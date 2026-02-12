@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BillingType {
+  TJM
+  FORFAIT
+  MISSION
+}
+
+enum SubscriptionStatus {
+  FREE
+  ACTIVE
+  CANCELED
+  PAST_DUE
+}
+
+model User {
+  id                  String             @id @default(uuid())
+  email               String             @unique
+  name                String?
+  avatarUrl           String?
+
+  // Profil freelance
+  monthlyExpenses     Float              @default(1800)
+  savings             Float              @default(10000)
+  adminHoursPerWeek   Float              @default(6)
+  workDaysPerWeek     Int                @default(5)
+  onboardingCompleted Boolean            @default(false)
+
+  // Stripe
+  stripeCustomerId    String?            @unique
+  subscriptionStatus  SubscriptionStatus @default(FREE)
+  subscriptionId      String?
+
+  // Relations
+  clients             Client[]
+  scenarios           Scenario[]
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+}
+
+model Client {
+  id             String      @id @default(uuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name           String
+  billing        BillingType
+
+  // TJM
+  dailyRate      Float?
+  daysPerMonth   Float?
+
+  // Forfait
+  monthlyAmount  Float?
+
+  // Mission
+  totalAmount    Float?
+  startMonth     Int?
+  endMonth       Int?
+
+  // Meta
+  isActive       Boolean     @default(true)
+  color          String?
+
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([userId])
+}
+
+model Scenario {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  icon        String?
+
+  params      Json
+  results     Json?
+
+  isPinned    Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}

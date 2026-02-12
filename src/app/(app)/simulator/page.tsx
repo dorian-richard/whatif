@@ -42,6 +42,18 @@ export default function SimulatorPage() {
               Reinitialiser
             </button>
             <button
+              onClick={() => router.push("/scenarios")}
+              className="px-3 py-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors rounded-lg hover:bg-gray-100"
+            >
+              📋 Scenarios
+            </button>
+            <button
+              onClick={() => router.push("/settings")}
+              className="px-3 py-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors rounded-lg hover:bg-gray-100"
+            >
+              ⚙️
+            </button>
+            <button
               onClick={() => router.push("/onboarding")}
               className="px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
             >
