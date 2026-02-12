@@ -2,6 +2,7 @@
 
 import { useProfileStore } from "@/stores/useProfileStore";
 import { Slider } from "@/components/ui/slider";
+import { CalendarDays, ClipboardList } from "@/components/ui/icons";
 
 export function StepSchedule() {
   const { workDaysPerWeek, adminHoursPerWeek, setProfile } = useProfileStore();
@@ -19,7 +20,7 @@ export function StepSchedule() {
         <div>
           <div className="flex justify-between items-center mb-3">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
-              <span className="text-base">📅</span> Jours de travail / semaine
+              <CalendarDays className="size-4 text-indigo-500" /> Jours de travail / semaine
             </label>
             <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
               {workDaysPerWeek}j
@@ -41,7 +42,7 @@ export function StepSchedule() {
         <div>
           <div className="flex justify-between items-center mb-3">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
-              <span className="text-base">📋</span> Heures admin / semaine
+              <ClipboardList className="size-4 text-indigo-500" /> Heures admin / semaine
             </label>
             <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
               {adminHoursPerWeek}h

@@ -3,6 +3,7 @@
 import { useProfileStore } from "@/stores/useProfileStore";
 import { Slider } from "@/components/ui/slider";
 import { fmt } from "@/lib/utils";
+import { Receipt, Landmark } from "@/components/ui/icons";
 
 export function StepFinances() {
   const { monthlyExpenses, savings, setProfile } = useProfileStore();
@@ -22,7 +23,7 @@ export function StepFinances() {
         <div>
           <div className="flex justify-between items-center mb-3">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
-              <span className="text-base">🧾</span> Charges mensuelles fixes
+              <Receipt className="size-4 text-indigo-500" /> Charges mensuelles fixes
             </label>
             <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
               {fmt(monthlyExpenses)}&euro;
@@ -44,7 +45,7 @@ export function StepFinances() {
         <div>
           <div className="flex justify-between items-center mb-3">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
-              <span className="text-base">🏦</span> Epargne de securite
+              <Landmark className="size-4 text-indigo-500" /> Epargne de securite
             </label>
             <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
               {fmt(savings)}&euro;

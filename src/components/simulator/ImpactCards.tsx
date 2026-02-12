@@ -1,15 +1,17 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { ProjectionResult } from "@/types";
-import { fmt } from "@/lib/utils";
-import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { fmt, cn } from "@/lib/utils";
+import { Wallet, CalendarDays, TrendingDown, TrendingUp } from "@/components/ui/icons";
 
 interface ImpactCardProps {
   label: string;
   before: number;
   after: number;
   unit: string;
-  icon: string;
+  icon: ReactNode;
   reverse?: boolean;
 }
 
@@ -20,9 +22,10 @@ function ImpactCard({ label, before, after, unit, icon, reverse }: ImpactCardPro
   const isNeutral = Math.abs(diff) < 0.5;
 
   return (
-    <div
+    <motion.div
+      layout
       className={cn(
-        "rounded-2xl p-4 border transition-all",
+        "rounded-2xl p-4 border transition-colors",
         isNeutral
           ? "bg-gray-50 border-gray-100"
           : isPositive
@@ -31,7 +34,7 @@ function ImpactCard({ label, before, after, unit, icon, reverse }: ImpactCardPro
       )}
     >
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-lg">{icon}</span>
+        {icon}
         <span className="text-xs font-medium uppercase tracking-wide text-gray-500">
           {label}
         </span>
@@ -54,7 +57,7 @@ function ImpactCard({ label, before, after, unit, icon, reverse }: ImpactCardPro
           {pctChange.toFixed(1)}%)
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -69,28 +72,28 @@ export function ImpactCards({ projection }: ImpactCardsProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       <ImpactCard
-        icon="💰"
+        icon={<Wallet className="size-4 text-gray-400" />}
         label="CA annuel"
         before={beforeAnnual}
         after={afterAnnual}
         unit="&euro;"
       />
       <ImpactCard
-        icon="📅"
+        icon={<CalendarDays className="size-4 text-gray-400" />}
         label="CA mensuel moy."
         before={beforeAnnual / 12}
         after={afterAnnual / 12}
         unit="&euro;"
       />
       <ImpactCard
-        icon="📉"
+        icon={<TrendingDown className="size-4 text-gray-400" />}
         label="Mois le + faible"
         before={Math.min(...projection.before)}
         after={Math.min(...projection.after)}
         unit="&euro;"
       />
       <ImpactCard
-        icon="📈"
+        icon={<TrendingUp className="size-4 text-gray-400" />}
         label="Mois le + fort"
         before={Math.max(...projection.before)}
         after={Math.max(...projection.after)}

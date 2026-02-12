@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { motion } from "framer-motion";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { useSimulatorStore } from "@/stores/useSimulatorStore";
 import { simulate, getClientBaseCA } from "@/lib/simulation-engine";
@@ -53,10 +54,19 @@ export function SimulatorEngine() {
   const ponctualCA = totalCA - recurringCA;
   const recurringPct = totalCA > 0 ? (recurringCA / totalCA) * 100 : 0;
 
+  const stagger = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.07 } },
+  } as const;
+  const fadeUp = {
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" as const } },
+  };
+
   return (
-    <div className="space-y-5">
+    <motion.div className="space-y-5" variants={stagger} initial="hidden" animate="show">
       {/* Summary bar */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+      <motion.div variants={fadeUp} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
         <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
           <div className="text-center">
             <span className="text-gray-400 text-xs block">CA mensuel</span>
@@ -88,26 +98,30 @@ export function SimulatorEngine() {
             </span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <PresetScenarios />
-      <SliderPanel />
-      <Verdict projection={projection} sim={simParams} clients={profile.clients} />
-      <ImpactCards projection={projection} />
-      <RevenueTimeline projection={projection} />
-      <ClientComposition clients={profile.clients} lostClientIndex={sim.lostClientIndex} />
-      <EmotionalMetrics
-        projection={projection}
-        profile={profile}
-        sim={simParams}
-        clients={profile.clients}
-      />
-      <MonthlyBreakdown
-        projection={projection}
-        clients={profile.clients}
-        profile={profile}
-        sim={simParams}
-      />
-    </div>
+      <motion.div variants={fadeUp}><PresetScenarios /></motion.div>
+      <motion.div variants={fadeUp}><SliderPanel /></motion.div>
+      <motion.div variants={fadeUp}><Verdict projection={projection} sim={simParams} clients={profile.clients} /></motion.div>
+      <motion.div variants={fadeUp}><ImpactCards projection={projection} /></motion.div>
+      <motion.div variants={fadeUp}><RevenueTimeline projection={projection} /></motion.div>
+      <motion.div variants={fadeUp}><ClientComposition clients={profile.clients} lostClientIndex={sim.lostClientIndex} /></motion.div>
+      <motion.div variants={fadeUp}>
+        <EmotionalMetrics
+          projection={projection}
+          profile={profile}
+          sim={simParams}
+          clients={profile.clients}
+        />
+      </motion.div>
+      <motion.div variants={fadeUp}>
+        <MonthlyBreakdown
+          projection={projection}
+          clients={profile.clients}
+          profile={profile}
+          sim={simParams}
+        />
+      </motion.div>
+    </motion.div>
   );
 }

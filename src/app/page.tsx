@@ -3,6 +3,7 @@ import { Demo } from "@/components/landing/Demo";
 import { Pricing } from "@/components/landing/Pricing";
 import { Testimonials } from "@/components/landing/Testimonials";
 import Link from "next/link";
+import { Sparkles } from "@/components/ui/icons";
 
 export default function Home() {
   return (
@@ -11,8 +12,8 @@ export default function Home() {
       <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-sm border-b border-gray-100 z-50">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-sm">
-              🔮
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
+              <Sparkles className="size-4" />
             </div>
             <span className="font-bold text-gray-900">WhatIf</span>
           </div>
@@ -48,8 +49,8 @@ export default function Home() {
       <footer className="py-10 px-4 border-t border-gray-100">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-indigo-600 rounded flex items-center justify-center text-white text-xs">
-              🔮
+            <div className="w-6 h-6 bg-indigo-600 rounded flex items-center justify-center text-white">
+              <Sparkles className="size-3" />
             </div>
             <span className="text-sm text-gray-400">
               WhatIf &mdash; Simulateur de decisions freelance

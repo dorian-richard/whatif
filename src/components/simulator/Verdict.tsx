@@ -1,8 +1,10 @@
 "use client";
 
 import type { ProjectionResult, SimulationParams, ClientData } from "@/types";
+import { motion, AnimatePresence } from "framer-motion";
 import { fmt } from "@/lib/utils";
 import { getClientBaseCA } from "@/lib/simulation-engine";
+import { CircleCheck, CircleMinus, CircleAlert, CircleX } from "@/components/ui/icons";
 
 interface VerdictProps {
   projection: ProjectionResult;
@@ -69,7 +71,12 @@ export function Verdict({ projection, sim, clients }: VerdictProps) {
     messages.push("Ajuste les parametres pour voir l'impact de tes decisions.");
   }
 
-  const emoji = pctDiff > 5 ? "🟢" : pctDiff > -5 ? "🟡" : pctDiff > -15 ? "🟠" : "🔴";
+  const statusIcon =
+    pctDiff > 5 ? <CircleCheck className="size-7 text-emerald-500" /> :
+    pctDiff > -5 ? <CircleMinus className="size-7 text-amber-500" /> :
+    pctDiff > -15 ? <CircleAlert className="size-7 text-orange-500" /> :
+    <CircleX className="size-7 text-red-500" />;
+
   const tone =
     pctDiff > 5
       ? "bg-emerald-50 border-emerald-200"
@@ -77,37 +84,48 @@ export function Verdict({ projection, sim, clients }: VerdictProps) {
         ? "bg-amber-50 border-amber-200"
         : "bg-red-50 border-red-200";
 
+  const toneKey = pctDiff > 5 ? "positive" : pctDiff > -5 ? "neutral" : "negative";
+
   return (
-    <div className={`rounded-2xl p-5 border ${tone}`}>
-      <div className="flex items-start gap-3">
-        <span className="text-3xl">{emoji}</span>
-        <div>
-          <h3 className="text-sm font-bold text-gray-800 mb-1">
-            {pctDiff > 5
-              ? "Ce scenario te profite"
-              : pctDiff > -5
-                ? "Impact modere"
-                : "Attention, impact significatif"}
-          </h3>
-          {messages.map((m, i) => (
-            <p key={i} className="text-sm text-gray-600 mb-1">
-              &rarr; {m}
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={toneKey}
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.97 }}
+        transition={{ duration: 0.25 }}
+        className={`rounded-2xl p-5 border ${tone}`}
+      >
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5">{statusIcon}</div>
+          <div>
+            <h3 className="text-sm font-bold text-gray-800 mb-1">
+              {pctDiff > 5
+                ? "Ce scenario te profite"
+                : pctDiff > -5
+                  ? "Impact modere"
+                  : "Attention, impact significatif"}
+            </h3>
+            {messages.map((m, i) => (
+              <p key={i} className="text-sm text-gray-600 mb-1">
+                &rarr; {m}
+              </p>
+            ))}
+            <p className="text-xs text-gray-400 mt-2">
+              Variation annuelle :{" "}
+              <strong className={pctDiff >= 0 ? "text-emerald-600" : "text-red-600"}>
+                {pctDiff >= 0 ? "+" : ""}
+                {pctDiff.toFixed(1)}%
+              </strong>{" "}
+              soit{" "}
+              <strong>
+                {diff >= 0 ? "+" : ""}
+                {fmt(diff)}&euro;
+              </strong>
             </p>
-          ))}
-          <p className="text-xs text-gray-400 mt-2">
-            Variation annuelle :{" "}
-            <strong className={pctDiff >= 0 ? "text-emerald-600" : "text-red-600"}>
-              {pctDiff >= 0 ? "+" : ""}
-              {pctDiff.toFixed(1)}%
-            </strong>{" "}
-            soit{" "}
-            <strong>
-              {diff >= 0 ? "+" : ""}
-              {fmt(diff)}&euro;
-            </strong>
-          </p>
+          </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { simulate } from "@/lib/simulation-engine";
 import { SEASONALITY, MONTHS_SHORT, DEFAULT_SIM } from "@/lib/constants";
 import { fmt } from "@/lib/utils";
+import { Icon } from "@/components/ui/icons";
 import type { ClientData, FreelanceProfile, SimulationParams } from "@/types";
 
 const DEMO_CLIENTS: ClientData[] = [
@@ -21,10 +22,10 @@ const DEMO_PROFILE: FreelanceProfile = {
 };
 
 const DEMO_SCENARIOS = [
-  { label: "3 semaines off", icon: "🏖️", params: { ...DEFAULT_SIM, vacationWeeks: 3 } },
-  { label: "+20% tarifs", icon: "📈", params: { ...DEFAULT_SIM, rateChange: 20 } },
-  { label: "Perte client #1", icon: "💔", params: { ...DEFAULT_SIM, lostClientIndex: 0 } },
-  { label: "4j/semaine", icon: "⏰", params: { ...DEFAULT_SIM, workDaysPerWeek: 4 } },
+  { label: "3 semaines off", icon: "palmtree", params: { ...DEFAULT_SIM, vacationWeeks: 3 } },
+  { label: "+20% tarifs", icon: "trending-up", params: { ...DEFAULT_SIM, rateChange: 20 } },
+  { label: "Perte client #1", icon: "heart-crack", params: { ...DEFAULT_SIM, lostClientIndex: 0 } },
+  { label: "4j/semaine", icon: "clock", params: { ...DEFAULT_SIM, workDaysPerWeek: 4 } },
 ];
 
 export function Demo() {
@@ -64,7 +65,7 @@ export function Demo() {
                   : "bg-white text-gray-700 border border-gray-200 hover:border-indigo-300"
               }`}
             >
-              {s.icon} {s.label}
+              <Icon name={s.icon} className="size-4 inline" /> {s.label}
             </button>
           ))}
         </div>

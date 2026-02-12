@@ -6,6 +6,7 @@ import { useSimulatorStore } from "@/stores/useSimulatorStore";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { simulate } from "@/lib/simulation-engine";
 import { fmt } from "@/lib/utils";
+import { Icon, ClipboardList } from "@/components/ui/icons";
 import type { SimulationParams } from "@/types";
 
 interface SavedScenario {
@@ -34,7 +35,7 @@ export default function ScenariosPage() {
 
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [newName, setNewName] = useState("");
-  const [newIcon, setNewIcon] = useState("🔮");
+  const [newIcon, setNewIcon] = useState("sparkles");
   const [newDesc, setNewDesc] = useState("");
 
   const saveScenario = () => {
@@ -88,7 +89,7 @@ export default function ScenariosPage() {
     localStorage.setItem("whatif_scenarios", JSON.stringify(updated));
   };
 
-  const ICON_OPTIONS = ["🔮", "🏖️", "📈", "💔", "🚀", "⏰", "📚", "💡", "🎯", "🛟"];
+  const ICON_OPTIONS = ["sparkles", "palmtree", "trending-up", "heart-crack", "rocket", "clock", "book-open", "lightbulb", "target", "life-buoy"];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-50">
@@ -110,7 +111,7 @@ export default function ScenariosPage() {
       <div className="max-w-4xl mx-auto p-4 md:p-6">
         {scenarios.length === 0 ? (
           <div className="text-center py-20">
-            <div className="text-5xl mb-4">📋</div>
+            <div className="mb-4 flex justify-center"><ClipboardList className="size-12 text-gray-300" /></div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Aucun scenario sauvegarde</h2>
             <p className="text-sm text-gray-400 mb-6">Configure le simulateur puis sauvegarde ton scenario ici.</p>
             <button onClick={() => router.push("/simulator")} className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700">
@@ -121,7 +122,7 @@ export default function ScenariosPage() {
           <div className="grid gap-3">
             {scenarios.map((s) => (
               <div key={s.id} className="bg-white rounded-xl p-4 border border-gray-100 hover:shadow-md transition-shadow flex items-center gap-4">
-                <span className="text-3xl">{s.icon}</span>
+                <span className="text-indigo-500"><Icon name={s.icon} className="size-8" /></span>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-gray-900 truncate">{s.name}</h3>
                   {s.description && <p className="text-xs text-gray-400 truncate">{s.description}</p>}
@@ -150,8 +151,8 @@ export default function ScenariosPage() {
                 <div className="flex gap-2 flex-wrap">
                   {ICON_OPTIONS.map((icon) => (
                     <button key={icon} onClick={() => setNewIcon(icon)}
-                      className={`w-10 h-10 rounded-xl text-xl flex items-center justify-center transition-all ${newIcon === icon ? "bg-indigo-100 ring-2 ring-indigo-600" : "bg-gray-50 hover:bg-gray-100"}`}>
-                      {icon}
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${newIcon === icon ? "bg-indigo-100 ring-2 ring-indigo-600 text-indigo-600" : "bg-gray-50 hover:bg-gray-100 text-gray-500"}`}>
+                      <Icon name={icon} className="size-5" />
                     </button>
                   ))}
                 </div>

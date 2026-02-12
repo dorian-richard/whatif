@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { Search } from "@/components/ui/icons";
 
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-50 p-4">
       <div className="text-center max-w-sm">
-        <div className="text-5xl mb-4">🔍</div>
+        <div className="mb-4 flex justify-center"><Search className="size-12 text-gray-300" /></div>
         <h2 className="text-xl font-bold text-gray-900 mb-2">Page introuvable</h2>
         <p className="text-sm text-gray-500 mb-6">Cette page n&apos;existe pas ou a ete deplacee.</p>
         <Link

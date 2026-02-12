@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { Slider } from "@/components/ui/slider";
 import { fmt } from "@/lib/utils";
+import { CalendarDays, ClipboardList, Receipt, Landmark } from "@/components/ui/icons";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -39,28 +40,28 @@ export default function SettingsPage() {
           <div className="space-y-6">
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="text-sm font-medium text-gray-700">📅 Jours de travail / semaine</label>
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5"><CalendarDays className="size-4 text-indigo-500" /> Jours de travail / semaine</label>
                 <span className="text-sm font-bold text-indigo-600">{profile.workDaysPerWeek}j</span>
               </div>
               <Slider value={[profile.workDaysPerWeek]} onValueChange={([v]) => profile.setProfile({ workDaysPerWeek: v })} min={3} max={6} step={1} />
             </div>
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="text-sm font-medium text-gray-700">📋 Heures admin / semaine</label>
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5"><ClipboardList className="size-4 text-indigo-500" /> Heures admin / semaine</label>
                 <span className="text-sm font-bold text-indigo-600">{profile.adminHoursPerWeek}h</span>
               </div>
               <Slider value={[profile.adminHoursPerWeek]} onValueChange={([v]) => profile.setProfile({ adminHoursPerWeek: v })} min={0} max={20} step={1} />
             </div>
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="text-sm font-medium text-gray-700">🧾 Charges mensuelles</label>
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5"><Receipt className="size-4 text-indigo-500" /> Charges mensuelles</label>
                 <span className="text-sm font-bold text-indigo-600">{fmt(profile.monthlyExpenses)}&euro;</span>
               </div>
               <Slider value={[profile.monthlyExpenses]} onValueChange={([v]) => profile.setProfile({ monthlyExpenses: v })} min={500} max={6000} step={100} />
             </div>
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="text-sm font-medium text-gray-700">🏦 Epargne de securite</label>
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5"><Landmark className="size-4 text-indigo-500" /> Epargne de securite</label>
                 <span className="text-sm font-bold text-indigo-600">{fmt(profile.savings)}&euro;</span>
               </div>
               <Slider value={[profile.savings]} onValueChange={([v]) => profile.setProfile({ savings: v })} min={0} max={60000} step={1000} />

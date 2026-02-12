@@ -6,6 +6,7 @@ import { useSimulatorStore } from "@/stores/useSimulatorStore";
 import { SimulatorEngine } from "@/components/simulator/SimulatorEngine";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import { fmt } from "@/lib/utils";
+import { Sparkles, ClipboardList, Settings } from "@/components/ui/icons";
 
 export default function SimulatorPage() {
   const router = useRouter();
@@ -23,8 +24,8 @@ export default function SimulatorPage() {
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-100 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-lg">
-              🔮
+            <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
+              <Sparkles className="size-5" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-gray-900">WhatIf</h1>
@@ -45,13 +46,13 @@ export default function SimulatorPage() {
               onClick={() => router.push("/scenarios")}
               className="px-3 py-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors rounded-lg hover:bg-gray-100"
             >
-              📋 Scenarios
+              <ClipboardList className="size-3.5 inline" /> Scenarios
             </button>
             <button
               onClick={() => router.push("/settings")}
               className="px-3 py-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors rounded-lg hover:bg-gray-100"
             >
-              ⚙️
+              <Settings className="size-4" />
             </button>
             <button
               onClick={() => router.push("/onboarding")}

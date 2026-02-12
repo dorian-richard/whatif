@@ -1,11 +1,12 @@
 import Link from "next/link";
+import { Sparkles } from "@/components/ui/icons";
 
 export function Hero() {
   return (
     <section className="pt-24 pb-16 px-4">
       <div className="max-w-4xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-1.5 rounded-full text-sm font-medium mb-8">
-          🔮 Simulateur de decisions freelance
+          <Sparkles className="size-4" /> Simulateur de decisions freelance
         </div>
         <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
           Chaque decision a un prix.

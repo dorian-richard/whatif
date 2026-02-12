@@ -1,14 +1,17 @@
 "use client";
 
+import type { ComponentType } from "react";
+import type { LucideProps } from "lucide-react";
 import type { ProjectionResult, ClientData, FreelanceProfile, SimulationParams } from "@/types";
 import { MONTHS_SHORT, SEASONALITY } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import { getClientMonthlyCA } from "@/lib/simulation-engine";
+import { CalendarDays, Package, Target, AlertTriangle } from "@/components/ui/icons";
 
-const BILLING_BADGE: Record<string, { icon: string; label: string; color: string }> = {
-  tjm: { icon: "📅", label: "TJM", color: "bg-indigo-100 text-indigo-700" },
-  forfait: { icon: "📦", label: "Forfait", color: "bg-amber-100 text-amber-700" },
-  mission: { icon: "🎯", label: "Mission", color: "bg-emerald-100 text-emerald-700" },
+const BILLING_BADGE: Record<string, { Icon: ComponentType<LucideProps>; label: string; color: string }> = {
+  tjm: { Icon: CalendarDays, label: "TJM", color: "bg-indigo-100 text-indigo-700" },
+  forfait: { Icon: Package, label: "Forfait", color: "bg-amber-100 text-amber-700" },
+  mission: { Icon: Target, label: "Mission", color: "bg-emerald-100 text-emerald-700" },
 };
 
 interface MonthlyBreakdownProps {
@@ -44,7 +47,6 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
             const diff = projection.after[i] - projection.before[i];
             const net = projection.after[i] - expenses;
 
-            // Determine which billing types are active this month
             const activeBillings = new Set<string>();
             clients.forEach((c, ci) => {
               if (sim.lostClientIndex === ci) return;
@@ -74,7 +76,8 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
                     net >= 0 ? "text-gray-700" : "text-red-600 font-bold"
                   )}
                 >
-                  {fmt(net)}&euro; {net < 0 && "⚠️"}
+                  {fmt(net)}&euro;{" "}
+                  {net < 0 && <AlertTriangle className="size-3.5 inline text-red-500" />}
                 </td>
                 <td className="py-2 pl-3">
                   <div className="flex gap-1">
@@ -83,9 +86,9 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
                       return (
                         <span
                           key={billing}
-                          className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded-full", b.color)}
+                          className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5", b.color)}
                         >
-                          {b.icon} {b.label}
+                          <b.Icon className="size-2.5" /> {b.label}
                         </span>
                       );
                     })}

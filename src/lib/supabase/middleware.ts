@@ -29,18 +29,18 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protect app routes
-  const isAppRoute =
-    request.nextUrl.pathname.startsWith("/simulator") ||
-    request.nextUrl.pathname.startsWith("/onboarding") ||
-    request.nextUrl.pathname.startsWith("/scenarios") ||
-    request.nextUrl.pathname.startsWith("/settings");
-
-  if (!user && isAppRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
+  // TODO: Re-enable auth protection when ready
+  // const isAppRoute =
+  //   request.nextUrl.pathname.startsWith("/simulator") ||
+  //   request.nextUrl.pathname.startsWith("/onboarding") ||
+  //   request.nextUrl.pathname.startsWith("/scenarios") ||
+  //   request.nextUrl.pathname.startsWith("/settings");
+  //
+  // if (!user && isAppRoute) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/login";
+  //   return NextResponse.redirect(url);
+  // }
 
   return supabaseResponse;
 }

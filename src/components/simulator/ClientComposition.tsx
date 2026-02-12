@@ -4,11 +4,14 @@ import type { ClientData } from "@/types";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import { fmt } from "@/lib/utils";
 import { CLIENT_COLORS } from "@/lib/constants";
+import { CalendarDays, Package, Target } from "@/components/ui/icons";
+import type { ComponentType } from "react";
+import type { LucideProps } from "lucide-react";
 
-const BILLING_BADGES: Record<string, { label: string; icon: string }> = {
-  tjm: { label: "TJM", icon: "📅" },
-  forfait: { label: "Forfait", icon: "📦" },
-  mission: { label: "Mission", icon: "🎯" },
+const BILLING_BADGES: Record<string, { label: string; Icon: ComponentType<LucideProps> }> = {
+  tjm: { label: "TJM", Icon: CalendarDays },
+  forfait: { label: "Forfait", Icon: Package },
+  mission: { label: "Mission", Icon: Target },
 };
 
 interface ClientCompositionProps {
@@ -59,8 +62,8 @@ export function ClientComposition({ clients, lostClientIndex }: ClientCompositio
                 style={{ backgroundColor: client.color ?? CLIENT_COLORS[i % CLIENT_COLORS.length] }}
               />
               <span className="text-gray-700 font-medium truncate">{client.name}</span>
-              <span className="text-xs text-gray-400 shrink-0">
-                {badge.icon} {fmt(ca)}&euro; ({pct.toFixed(0)}%)
+              <span className="text-xs text-gray-400 shrink-0 flex items-center gap-0.5">
+                <badge.Icon className="size-3" /> {fmt(ca)}&euro; ({pct.toFixed(0)}%)
               </span>
             </div>
           );

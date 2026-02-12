@@ -7,6 +7,7 @@ import { StepClients } from "@/components/onboarding/StepClients";
 import { StepSchedule } from "@/components/onboarding/StepSchedule";
 import { StepFinances } from "@/components/onboarding/StepFinances";
 import { CLIENT_COLORS } from "@/lib/constants";
+import { Sparkles } from "@/components/ui/icons";
 
 const STEPS = [
   { component: StepClients },
@@ -44,8 +45,8 @@ export default function OnboardingPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-indigo-200">
-              🔮
+            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+              <Sparkles className="size-6" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900">WhatIf</h1>
           </div>
@@ -100,7 +101,7 @@ export default function OnboardingPage() {
                 onClick={finish}
                 className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
               >
-                🔮 Lancer le simulateur
+                <Sparkles className="size-4 inline" /> Lancer le simulateur
               </button>
             )}
           </div>

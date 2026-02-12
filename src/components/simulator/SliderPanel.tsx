@@ -1,11 +1,13 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useSimulatorStore } from "@/stores/useSimulatorStore";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { Slider } from "@/components/ui/slider";
 import { PRESET_SCENARIOS } from "@/lib/constants";
 import { fmt } from "@/lib/utils";
 import { getClientBaseCA } from "@/lib/simulation-engine";
+import { Palmtree, TrendingUp, UserPlus, Clock, HeartCrack, Receipt } from "@/components/ui/icons";
 
 function LabeledSlider({
   icon,
@@ -18,7 +20,7 @@ function LabeledSlider({
   unit,
   tooltip,
 }: {
-  icon: string;
+  icon: ReactNode;
   label: string;
   value: number;
   onChange: (v: number) => void;
@@ -32,7 +34,7 @@ function LabeledSlider({
     <div className="group">
       <div className="flex justify-between items-center mb-2">
         <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5" title={tooltip}>
-          <span className="text-base">{icon}</span>
+          {icon}
           {label}
         </label>
         <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
@@ -71,7 +73,7 @@ export function SliderPanel() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <LabeledSlider
-          icon="🏖️"
+          icon={<Palmtree className="size-4 text-indigo-500" />}
           label="Semaines de vacances"
           value={sim.vacationWeeks}
           onChange={(v) => sim.setParam("vacationWeeks", v)}
@@ -82,7 +84,7 @@ export function SliderPanel() {
           tooltip="TJM et Mission : revenu tombe a 0. Forfait : continue de tourner."
         />
         <LabeledSlider
-          icon="📈"
+          icon={<TrendingUp className="size-4 text-indigo-500" />}
           label="Variation de tarifs"
           value={sim.rateChange}
           onChange={(v) => sim.setParam("rateChange", v)}
@@ -93,7 +95,7 @@ export function SliderPanel() {
           tooltip="S'applique uniquement aux clients TJM."
         />
         <LabeledSlider
-          icon="🆕"
+          icon={<UserPlus className="size-4 text-indigo-500" />}
           label="Nouveaux clients"
           value={sim.newClients}
           onChange={(v) => sim.setParam("newClients", v)}
@@ -103,7 +105,7 @@ export function SliderPanel() {
           unit=""
         />
         <LabeledSlider
-          icon="⏰"
+          icon={<Clock className="size-4 text-indigo-500" />}
           label="Jours de travail / semaine"
           value={sim.workDaysPerWeek}
           onChange={(v) => sim.setParam("workDaysPerWeek", v)}
@@ -116,7 +118,8 @@ export function SliderPanel() {
 
         <div>
           <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5 mb-2">
-            <span className="text-base">💔</span>Perte d&apos;un client
+            <HeartCrack className="size-4 text-indigo-500" />
+            Perte d&apos;un client
           </label>
           <select
             value={sim.lostClientIndex}
@@ -137,7 +140,7 @@ export function SliderPanel() {
         </div>
 
         <LabeledSlider
-          icon="🧾"
+          icon={<Receipt className="size-4 text-indigo-500" />}
           label="Variation charges mensuelles"
           value={sim.expenseChange}
           onChange={(v) => sim.setParam("expenseChange", v)}

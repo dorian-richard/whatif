@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { Sparkles, MailOpen } from "@/components/ui/icons";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ export default function SignupPage() {
     const supabase = createClient();
     const { error: authError } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/onboarding` },
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding` },
     });
 
     if (authError) {
@@ -34,8 +35,8 @@ export default function SignupPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl">
-              🔮
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
+              <Sparkles className="size-5" />
             </div>
             <span className="text-2xl font-bold text-gray-900">WhatIf</span>
           </Link>
@@ -48,7 +49,7 @@ export default function SignupPage() {
         <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 p-6 border border-gray-100">
           {sent ? (
             <div className="text-center py-4">
-              <div className="text-4xl mb-3">📬</div>
+              <div className="mb-3 flex justify-center"><MailOpen className="size-10 text-indigo-500" /></div>
               <h2 className="text-lg font-bold text-gray-900 mb-1">Check tes emails !</h2>
               <p className="text-sm text-gray-500">
                 On a envoye un lien de connexion a <strong>{email}</strong>
