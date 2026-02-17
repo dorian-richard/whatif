@@ -69,11 +69,27 @@ function computeForStatus(
     impots = annualCA * ir;
     netAnnual = annualCA - chargesSociales - impots;
   } else if (is === 0) {
-    // IR structures (EI, EURL IR, SASU IR): URSSAF puis IR
-    chargesSociales = annualCA * urssaf;
-    const afterUrssaf = annualCA - chargesSociales;
-    impots = afterUrssaf * ir;
-    netAnnual = afterUrssaf - impots;
+    // IR structures (EI, EURL IR, SASU IR)
+    if (status === "sasu_ir" && remunerationType === "dividendes") {
+      // SASU IR sans salaire : pas de charges sociales, juste IR sur le bénéfice
+      chargesSociales = 0;
+      impots = annualCA * ir;
+      netAnnual = annualCA - impots;
+    } else if (status === "sasu_ir" && remunerationType === "mixte") {
+      // SASU IR mixte : partie salaire avec charges, reste sans charges
+      const salaryCost = annualCA * (mixtePartSalaire / 100);
+      chargesSociales = salaryCost * urssaf;
+      const salaryNet = salaryCost - chargesSociales;
+      const remaining = annualCA - salaryCost;
+      impots = (salaryNet + remaining) * ir;
+      netAnnual = salaryNet + remaining - impots;
+    } else {
+      // Salaire classique : URSSAF puis IR
+      chargesSociales = annualCA * urssaf;
+      const afterUrssaf = annualCA - chargesSociales;
+      impots = afterUrssaf * ir;
+      netAnnual = afterUrssaf - impots;
+    }
   } else {
     // IS structures (EURL IS, SASU IS)
     const isSASU = status === "sasu_is";
@@ -171,7 +187,7 @@ export default function ComparateurPage() {
   // Compute for all statuts
   const results = useMemo(() => {
     return STATUTS.map((s) => {
-      const remType = (s === "eurl_is" || s === "sasu_is") ? localRemType : "salaire";
+      const remType = (s === "eurl_is" || s === "sasu_is" || s === "sasu_ir") ? localRemType : "salaire";
       return computeForStatus(annualCA, s, remType, localMixte);
     });
   }, [annualCA, localRemType, localMixte]);
@@ -234,7 +250,7 @@ export default function ComparateurPage() {
         {/* Remuneration type selector (for IS statuts) */}
         <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6">
           <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-3">
-            Mode de rémunération (EURL IS / SASU IS)
+            Mode de rémunération (SASU IR / EURL IS / SASU IS)
           </div>
           <div className="flex gap-2 mb-4">
             {([

@@ -69,7 +69,18 @@ function reverseCA(
   }
 
   if (is === 0) {
-    // IR structures: net = CA * (1 - urssaf) * (1 - ir)
+    if (status === "sasu_ir" && remType === "dividendes") {
+      // SASU IR sans salaire : pas de charges sociales, juste IR
+      return targetNet / (1 - ir);
+    }
+    if (status === "sasu_ir" && remType === "mixte") {
+      // SASU IR mixte
+      const salPart = mixtePartSalaire / 100;
+      const divPart = 1 - salPart;
+      const multiplier = salPart * (1 - urssaf) * (1 - ir) + divPart * (1 - ir);
+      return targetNet / multiplier;
+    }
+    // IR structures with salary: URSSAF then IR
     return targetNet / ((1 - urssaf) * (1 - ir));
   }
 
@@ -141,7 +152,7 @@ export default function ObjectifPage() {
     return STATUTS.map((s) => {
       const cfg = BUSINESS_STATUS_CONFIG[s];
       const color = STATUT_COLORS[s] ?? "#5682F2";
-      const remType = (s === "eurl_is" || s === "sasu_is") ? localRemType : "salaire";
+      const remType = (s === "eurl_is" || s === "sasu_is" || s === "sasu_ir") ? localRemType : "salaire";
 
       const requiredCA = reverseCA(targetAnnualNet, s, remType, localMixte);
       const requiredTJM = workedDaysPerYear > 0 ? requiredCA / workedDaysPerYear : 0;
