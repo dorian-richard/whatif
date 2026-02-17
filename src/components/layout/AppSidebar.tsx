@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Scale, Settings } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Scale, Target, Settings } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 
 const NAV_ITEMS = [
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
   { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
   { href: "/comparateur", label: "Comparateur", icon: Scale },
+  { href: "/objectif", label: "Objectif", icon: Target },
   { href: "/settings", label: "Paramètres", icon: Settings },
 ];
 
