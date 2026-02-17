@@ -1,36 +1,35 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="512" height="512" rx="112" fill="url(#bg)"/>
 
-  <!-- Eye outer shape (almond) -->
+  <!-- Prism / Diamond shape -->
   <path
-    d="M100 256 C100 256 178 148 256 148 C334 148 412 256 412 256 C412 256 334 364 256 364 C178 364 100 256 100 256Z"
+    d="M256 130 L346 256 L256 382 L166 256 Z"
     stroke="white"
-    stroke-width="22"
-    stroke-linecap="round"
+    stroke-width="20"
     stroke-linejoin="round"
-    fill="none"
+    fill="white"
+    fill-opacity="0.08"
   />
 
-  <!-- Iris -->
-  <circle cx="256" cy="256" r="68" stroke="white" stroke-width="18" fill="none"/>
+  <!-- Inner facet lines -->
+  <line x1="256" y1="130" x2="210" y2="300" stroke="white" stroke-width="6" opacity="0.2"/>
+  <line x1="256" y1="130" x2="302" y2="300" stroke="white" stroke-width="6" opacity="0.2"/>
 
-  <!-- Pupil with trend line inside -->
-  <circle cx="256" cy="256" r="32" fill="white" opacity="0.9"/>
+  <!-- Single input ray entering prism -->
+  <line x1="90" y1="256" x2="166" y2="256" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.7"/>
 
-  <!-- Subtle trend line crossing the eye -->
-  <polyline
-    points="148,290 200,270 240,280 280,240 320,210 364,230"
-    stroke="white"
-    stroke-width="10"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    fill="none"
-    opacity="0.35"
-  />
+  <!-- Refracted output rays (multiple scenarios) -->
+  <line x1="346" y1="256" x2="422" y2="190" stroke="white" stroke-width="10" stroke-linecap="round" opacity="0.9"/>
+  <line x1="346" y1="256" x2="422" y2="248" stroke="white" stroke-width="10" stroke-linecap="round" opacity="0.6"/>
+  <line x1="346" y1="256" x2="422" y2="306" stroke="white" stroke-width="10" stroke-linecap="round" opacity="0.35"/>
 
-  <!-- Lens reflection / sparkle -->
-  <circle cx="228" cy="224" r="10" fill="white" opacity="0.5"/>
-  <circle cx="244" cy="216" r="5" fill="white" opacity="0.3"/>
+  <!-- Dots at ray ends (data points) -->
+  <circle cx="422" cy="190" r="8" fill="white" opacity="0.9"/>
+  <circle cx="422" cy="248" r="8" fill="white" opacity="0.6"/>
+  <circle cx="422" cy="306" r="8" fill="white" opacity="0.35"/>
+
+  <!-- Sparkle on prism top -->
+  <circle cx="256" cy="140" r="6" fill="white" opacity="0.6"/>
 
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512">
