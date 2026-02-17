@@ -28,7 +28,11 @@
       "Bash(kill:*)",
       "Bash(pkill:*)",
       "Bash(git config:*)",
-      "Bash(ssh:*)"
+      "Bash(ssh:*)",
+      "Bash(git push:*)",
+      "Bash(npm i:*)",
+      "Bash(vercel:*)",
+      "Bash(dig:*)"
     ]
   }
 }

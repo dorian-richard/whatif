@@ -31,8 +31,6 @@ export function AppSidebar() {
           onClick={() => router.push("/dashboard")}
           className="flex items-center gap-2.5 px-5 h-16 shrink-0"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.svg" alt="Freelens" className="w-8 h-8 rounded-xl" />
           <span className="text-lg font-bold text-white">Freelens</span>
         </button>
 

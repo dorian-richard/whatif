@@ -49,10 +49,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-xl">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-3 mb-3">
-            <img src="/logo.svg" alt="Freelens" className="w-12 h-12" />
-            <h1 className="text-3xl font-bold fn-gradient-text">Freelens</h1>
-          </div>
+          <h1 className="text-3xl font-bold fn-gradient-text mb-3">Freelens</h1>
           <p className="text-[#8b8b9e]">Simule chaque décision avant de la prendre.</p>
         </div>
 

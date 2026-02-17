@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import Image from "next/image";
 import { MailOpen } from "@/components/ui/icons";
 
 export default function SignupPage() {
@@ -36,7 +35,6 @@ export default function SignupPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <Image src="/logo.svg" alt="Freelens" width={40} height={40} className="rounded-xl" />
             <span className="text-2xl font-bold text-white">Freelens</span>
           </Link>
           <h1 className="text-xl font-bold text-white">Créer un compte</h1>
