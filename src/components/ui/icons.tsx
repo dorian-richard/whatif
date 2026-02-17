@@ -48,6 +48,7 @@ import {
   Check,
   X,
   Info,
+  Scale,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -153,4 +154,5 @@ export {
   Check,
   X,
   Info,
+  Scale,
 };
