@@ -5,7 +5,7 @@ import { useProfileStore } from "@/stores/useProfileStore";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
-import type { BusinessStatus, FreelanceProfile } from "@/types";
+import type { BusinessStatus, RemunerationType } from "@/types";
 import {
   Check,
   CircleAlert,
@@ -164,14 +164,17 @@ export default function ComparateurPage() {
   const [caOverride, setCaOverride] = useState<number | null>(null);
   const annualCA = caOverride ?? baseAnnualCA;
 
+  // Local remuneration controls (initialized from profile)
+  const [localRemType, setLocalRemType] = useState<RemunerationType>(remunerationType ?? "salaire");
+  const [localMixte, setLocalMixte] = useState(mixtePartSalaire ?? 50);
+
   // Compute for all statuts
   const results = useMemo(() => {
     return STATUTS.map((s) => {
-      // For IS statuts, use the user's remunerationType; for others it doesn't matter
-      const remType = (s === "eurl_is" || s === "sasu_is") ? (remunerationType ?? "salaire") : "salaire";
-      return computeForStatus(annualCA, s, remType, mixtePartSalaire ?? 50);
+      const remType = (s === "eurl_is" || s === "sasu_is") ? localRemType : "salaire";
+      return computeForStatus(annualCA, s, remType, localMixte);
     });
-  }, [annualCA, remunerationType, mixtePartSalaire]);
+  }, [annualCA, localRemType, localMixte]);
 
   // Best statut = highest net among eligible
   const best = useMemo(() => {
@@ -226,6 +229,54 @@ export default function ComparateurPage() {
             <span>150 000 &euro;</span>
             <span>300 000 &euro;</span>
           </div>
+        </div>
+
+        {/* Remuneration type selector (for IS statuts) */}
+        <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6">
+          <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-3">
+            Mode de rémunération (EURL IS / SASU IS)
+          </div>
+          <div className="flex gap-2 mb-4">
+            {([
+              { value: "salaire" as const, label: "Salaire" },
+              { value: "dividendes" as const, label: "Dividendes" },
+              { value: "mixte" as const, label: "Mixte" },
+            ]).map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setLocalRemType(opt.value)}
+                className={cn(
+                  "px-4 py-2 rounded-xl text-sm font-medium transition-all",
+                  localRemType === opt.value
+                    ? "bg-[#5682F2]/15 text-[#5682F2] ring-1 ring-[#5682F2]/30"
+                    : "bg-white/[0.04] text-[#8b8b9e] hover:text-white hover:bg-white/[0.06]"
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          {localRemType === "mixte" && (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-[#8b8b9e]">Répartition salaire / dividendes</span>
+                <span className="text-sm font-bold text-white">{localMixte}% / {100 - localMixte}%</span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                step={5}
+                value={localMixte}
+                onChange={(e) => setLocalMixte(Number(e.target.value))}
+                className="w-full accent-[#5682F2] h-2 bg-white/[0.06] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
+              />
+              <div className="flex justify-between text-xs text-[#5a5a6e] mt-1">
+                <span>100% Dividendes</span>
+                <span>100% Salaire</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Best status badge */}
