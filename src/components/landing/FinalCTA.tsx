@@ -27,9 +27,7 @@ export function FinalCTA() {
             Commencer gratuitement &rarr;
           </Link>
         </div>
-        <p className="text-sm text-[#5a5a6e]">
-          Gratuit pour 3 clients &middot; Aucune carte requise &middot; Données 100% locales
-        </p>
+        <div />
       </div>
 
       {/* Footer */}

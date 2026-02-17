@@ -41,9 +41,7 @@ export function Hero() {
             Voir la démo
           </a>
         </div>
-        <p className="text-sm text-[#5a5a6e] mb-12">
-          Gratuit pour 3 clients &middot; Pas de carte bancaire requise
-        </p>
+        <div className="mb-12" />
 
         {/* Dashboard mockup */}
         <div className="relative mx-auto max-w-3xl">
