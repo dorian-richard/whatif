@@ -27,6 +27,7 @@ const STATUT_COLORS: Record<string, string> = {
 };
 
 const PFU_RATE = 0.30;
+const MICRO_PLAFOND = 77700;
 
 interface StatusResult {
   status: BusinessStatus;
@@ -38,6 +39,8 @@ interface StatusResult {
   totalPrelevements: number;
   tauxEffectif: number;
   color: string;
+  ineligible?: boolean;
+  ineligibleReason?: string;
 }
 
 /**
@@ -131,6 +134,8 @@ function computeForStatus(
   const totalPrelevements = chargesSociales + impots;
   const tauxEffectif = annualCA > 0 ? totalPrelevements / annualCA : 0;
 
+  const ineligible = status === "micro" && annualCA > MICRO_PLAFOND;
+
   return {
     status,
     label: cfg.label,
@@ -141,6 +146,8 @@ function computeForStatus(
     totalPrelevements,
     tauxEffectif,
     color,
+    ineligible,
+    ineligibleReason: ineligible ? `Plafond micro dépassé (${fmt(MICRO_PLAFOND)} €)` : undefined,
   };
 }
 
@@ -166,11 +173,12 @@ export default function ComparateurPage() {
     });
   }, [annualCA, remunerationType, mixtePartSalaire]);
 
-  // Best statut = highest net
-  const best = useMemo(
-    () => results.reduce((a, b) => (a.netAnnual > b.netAnnual ? a : b)),
-    [results]
-  );
+  // Best statut = highest net among eligible
+  const best = useMemo(() => {
+    const eligible = results.filter((r) => !r.ineligible);
+    if (eligible.length === 0) return results[0];
+    return eligible.reduce((a, b) => (a.netAnnual > b.netAnnual ? a : b));
+  }, [results]);
 
   // Max net for bar scaling
   const maxNet = Math.max(...results.map((r) => r.netMonthly), 1);
@@ -245,7 +253,7 @@ export default function ComparateurPage() {
         {/* Comparison cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
           {results.map((r) => {
-            const isBest = r.status === best.status;
+            const isBest = r.status === best.status && !r.ineligible;
             const isCurrent = r.status === businessStatus;
             const delta = r.netMonthly - best.netMonthly;
             const barWidth = maxNet > 0 ? (r.netMonthly / maxNet) * 100 : 0;
@@ -256,13 +264,20 @@ export default function ComparateurPage() {
                 key={r.status}
                 className={cn(
                   "bg-[#12121c] rounded-2xl border p-5 transition-all relative",
-                  isBest
-                    ? "border-white/[0.15] ring-1 ring-white/[0.08]"
-                    : "border-white/[0.06]"
+                  r.ineligible
+                    ? "border-[#f87171]/20 opacity-60"
+                    : isBest
+                      ? "border-white/[0.15] ring-1 ring-white/[0.08]"
+                      : "border-white/[0.06]"
                 )}
               >
                 {/* Tags */}
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2 mb-4 flex-wrap">
+                  {r.ineligible && (
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#f87171]/15 text-[#f87171]">
+                      Non éligible
+                    </span>
+                  )}
                   {isBest && (
                     <span
                       className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
@@ -277,6 +292,9 @@ export default function ComparateurPage() {
                     </span>
                   )}
                 </div>
+                {r.ineligible && r.ineligibleReason && (
+                  <div className="text-[11px] text-[#f87171] mb-3">{r.ineligibleReason}</div>
+                )}
 
                 {/* Status name */}
                 <div className="mb-4">
