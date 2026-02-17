@@ -49,7 +49,11 @@ export default function OnboardingPage() {
       <div className="w-full max-w-xl">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold fn-gradient-text mb-3">Freelens</h1>
+          <div className="flex items-center justify-center gap-3 mb-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Freelens" className="w-12 h-12" />
+            <h1 className="text-3xl font-bold fn-gradient-text">Freelens</h1>
+          </div>
           <p className="text-[#8b8b9e]">Simule chaque décision avant de la prendre.</p>
         </div>
 

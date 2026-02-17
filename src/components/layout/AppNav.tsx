@@ -24,6 +24,8 @@ export function AppNav() {
           onClick={() => router.push("/dashboard")}
           className="flex items-center gap-2.5"
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Freelens" className="w-8 h-8 rounded-lg" />
           <span className="text-lg font-bold text-gray-900 dark:text-white hidden sm:block">Freelens</span>
         </button>
 

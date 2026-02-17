@@ -34,6 +34,8 @@ export function FinalCTA() {
       <footer className="absolute bottom-0 w-full py-6 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Freelens" className="w-5 h-5 rounded" />
             <span className="text-sm text-[#5a5a6e]">
               Freelens &mdash; Le copilote financier des freelances
             </span>

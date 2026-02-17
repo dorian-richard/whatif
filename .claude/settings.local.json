@@ -32,7 +32,9 @@
       "Bash(git push:*)",
       "Bash(npm i:*)",
       "Bash(vercel:*)",
-      "Bash(dig:*)"
+      "Bash(dig:*)",
+      "Bash(sudo dscacheutil:*)",
+      "Bash(sudo killall:*)"
     ]
   }
 }

@@ -15,6 +15,8 @@ export default function Home() {
       <nav className="fixed top-0 w-full z-50 bg-[#07070e]/70 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Freelens" className="w-8 h-8 rounded-lg" />
             <span className="font-bold text-white text-lg">Freelens</span>
           </div>
           <div className="flex items-center gap-6">
