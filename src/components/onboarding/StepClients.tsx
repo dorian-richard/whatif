@@ -11,13 +11,13 @@ export function StepClients() {
 
   const totalCA = clients.reduce((sum, c) => sum + getClientBaseCA(c), 0);
   const tjmClients = clients.filter((c) => c.billing === "tjm");
-  const totalDays = tjmClients.reduce((s, c) => s + (c.daysPerMonth ?? 0), 0);
+  const totalDaysPerWeek = tjmClients.reduce((s, c) => s + (c.daysPerWeek ?? 0), 0);
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-gray-900 mb-1">Tes clients actuels</h2>
-      <p className="text-sm text-gray-400 mb-5">
-        Ajoute tes clients avec leur type de facturation. On ajustera apres.
+      <h2 className="text-xl font-bold text-white mb-1">Tes clients actuels</h2>
+      <p className="text-sm text-[#8b8b9e] mb-5">
+        Ajoute tes clients avec leur type de facturation. On ajustera après.
       </p>
 
       <div className="space-y-3">
@@ -38,24 +38,24 @@ export function StepClients() {
             name: `Client ${String.fromCharCode(65 + clients.length)}`,
             billing: "tjm",
             dailyRate: 400,
-            daysPerMonth: 5,
+            daysPerWeek: 5,
           })
         }
-        className="w-full mt-3 py-2.5 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-400 hover:border-indigo-300 hover:text-indigo-500 transition-all"
+        className="w-full mt-3 py-2.5 border-2 border-dashed border-white/[0.1] rounded-xl text-sm text-[#5a5a6e] hover:border-[#5682F2]/30 hover:text-[#5682F2] transition-all"
       >
         + Ajouter un client
       </button>
 
       {clients.length > 0 && (
-        <div className="mt-4 p-3 bg-indigo-50 rounded-xl text-center space-y-1">
-          <span className="text-sm text-indigo-600 font-medium block">
+        <div className="mt-4 p-3 bg-[#5682F2]/10 border border-[#5682F2]/20 rounded-xl text-center space-y-1">
+          <span className="text-sm text-[#5682F2] font-medium block">
             CA total : <strong>{fmt(totalCA)}&euro;/mois</strong>
           </span>
-          <div className="flex justify-center gap-4 text-xs text-gray-500">
+          <div className="flex justify-center gap-4 text-xs text-[#8b8b9e]">
             <span>{clients.filter((c) => c.billing === "tjm").length} TJM</span>
             <span>{clients.filter((c) => c.billing === "forfait").length} Forfait</span>
             <span>{clients.filter((c) => c.billing === "mission").length} Mission</span>
-            {totalDays > 0 && <span>{totalDays.toFixed(1)}j factures/mois</span>}
+            {totalDaysPerWeek > 0 && <span>{totalDaysPerWeek}j/sem facturés</span>}
           </div>
         </div>
       )}

@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import type Stripe from "stripe";
-
-const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   const body = await request.text();

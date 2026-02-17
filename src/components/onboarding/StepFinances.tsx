@@ -13,19 +13,19 @@ export function StepFinances() {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-1">Ta situation financiere</h2>
-        <p className="text-sm text-gray-400 mb-6">
-          Pour calculer ton runway et tes marges de manoeuvre.
+        <h2 className="text-xl font-bold text-white mb-1">Ta situation financière</h2>
+        <p className="text-sm text-[#8b8b9e] mb-6">
+          Pour calculer ton runway et tes marges de manœuvre.
         </p>
       </div>
 
       <div className="space-y-8">
         <div>
           <div className="flex justify-between items-center mb-3">
-            <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
-              <Receipt className="size-4 text-indigo-500" /> Charges mensuelles fixes
+            <label className="text-sm font-medium text-[#8b8b9e] flex items-center gap-1.5">
+              <Receipt className="size-4 text-[#5682F2]" /> Charges mensuelles fixes
             </label>
-            <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
+            <span className="text-sm font-bold text-[#5682F2] bg-[#5682F2]/10 px-2.5 py-1 rounded-md">
               {fmt(monthlyExpenses)}&euro;
             </span>
           </div>
@@ -36,7 +36,7 @@ export function StepFinances() {
             max={6000}
             step={100}
           />
-          <div className="flex justify-between text-xs text-gray-300 mt-1">
+          <div className="flex justify-between text-xs text-[#5a5a6e] mt-1">
             <span>500&euro;</span>
             <span>6 000&euro;</span>
           </div>
@@ -44,10 +44,10 @@ export function StepFinances() {
 
         <div>
           <div className="flex justify-between items-center mb-3">
-            <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
-              <Landmark className="size-4 text-indigo-500" /> Epargne de securite
+            <label className="text-sm font-medium text-[#8b8b9e] flex items-center gap-1.5">
+              <Landmark className="size-4 text-[#5682F2]" /> Trésorerie de sécurité
             </label>
-            <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
+            <span className="text-sm font-bold text-[#5682F2] bg-[#5682F2]/10 px-2.5 py-1 rounded-md">
               {fmt(savings)}&euro;
             </span>
           </div>
@@ -58,16 +58,16 @@ export function StepFinances() {
             max={60000}
             step={1000}
           />
-          <div className="flex justify-between text-xs text-gray-300 mt-1">
+          <div className="flex justify-between text-xs text-[#5a5a6e] mt-1">
             <span>0&euro;</span>
             <span>60 000&euro;</span>
           </div>
         </div>
       </div>
 
-      <div className="p-3 bg-gray-50 rounded-xl text-center">
-        <span className="text-sm text-gray-500">
-          Runway actuel : <strong className="text-indigo-600">{runway.toFixed(1)} mois</strong>
+      <div className="p-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-center">
+        <span className="text-sm text-[#8b8b9e]">
+          Runway actuel : <strong className="text-[#5682F2]">{runway.toFixed(1)} mois</strong>
         </span>
       </div>
     </div>

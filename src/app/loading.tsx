@@ -1,13 +1,13 @@
-import { Sparkles } from "@/components/ui/icons";
+import Image from "next/image";
 
 export default function Loading() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-50">
+    <div className="min-h-screen flex items-center justify-center bg-[#07070e]">
       <div className="text-center">
-        <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4 animate-pulse">
-          <Sparkles className="size-6" />
+        <div className="mx-auto mb-4 animate-pulse">
+          <Image src="/logo.svg" alt="Freelens" width={48} height={48} className="rounded-2xl" />
         </div>
-        <p className="text-sm text-gray-400">Chargement...</p>
+        <p className="text-sm text-[#5a5a6e]">Chargement...</p>
       </div>
     </div>
   );

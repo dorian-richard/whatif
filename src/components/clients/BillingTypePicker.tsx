@@ -28,13 +28,13 @@ export function BillingTypePicker({ value, onChange }: BillingTypePickerProps) {
           className={cn(
             "flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all text-center",
             value === opt.value
-              ? "border-indigo-600 bg-indigo-50 text-indigo-700"
-              : "border-gray-100 bg-white hover:border-gray-200 text-gray-500"
+              ? "border-[#5682F2]/30 bg-[#5682F2]/15 text-[#5682F2]"
+              : "border-white/[0.06] bg-white/[0.03] hover:border-white/[0.1] text-[#8b8b9e]"
           )}
         >
-          <opt.Icon className={cn("size-5", value === opt.value ? "text-indigo-600" : "text-gray-400")} />
+          <opt.Icon className={cn("size-5", value === opt.value ? "text-[#5682F2]" : "text-[#5a5a6e]")} />
           <span className="text-xs font-semibold">{opt.label}</span>
-          <span className="text-[10px] text-gray-400">{opt.desc}</span>
+          <span className="text-[10px] text-[#5a5a6e]">{opt.desc}</span>
         </button>
       ))}
     </div>

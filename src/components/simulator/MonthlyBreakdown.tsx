@@ -5,13 +5,13 @@ import type { LucideProps } from "lucide-react";
 import type { ProjectionResult, ClientData, FreelanceProfile, SimulationParams } from "@/types";
 import { MONTHS_SHORT, SEASONALITY } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
-import { getClientMonthlyCA } from "@/lib/simulation-engine";
+import { getClientMonthlyCA, JOURS_OUVRES } from "@/lib/simulation-engine";
 import { CalendarDays, Package, Target, AlertTriangle } from "@/components/ui/icons";
 
 const BILLING_BADGE: Record<string, { Icon: ComponentType<LucideProps>; label: string; color: string }> = {
-  tjm: { Icon: CalendarDays, label: "TJM", color: "bg-indigo-100 text-indigo-700" },
-  forfait: { Icon: Package, label: "Forfait", color: "bg-amber-100 text-amber-700" },
-  mission: { Icon: Target, label: "Mission", color: "bg-emerald-100 text-emerald-700" },
+  tjm: { Icon: CalendarDays, label: "TJM", color: "bg-[#5682F2]/12 text-[#5682F2]" },
+  forfait: { Icon: Package, label: "Forfait", color: "bg-[#fbbf24]/12 text-[#fbbf24]" },
+  mission: { Icon: Target, label: "Mission", color: "bg-[#4ade80]/12 text-[#4ade80]" },
 };
 
 interface MonthlyBreakdownProps {
@@ -27,25 +27,39 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
   const totalAfter = projection.after.reduce((a, b) => a + b, 0);
   const totalDiff = totalAfter - totalBefore;
   const totalNet = totalAfter - expenses * 12;
+  const maxAfter = Math.max(...projection.after);
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 overflow-x-auto">
-      <h3 className="text-sm font-bold text-gray-800 mb-3">Detail mois par mois</h3>
+    <div className="bg-[#12121c] rounded-2xl p-6 border border-white/[0.06] overflow-x-auto">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-bold text-white">Mensuel</h3>
+        <div className="flex gap-3 text-xs text-[#5a5a6e]">
+          <span>
+            Net total :{" "}
+            <strong className={totalNet >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}>
+              {fmt(totalNet)}&euro;
+            </strong>
+          </span>
+        </div>
+      </div>
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100">
-            <th className="text-left py-2 pr-4">Mois</th>
-            <th className="text-right py-2 px-3">Actuel</th>
-            <th className="text-right py-2 px-3">Simule</th>
-            <th className="text-right py-2 px-3">Diff.</th>
-            <th className="text-right py-2 px-3">Net estime</th>
-            <th className="text-left py-2 pl-3">Sources</th>
+          <tr className="text-[10px] text-[#5a5a6e] uppercase tracking-wider border-b border-white/[0.06]">
+            <th className="text-left py-2.5 pr-4 font-semibold">Mois</th>
+            <th className="text-center py-2.5 px-2 font-semibold">Jours</th>
+            <th className="text-right py-2.5 px-3 font-semibold">Actuel</th>
+            <th className="text-right py-2.5 px-3 font-semibold">Simulé</th>
+            <th className="text-right py-2.5 px-3 font-semibold">Diff.</th>
+            <th className="text-right py-2.5 px-3 font-semibold">Net</th>
+            <th className="py-2.5 px-3 font-semibold w-24"></th>
+            <th className="text-left py-2.5 pl-3 font-semibold">Sources</th>
           </tr>
         </thead>
         <tbody>
           {MONTHS_SHORT.map((m, i) => {
             const diff = projection.after[i] - projection.before[i];
             const net = projection.after[i] - expenses;
+            const barPct = maxAfter > 0 ? (projection.after[i] / maxAfter) * 100 : 0;
 
             const activeBillings = new Set<string>();
             clients.forEach((c, ci) => {
@@ -55,31 +69,42 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
             });
 
             return (
-              <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                <td className="py-2 pr-4 font-medium text-gray-700">{m}</td>
-                <td className="text-right py-2 px-3 text-gray-500">{fmt(projection.before[i])}&euro;</td>
-                <td className="text-right py-2 px-3 font-semibold text-gray-800">
+              <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors group">
+                <td className="py-2.5 pr-4 font-semibold text-[#8b8b9e] text-xs">{m}</td>
+                <td className="text-center py-2.5 px-2 text-[#5a5a6e] tabular-nums text-xs">{JOURS_OUVRES[i]}j</td>
+                <td className="text-right py-2.5 px-3 text-[#5a5a6e] tabular-nums">{fmt(projection.before[i])}&euro;</td>
+                <td className="text-right py-2.5 px-3 font-semibold text-white tabular-nums">
                   {fmt(projection.after[i])}&euro;
                 </td>
                 <td
                   className={cn(
-                    "text-right py-2 px-3 font-bold",
-                    diff >= 0 ? "text-emerald-600" : "text-red-600"
+                    "text-right py-2.5 px-3 font-bold tabular-nums",
+                    Math.abs(diff) < 0.5 ? "text-[#5a5a6e]" : diff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"
                   )}
                 >
-                  {diff >= 0 ? "+" : ""}
-                  {fmt(diff)}&euro;
+                  {Math.abs(diff) < 0.5 ? "-" : `${diff >= 0 ? "+" : ""}${fmt(diff)}\u20AC`}
                 </td>
                 <td
                   className={cn(
-                    "text-right py-2 px-3",
-                    net >= 0 ? "text-gray-700" : "text-red-600 font-bold"
+                    "text-right py-2.5 px-3 tabular-nums",
+                    net >= 0 ? "text-[#8b8b9e]" : "text-[#f87171] font-bold"
                   )}
                 >
-                  {fmt(net)}&euro;{" "}
-                  {net < 0 && <AlertTriangle className="size-3.5 inline text-red-500" />}
+                  {fmt(net)}&euro;
+                  {net < 0 && <AlertTriangle className="size-3 inline ml-1 text-[#f87171]" />}
                 </td>
-                <td className="py-2 pl-3">
+                <td className="py-2.5 px-3">
+                  <div className="w-full h-1.5 rounded-full bg-white/[0.04]">
+                    <div
+                      className={cn(
+                        "h-full rounded-full transition-all duration-500",
+                        net >= 0 ? "bg-[#5682F2]" : "bg-[#f87171]"
+                      )}
+                      style={{ width: `${barPct}%` }}
+                    />
+                  </div>
+                </td>
+                <td className="py-2.5 pl-3">
                   <div className="flex gap-1">
                     {Array.from(activeBillings).map((billing) => {
                       const b = BILLING_BADGE[billing];
@@ -97,20 +122,26 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
               </tr>
             );
           })}
-          <tr className="border-t-2 border-gray-200 font-bold">
-            <td className="py-3 pr-4 text-gray-900">TOTAL</td>
-            <td className="text-right py-3 px-3 text-gray-600">{fmt(totalBefore)}&euro;</td>
-            <td className="text-right py-3 px-3 text-gray-900">{fmt(totalAfter)}&euro;</td>
+          <tr className="border-t border-white/[0.06] font-bold bg-white/[0.03]">
+            <td className="py-3 pr-4 text-white text-xs">TOTAL</td>
+            <td className="text-center py-3 px-2 text-[#8b8b9e] tabular-nums text-xs">{JOURS_OUVRES.reduce((a, b) => a + b, 0)}j</td>
+            <td className="text-right py-3 px-3 text-[#8b8b9e] tabular-nums">{fmt(totalBefore)}&euro;</td>
+            <td className="text-right py-3 px-3 text-white tabular-nums">{fmt(totalAfter)}&euro;</td>
             <td
               className={cn(
-                "text-right py-3 px-3",
-                totalDiff >= 0 ? "text-emerald-600" : "text-red-600"
+                "text-right py-3 px-3 tabular-nums",
+                totalDiff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"
               )}
             >
-              {totalDiff >= 0 ? "+" : ""}
-              {fmt(totalDiff)}&euro;
+              {totalDiff >= 0 ? "+" : ""}{fmt(totalDiff)}&euro;
             </td>
-            <td className="text-right py-3 px-3 text-gray-900">{fmt(totalNet)}&euro;</td>
+            <td className={cn(
+              "text-right py-3 px-3 tabular-nums",
+              totalNet >= 0 ? "text-white" : "text-[#f87171]"
+            )}>
+              {fmt(totalNet)}&euro;
+            </td>
+            <td />
             <td />
           </tr>
         </tbody>

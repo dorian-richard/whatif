@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { simulate, getClientMonthlyCA } from "./simulation-engine";
+import { simulate, getClientMonthlyCA, getClientBaseCA, JOURS_OUVRES, AVG_JOURS_OUVRES } from "./simulation-engine";
 import type { ClientData, SimulationParams, FreelanceProfile } from "@/types";
 import { DEFAULT_SIM, SEASONALITY } from "./constants";
 
@@ -10,7 +10,7 @@ const tjmClient: ClientData = {
   name: "Client TJM",
   billing: "tjm",
   dailyRate: 500,
-  daysPerMonth: 10,
+  daysPerWeek: 5,
 };
 
 const forfaitClient: ClientData = {
@@ -34,20 +34,63 @@ const defaultProfile: FreelanceProfile = {
   savings: 10000,
   adminHoursPerWeek: 6,
   workDaysPerWeek: 5,
+  businessStatus: "micro",
 };
 
 const defaultParams: SimulationParams = { ...DEFAULT_SIM };
 
+// ─── JOURS_OUVRES ───
+
+describe("Jours ouvres", () => {
+  test("12 mois calcules", () => {
+    expect(JOURS_OUVRES).toHaveLength(12);
+  });
+
+  test("chaque mois entre 19 et 23 jours", () => {
+    JOURS_OUVRES.forEach((d) => {
+      expect(d).toBeGreaterThanOrEqual(19);
+      expect(d).toBeLessThanOrEqual(23);
+    });
+  });
+
+  test("moyenne autour de 21-22", () => {
+    expect(AVG_JOURS_OUVRES).toBeGreaterThan(20);
+    expect(AVG_JOURS_OUVRES).toBeLessThan(23);
+  });
+});
+
 // ─── getClientMonthlyCA ───
 
 describe("getClientMonthlyCA", () => {
-  test("TJM : CA = dailyRate * daysPerMonth * season", () => {
+  test("TJM : CA = dailyRate * (daysPerWeek/5) * joursOuvres * season", () => {
     const ca = getClientMonthlyCA(tjmClient, 0, SEASONALITY[0]);
-    expect(ca).toBeCloseTo(500 * 10 * 0.88, 1);
+    const expected = 500 * (5 / 5) * JOURS_OUVRES[0] * SEASONALITY[0];
+    expect(ca).toBeCloseTo(expected, 1);
   });
 
   test("TJM : CA sans saisonnalite (season=1)", () => {
-    expect(getClientMonthlyCA(tjmClient, 0, 1)).toBe(5000);
+    const ca = getClientMonthlyCA(tjmClient, 0, 1);
+    expect(ca).toBe(500 * JOURS_OUVRES[0]);
+  });
+
+  test("TJM partiel : 2j/sem = 40% des jours ouvres", () => {
+    const partTime: ClientData = { ...tjmClient, daysPerWeek: 2 };
+    const ca = getClientMonthlyCA(partTime, 0, 1);
+    expect(ca).toBeCloseTo(500 * (2 / 5) * JOURS_OUVRES[0], 1);
+  });
+
+  test("TJM : CA varie selon le mois (jours ouvres differents)", () => {
+    const caJan = getClientMonthlyCA(tjmClient, 0, 1);
+    const caFeb = getClientMonthlyCA(tjmClient, 1, 1);
+    if (JOURS_OUVRES[0] !== JOURS_OUVRES[1]) {
+      expect(caJan).not.toBe(caFeb);
+    }
+  });
+
+  test("TJM legacy : daysPerMonth fallback si pas de daysPerWeek", () => {
+    const legacy: ClientData = { id: "l", name: "Legacy", billing: "tjm", dailyRate: 500, daysPerMonth: 10 };
+    const ca = getClientMonthlyCA(legacy, 0, 1);
+    expect(ca).toBe(500 * 10);
   });
 
   test("Forfait : montant fixe, pas de saisonnalite", () => {
@@ -58,7 +101,6 @@ describe("getClientMonthlyCA", () => {
   });
 
   test("Mission : repartition uniforme sur la periode", () => {
-    // 12000€ sur 4 mois (mars a juin) = 3000€/mois
     const ca = getClientMonthlyCA(missionClient, 3, SEASONALITY[3]);
     expect(ca).toBe(3000);
   });
@@ -74,6 +116,19 @@ describe("getClientMonthlyCA", () => {
   });
 });
 
+// ─── getClientBaseCA ───
+
+describe("getClientBaseCA", () => {
+  test("TJM : utilise la moyenne des jours ouvres", () => {
+    const base = getClientBaseCA(tjmClient);
+    expect(base).toBeCloseTo(500 * AVG_JOURS_OUVRES, 1);
+  });
+
+  test("Forfait : retourne le montant mensuel", () => {
+    expect(getClientBaseCA(forfaitClient)).toBe(3000);
+  });
+});
+
 // ─── simulate ───
 
 describe("Moteur de simulation", () => {
@@ -84,36 +139,29 @@ describe("Moteur de simulation", () => {
   });
 
   test("TJM : vacances -> revenu tombe a 0", () => {
-    const params = { ...defaultParams, vacationWeeks: 4.33 }; // ~1 mois
+    const params = { ...defaultParams, vacationWeeks: 4.33 };
     const result = simulate([tjmClient], params, defaultProfile);
-    // Premier mois complet de vacances -> 0
     expect(result.after[0]).toBe(0);
-    // Les mois suivants devraient etre normaux
     expect(result.after[3]).toBeGreaterThan(0);
   });
 
   test("Forfait : vacances -> revenu continue", () => {
     const params = { ...defaultParams, vacationWeeks: 4.33 };
     const result = simulate([forfaitClient], params, defaultProfile);
-    // Le forfait continue pendant les vacances
     expect(result.after[0]).toBe(3000);
     expect(result.after[1]).toBe(3000);
   });
 
   test("Mission : vacances -> revenu tombe a 0", () => {
-    // Mission de mars a juin, vacances en mars
     const params = { ...defaultParams, vacationWeeks: 4.33 };
     const result = simulate([missionClient], params, defaultProfile);
-    // Mois 0 (jan) : mission pas active = 0 de toute facon
-    // Mois 2 (mars) : mission active mais vacances terminées
-    expect(result.after[0]).toBe(0); // Pas de mission en jan
+    expect(result.after[0]).toBe(0);
   });
 
   test("Variation tarifs : s'applique uniquement au TJM", () => {
     const params = { ...defaultParams, rateChange: 20 };
     const clients = [tjmClient, forfaitClient];
     const result = simulate(clients, params, defaultProfile);
-    // TJM augmente de 20%, forfait inchange
     for (let i = 0; i < 12; i++) {
       const tjmBefore = getClientMonthlyCA(tjmClient, i, SEASONALITY[i]);
       const forfaitBefore = getClientMonthlyCA(forfaitClient, i, SEASONALITY[i]);
@@ -138,7 +186,6 @@ describe("Moteur de simulation", () => {
     const clients = [tjmClient, forfaitClient];
     const params = { ...defaultParams, lostClientIndex: 0 };
     const result = simulate(clients, params, defaultProfile);
-    // Seul le forfait reste
     for (let i = 0; i < 12; i++) {
       expect(result.after[i]).toBe(3000);
     }
@@ -147,13 +194,11 @@ describe("Moteur de simulation", () => {
   test("Nouveaux clients : montee progressive sur 3 mois", () => {
     const params = { ...defaultParams, newClients: 1 };
     const result = simulate([tjmClient], params, defaultProfile);
-    // Mois 0 : 33% du CA moyen * saisonnalite
-    const avgCA = 5000; // tjmClient base CA
+    const avgCA = getClientBaseCA(tjmClient);
     expect(result.after[0]).toBeCloseTo(
       result.before[0] + avgCA * (1 / 3) * SEASONALITY[0],
       1
     );
-    // Mois 2 : 100%
     expect(result.after[2]).toBeCloseTo(
       result.before[2] + avgCA * 1 * SEASONALITY[2],
       1
@@ -162,11 +207,9 @@ describe("Moteur de simulation", () => {
 
   test("Saisonnalite : TJM affecte, Forfait non", () => {
     const result = simulate([tjmClient, forfaitClient], defaultParams, defaultProfile);
-    // Juillet (index 6) : saisonnalite = 0.78
     const julCA = result.before[6];
-    const tjmJul = 500 * 10 * 0.78;
+    const tjmJul = 500 * (5 / 5) * JOURS_OUVRES[6] * SEASONALITY[6];
     expect(julCA).toBeCloseTo(tjmJul + 3000, 1);
-    // Forfait est toujours 3000
   });
 
   test("Edge case : 0 clients", () => {
@@ -178,10 +221,8 @@ describe("Moteur de simulation", () => {
   test("Edge case : 12 semaines vacances", () => {
     const params = { ...defaultParams, vacationWeeks: 12 };
     const result = simulate([tjmClient], params, defaultProfile);
-    // ~2.77 mois de vacances, les premiers mois a 0
     expect(result.after[0]).toBe(0);
     expect(result.after[1]).toBe(0);
-    // Total after < total before
     const totalBefore = result.before.reduce((a, b) => a + b, 0);
     const totalAfter = result.after.reduce((a, b) => a + b, 0);
     expect(totalAfter).toBeLessThan(totalBefore);
@@ -193,12 +234,10 @@ describe("Moteur de simulation", () => {
       ...defaultParams,
       vacationWeeks: 2,
       rateChange: 10,
-      lostClientIndex: 1, // perd le forfait
+      lostClientIndex: 1,
     };
     const result = simulate(clients, params, defaultProfile);
-    // Seul le TJM reste, augmente de 10%, avec 2 semaines de vacances
     const totalAfter = result.after.reduce((a, b) => a + b, 0);
-    // Sans le forfait (3000*12 = 36000) et avec +10% sur le TJM
     expect(totalAfter).toBeLessThan(
       result.before.reduce((a, b) => a + b, 0)
     );
@@ -208,10 +247,8 @@ describe("Moteur de simulation", () => {
   test("rateChangeAfter : s'applique a partir du mois 3", () => {
     const params = { ...defaultParams, rateChangeAfter: 15 };
     const result = simulate([tjmClient], params, defaultProfile);
-    // Mois 0 et 1 : pas de changement
     expect(result.after[0]).toBeCloseTo(result.before[0], 1);
     expect(result.after[1]).toBeCloseTo(result.before[1], 1);
-    // Mois 2+ : +15%
     expect(result.after[2]).toBeCloseTo(result.before[2] * 1.15, 1);
     expect(result.after[5]).toBeCloseTo(result.before[5] * 1.15, 1);
   });

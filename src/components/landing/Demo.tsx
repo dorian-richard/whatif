@@ -2,16 +2,16 @@
 
 import { useState, useMemo } from "react";
 import { simulate } from "@/lib/simulation-engine";
-import { SEASONALITY, MONTHS_SHORT, DEFAULT_SIM } from "@/lib/constants";
+import { DEFAULT_SIM, MONTHS_SHORT } from "@/lib/constants";
 import { fmt } from "@/lib/utils";
 import { Icon } from "@/components/ui/icons";
-import type { ClientData, FreelanceProfile, SimulationParams } from "@/types";
+import type { ClientData, FreelanceProfile } from "@/types";
 
 const DEMO_CLIENTS: ClientData[] = [
-  { id: "1", name: "Startup Tech", billing: "tjm", dailyRate: 550, daysPerMonth: 8, color: "#6366f1" },
-  { id: "2", name: "Agence Design", billing: "forfait", monthlyAmount: 2500, color: "#f59e0b" },
-  { id: "3", name: "E-commerce", billing: "tjm", dailyRate: 450, daysPerMonth: 5, color: "#10b981" },
-  { id: "4", name: "Refonte site", billing: "mission", totalAmount: 8000, startMonth: 3, endMonth: 6, color: "#ef4444" },
+  { id: "1", name: "Startup Tech", billing: "tjm", dailyRate: 550, daysPerWeek: 3, color: "#5682F2" },
+  { id: "2", name: "Agence Design", billing: "forfait", monthlyAmount: 2500, color: "#F4BE7E" },
+  { id: "3", name: "E-commerce", billing: "tjm", dailyRate: 450, daysPerWeek: 2, color: "#4ade80" },
+  { id: "4", name: "Refonte site", billing: "mission", totalAmount: 8000, startMonth: 3, endMonth: 6, color: "#f87171" },
 ];
 
 const DEMO_PROFILE: FreelanceProfile = {
@@ -19,6 +19,7 @@ const DEMO_PROFILE: FreelanceProfile = {
   savings: 12000,
   adminHoursPerWeek: 5,
   workDaysPerWeek: 5,
+  businessStatus: "micro",
 };
 
 const DEMO_SCENARIOS = [
@@ -40,16 +41,22 @@ export function Demo() {
   const beforeTotal = projection.before.reduce((a, b) => a + b, 0);
   const afterTotal = projection.after.reduce((a, b) => a + b, 0);
   const diff = afterTotal - beforeTotal;
+  const maxVal = Math.max(...projection.before, ...projection.after, 1);
 
   return (
-    <section id="demo" className="py-20 px-4 bg-gray-50/50">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">
-            Essaie par toi-meme
+    <section id="demo" className="snap-section relative flex items-center overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] bg-[#F4BE7E]/5 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="relative max-w-5xl mx-auto px-6 py-20 w-full">
+        <div className="text-center mb-12">
+          <span className="text-sm font-medium text-[#F4BE7E] uppercase tracking-widest mb-3 block">Démo interactive</span>
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+            Essaie par toi-même
           </h2>
-          <p className="text-gray-500">
-            Clique sur un scenario et vois l&apos;impact instantanement.
+          <p className="text-lg text-[#8b8b9e]">
+            Clique sur un scénario et vois l&apos;impact instantanément.
           </p>
         </div>
 
@@ -59,32 +66,34 @@ export function Demo() {
             <button
               key={i}
               onClick={() => setActiveIdx(activeIdx === i ? null : i)}
-              className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border ${
                 activeIdx === i
-                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200"
-                  : "bg-white text-gray-700 border border-gray-200 hover:border-indigo-300"
+                  ? "bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] border-[#5682F2] text-white fn-glow"
+                  : "bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20"
               }`}
             >
-              <Icon name={s.icon} className="size-4 inline" /> {s.label}
+              <Icon name={s.icon} className="size-4 inline mr-1" /> {s.label}
             </button>
           ))}
         </div>
 
-        {/* Mini chart */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex gap-4 text-xs">
+        {/* Chart card */}
+        <div className="bg-[#12121c] rounded-2xl p-6 border border-white/[0.06] max-w-3xl mx-auto">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex gap-4 text-xs text-white font-medium">
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-0.5 bg-indigo-500 inline-block rounded" /> Actuel
+                <span className="w-3 h-1.5 bg-[#5682F2] inline-block rounded" /> Actuel
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-0.5 bg-orange-500 inline-block rounded" /> Simule
+                <span className="w-3 h-1.5 bg-[#F4BE7E] inline-block rounded" /> Simulé
               </span>
             </div>
             {activeIdx !== null && (
               <span
-                className={`text-sm font-bold px-3 py-1 rounded-full ${
-                  diff >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
+                className={`text-sm font-bold px-4 py-1.5 rounded-full ${
+                  diff >= 0
+                    ? "bg-[#4ade80]/15 text-[#4ade80]"
+                    : "bg-[#f87171]/15 text-[#f87171]"
                 }`}
               >
                 {diff >= 0 ? "+" : ""}{fmt(diff)}&euro;/an
@@ -92,42 +101,46 @@ export function Demo() {
             )}
           </div>
 
-          {/* Simple bar chart */}
-          <div className="flex items-end gap-1.5 h-40">
+          {/* Bar chart */}
+          <div className="flex items-end gap-2 h-44">
             {MONTHS_SHORT.map((month, i) => {
-              const maxVal = Math.max(...projection.before, ...projection.after);
               const beforeH = (projection.before[i] / maxVal) * 100;
               const afterH = (projection.after[i] / maxVal) * 100;
               return (
-                <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
-                  <div className="w-full flex gap-0.5 items-end" style={{ height: "120px" }}>
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <div className="w-full flex gap-[2px] items-end" style={{ height: "140px" }}>
                     <div
-                      className="flex-1 bg-indigo-200 rounded-t transition-all duration-300"
-                      style={{ height: `${beforeH}%` }}
+                      className="flex-1 bg-[#5682F2] rounded-t-sm transition-all duration-500 opacity-60"
+                      style={{ height: `${Math.max(2, beforeH)}%` }}
                     />
                     <div
-                      className="flex-1 bg-orange-300 rounded-t transition-all duration-300"
-                      style={{ height: `${afterH}%` }}
+                      className="flex-1 rounded-t-sm transition-all duration-500"
+                      style={{
+                        height: `${Math.max(2, afterH)}%`,
+                        backgroundColor: activeIdx !== null ? "#F4BE7E" : "#5682F2",
+                        opacity: activeIdx !== null ? 0.9 : 0.6,
+                      }}
                     />
                   </div>
-                  <span className="text-[10px] text-gray-400">{month}</span>
+                  <span className="text-[10px] text-[#5a5a6e]">{month}</span>
                 </div>
               );
             })}
           </div>
 
-          <div className="mt-4 pt-4 border-t border-gray-100 flex justify-around text-center text-sm">
+          {/* Summary */}
+          <div className="mt-6 pt-4 border-t border-white/[0.06] grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-gray-400 text-xs">CA actuel</div>
-              <div className="font-bold text-gray-900">{fmt(beforeTotal)}&euro;/an</div>
+              <div className="text-[11px] text-[#5a5a6e] uppercase tracking-wider">CA actuel</div>
+              <div className="text-lg font-bold text-white mt-1">{fmt(beforeTotal)}&euro;</div>
             </div>
             <div>
-              <div className="text-gray-400 text-xs">CA simule</div>
-              <div className="font-bold text-gray-900">{fmt(afterTotal)}&euro;/an</div>
+              <div className="text-[11px] text-[#5a5a6e] uppercase tracking-wider">CA simulé</div>
+              <div className="text-lg font-bold text-white mt-1">{fmt(afterTotal)}&euro;</div>
             </div>
             <div>
-              <div className="text-gray-400 text-xs">Impact</div>
-              <div className={`font-bold ${diff >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+              <div className="text-[11px] text-[#5a5a6e] uppercase tracking-wider">Impact</div>
+              <div className={`text-lg font-bold mt-1 ${diff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}`}>
                 {diff >= 0 ? "+" : ""}{fmt(diff)}&euro;
               </div>
             </div>

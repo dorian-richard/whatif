@@ -5,7 +5,7 @@ import { useSimulatorStore } from "@/stores/useSimulatorStore";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { Slider } from "@/components/ui/slider";
 import { PRESET_SCENARIOS } from "@/lib/constants";
-import { fmt } from "@/lib/utils";
+import { fmt, cn } from "@/lib/utils";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import { Palmtree, TrendingUp, UserPlus, Clock, HeartCrack, Receipt } from "@/components/ui/icons";
 
@@ -30,14 +30,26 @@ function LabeledSlider({
   unit: string;
   tooltip?: string;
 }) {
+  const isModified = value !== min && !(unit === "j" && value === 5);
+
   return (
-    <div className="group">
-      <div className="flex justify-between items-center mb-2">
-        <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5" title={tooltip}>
-          {icon}
-          {label}
+    <div className="group p-3 rounded-xl hover:bg-white/[0.02] transition-colors">
+      <div className="flex justify-between items-center mb-2.5">
+        <label className="text-sm font-medium text-[#8b8b9e] flex items-center gap-2" title={tooltip}>
+          <div className="size-7 rounded-lg bg-[#5682F2]/15 flex items-center justify-center group-hover:bg-[#5682F2]/20 transition-colors">
+            {icon}
+          </div>
+          <span>{label}</span>
+          {tooltip && (
+            <span className="text-[10px] text-[#5a5a6e] hidden group-hover:inline" title={tooltip}>?</span>
+          )}
         </label>
-        <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+        <span className={cn(
+          "text-sm font-bold px-2.5 py-1 rounded-lg transition-colors",
+          isModified
+            ? "text-[#5682F2] bg-[#5682F2]/15"
+            : "text-[#5a5a6e] bg-white/[0.04]"
+        )}>
           {value}{unit}
         </span>
       </div>
@@ -48,7 +60,7 @@ function LabeledSlider({
         max={max}
         step={step}
       />
-      <div className="flex justify-between text-xs text-gray-300 mt-1">
+      <div className="flex justify-between text-[10px] text-[#5a5a6e] mt-1.5 px-0.5">
         <span>{min}{unit}</span>
         <span>{max}{unit}</span>
       </div>
@@ -62,19 +74,19 @@ export function SliderPanel() {
   const totalCA = clients.reduce((sum, c) => sum + getClientBaseCA(c), 0);
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-gray-800">Ajustement fin</h3>
+    <div className="bg-[#12121c] rounded-2xl p-5 border border-white/[0.06]">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-bold text-white">Paramètres</h3>
         {sim.activePreset && (
-          <span className="text-xs text-indigo-500 bg-indigo-50 px-2 py-1 rounded-full">
-            Scenario &quot;{PRESET_SCENARIOS.find((p) => p.id === sim.activePreset)?.title}&quot; actif
+          <span className="text-xs text-[#5682F2] bg-[#5682F2]/15 px-2.5 py-1 rounded-full font-medium border border-[#5682F2]/20">
+            {PRESET_SCENARIOS.find((p) => p.id === sim.activePreset)?.title}
           </span>
         )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
         <LabeledSlider
-          icon={<Palmtree className="size-4 text-indigo-500" />}
-          label="Semaines de vacances"
+          icon={<Palmtree className="size-4 text-[#5682F2]" />}
+          label="Vacances"
           value={sim.vacationWeeks}
           onChange={(v) => sim.setParam("vacationWeeks", v)}
           min={0}
@@ -84,8 +96,8 @@ export function SliderPanel() {
           tooltip="TJM et Mission : revenu tombe a 0. Forfait : continue de tourner."
         />
         <LabeledSlider
-          icon={<TrendingUp className="size-4 text-indigo-500" />}
-          label="Variation de tarifs"
+          icon={<TrendingUp className="size-4 text-[#5682F2]" />}
+          label="Tarifs"
           value={sim.rateChange}
           onChange={(v) => sim.setParam("rateChange", v)}
           min={-30}
@@ -95,8 +107,8 @@ export function SliderPanel() {
           tooltip="S'applique uniquement aux clients TJM."
         />
         <LabeledSlider
-          icon={<UserPlus className="size-4 text-indigo-500" />}
-          label="Nouveaux clients"
+          icon={<UserPlus className="size-4 text-[#5682F2]" />}
+          label="Nvx clients"
           value={sim.newClients}
           onChange={(v) => sim.setParam("newClients", v)}
           min={0}
@@ -105,8 +117,8 @@ export function SliderPanel() {
           unit=""
         />
         <LabeledSlider
-          icon={<Clock className="size-4 text-indigo-500" />}
-          label="Jours de travail / semaine"
+          icon={<Clock className="size-4 text-[#5682F2]" />}
+          label="Jours / sem"
           value={sim.workDaysPerWeek}
           onChange={(v) => sim.setParam("workDaysPerWeek", v)}
           min={3}
@@ -116,15 +128,22 @@ export function SliderPanel() {
           tooltip="Affecte uniquement les clients TJM (proportionnel)."
         />
 
-        <div>
-          <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5 mb-2">
-            <HeartCrack className="size-4 text-indigo-500" />
+        <div className="p-3 rounded-xl hover:bg-white/[0.02] transition-colors">
+          <label className="text-sm font-medium text-[#8b8b9e] flex items-center gap-2 mb-2.5">
+            <div className="size-7 rounded-lg bg-[#5682F2]/15 flex items-center justify-center">
+              <HeartCrack className="size-4 text-[#5682F2]" />
+            </div>
             Perte d&apos;un client
           </label>
           <select
             value={sim.lostClientIndex}
             onChange={(e) => sim.setParam("lostClientIndex", Number(e.target.value))}
-            className="w-full p-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-white"
+            className={cn(
+              "w-full p-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#5682F2]/30 transition-colors",
+              sim.lostClientIndex >= 0
+                ? "border-[#f87171]/30 bg-[#f87171]/8 text-[#f87171]"
+                : "border-white/[0.1] bg-[#12121c] text-white"
+            )}
           >
             <option value={-1}>&mdash; Aucune perte &mdash;</option>
             {clients.map((c, i) => {
@@ -140,8 +159,8 @@ export function SliderPanel() {
         </div>
 
         <LabeledSlider
-          icon={<Receipt className="size-4 text-indigo-500" />}
-          label="Variation charges mensuelles"
+          icon={<Receipt className="size-4 text-[#5682F2]" />}
+          label="Charges"
           value={sim.expenseChange}
           onChange={(v) => sim.setParam("expenseChange", v)}
           min={-500}

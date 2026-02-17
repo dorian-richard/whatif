@@ -1,11 +1,34 @@
-import type { ClientData, SimulationParams, ProjectionResult, FreelanceProfile } from "@/types";
-import { SEASONALITY } from "./constants";
+import type { ClientData, SimulationParams, ProjectionResult, FreelanceProfile, BusinessStatus } from "@/types";
+import { SEASONALITY, BUSINESS_STATUS_CONFIG } from "./constants";
+
+/**
+ * Calcule les jours ouvres (lun-ven) pour chaque mois de l'annee donnee.
+ */
+function computeBusinessDays(year: number): number[] {
+  const result: number[] = [];
+  for (let m = 0; m < 12; m++) {
+    let count = 0;
+    const daysInMonth = new Date(year, m + 1, 0).getDate();
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dow = new Date(year, m, d).getDay();
+      if (dow !== 0 && dow !== 6) count++;
+    }
+    result.push(count);
+  }
+  return result;
+}
+
+/** Jours ouvres par mois pour l'annee en cours */
+export const JOURS_OUVRES = computeBusinessDays(new Date().getFullYear());
+
+/** Moyenne des jours ouvres par mois (~21.75) */
+export const AVG_JOURS_OUVRES = JOURS_OUVRES.reduce((a, b) => a + b, 0) / 12;
 
 /**
  * Calcule le CA mensuel d'un client pour un mois donne.
  *
  * REGLES CLES :
- * - TJM : affecte par saisonnalite (moins de jours dispos en ete)
+ * - TJM : jours ouvres reels du mois x (jours/sem / 5), affecte par saisonnalite
  * - Forfait : montant FIXE, insensible a la saisonnalite
  * - Mission : reparti uniformement sur la periode, pas de saisonnalite
  */
@@ -16,14 +39,21 @@ export function getClientMonthlyCA(
 ): number {
   if (client.isActive === false) return 0;
 
-  // Verifier si le client est actif ce mois-ci (pour missions bornees)
   const start = client.startMonth ?? 0;
   const end = client.endMonth ?? 11;
   if (monthIndex < start || monthIndex > end) return 0;
 
   switch (client.billing) {
-    case "tjm":
+    case "tjm": {
+      if (client.daysPerYear) {
+        return (client.dailyRate ?? 0) * (client.daysPerYear / 12) * season;
+      }
+      if (client.daysPerWeek != null) {
+        const businessDays = JOURS_OUVRES[monthIndex];
+        return (client.dailyRate ?? 0) * (client.daysPerWeek / 5) * businessDays * season;
+      }
       return (client.dailyRate ?? 0) * (client.daysPerMonth ?? 0) * season;
+    }
     case "forfait":
       return client.monthlyAmount ?? 0;
     case "mission": {
@@ -36,11 +66,103 @@ export function getClientMonthlyCA(
 }
 
 /**
- * Calcule le CA mensuel de base (sans saisonnalite) pour un client.
+ * Calcule le CA mensuel de base (moyenne annuelle, sans saisonnalite) pour un client.
  * Utilise pour les moyennes et statistiques.
  */
 export function getClientBaseCA(client: ClientData): number {
+  if (client.billing === "tjm") {
+    if (client.daysPerYear) {
+      return (client.dailyRate ?? 0) * client.daysPerYear / 12;
+    }
+    if (client.daysPerWeek != null) {
+      return (client.dailyRate ?? 0) * (client.daysPerWeek / 5) * AVG_JOURS_OUVRES;
+    }
+  }
   return getClientMonthlyCA(client, 0, 1);
+}
+
+/** Taux du Prelevement Forfaitaire Unique (flat tax dividendes) */
+const PFU_RATE = 0.30; // 12.8% IR + 17.2% CSG/CRDS
+
+/**
+ * Calcule le revenu net apres toutes charges et impots.
+ *
+ * Micro : URSSAF + IR sont des taux effectifs sur le CA
+ * IR (ei, eurl_ir, sasu_ir) : URSSAF sur CA, puis IR sur le reste
+ * IS (eurl_is, sasu_is) : depend du mode de remuneration :
+ *   - Salaire : charges sociales + IR, salaire deductible donc pas d'IS
+ *   - Dividendes : IS sur benefice, puis PFU 30% (SASU) ou charges TNS + IR (EURL)
+ *   - Mixte : partie salaire + dividendes sur le reste
+ */
+export function computeNetFromCA(
+  annualCA: number,
+  profile: FreelanceProfile
+): number {
+  const statusConfig = BUSINESS_STATUS_CONFIG[profile.businessStatus ?? "micro"];
+  const urssafRate = profile.customUrssafRate ?? statusConfig.urssaf;
+  const irRate = profile.customIrRate ?? statusConfig.ir;
+  const isRate = statusConfig.is;
+
+  // Micro : taux forfaitaires appliques directement sur le CA
+  if (profile.businessStatus === "micro") {
+    return annualCA * (1 - urssafRate - irRate);
+  }
+
+  // Structures IR (pas d'IS) : URSSAF puis IR
+  if (isRate === 0) {
+    return annualCA * (1 - urssafRate) * (1 - irRate);
+  }
+
+  // --- Structures IS (eurl_is, sasu_is) ---
+  const remunerationType = profile.remunerationType ?? "salaire";
+  const isSASU = profile.businessStatus === "sasu_is";
+
+  // Calcul net des dividendes apres IS :
+  // SASU : PFU 30% flat (inclut IR + social)
+  // EURL : charges TNS (~45%) + IR (dividendes > 10% du capital)
+  const netFromDividends = (dividends: number) => {
+    if (isSASU) return dividends * (1 - PFU_RATE);
+    return dividends * (1 - urssafRate) * (1 - irRate);
+  };
+
+  // 100% Salaire : tout en remuneration, deductible = pas d'IS
+  if (remunerationType === "salaire") {
+    return annualCA * (1 - urssafRate) * (1 - irRate);
+  }
+
+  // 100% Dividendes : IS sur tout le benefice, puis taxation dividendes
+  if (remunerationType === "dividendes") {
+    const afterIS = annualCA * (1 - isRate);
+    return netFromDividends(afterIS);
+  }
+
+  // Mixte : repartition salaire/dividendes selon pourcentage ou monthlySalary
+  const mixtePartSalaire = profile.mixtePartSalaire ?? 50;
+
+  // Calculer le cout salaire : soit via pourcentage du CA, soit via monthlySalary (fallback)
+  let salaryCost: number;
+  if (mixtePartSalaire > 0) {
+    // Pourcentage du CA alloue en remuneration salaire (avant charges)
+    salaryCost = Math.min(annualCA * (mixtePartSalaire / 100), annualCA);
+  } else {
+    const annualSalary = (profile.monthlySalary ?? 0) * 12;
+    if (annualSalary <= 0) {
+      const afterIS = annualCA * (1 - isRate);
+      return netFromDividends(afterIS);
+    }
+    salaryCost = Math.min(annualSalary / (1 - urssafRate), annualCA);
+  }
+
+  const actualSalaryNet = salaryCost * (1 - urssafRate);
+
+  // Benefice restant → IS → dividendes
+  const remainingCA = Math.max(0, annualCA - salaryCost);
+  const afterIS = remainingCA * (1 - isRate);
+
+  const netSalary = actualSalaryNet * (1 - irRate);
+  const netDividends = netFromDividends(afterIS);
+
+  return netSalary + netDividends;
 }
 
 /**
@@ -78,9 +200,8 @@ export function simulate(
   const before: number[] = [];
   const after: number[] = [];
 
-  // CA de base (mois 0, saisonnalite 1) pour les nouveaux clients
   const totalBaseCA = clients.reduce(
-    (sum, c) => sum + getClientMonthlyCA(c, 0, 1),
+    (sum, c) => sum + getClientBaseCA(c),
     0
   );
   const clientCount = clients.filter((c) => c.isActive !== false).length;
@@ -94,27 +215,22 @@ export function simulate(
       const base = getClientMonthlyCA(client, month, season);
       beforeTotal += base;
 
-      // Client perdu -> skip entierement
       if (params.lostClientIndex === clientIndex) return;
 
       let simulated = base;
 
-      // Variation de tarifs (TJM seulement)
       if (client.billing === "tjm") {
         simulated *= 1 + params.rateChange / 100;
 
-        // Post-formation : +X% a partir du mois 3 (index 2)
         if (params.rateChangeAfter > 0 && month >= 2) {
           simulated *= 1 + params.rateChangeAfter / 100;
         }
 
-        // Reduction jours/semaine (TJM seulement)
         if (params.workDaysPerWeek < profile.workDaysPerWeek) {
           simulated *= params.workDaysPerWeek / profile.workDaysPerWeek;
         }
       }
 
-      // Vacances
       if (params.vacationWeeks > 0) {
         const vacMonths = params.vacationWeeks / 4.33;
         const isFullVacMonth = month < Math.floor(vacMonths);
@@ -127,14 +243,12 @@ export function simulate(
           } else if (isPartialVacMonth) {
             simulated *= 1 - (vacMonths % 1);
           }
-          // Forfait : PAS impacte par les vacances
         }
       }
 
       afterTotal += simulated;
     });
 
-    // Nouveaux clients (montee progressive sur 3 mois)
     if (params.newClients > 0 && clientCount > 0) {
       const avgCA = totalBaseCA / clientCount;
       const rampUp = Math.min(1, (month + 1) / 3);

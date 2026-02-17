@@ -6,6 +6,8 @@ export interface ClientData {
   billing: BillingType;
   dailyRate?: number;
   daysPerMonth?: number;
+  daysPerWeek?: number;
+  daysPerYear?: number;
   monthlyAmount?: number;
   totalAmount?: number;
   startMonth?: number;
@@ -14,11 +16,29 @@ export interface ClientData {
   isActive?: boolean;
 }
 
+export type BusinessStatus =
+  | "micro"
+  | "ei"
+  | "eurl_ir"
+  | "eurl_is"
+  | "sasu_ir"
+  | "sasu_is";
+
+export type RemunerationType = "salaire" | "dividendes" | "mixte";
+
 export interface FreelanceProfile {
   monthlyExpenses: number;
   savings: number;
   adminHoursPerWeek: number;
   workDaysPerWeek: number;
+  workedDaysPerYear?: number;
+  businessStatus: BusinessStatus;
+  remunerationType?: RemunerationType;
+  customUrssafRate?: number;
+  customIrRate?: number;
+  customTaxRate?: number;
+  monthlySalary?: number;
+  mixtePartSalaire?: number;
 }
 
 export interface SimulationParams {

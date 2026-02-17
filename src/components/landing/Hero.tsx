@@ -1,40 +1,123 @@
 import Link from "next/link";
-import { Sparkles } from "@/components/ui/icons";
 
 export function Hero() {
   return (
-    <section className="pt-24 pb-16 px-4">
-      <div className="max-w-4xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-1.5 rounded-full text-sm font-medium mb-8">
-          <Sparkles className="size-4" /> Simulateur de decisions freelance
+    <section className="snap-section relative flex items-center justify-center overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[#5682F2]/8 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#F4BE7E]/5 rounded-full blur-[100px]" />
+      </div>
+
+      <div className="relative max-w-5xl mx-auto px-6 text-center pt-20">
+        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-sm font-medium text-[#F4BE7E] mb-8 backdrop-blur-sm">
+          <span className="w-2 h-2 rounded-full bg-[#F4BE7E] animate-pulse" />
+          Le copilote financier des freelances
         </div>
-        <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
-          Chaque decision a un prix.
+
+        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] mb-6 tracking-tight">
+          <span className="text-white">Anticipe</span>
           <br />
-          <span className="text-indigo-600">Connais-le avant de la prendre.</span>
+          <span className="text-white">avant de </span>
+          <span className="fn-gradient-text">décider.</span>
         </h1>
-        <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-          Vacances, hausse de tarifs, perte d&apos;un client, passage a 4 jours...
-          WhatIf simule l&apos;impact sur tes 12 prochains mois en temps reel.
+
+        <p className="text-lg sm:text-xl text-[#8b8b9e] max-w-2xl mx-auto mb-10 leading-relaxed">
+          Dashboard, simulateur de scénarios, suivi clients et fiscalité.
+          Pilote ton activité freelance et prends des décisions éclairées.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           <Link
             href="/onboarding"
-            className="px-8 py-3.5 bg-indigo-600 text-white rounded-xl text-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
+            className="px-8 py-3.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-lg font-semibold hover:opacity-90 transition-opacity fn-glow"
           >
             Essayer gratuitement &rarr;
           </Link>
           <a
             href="#demo"
-            className="px-8 py-3.5 bg-white text-gray-700 rounded-xl text-lg font-semibold hover:bg-gray-50 transition-colors border border-gray-200"
+            className="px-8 py-3.5 bg-white/5 text-white rounded-full text-lg font-semibold hover:bg-white/10 transition-colors border border-white/10 backdrop-blur-sm"
           >
-            Voir la demo
+            Voir la démo
           </a>
         </div>
-        <p className="text-sm text-gray-400 mt-4">
+        <p className="text-sm text-[#5a5a6e] mb-12">
           Gratuit pour 3 clients &middot; Pas de carte bancaire requise
         </p>
+
+        {/* Dashboard mockup */}
+        <div className="relative mx-auto max-w-3xl">
+          <div className="fn-glow rounded-2xl">
+            <DashboardMockup />
+          </div>
+          {/* Fade bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#07070e] to-transparent" />
+        </div>
       </div>
     </section>
+  );
+}
+
+function DashboardMockup() {
+  return (
+    <div className="bg-[#12121c] rounded-2xl border border-white/10 p-6 text-left overflow-hidden">
+      {/* Top bar */}
+      <div className="flex items-center gap-2 mb-6">
+        <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+        <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
+        <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+        <div className="ml-4 flex-1 h-6 bg-white/5 rounded-lg" />
+      </div>
+
+      {/* KPI row */}
+      <div className="grid grid-cols-4 gap-3 mb-6">
+        {[
+          { label: "CA mensuel", value: "8 750 \u20AC", color: "#5682F2" },
+          { label: "Net mensuel", value: "5 420 \u20AC", color: "#4ade80" },
+          { label: "Clients actifs", value: "4", color: "#F4BE7E" },
+          { label: "Récurrent", value: "78%", color: "#a78bfa" },
+        ].map((kpi) => (
+          <div key={kpi.label} className="bg-white/5 rounded-xl p-3 border border-white/5">
+            <div className="text-[10px] text-[#5a5a6e] uppercase tracking-wider mb-1">{kpi.label}</div>
+            <div className="text-lg font-bold text-white">{kpi.value}</div>
+            <div className="w-full h-1 bg-white/5 rounded-full mt-2">
+              <div className="h-full rounded-full" style={{ width: "65%", backgroundColor: kpi.color }} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Chart area */}
+      <div className="bg-white/3 rounded-xl p-4 border border-white/5">
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-xs text-[#8b8b9e] font-medium">Projection 12 mois</span>
+          <div className="flex gap-3 text-[10px]">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-[#5682F2]" /> Actuel</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-[#F4BE7E]" /> Simulé</span>
+          </div>
+        </div>
+        <svg viewBox="0 0 480 120" className="w-full h-auto">
+          {/* Grid lines */}
+          {[0, 30, 60, 90].map((y) => (
+            <line key={y} x1="0" y1={y} x2="480" y2={y} stroke="rgba(255,255,255,0.04)" />
+          ))}
+          {/* Actuel line */}
+          <defs>
+            <linearGradient id="mockGrad1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#5682F2" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#5682F2" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="mockGrad2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#F4BE7E" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#F4BE7E" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d="M0,80 Q40,65 80,70 T160,55 T240,60 T320,45 T400,50 T480,40 V120 H0 Z" fill="url(#mockGrad1)" />
+          <path d="M0,80 Q40,65 80,70 T160,55 T240,60 T320,45 T400,50 T480,40" fill="none" stroke="#5682F2" strokeWidth="2.5" />
+          <path d="M0,85 Q40,75 80,80 T160,65 T240,70 T320,55 T400,45 T480,30 V120 H0 Z" fill="url(#mockGrad2)" />
+          <path d="M0,85 Q40,75 80,80 T160,65 T240,70 T320,55 T400,45 T480,30" fill="none" stroke="#F4BE7E" strokeWidth="2" strokeDasharray="6 4" />
+        </svg>
+      </div>
+    </div>
   );
 }

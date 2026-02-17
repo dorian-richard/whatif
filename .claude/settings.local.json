@@ -10,7 +10,25 @@
       "Bash(npx vitest run:*)",
       "Bash(npx shadcn@latest add:*)",
       "Bash(npx next build:*)",
-      "Bash(npx prisma generate:*)"
+      "Bash(npx prisma generate:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(git -C /Users/dorianrichard/Documents/WhatIf status -s)",
+      "Bash(git -C /Users/dorianrichard/Documents/WhatIf log:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs:*)",
+      "Bash(npx next dev:*)",
+      "WebFetch(domain:finary.com)",
+      "WebFetch(domain:dribbble.com)",
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:finanry.com)",
+      "WebFetch(domain:avenuedesinvestisseurs.fr)",
+      "Bash(kill:*)",
+      "Bash(pkill:*)",
+      "Bash(git config:*)",
+      "Bash(ssh:*)"
     ]
   }
 }

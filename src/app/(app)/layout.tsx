@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { AppSidebar } from "@/components/layout/AppSidebar";
 
 export const metadata: Metadata = {
-  title: "WhatIf — Simulateur",
+  title: "Freelens — Simulateur",
 };
 
 export default function AppLayout({
@@ -9,5 +10,12 @@ export default function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <div className="min-h-screen bg-[#07070e]">
+      <AppSidebar />
+      <main className="md:ml-[220px] min-h-screen pt-8 md:pt-10 pb-16 md:pb-0">
+        {children}
+      </main>
+    </div>
+  );
 }

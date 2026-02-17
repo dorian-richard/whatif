@@ -29,18 +29,29 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // TODO: Re-enable auth protection when ready
-  // const isAppRoute =
-  //   request.nextUrl.pathname.startsWith("/simulator") ||
-  //   request.nextUrl.pathname.startsWith("/onboarding") ||
-  //   request.nextUrl.pathname.startsWith("/scenarios") ||
-  //   request.nextUrl.pathname.startsWith("/settings");
-  //
-  // if (!user && isAppRoute) {
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = "/login";
-  //   return NextResponse.redirect(url);
-  // }
+  const isAppRoute =
+    request.nextUrl.pathname.startsWith("/dashboard") ||
+    request.nextUrl.pathname.startsWith("/simulator") ||
+    request.nextUrl.pathname.startsWith("/onboarding") ||
+    request.nextUrl.pathname.startsWith("/scenarios") ||
+    request.nextUrl.pathname.startsWith("/settings");
+
+  if (!user && isAppRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  // Redirect logged-in users away from auth pages
+  const isAuthRoute =
+    request.nextUrl.pathname.startsWith("/login") ||
+    request.nextUrl.pathname.startsWith("/signup");
+
+  if (user && isAuthRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }

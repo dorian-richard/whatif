@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WhatIf — Simulateur de decisions freelance",
+  title: "Freelens — Le copilote financier des freelances",
   description:
-    "Chaque decision de freelance a un prix. WhatIf te le montre avant que tu la prennes.",
+    "Dashboard, simulateur de scénarios, suivi clients et fiscalité. Pilote ton activité freelance et prends des décisions éclairées.",
 };
 
 export default function RootLayout({
@@ -24,11 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

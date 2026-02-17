@@ -2,7 +2,7 @@
 
 import type { ProjectionResult, SimulationParams, ClientData } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
-import { fmt } from "@/lib/utils";
+import { fmt, cn } from "@/lib/utils";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import { CircleCheck, CircleMinus, CircleAlert, CircleX } from "@/components/ui/icons";
 
@@ -24,7 +24,7 @@ export function Verdict({ projection, sim, clients }: VerdictProps) {
   const messages: string[] = [];
 
   if (sim.vacationWeeks > 0) {
-    const base = `${sim.vacationWeeks} semaines de repos te coutent ${fmt(Math.abs(diff))}\u20AC sur l'annee — soit ${fmt(Math.abs(diff / sim.vacationWeeks))}\u20AC/semaine.`;
+    const base = `${sim.vacationWeeks} semaines de repos te coûtent ${fmt(Math.abs(diff))}\u20AC sur l'année — soit ${fmt(Math.abs(diff / sim.vacationWeeks))}\u20AC/semaine.`;
     if (forfaitClients.length > 0) {
       messages.push(
         `${base} Mais tes ${forfaitClients.length} forfait(s) (${fmt(forfaitCA)}\u20AC/mois) continuent de tourner.`
@@ -37,54 +37,60 @@ export function Verdict({ projection, sim, clients }: VerdictProps) {
   if (sim.rateChange > 0) {
     const tjmCount = clients.filter((c) => c.billing === "tjm").length;
     messages.push(
-      `+${sim.rateChange}% de tarifs sur tes ${tjmCount} client(s) TJM generent ${diff >= 0 ? "+" : ""}${fmt(diff)}\u20AC/an.`
+      `+${sim.rateChange}% de tarifs sur tes ${tjmCount} client(s) TJM génèrent ${diff >= 0 ? "+" : ""}${fmt(diff)}\u20AC/an.`
     );
   }
 
   if (sim.rateChange < 0) {
     messages.push(
-      `Baisser tes tarifs de ${Math.abs(sim.rateChange)}% te coute ${fmt(Math.abs(diff))}\u20AC/an.`
+      `Baisser tes tarifs de ${Math.abs(sim.rateChange)}% te coûte ${fmt(Math.abs(diff))}\u20AC/an.`
     );
   }
 
   if (sim.lostClientIndex >= 0 && sim.lostClientIndex < clients.length) {
     const lost = clients[sim.lostClientIndex];
     messages.push(
-      `Perdre ${lost.name} = ${fmt(Math.abs(diff))}\u20AC de manque a gagner annuel. Commence a prospecter maintenant.`
+      `Perdre ${lost.name} = ${fmt(Math.abs(diff))}\u20AC de manque à gagner annuel. Commence à prospecter maintenant.`
     );
   }
 
   if (sim.newClients > 0) {
     messages.push(
-      `${sim.newClients} nouveau(x) client(s) ajoutent ~${fmt(Math.max(0, diff))}\u20AC/an apres montee en charge.`
+      `${sim.newClients} nouveau(x) client(s) ajoutent ~${fmt(Math.max(0, diff))}\u20AC/an après montée en charge.`
     );
   }
 
   if (sim.workDaysPerWeek < 5) {
     const freedomDays = 5 - sim.workDaysPerWeek;
     messages.push(
-      `Passer a ${sim.workDaysPerWeek}j/sem = ${freedomDays} jour(s) de liberte/sem, mais ${fmt(Math.abs(diff))}\u20AC de moins/an.`
+      `Passer à ${sim.workDaysPerWeek}j/sem = ${freedomDays} jour(s) de liberté/sem, mais ${fmt(Math.abs(diff))}\u20AC de moins/an.`
+    );
+  }
+
+  if (sim.expenseChange !== 0) {
+    const sign = sim.expenseChange > 0 ? "+" : "";
+    messages.push(
+      `${sign}${fmt(sim.expenseChange)}\u20AC/mois de charges = ${sign}${fmt(sim.expenseChange * 12)}\u20AC/an sur ton budget.`
     );
   }
 
   if (messages.length === 0) {
-    messages.push("Ajuste les parametres pour voir l'impact de tes decisions.");
+    messages.push("Ajuste les paramètres pour voir l'impact de tes décisions.");
   }
 
   const statusIcon =
-    pctDiff > 5 ? <CircleCheck className="size-7 text-emerald-500" /> :
-    pctDiff > -5 ? <CircleMinus className="size-7 text-amber-500" /> :
-    pctDiff > -15 ? <CircleAlert className="size-7 text-orange-500" /> :
-    <CircleX className="size-7 text-red-500" />;
-
-  const tone =
-    pctDiff > 5
-      ? "bg-emerald-50 border-emerald-200"
-      : pctDiff > -5
-        ? "bg-amber-50 border-amber-200"
-        : "bg-red-50 border-red-200";
+    pctDiff > 5 ? <CircleCheck className="size-7 text-[#4ade80]" /> :
+    pctDiff > -5 ? <CircleMinus className="size-7 text-[#fbbf24]" /> :
+    pctDiff > -15 ? <CircleAlert className="size-7 text-[#fbbf24]" /> :
+    <CircleX className="size-7 text-[#f87171]" />;
 
   const toneKey = pctDiff > 5 ? "positive" : pctDiff > -5 ? "neutral" : "negative";
+
+  const toneStyles = {
+    positive: "bg-[#4ade80]/8 border-[#4ade80]/20",
+    neutral: "bg-[#fbbf24]/8 border-[#fbbf24]/20",
+    negative: "bg-[#f87171]/8 border-[#f87171]/20",
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -94,35 +100,49 @@ export function Verdict({ projection, sim, clients }: VerdictProps) {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.97 }}
         transition={{ duration: 0.25 }}
-        className={`rounded-2xl p-5 border ${tone}`}
+        className={cn("rounded-2xl p-5 border", toneStyles[toneKey])}
       >
         <div className="flex items-start gap-3">
-          <div className="mt-0.5">{statusIcon}</div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-800 mb-1">
-              {pctDiff > 5
-                ? "Ce scenario te profite"
-                : pctDiff > -5
-                  ? "Impact modere"
-                  : "Attention, impact significatif"}
-            </h3>
-            {messages.map((m, i) => (
-              <p key={i} className="text-sm text-gray-600 mb-1">
-                &rarr; {m}
-              </p>
-            ))}
-            <p className="text-xs text-gray-400 mt-2">
-              Variation annuelle :{" "}
-              <strong className={pctDiff >= 0 ? "text-emerald-600" : "text-red-600"}>
-                {pctDiff >= 0 ? "+" : ""}
-                {pctDiff.toFixed(1)}%
-              </strong>{" "}
-              soit{" "}
-              <strong>
-                {diff >= 0 ? "+" : ""}
-                {fmt(diff)}&euro;
-              </strong>
-            </p>
+          <div className="mt-0.5 shrink-0">{statusIcon}</div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="text-sm font-bold text-white">
+                {pctDiff > 5
+                  ? "Positif"
+                  : pctDiff > -5
+                    ? "Neutre"
+                    : "Attention"}
+              </h3>
+              <span className={cn(
+                "text-xs font-bold px-2 py-0.5 rounded-full shrink-0",
+                pctDiff >= 0
+                  ? "bg-[#4ade80]/12 text-[#4ade80]"
+                  : "bg-[#f87171]/12 text-[#f87171]"
+              )}>
+                {pctDiff >= 0 ? "+" : ""}{pctDiff.toFixed(1)}%
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              {messages.map((m, i) => (
+                <p key={i} className="text-sm text-[#8b8b9e] leading-relaxed">
+                  <span className="text-[#5a5a6e] mr-1">&rarr;</span> {m}
+                </p>
+              ))}
+            </div>
+            <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center gap-4 text-xs text-[#5a5a6e]">
+              <span>
+                Variation :{" "}
+                <strong className={pctDiff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}>
+                  {diff >= 0 ? "+" : ""}{fmt(diff)}&euro;/an
+                </strong>
+              </span>
+              <span>
+                Mensuel :{" "}
+                <strong className={pctDiff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}>
+                  {diff >= 0 ? "+" : ""}{fmt(diff / 12)}&euro;/mois
+                </strong>
+              </span>
+            </div>
           </div>
         </div>
       </motion.div>

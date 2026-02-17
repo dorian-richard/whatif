@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type { SimulationParams } from "@/types";
 import { DEFAULT_SIM } from "@/lib/constants";
 
@@ -13,20 +14,27 @@ interface SimulatorState extends SimulationParams {
   reset: () => void;
 }
 
-export const useSimulatorStore = create<SimulatorState>((set, get) => ({
-  ...DEFAULT_SIM,
-  activePreset: null,
+export const useSimulatorStore = create<SimulatorState>()(
+  persist(
+    (set, get) => ({
+      ...DEFAULT_SIM,
+      activePreset: null,
 
-  setParam: (key, value) =>
-    set({ [key]: value, activePreset: null }),
+      setParam: (key, value) =>
+        set({ [key]: value, activePreset: null }),
 
-  applyPreset: (presetId, changes) =>
-    set((state) => {
-      if (state.activePreset === presetId) {
-        return { ...DEFAULT_SIM, activePreset: null };
-      }
-      return { ...DEFAULT_SIM, ...changes, activePreset: presetId };
+      applyPreset: (presetId, changes) =>
+        set((state) => {
+          if (state.activePreset === presetId) {
+            return { ...DEFAULT_SIM, activePreset: null };
+          }
+          return { ...DEFAULT_SIM, ...changes, activePreset: presetId };
+        }),
+
+      reset: () => set({ ...DEFAULT_SIM, activePreset: null }),
     }),
-
-  reset: () => set({ ...DEFAULT_SIM, activePreset: null }),
-}));
+    {
+      name: "freelens-simulator",
+    }
+  )
+);

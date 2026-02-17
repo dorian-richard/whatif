@@ -1,4 +1,4 @@
-# WhatIf — Simulateur de decisions freelance
+# Freelens — Simulateur de decisions freelance
 
 ## Stack
 
