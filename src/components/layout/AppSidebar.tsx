@@ -32,7 +32,7 @@ export function AppSidebar() {
           className="flex items-center gap-2.5 px-5 h-16 shrink-0"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Freelens" className="w-8 h-8 rounded-lg" />
+          <img src="/logo.png" alt="Freelens" className="h-7 w-auto opacity-80" />
           <span className="text-lg font-bold text-white">Freelens</span>
         </button>
 

@@ -16,7 +16,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Freelens" className="w-8 h-8 rounded-lg" />
+            <img src="/logo.png" alt="Freelens" className="h-7 w-auto opacity-80" />
             <span className="font-bold text-white text-lg">Freelens</span>
           </div>
           <div className="flex items-center gap-6">

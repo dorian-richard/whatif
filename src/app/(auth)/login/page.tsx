@@ -36,7 +36,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Freelens" className="w-10 h-10 rounded-xl" />
+            <img src="/logo.png" alt="Freelens" className="h-8 w-auto opacity-80" />
             <span className="text-2xl font-bold text-white">Freelens</span>
           </Link>
           <h1 className="text-xl font-bold text-white">Connexion</h1>

@@ -4,7 +4,7 @@ export default function Loading() {
       <div className="text-center">
         <div className="mx-auto mb-4 animate-pulse">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Freelens" className="w-12 h-12 rounded-2xl" />
+          <img src="/logo.png" alt="Freelens" className="h-10 w-auto opacity-80" />
         </div>
         <p className="text-sm text-[#5a5a6e]">Chargement...</p>
       </div>
