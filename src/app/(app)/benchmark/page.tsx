@@ -40,26 +40,30 @@ const SENIORITY_CONFIG: Record<
   expert: { label: "Expert", years: "10+ ans", color: "#a78bfa" },
 };
 
+/* Multiplicateurs calcul\u00e9s depuis les \u00e9carts Paris / Grandes villes / R\u00e9gions
+   du barom\u00e8tre Silkhom 2025 (moyenne sur 50+ m\u00e9tiers IT). */
 const LOCATIONS: Record<Location, { label: string; mult: number }> = {
   paris: { label: "Paris / IDF", mult: 1.0 },
-  grande_ville: { label: "Lyon, Marseille, Nantes\u2026", mult: 0.88 },
-  remote: { label: "Full remote", mult: 0.92 },
-  province: { label: "Province", mult: 0.78 },
+  grande_ville: { label: "Lyon, Marseille, Nantes\u2026", mult: 0.9 },
+  remote: { label: "Full remote", mult: 0.93 },
+  province: { label: "Province", mult: 0.85 },
 };
 
-/* ── Benchmark data (Paris base, 2024-2025) ── */
+/* ══ Donn\u00e9es r\u00e9elles — TJM Paris (base), sources : Silkhom 2025, Embarq 2025 ══
+   Chaque range = { min, m\u00e9diane estim\u00e9e, max } en \u20ac/jour \u00e0 Paris.
+   Les autres localisations sont d\u00e9riv\u00e9es via multiplicateur. */
 
 const METIERS: Metier[] = [
-  // Tech
+  /* ── Tech (source : Silkhom 2025) ──────────────────────────── */
   {
     id: "dev_frontend",
     label: "Dev Frontend",
     category: "Tech",
     ranges: {
-      junior: { min: 300, median: 350, max: 420 },
-      confirme: { min: 400, median: 480, max: 560 },
-      senior: { min: 530, median: 620, max: 720 },
-      expert: { min: 680, median: 780, max: 950 },
+      junior:   { min: 320, median: 385, max: 450 },
+      confirme: { min: 400, median: 450, max: 500 },
+      senior:   { min: 450, median: 525, max: 600 },
+      expert:   { min: 500, median: 600, max: 700 },
     },
   },
   {
@@ -67,10 +71,10 @@ const METIERS: Metier[] = [
     label: "Dev Backend",
     category: "Tech",
     ranges: {
-      junior: { min: 300, median: 360, max: 430 },
-      confirme: { min: 420, median: 500, max: 580 },
-      senior: { min: 550, median: 650, max: 780 },
-      expert: { min: 720, median: 850, max: 1050 },
+      junior:   { min: 320, median: 385, max: 450 },
+      confirme: { min: 400, median: 450, max: 500 },
+      senior:   { min: 450, median: 525, max: 600 },
+      expert:   { min: 500, median: 600, max: 700 },
     },
   },
   {
@@ -78,10 +82,43 @@ const METIERS: Metier[] = [
     label: "Dev Fullstack",
     category: "Tech",
     ranges: {
-      junior: { min: 300, median: 350, max: 420 },
-      confirme: { min: 400, median: 490, max: 570 },
-      senior: { min: 540, median: 630, max: 740 },
-      expert: { min: 700, median: 800, max: 950 },
+      junior:   { min: 350, median: 400, max: 450 },
+      confirme: { min: 400, median: 450, max: 500 },
+      senior:   { min: 450, median: 525, max: 600 },
+      expert:   { min: 500, median: 600, max: 700 },
+    },
+  },
+  {
+    id: "dev_python",
+    label: "Dev Python",
+    category: "Tech",
+    ranges: {
+      junior:   { min: 380, median: 415, max: 450 },
+      confirme: { min: 450, median: 500, max: 550 },
+      senior:   { min: 500, median: 550, max: 600 },
+      expert:   { min: 600, median: 675, max: 750 },
+    },
+  },
+  {
+    id: "dev_java",
+    label: "Dev Java / .NET",
+    category: "Tech",
+    ranges: {
+      junior:   { min: 350, median: 400, max: 450 },
+      confirme: { min: 390, median: 440, max: 490 },
+      senior:   { min: 450, median: 525, max: 600 },
+      expert:   { min: 600, median: 650, max: 700 },
+    },
+  },
+  {
+    id: "dev_mobile",
+    label: "Dev Mobile",
+    category: "Tech",
+    ranges: {
+      junior:   { min: 330, median: 380, max: 430 },
+      confirme: { min: 400, median: 475, max: 550 },
+      senior:   { min: 500, median: 575, max: 650 },
+      expert:   { min: 600, median: 660, max: 720 },
     },
   },
   {
@@ -89,44 +126,34 @@ const METIERS: Metier[] = [
     label: "DevOps / Cloud",
     category: "Tech",
     ranges: {
-      junior: { min: 350, median: 400, max: 470 },
-      confirme: { min: 450, median: 540, max: 630 },
-      senior: { min: 600, median: 700, max: 850 },
-      expert: { min: 800, median: 950, max: 1200 },
+      junior:   { min: 450, median: 490, max: 530 },
+      confirme: { min: 500, median: 525, max: 550 },
+      senior:   { min: 520, median: 585, max: 650 },
+      expert:   { min: 600, median: 675, max: 750 },
     },
   },
   {
-    id: "mobile",
-    label: "Dev Mobile",
+    id: "lead_archi",
+    label: "Lead Tech / Archi",
     category: "Tech",
     ranges: {
-      junior: { min: 300, median: 350, max: 420 },
-      confirme: { min: 400, median: 490, max: 570 },
-      senior: { min: 540, median: 640, max: 760 },
-      expert: { min: 720, median: 830, max: 1000 },
+      junior:   { min: 500, median: 575, max: 650 },
+      confirme: { min: 550, median: 625, max: 700 },
+      senior:   { min: 600, median: 700, max: 800 },
+      expert:   { min: 700, median: 800, max: 900 },
     },
   },
-  {
-    id: "archi_lead",
-    label: "Archi / Lead Tech",
-    category: "Tech",
-    ranges: {
-      junior: { min: 400, median: 450, max: 520 },
-      confirme: { min: 500, median: 600, max: 700 },
-      senior: { min: 680, median: 800, max: 950 },
-      expert: { min: 900, median: 1050, max: 1400 },
-    },
-  },
-  // Data & IA
+
+  /* ── Data & IA (source : Silkhom 2025) ─────────────────────── */
   {
     id: "data_engineer",
     label: "Data Engineer",
     category: "Data & IA",
     ranges: {
-      junior: { min: 350, median: 400, max: 460 },
-      confirme: { min: 440, median: 530, max: 620 },
-      senior: { min: 580, median: 680, max: 820 },
-      expert: { min: 780, median: 900, max: 1100 },
+      junior:   { min: 430, median: 480, max: 530 },
+      confirme: { min: 450, median: 525, max: 600 },
+      senior:   { min: 550, median: 625, max: 700 },
+      expert:   { min: 650, median: 750, max: 850 },
     },
   },
   {
@@ -134,10 +161,10 @@ const METIERS: Metier[] = [
     label: "Data Scientist / ML",
     category: "Data & IA",
     ranges: {
-      junior: { min: 350, median: 400, max: 470 },
-      confirme: { min: 450, median: 550, max: 650 },
-      senior: { min: 620, median: 730, max: 880 },
-      expert: { min: 830, median: 980, max: 1250 },
+      junior:   { min: 430, median: 480, max: 530 },
+      confirme: { min: 450, median: 525, max: 600 },
+      senior:   { min: 550, median: 625, max: 700 },
+      expert:   { min: 650, median: 750, max: 850 },
     },
   },
   {
@@ -145,101 +172,196 @@ const METIERS: Metier[] = [
     label: "Data Analyst",
     category: "Data & IA",
     ranges: {
-      junior: { min: 280, median: 330, max: 400 },
-      confirme: { min: 380, median: 450, max: 530 },
-      senior: { min: 500, median: 580, max: 700 },
-      expert: { min: 650, median: 750, max: 880 },
+      junior:   { min: 350, median: 400, max: 450 },
+      confirme: { min: 420, median: 480, max: 540 },
+      senior:   { min: 500, median: 570, max: 640 },
+      expert:   { min: 600, median: 670, max: 740 },
     },
   },
-  // Product & Design
+
+  /* ── Infra & S\u00e9cu (source : Silkhom 2025) ──────────────────── */
   {
-    id: "product_manager",
-    label: "Product Manager",
-    category: "Product & Design",
+    id: "cybersecurite",
+    label: "Cybers\u00e9curit\u00e9",
+    category: "Infra & S\u00e9cu",
     ranges: {
-      junior: { min: 350, median: 400, max: 470 },
-      confirme: { min: 450, median: 540, max: 630 },
-      senior: { min: 600, median: 700, max: 850 },
-      expert: { min: 800, median: 950, max: 1200 },
-    },
-  },
-  {
-    id: "product_designer",
-    label: "Product Designer",
-    category: "Product & Design",
-    ranges: {
-      junior: { min: 300, median: 350, max: 420 },
-      confirme: { min: 400, median: 480, max: 560 },
-      senior: { min: 520, median: 620, max: 730 },
-      expert: { min: 680, median: 790, max: 950 },
+      junior:   { min: 460, median: 520, max: 580 },
+      confirme: { min: 530, median: 605, max: 680 },
+      senior:   { min: 660, median: 745, max: 830 },
+      expert:   { min: 750, median: 850, max: 950 },
     },
   },
   {
-    id: "ui_designer",
-    label: "UI / Brand Designer",
-    category: "Product & Design",
+    id: "sysadmin",
+    label: "Syst\u00e8mes & R\u00e9seaux",
+    category: "Infra & S\u00e9cu",
     ranges: {
-      junior: { min: 250, median: 300, max: 370 },
-      confirme: { min: 350, median: 420, max: 500 },
-      senior: { min: 480, median: 560, max: 670 },
-      expert: { min: 620, median: 720, max: 860 },
+      junior:   { min: 350, median: 400, max: 450 },
+      confirme: { min: 450, median: 475, max: 500 },
+      senior:   { min: 500, median: 550, max: 600 },
+      expert:   { min: 550, median: 600, max: 650 },
     },
   },
-  // Conseil
+
+  /* ── Product & Design (sources : Silkhom 2025 + Embarq) ────── */
+  {
+    id: "product_owner",
+    label: "Product Owner / PM",
+    category: "Product & Design",
+    ranges: {
+      junior:   { min: 400, median: 450, max: 500 },
+      confirme: { min: 500, median: 560, max: 620 },
+      senior:   { min: 580, median: 670, max: 760 },
+      expert:   { min: 700, median: 800, max: 900 },
+    },
+  },
+  {
+    id: "ux_ui_designer",
+    label: "UX / UI Designer",
+    category: "Product & Design",
+    ranges: {
+      junior:   { min: 350, median: 400, max: 450 },
+      confirme: { min: 430, median: 480, max: 530 },
+      senior:   { min: 450, median: 515, max: 580 },
+      expert:   { min: 530, median: 600, max: 680 },
+    },
+  },
+  {
+    id: "graphiste_da",
+    label: "Graphiste / DA",
+    category: "Product & Design",
+    ranges: {
+      junior:   { min: 250, median: 300, max: 350 },
+      confirme: { min: 330, median: 380, max: 430 },
+      senior:   { min: 400, median: 460, max: 520 },
+      expert:   { min: 500, median: 560, max: 620 },
+    },
+  },
+
+  /* ── Conseil & Gestion (sources : Silkhom 2025 + Embarq) ───── */
   {
     id: "scrum_master",
     label: "Scrum Master / Coach",
     category: "Conseil & Gestion",
     ranges: {
-      junior: { min: 300, median: 360, max: 430 },
-      confirme: { min: 420, median: 500, max: 580 },
-      senior: { min: 550, median: 650, max: 780 },
-      expert: { min: 730, median: 850, max: 1050 },
+      junior:   { min: 400, median: 450, max: 500 },
+      confirme: { min: 500, median: 575, max: 650 },
+      senior:   { min: 600, median: 700, max: 800 },
+      expert:   { min: 700, median: 800, max: 900 },
     },
   },
   {
-    id: "consultant_it",
-    label: "Consultant IT / SI",
+    id: "chef_projet_tech",
+    label: "Chef de Projet Technique",
     category: "Conseil & Gestion",
     ranges: {
-      junior: { min: 350, median: 400, max: 470 },
-      confirme: { min: 450, median: 540, max: 640 },
-      senior: { min: 600, median: 720, max: 860 },
-      expert: { min: 800, median: 950, max: 1200 },
+      junior:   { min: 550, median: 600, max: 650 },
+      confirme: { min: 600, median: 650, max: 700 },
+      senior:   { min: 700, median: 775, max: 850 },
+      expert:   { min: 800, median: 875, max: 950 },
     },
   },
   {
-    id: "chef_projet",
-    label: "Chef de projet / PMO",
+    id: "business_analyst",
+    label: "Business Analyst",
     category: "Conseil & Gestion",
     ranges: {
-      junior: { min: 300, median: 370, max: 440 },
-      confirme: { min: 420, median: 500, max: 600 },
-      senior: { min: 560, median: 660, max: 780 },
-      expert: { min: 720, median: 830, max: 1000 },
+      junior:   { min: 400, median: 450, max: 500 },
+      confirme: { min: 450, median: 500, max: 550 },
+      senior:   { min: 550, median: 625, max: 700 },
+      expert:   { min: 650, median: 725, max: 800 },
     },
   },
-  // Marketing
+  {
+    id: "consultant_strategie",
+    label: "Consultant Strat\u00e9gie",
+    category: "Conseil & Gestion",
+    ranges: {
+      junior:   { min: 350, median: 420, max: 500 },
+      confirme: { min: 500, median: 580, max: 650 },
+      senior:   { min: 650, median: 750, max: 850 },
+      expert:   { min: 800, median: 920, max: 1050 },
+    },
+  },
+
+  /* ── Marketing & Com (source : Embarq 2025) ───────────────── */
   {
     id: "growth",
     label: "Growth / Acquisition",
-    category: "Marketing",
+    category: "Marketing & Com",
     ranges: {
-      junior: { min: 280, median: 340, max: 400 },
-      confirme: { min: 380, median: 460, max: 540 },
-      senior: { min: 500, median: 600, max: 720 },
-      expert: { min: 650, median: 770, max: 920 },
+      junior:   { min: 280, median: 330, max: 380 },
+      confirme: { min: 380, median: 440, max: 500 },
+      senior:   { min: 480, median: 540, max: 600 },
+      expert:   { min: 580, median: 650, max: 720 },
     },
   },
   {
-    id: "seo",
+    id: "seo_sea",
     label: "SEO / SEA",
-    category: "Marketing",
+    category: "Marketing & Com",
     ranges: {
-      junior: { min: 250, median: 300, max: 370 },
-      confirme: { min: 350, median: 420, max: 500 },
-      senior: { min: 470, median: 550, max: 660 },
-      expert: { min: 600, median: 700, max: 850 },
+      junior:   { min: 280, median: 330, max: 380 },
+      confirme: { min: 350, median: 400, max: 450 },
+      senior:   { min: 430, median: 490, max: 550 },
+      expert:   { min: 530, median: 590, max: 650 },
+    },
+  },
+  {
+    id: "community_manager",
+    label: "Community Manager",
+    category: "Marketing & Com",
+    ranges: {
+      junior:   { min: 200, median: 250, max: 300 },
+      confirme: { min: 280, median: 330, max: 380 },
+      senior:   { min: 350, median: 400, max: 450 },
+      expert:   { min: 420, median: 470, max: 520 },
+    },
+  },
+  {
+    id: "copywriter",
+    label: "R\u00e9dacteur / Copywriter",
+    category: "Marketing & Com",
+    ranges: {
+      junior:   { min: 250, median: 300, max: 350 },
+      confirme: { min: 330, median: 380, max: 430 },
+      senior:   { min: 400, median: 460, max: 520 },
+      expert:   { min: 500, median: 560, max: 620 },
+    },
+  },
+
+  /* ── Finance & RH (source : Embarq 2025) ──────────────────── */
+  {
+    id: "daf_finance",
+    label: "DAF / Contr\u00f4le de gestion",
+    category: "Finance & RH",
+    ranges: {
+      junior:   { min: 400, median: 460, max: 520 },
+      confirme: { min: 500, median: 575, max: 650 },
+      senior:   { min: 620, median: 710, max: 800 },
+      expert:   { min: 750, median: 875, max: 1000 },
+    },
+  },
+  {
+    id: "consultant_rh",
+    label: "Consultant RH",
+    category: "Finance & RH",
+    ranges: {
+      junior:   { min: 300, median: 350, max: 400 },
+      confirme: { min: 380, median: 430, max: 480 },
+      senior:   { min: 460, median: 530, max: 600 },
+      expert:   { min: 580, median: 650, max: 720 },
+    },
+  },
+  {
+    id: "formateur",
+    label: "Formateur",
+    category: "Finance & RH",
+    ranges: {
+      junior:   { min: 350, median: 400, max: 450 },
+      confirme: { min: 430, median: 500, max: 570 },
+      senior:   { min: 550, median: 625, max: 700 },
+      expert:   { min: 650, median: 730, max: 800 },
     },
   },
 ];
@@ -249,9 +371,11 @@ const CATEGORIES = [...new Set(METIERS.map((m) => m.category))];
 const CATEGORY_COLORS: Record<string, string> = {
   Tech: "#5682F2",
   "Data & IA": "#a78bfa",
+  "Infra & S\u00e9cu": "#f87171",
   "Product & Design": "#F4BE7E",
   "Conseil & Gestion": "#4ade80",
-  Marketing: "#f97316",
+  "Marketing & Com": "#f97316",
+  "Finance & RH": "#38bdf8",
 };
 
 /* ── Helpers ── */
@@ -317,7 +441,7 @@ export default function BenchmarkPage() {
     return Math.round(rates.reduce((s, r) => s + r, 0) / rates.length);
   }, [clients]);
 
-  // Initialize métier from profile role (if set)
+  // Initialize m\u00e9tier from profile role (if set)
   const [selectedMetier, setSelectedMetier] = useState(
     () => {
       if (role && METIERS.some((m) => m.id === role)) return role;
@@ -807,11 +931,18 @@ export default function BenchmarkPage() {
         </div>
       </div>
 
-      {/* Disclaimer */}
-      <div className="text-center text-xs text-[#5a5a6e] pb-8">
-        Donn&eacute;es indicatives bas&eacute;es sur les benchmarks Malt,
-        Cr&egrave;me de la Cr&egrave;me et Comet (2024-2025). Les TJM r&eacute;els
-        varient selon l&apos;exp&eacute;rience, le secteur et la mission.
+      {/* Sources & disclaimer */}
+      <div className="text-center text-xs text-[#5a5a6e] pb-8 space-y-1">
+        <p>
+          Sources : Barom&egrave;tre Silkhom 2025 (20 000+ placements IT),
+          Embarq 2025. Multiplicateurs g&eacute;ographiques
+          calcul&eacute;s sur les &eacute;carts Paris / Grandes villes /
+          R&eacute;gions Silkhom.
+        </p>
+        <p>
+          Les TJM r&eacute;els varient selon l&apos;exp&eacute;rience, le
+          secteur, le type de mission et la n&eacute;gociation.
+        </p>
       </div>
     </div>
   );
