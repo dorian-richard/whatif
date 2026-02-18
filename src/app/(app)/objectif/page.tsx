@@ -56,11 +56,12 @@ function reverseCA(
   targetNet: number,
   status: BusinessStatus,
   remType: RemunerationType,
-  mixtePartSalaire: number
+  mixtePartSalaire: number,
+  customIrRate?: number
 ): number {
   const cfg = BUSINESS_STATUS_CONFIG[status];
   const urssaf = cfg.urssaf;
-  const ir = cfg.ir;
+  const ir = customIrRate ?? cfg.ir;
   const is = cfg.is;
 
   if (status === "micro") {
@@ -134,7 +135,7 @@ const DIFFICULTY_CONFIG = {
 };
 
 export default function ObjectifPage() {
-  const { workDaysPerWeek, monthlyExpenses, remunerationType, mixtePartSalaire } =
+  const { workDaysPerWeek, monthlyExpenses, remunerationType, mixtePartSalaire, customIrRate } =
     useProfileStore();
 
   const [targetNet, setTargetNet] = useState(4000);
@@ -154,7 +155,7 @@ export default function ObjectifPage() {
       const color = STATUT_COLORS[s] ?? "#5682F2";
       const remType = (s === "eurl_is" || s === "sasu_is" || s === "sasu_ir") ? localRemType : "salaire";
 
-      const requiredCA = reverseCA(targetAnnualNet, s, remType, localMixte);
+      const requiredCA = reverseCA(targetAnnualNet, s, remType, localMixte, customIrRate);
       const requiredTJM = workedDaysPerYear > 0 ? requiredCA / workedDaysPerYear : 0;
       const requiredDaysPerWeek = workedWeeks > 0 && requiredTJM > 0
         ? requiredCA / (workedWeeks * requiredTJM)
@@ -177,7 +178,7 @@ export default function ObjectifPage() {
         difficulty: getDifficulty(requiredTJM),
       };
     });
-  }, [targetAnnualNet, localRemType, localMixte, workedDaysPerYear, workedWeeks]);
+  }, [targetAnnualNet, localRemType, localMixte, workedDaysPerYear, workedWeeks, customIrRate]);
 
   // Best = lowest required TJM among eligible
   const best = useMemo(() => {

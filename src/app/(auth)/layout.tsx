@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Freelens — Connexion",
+  title: "Connexion",
 };
 
 export default function AuthLayout({

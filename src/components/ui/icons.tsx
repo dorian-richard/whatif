@@ -49,6 +49,8 @@ import {
   X,
   Info,
   Scale,
+  ArrowLeftRight,
+  Briefcase,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -155,4 +157,6 @@ export {
   X,
   Info,
   Scale,
+  ArrowLeftRight,
+  Briefcase,
 };

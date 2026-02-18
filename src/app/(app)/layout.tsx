@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 
 export const metadata: Metadata = {
-  title: "Freelens — Simulateur",
+  robots: { index: false, follow: false },
 };
 
 export default function AppLayout({

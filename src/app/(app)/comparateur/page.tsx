@@ -51,11 +51,12 @@ function computeForStatus(
   annualCA: number,
   status: BusinessStatus,
   remunerationType: "salaire" | "dividendes" | "mixte" = "salaire",
-  mixtePartSalaire: number = 50
+  mixtePartSalaire: number = 50,
+  customIrRate?: number
 ): StatusResult {
   const cfg = BUSINESS_STATUS_CONFIG[status];
   const urssaf = cfg.urssaf;
-  const ir = cfg.ir;
+  const ir = customIrRate ?? cfg.ir;
   const is = cfg.is;
   const color = STATUT_COLORS[status] ?? "#5682F2";
 
@@ -168,7 +169,7 @@ function computeForStatus(
 }
 
 export default function ComparateurPage() {
-  const { clients, businessStatus, remunerationType, mixtePartSalaire, monthlyExpenses } =
+  const { clients, businessStatus, remunerationType, mixtePartSalaire, monthlyExpenses, customIrRate } =
     useProfileStore();
 
   // CA from clients
@@ -188,9 +189,9 @@ export default function ComparateurPage() {
   const results = useMemo(() => {
     return STATUTS.map((s) => {
       const remType = (s === "eurl_is" || s === "sasu_is" || s === "sasu_ir") ? localRemType : "salaire";
-      return computeForStatus(annualCA, s, remType, localMixte);
+      return computeForStatus(annualCA, s, remType, localMixte, customIrRate);
     });
-  }, [annualCA, localRemType, localMixte]);
+  }, [annualCA, localRemType, localMixte, customIrRate]);
 
   // Best statut = highest net among eligible
   const best = useMemo(() => {

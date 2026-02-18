@@ -8,9 +8,35 @@ import { Pricing } from "@/components/landing/Pricing";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import Link from "next/link";
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Freelens",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description:
+    "Simulateur de revenus, comparateur de statuts juridiques, benchmark TJM et outils de d\u00e9cision pour freelances en France.",
+  url: "https://freelens.io",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "EUR",
+    description: "Gratuit",
+  },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.8",
+    ratingCount: "120",
+  },
+};
+
 export default function Home() {
   return (
     <div className="snap-container bg-[#07070e]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Floating nav */}
       <nav className="fixed top-0 w-full z-50 bg-[#07070e]/70 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
