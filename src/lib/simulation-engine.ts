@@ -70,6 +70,7 @@ export function getClientMonthlyCA(
  * Utilise pour les moyennes et statistiques.
  */
 export function getClientBaseCA(client: ClientData): number {
+  if (client.isActive === false) return 0;
   if (client.billing === "tjm") {
     if (client.daysPerYear) {
       return (client.dailyRate ?? 0) * client.daysPerYear / 12;
@@ -79,6 +80,22 @@ export function getClientBaseCA(client: ClientData): number {
     }
   }
   return getClientMonthlyCA(client, 0, 1);
+}
+
+/**
+ * Calcule le CA annuel reel a partir des clients en tenant compte de la
+ * saisonnalite, des periodes de contrat et des clients inactifs.
+ * Resultat coherent avec simulate().
+ */
+export function getAnnualCA(clients: ClientData[]): number {
+  let total = 0;
+  for (let month = 0; month < 12; month++) {
+    const season = SEASONALITY[month];
+    for (const client of clients) {
+      total += getClientMonthlyCA(client, month, season);
+    }
+  }
+  return total;
 }
 
 /** Taux du Prelevement Forfaitaire Unique (flat tax dividendes) */

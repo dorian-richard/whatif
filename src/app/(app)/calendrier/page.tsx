@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { getClientBaseCA } from "@/lib/simulation-engine";
+import { getAnnualCA } from "@/lib/simulation-engine";
 import { BUSINESS_STATUS_CONFIG, MONTHS_SHORT } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus } from "@/types";
@@ -117,10 +117,7 @@ const DEADLINES: FiscalDeadline[] = [
 export default function CalendrierPage() {
   const { clients, businessStatus } = useProfileStore();
 
-  const annualCA = useMemo(
-    () => clients.reduce((sum, c) => sum + getClientBaseCA(c), 0) * 12,
-    [clients]
-  );
+  const annualCA = useMemo(() => getAnnualCA(clients), [clients]);
 
   const [selectedStatus, setSelectedStatus] = useState<BusinessStatus>(businessStatus);
 

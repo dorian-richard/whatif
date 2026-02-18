@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { getClientBaseCA } from "@/lib/simulation-engine";
+import { getAnnualCA } from "@/lib/simulation-engine";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus } from "@/types";
@@ -137,13 +137,11 @@ function computeRetraiteCDI(annualCA: number, age: number): RetraiteResult {
 export default function RetraitePage() {
   const { clients, age: profileAge } = useProfileStore();
 
-  const baseAnnualCA = useMemo(
-    () => clients.reduce((sum, c) => sum + getClientBaseCA(c), 0) * 12,
-    [clients]
-  );
+  const baseAnnualCA = useMemo(() => getAnnualCA(clients), [clients]);
 
   const [caOverride, setCaOverride] = useState<number | null>(null);
   const annualCA = caOverride ?? baseAnnualCA;
+  const sliderMax = Math.max(300000, Math.ceil(baseAnnualCA / 50000) * 50000 + 50000);
   const [age, setAge] = useState(profileAge ?? 35);
   const [yearsContributed, setYearsContributed] = useState(Math.max(0, (profileAge ?? 35) - 22));
 
@@ -215,14 +213,14 @@ export default function RetraitePage() {
           <input
             type="range"
             min={10000}
-            max={300000}
+            max={sliderMax}
             step={1000}
             value={annualCA}
             onChange={(e) => setCaOverride(Number(e.target.value))}
             className="w-full accent-[#5682F2] h-2 bg-white/[0.06] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
           />
           <div className="flex justify-between text-[10px] text-[#5a5a6e] mt-1">
-            <span>10k</span><span>300k</span>
+            <span>10k</span><span>{fmt(sliderMax / 1000)}k</span>
           </div>
         </div>
 
