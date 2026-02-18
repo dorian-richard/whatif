@@ -69,16 +69,18 @@ const DEADLINES: FiscalDeadline[] = [
     statuses: ["ei", "eurl_ir", "eurl_is"],
     estimateAmount: (ca, s) => ca * rate(s) / 4 },
 
-  // ── SASU : charges mensuelles (affiche en note) ──
-  { month: 0, day: 15, label: "Bulletin de paie + charges sociales", category: "urssaf",
+  // ── SASU : bulletin de paie + charges mensuelles ──
+  ...Array.from({ length: 12 }, (_, i): FiscalDeadline => ({
+    month: i, day: 15, label: "Bulletin de paie + charges sociales", category: "urssaf",
     statuses: ["sasu_ir", "sasu_is"],
-    note: "Recurrent chaque mois",
-    estimateAmount: (ca, s) => ca * rate(s) / 12 },
+    estimateAmount: (ca, s) => ca * rate(s) / 12,
+  })),
 
-  // ── TVA : mensuelle (non-micro) ──
-  { month: 0, day: 19, label: "Declaration TVA mensuelle", category: "tva",
+  // ── TVA : declaration mensuelle (non-micro) ──
+  ...Array.from({ length: 12 }, (_, i): FiscalDeadline => ({
+    month: i, day: 19, label: "Declaration TVA", category: "tva",
     statuses: ["ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"],
-    note: "Recurrent chaque mois (ou trimestriel selon option)" },
+  })),
 
   // ── IS acomptes ──
   { month: 2, day: 15, label: "Acompte IS T1", category: "is",
