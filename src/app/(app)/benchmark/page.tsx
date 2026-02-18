@@ -84,59 +84,26 @@ function percentileLabel(p: number): {
 export default function BenchmarkPage() {
   const { clients, role, setProfile, workDaysPerWeek, workedDaysPerYear } = useProfileStore();
 
-  // User's effective TJM — uses per-client days when available, profile fallback otherwise
+  // TJM effectif = CA total mensuel / jours travaillés par mois (profil)
+  // Utilise getClientBaseCA qui tient compte des params de chaque client
+  // (dailyRate, daysPerWeek, daysPerYear, monthlyAmount, etc.)
+  // et les jours travaillés du profil (workedDaysPerYear) comme dénominateur
   const userTJM = useMemo(() => {
     const activeClients = clients.filter((c) => c.isActive !== false);
     if (activeClients.length === 0) return null;
 
-    const profileDaysPerMonth = workedDaysPerYear
+    const totalMonthlyCA = activeClients.reduce(
+      (sum, c) => sum + getClientBaseCA(c),
+      0
+    );
+    if (totalMonthlyCA <= 0) return null;
+
+    // Jours travaillés/mois depuis le profil (pas la somme des clients)
+    const daysPerMonth = workedDaysPerYear
       ? workedDaysPerYear / 12
       : (workDaysPerWeek / 5) * AVG_JOURS_OUVRES;
 
-    let totalCA = 0;
-    let daysFromClients = 0;
-    let caWithDays = 0;
-    let caWithoutDays = 0;
-
-    for (const c of activeClients) {
-      const ca = getClientBaseCA(c);
-      totalCA += ca;
-
-      // Extract days/month from client params
-      let days = 0;
-      if (c.billing === "tjm") {
-        if (c.daysPerYear) days = c.daysPerYear / 12;
-        else if (c.daysPerWeek != null && c.daysPerWeek > 0)
-          days = (c.daysPerWeek / 5) * AVG_JOURS_OUVRES;
-        else if (c.daysPerMonth && c.daysPerMonth > 0) days = c.daysPerMonth;
-      } else if (c.daysPerMonth && c.daysPerMonth > 0) {
-        days = c.daysPerMonth;
-      }
-
-      if (days > 0) {
-        daysFromClients += days;
-        caWithDays += ca;
-      } else {
-        caWithoutDays += ca;
-      }
-    }
-
-    if (totalCA <= 0) return null;
-
-    let totalDays: number;
-    if (caWithoutDays === 0) {
-      // All clients have day info → use actual client data
-      totalDays = daysFromClients;
-    } else if (daysFromClients > 0 && caWithDays > 0) {
-      // Mix: estimate days for clients without info from known rate
-      const knownRate = caWithDays / daysFromClients;
-      totalDays = daysFromClients + caWithoutDays / knownRate;
-    } else {
-      // No day info at all → profile fallback
-      totalDays = profileDaysPerMonth;
-    }
-
-    return Math.round(totalCA / totalDays);
+    return Math.round(totalMonthlyCA / daysPerMonth);
   }, [clients, workDaysPerWeek, workedDaysPerYear]);
 
   // Initialize m\u00e9tier from profile role (if set)
