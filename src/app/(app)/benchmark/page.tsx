@@ -16,7 +16,7 @@ import {
   type Seniority,
   type TJMRange,
 } from "@/lib/benchmark-data";
-import { getClientBaseCA, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
+import { getAnnualCA, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
 
 /* ════════════════════════════════════════════════
    Local config
@@ -84,26 +84,17 @@ function percentileLabel(p: number): {
 export default function BenchmarkPage() {
   const { clients, role, setProfile, workDaysPerWeek, workedDaysPerYear } = useProfileStore();
 
-  // TJM effectif = CA total mensuel / jours travaillés par mois (profil)
-  // Utilise getClientBaseCA qui tient compte des params de chaque client
-  // (dailyRate, daysPerWeek, daysPerYear, monthlyAmount, etc.)
-  // et les jours travaillés du profil (workedDaysPerYear) comme dénominateur
+  // TJM effectif = CA annuel réel / jours travaillés par an
+  // Utilise getAnnualCA qui tient compte de la saisonnalité et des périodes contrats
   const userTJM = useMemo(() => {
-    const activeClients = clients.filter((c) => c.isActive !== false);
-    if (activeClients.length === 0) return null;
+    const annualCA = getAnnualCA(clients);
+    if (annualCA <= 0) return null;
 
-    const totalMonthlyCA = activeClients.reduce(
-      (sum, c) => sum + getClientBaseCA(c),
-      0
-    );
-    if (totalMonthlyCA <= 0) return null;
+    const daysPerYear = workedDaysPerYear
+      ? workedDaysPerYear
+      : (workDaysPerWeek / 5) * AVG_JOURS_OUVRES * 12;
 
-    // Jours travaillés/mois depuis le profil (pas la somme des clients)
-    const daysPerMonth = workedDaysPerYear
-      ? workedDaysPerYear / 12
-      : (workDaysPerWeek / 5) * AVG_JOURS_OUVRES;
-
-    return Math.round(totalMonthlyCA / daysPerMonth);
+    return Math.round(annualCA / daysPerYear);
   }, [clients, workDaysPerWeek, workedDaysPerYear]);
 
   // Initialize m\u00e9tier from profile role (if set)
