@@ -40,7 +40,8 @@ const RETRAITE_RATE_SALARIE = 0.15;
 /** Charges patronales CDI */
 const CDI_CHARGES_PATRONALES = 0.42;
 
-const STATUTS: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"];
+// SASU IR exclue : option IR limitee a 5 ans, pas pertinent pour la retraite long terme
+const STATUTS: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_is"];
 
 const STATUT_COLORS: Record<string, string> = {
   micro: "#F4BE7E",
