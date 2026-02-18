@@ -39,6 +39,7 @@ export interface FreelanceProfile {
   customTaxRate?: number;
   monthlySalary?: number;
   mixtePartSalaire?: number;
+  role?: string;
 }
 
 export interface SimulationParams {

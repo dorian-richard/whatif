@@ -293,23 +293,47 @@ function percentileLabel(p: number): {
    ════════════════════════════════════════════════ */
 
 export default function BenchmarkPage() {
-  const { clients } = useProfileStore();
+  const { clients, role, setProfile } = useProfileStore();
 
-  // User's average TJM from active clients
+  // User's average TJM computed from all active clients
   const userTJM = useMemo(() => {
-    const tjmClients = clients.filter(
-      (c) => c.isActive !== false && c.dailyRate && c.dailyRate > 0
-    );
-    if (tjmClients.length === 0) return null;
-    const sum = tjmClients.reduce((s, c) => s + (c.dailyRate ?? 0), 0);
-    return Math.round(sum / tjmClients.length);
+    const activeClients = clients.filter((c) => c.isActive !== false);
+    const rates: number[] = [];
+    for (const c of activeClients) {
+      if (c.billing === "tjm" && c.dailyRate && c.dailyRate > 0) {
+        rates.push(c.dailyRate);
+      } else if (
+        c.billing === "forfait" &&
+        c.monthlyAmount &&
+        c.daysPerMonth &&
+        c.daysPerMonth > 0
+      ) {
+        rates.push(Math.round(c.monthlyAmount / c.daysPerMonth));
+      } else if (c.dailyRate && c.dailyRate > 0) {
+        rates.push(c.dailyRate);
+      }
+    }
+    if (rates.length === 0) return null;
+    return Math.round(rates.reduce((s, r) => s + r, 0) / rates.length);
   }, [clients]);
 
-  const [selectedMetier, setSelectedMetier] = useState("dev_fullstack");
+  // Initialize métier from profile role (if set)
+  const [selectedMetier, setSelectedMetier] = useState(
+    () => {
+      if (role && METIERS.some((m) => m.id === role)) return role;
+      return "dev_fullstack";
+    }
+  );
   const [selectedSeniority, setSelectedSeniority] =
     useState<Seniority>("senior");
   const [selectedLocation, setSelectedLocation] =
     useState<Location>("paris");
+
+  // Persist role selection to profile store
+  const handleSelectMetier = (id: string) => {
+    setSelectedMetier(id);
+    setProfile({ role: id });
+  };
 
   const metier = METIERS.find((m) => m.id === selectedMetier) ?? METIERS[2];
   const locMult = LOCATIONS[selectedLocation].mult;
@@ -512,7 +536,7 @@ export default function BenchmarkPage() {
                   {METIERS.filter((m) => m.category === cat).map((m) => (
                     <button
                       key={m.id}
-                      onClick={() => setSelectedMetier(m.id)}
+                      onClick={() => handleSelectMetier(m.id)}
                       className={cn(
                         "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
                         selectedMetier === m.id
@@ -718,7 +742,7 @@ export default function BenchmarkPage() {
             return (
               <button
                 key={m.id}
-                onClick={() => setSelectedMetier(m.id)}
+                onClick={() => handleSelectMetier(m.id)}
                 className={cn(
                   "flex items-center gap-3 w-full p-3 rounded-xl transition-all text-left",
                   isSelected

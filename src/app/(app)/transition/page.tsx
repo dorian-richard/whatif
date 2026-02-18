@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
-import type { BusinessStatus } from "@/types";
+import type { BusinessStatus, RemunerationType } from "@/types";
 import {
   Briefcase,
   Check,
@@ -27,6 +27,7 @@ const STATUT_COLORS: Record<string, string> = {
 
 const CHARGES_SALARIALES = 0.23;
 const MICRO_PLAFOND = 77700;
+const PFU_RATE = 0.30;
 
 /* ── Avantages CDI ── */
 interface AvantageCDI {
@@ -92,32 +93,104 @@ const COUTS_FREELANCE: CoutFreelance[] = [
 
 /* ── Calculs ── */
 
-/** Reverse: target net → required CA (salary mode) */
+/** Reverse: target net → required CA */
 function reverseCA(
   targetNet: number,
   status: BusinessStatus,
+  remType: RemunerationType,
+  mixtePartSalaire: number,
   customIrRate?: number
 ): number {
   const cfg = BUSINESS_STATUS_CONFIG[status];
   const urssaf = cfg.urssaf;
   const ir = customIrRate ?? cfg.ir;
+  const is = cfg.is;
 
   if (status === "micro") return targetNet / (1 - urssaf - ir);
-  return targetNet / ((1 - urssaf) * (1 - ir));
+
+  if (is === 0) {
+    // IR structures
+    if (status === "sasu_ir" && remType === "dividendes") {
+      return targetNet / (1 - ir);
+    }
+    if (status === "sasu_ir" && remType === "mixte") {
+      const salPart = mixtePartSalaire / 100;
+      const divPart = 1 - salPart;
+      return targetNet / (salPart * (1 - urssaf) * (1 - ir) + divPart * (1 - ir));
+    }
+    return targetNet / ((1 - urssaf) * (1 - ir));
+  }
+
+  // IS structures
+  const isSASU = status === "sasu_is";
+
+  if (remType === "salaire") {
+    return targetNet / ((1 - urssaf) * (1 - ir));
+  }
+  if (remType === "dividendes") {
+    if (isSASU) return targetNet / ((1 - is) * (1 - PFU_RATE));
+    return targetNet / ((1 - is) * (1 - urssaf) * (1 - ir));
+  }
+  // Mixte
+  const salPart = mixtePartSalaire / 100;
+  const divPart = 1 - salPart;
+  const salMult = salPart * (1 - urssaf) * (1 - ir);
+  const divMult = isSASU
+    ? divPart * (1 - is) * (1 - PFU_RATE)
+    : divPart * (1 - is) * (1 - urssaf) * (1 - ir);
+  const total = salMult + divMult;
+  if (total <= 0) return Infinity;
+  return targetNet / total;
 }
 
-/** Forward: CA → net (salary mode) */
+/** Forward: CA → net */
 function forwardNet(
   annualCA: number,
   status: BusinessStatus,
+  remType: RemunerationType,
+  mixtePartSalaire: number,
   customIrRate?: number
 ): number {
   const cfg = BUSINESS_STATUS_CONFIG[status];
   const urssaf = cfg.urssaf;
   const ir = customIrRate ?? cfg.ir;
+  const is = cfg.is;
 
   if (status === "micro") return annualCA * (1 - urssaf - ir);
-  return annualCA * (1 - urssaf) * (1 - ir);
+
+  if (is === 0) {
+    if (status === "sasu_ir" && remType === "dividendes") {
+      return annualCA * (1 - ir);
+    }
+    if (status === "sasu_ir" && remType === "mixte") {
+      const salCost = annualCA * (mixtePartSalaire / 100);
+      const salNet = salCost * (1 - urssaf);
+      const remaining = annualCA - salCost;
+      return (salNet + remaining) * (1 - ir);
+    }
+    return annualCA * (1 - urssaf) * (1 - ir);
+  }
+
+  // IS
+  const isSASU = status === "sasu_is";
+
+  if (remType === "salaire") {
+    return annualCA * (1 - urssaf) * (1 - ir);
+  }
+  if (remType === "dividendes") {
+    const afterIS = annualCA * (1 - is);
+    if (isSASU) return afterIS * (1 - PFU_RATE);
+    return afterIS * (1 - urssaf) * (1 - ir);
+  }
+  // Mixte
+  const salCost = annualCA * (mixtePartSalaire / 100);
+  const salNet = salCost * (1 - urssaf) * (1 - ir);
+  const remaining = annualCA - salCost;
+  const afterIS = remaining * (1 - is);
+  const divNet = isSASU
+    ? afterIS * (1 - PFU_RATE)
+    : afterIS * (1 - urssaf) * (1 - ir);
+  return salNet + divNet;
 }
 
 function getDifficulty(
@@ -143,7 +216,7 @@ const DIFFICULTY_CONFIG = {
 /* ── Component ── */
 
 export default function TransitionPage() {
-  const { customIrRate, workDaysPerWeek } = useProfileStore();
+  const { customIrRate, workDaysPerWeek, remunerationType, mixtePartSalaire } = useProfileStore();
 
   // CDI inputs
   const [salaireBrut, setSalaireBrut] = useState(45000);
@@ -153,6 +226,8 @@ export default function TransitionPage() {
 
   // Freelance params
   const [vacationWeeks, setVacationWeeks] = useState(5);
+  const [localRemType, setLocalRemType] = useState<RemunerationType>(remunerationType ?? "salaire");
+  const [localMixte, setLocalMixte] = useState(mixtePartSalaire ?? 50);
 
   // TJM explorer
   const [explorerTJM, setExplorerTJM] = useState(500);
@@ -188,7 +263,8 @@ export default function TransitionPage() {
   // ── Required TJM per status ──
   const results = useMemo(() => {
     return STATUTS.map((s) => {
-      const requiredCA = reverseCA(targetFreelanceNet, s, customIrRate);
+      const remType = (s === "eurl_is" || s === "sasu_is" || s === "sasu_ir") ? localRemType : "salaire";
+      const requiredCA = reverseCA(targetFreelanceNet, s, remType, localMixte, customIrRate);
       const requiredTJM =
         workedDaysPerYear > 0 ? requiredCA / workedDaysPerYear : 0;
       const ineligible = s === "micro" && requiredCA > MICRO_PLAFOND;
@@ -209,7 +285,7 @@ export default function TransitionPage() {
         tauxEffectif,
       };
     });
-  }, [targetFreelanceNet, customIrRate, workedDaysPerYear]);
+  }, [targetFreelanceNet, customIrRate, workedDaysPerYear, localRemType, localMixte]);
 
   const best = useMemo(() => {
     const eligible = results.filter(
@@ -225,7 +301,8 @@ export default function TransitionPage() {
   const explorerResults = useMemo(() => {
     const annualCA = explorerTJM * workedDaysPerYear;
     return STATUTS.map((s) => {
-      const freelanceNetAnnuel = forwardNet(annualCA, s, customIrRate);
+      const remType = (s === "eurl_is" || s === "sasu_is" || s === "sasu_ir") ? localRemType : "salaire";
+      const freelanceNetAnnuel = forwardNet(annualCA, s, remType, localMixte, customIrRate);
       const freelanceNetAfterCosts = freelanceNetAnnuel - freelanceCostsAnnuel;
       const deltaMensuel =
         freelanceNetAfterCosts / 12 - cdiPackageMensuel;
@@ -246,6 +323,8 @@ export default function TransitionPage() {
     customIrRate,
     freelanceCostsAnnuel,
     cdiPackageMensuel,
+    localRemType,
+    localMixte,
   ]);
 
   const toggleAvantage = (id: string) => {
@@ -414,6 +493,50 @@ export default function TransitionPage() {
               onChange={(e) => setVacationWeeks(Number(e.target.value))}
               className="w-full accent-[#F4BE7E] h-2 bg-white/[0.06] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F4BE7E] [&::-webkit-slider-thumb]:shadow-lg"
             />
+          </div>
+
+          {/* Remuneration type */}
+          <div className="mt-5 pt-4 border-t border-white/[0.06]">
+            <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-3">
+              R&eacute;mun&eacute;ration (SASU IR / EURL IS / SASU IS)
+            </div>
+            <div className="flex gap-2 mb-3">
+              {([
+                { value: "salaire" as const, label: "Salaire" },
+                { value: "dividendes" as const, label: "Dividendes" },
+                { value: "mixte" as const, label: "Mixte" },
+              ]).map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setLocalRemType(opt.value)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                    localRemType === opt.value
+                      ? "bg-[#5682F2]/15 text-[#5682F2] ring-1 ring-[#5682F2]/30"
+                      : "bg-white/[0.04] text-[#8b8b9e] hover:text-white"
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+            {localRemType === "mixte" && (
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs text-[#8b8b9e]">Salaire / Dividendes</span>
+                  <span className="text-xs font-bold text-white">{localMixte}% / {100 - localMixte}%</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={localMixte}
+                  onChange={(e) => setLocalMixte(Number(e.target.value))}
+                  className="w-full accent-[#5682F2] h-1.5 bg-white/[0.06] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2]"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
