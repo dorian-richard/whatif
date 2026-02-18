@@ -16,6 +16,7 @@ import {
   type Seniority,
   type TJMRange,
 } from "@/lib/benchmark-data";
+import { getClientBaseCA, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
 
 /* ════════════════════════════════════════════════
    Local config
@@ -81,29 +82,62 @@ function percentileLabel(p: number): {
    ════════════════════════════════════════════════ */
 
 export default function BenchmarkPage() {
-  const { clients, role, setProfile } = useProfileStore();
+  const { clients, role, setProfile, workDaysPerWeek, workedDaysPerYear } = useProfileStore();
 
-  // User's average TJM computed from all active clients
+  // User's effective TJM — uses per-client days when available, profile fallback otherwise
   const userTJM = useMemo(() => {
     const activeClients = clients.filter((c) => c.isActive !== false);
-    const rates: number[] = [];
+    if (activeClients.length === 0) return null;
+
+    const profileDaysPerMonth = workedDaysPerYear
+      ? workedDaysPerYear / 12
+      : (workDaysPerWeek / 5) * AVG_JOURS_OUVRES;
+
+    let totalCA = 0;
+    let daysFromClients = 0;
+    let caWithDays = 0;
+    let caWithoutDays = 0;
+
     for (const c of activeClients) {
-      if (c.billing === "tjm" && c.dailyRate && c.dailyRate > 0) {
-        rates.push(c.dailyRate);
-      } else if (
-        c.billing === "forfait" &&
-        c.monthlyAmount &&
-        c.daysPerMonth &&
-        c.daysPerMonth > 0
-      ) {
-        rates.push(Math.round(c.monthlyAmount / c.daysPerMonth));
-      } else if (c.dailyRate && c.dailyRate > 0) {
-        rates.push(c.dailyRate);
+      const ca = getClientBaseCA(c);
+      totalCA += ca;
+
+      // Extract days/month from client params
+      let days = 0;
+      if (c.billing === "tjm") {
+        if (c.daysPerYear) days = c.daysPerYear / 12;
+        else if (c.daysPerWeek != null && c.daysPerWeek > 0)
+          days = (c.daysPerWeek / 5) * AVG_JOURS_OUVRES;
+        else if (c.daysPerMonth && c.daysPerMonth > 0) days = c.daysPerMonth;
+      } else if (c.daysPerMonth && c.daysPerMonth > 0) {
+        days = c.daysPerMonth;
+      }
+
+      if (days > 0) {
+        daysFromClients += days;
+        caWithDays += ca;
+      } else {
+        caWithoutDays += ca;
       }
     }
-    if (rates.length === 0) return null;
-    return Math.round(rates.reduce((s, r) => s + r, 0) / rates.length);
-  }, [clients]);
+
+    if (totalCA <= 0) return null;
+
+    let totalDays: number;
+    if (caWithoutDays === 0) {
+      // All clients have day info → use actual client data
+      totalDays = daysFromClients;
+    } else if (daysFromClients > 0 && caWithDays > 0) {
+      // Mix: estimate days for clients without info from known rate
+      const knownRate = caWithDays / daysFromClients;
+      totalDays = daysFromClients + caWithoutDays / knownRate;
+    } else {
+      // No day info at all → profile fallback
+      totalDays = profileDaysPerMonth;
+    }
+
+    return Math.round(totalCA / totalDays);
+  }, [clients, workDaysPerWeek, workedDaysPerYear]);
 
   // Initialize m\u00e9tier from profile role (if set)
   const [selectedMetier, setSelectedMetier] = useState(
