@@ -23,8 +23,8 @@ export function Hero() {
         </h1>
 
         <p className="text-lg sm:text-xl text-[#8b8b9e] max-w-2xl mx-auto mb-10 leading-relaxed">
-          Dashboard, simulateur de scénarios, suivi clients et fiscalité.
-          Pilote ton activité freelance et prends des décisions éclairées.
+          Simulateur, comparateur de statuts, benchmark TJM, transition CDI&nbsp;&rarr;&nbsp;Freelance et objectif revenu.
+          Tous les outils pour piloter ton activité.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">

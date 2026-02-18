@@ -1,4 +1,4 @@
-import { SlidersHorizontal, BarChart3, Shield, Zap, Target, Gauge } from "@/components/ui/icons";
+import { SlidersHorizontal, BarChart3, ArrowLeftRight, Target, Gauge, Briefcase } from "@/components/ui/icons";
 
 const FEATURES = [
   {
@@ -8,33 +8,33 @@ const FEATURES = [
     color: "#5682F2",
   },
   {
-    icon: BarChart3,
-    title: "12 mois de visibilité",
-    desc: "CA, revenu net, trésorerie mois par mois. Avec les vrais jours ouvrés, pas une moyenne approximative.",
+    icon: Gauge,
+    title: "Compare tous les statuts",
+    desc: "Micro, EI, EURL IR/IS, SASU IR/IS. Salaire, dividendes, mixte. Vois le net réel côte à côte pour choisir ton statut optimal.",
+    color: "#f87171",
+  },
+  {
+    icon: Briefcase,
+    title: "Benchmark TJM marché",
+    desc: "27 métiers, 7 catégories, données réelles Silkhom 2025. Compare ton TJM au marché par séniorité et localisation.",
     color: "#F4BE7E",
   },
   {
-    icon: Shield,
-    title: "Ta météo financière",
-    desc: "Runway, dépendance client, taux d'occupation. En un coup d'œil, tu sais si ton activité tient la route.",
+    icon: ArrowLeftRight,
+    title: "Transition CDI → Freelance",
+    desc: "Simule ton passage au freelance. Package CDI total vs objectif freelance, TJM requis par statut, comparaison visuelle.",
     color: "#4ade80",
   },
   {
     icon: Target,
-    title: "Chaque client, son modèle",
-    desc: "TJM, forfait mensuel, mission ponctuelle. Mixe les modes de facturation comme dans la vraie vie.",
+    title: "Objectif Revenu",
+    desc: "Tu vises un net mensuel ? On calcule le CA, le TJM et le nombre de clients nécessaires, statut par statut.",
     color: "#a78bfa",
   },
   {
-    icon: Gauge,
-    title: "La vraie fiscalité, pas un tableur",
-    desc: "Micro, EURL, SASU. Salaire, dividendes, mixte. URSSAF, IS, IR, PFU — les vrais calculs, automatiquement.",
-    color: "#f87171",
-  },
-  {
-    icon: Zap,
-    title: "Construit pour les freelances",
-    desc: "Pas un outil générique adapté. Freelens est pensé pour tes décisions : renégocier un TJM, changer de statut, prendre des congés.",
+    icon: BarChart3,
+    title: "12 mois de visibilité",
+    desc: "CA, revenu net, trésorerie mois par mois avec les vrais jours ouvrés, la saisonnalité et tous tes clients.",
     color: "#fbbf24",
   },
 ];
@@ -54,7 +54,7 @@ export function Features() {
             <span className="fn-gradient-text">décider sereinement</span>
           </h2>
           <p className="text-lg text-[#8b8b9e] max-w-xl mx-auto">
-            Dashboard, simulateur, scénarios et suivi fiscal réunis en un seul outil.
+            Simulateur, comparateur, benchmark et outils de transition — tout en un.
           </p>
         </div>
 

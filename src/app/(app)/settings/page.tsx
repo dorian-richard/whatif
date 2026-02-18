@@ -7,7 +7,8 @@ import { fmt, cn } from "@/lib/utils";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import type { BusinessStatus, RemunerationType } from "@/types";
-import { CalendarDays, ClipboardList, Receipt, Landmark, HandCoins, Target, Banknote, Users, Check, X, Info } from "@/components/ui/icons";
+import { CalendarDays, ClipboardList, Receipt, Landmark, HandCoins, Target, Banknote, Users, Check, X, Info, Briefcase } from "@/components/ui/icons";
+import { METIERS, METIER_CATEGORIES, CATEGORY_COLORS } from "@/lib/benchmark-data";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -293,6 +294,59 @@ export default function SettingsPage() {
       <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6">
         <h2 className="text-sm font-bold text-white mb-5">Profil freelance</h2>
         <div className="space-y-6">
+          {/* Métier selector */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-3">
+              <Briefcase className="size-4 text-[#F4BE7E]" />
+              <label className="text-sm font-medium text-[#8b8b9e]">Mon métier</label>
+              {profile.role && (
+                <span className="ml-auto text-xs font-medium text-[#F4BE7E]">
+                  {METIERS.find((m) => m.id === profile.role)?.label}
+                </span>
+              )}
+            </div>
+            <div className="space-y-3">
+              {METIER_CATEGORIES.map((cat) => (
+                <div key={cat}>
+                  <div
+                    className="text-[10px] font-semibold uppercase tracking-wider mb-1.5"
+                    style={{ color: CATEGORY_COLORS[cat] ?? "#8b8b9e" }}
+                  >
+                    {cat}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {METIERS.filter((m) => m.category === cat).map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => profile.setProfile({ role: m.id })}
+                        className={cn(
+                          "px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all",
+                          profile.role === m.id
+                            ? "ring-1"
+                            : "bg-white/[0.04] text-[#8b8b9e] hover:text-white hover:bg-white/[0.06]"
+                        )}
+                        style={
+                          profile.role === m.id
+                            ? {
+                                backgroundColor: `${CATEGORY_COLORS[cat]}15`,
+                                color: CATEGORY_COLORS[cat],
+                                boxShadow: `0 0 0 1px ${CATEGORY_COLORS[cat]}40`,
+                              }
+                            : undefined
+                        }
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-[#5a5a6e] mt-2">Utilisé pour personnaliser le benchmark TJM marché.</p>
+          </div>
+
+          <div className="border-t border-white/[0.06]" />
+
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="text-sm font-medium text-[#8b8b9e] flex items-center gap-1.5"><CalendarDays className="size-4 text-[#5682F2]" /> Jours de travail / semaine</label>
