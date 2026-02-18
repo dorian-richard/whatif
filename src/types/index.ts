@@ -40,6 +40,7 @@ export interface FreelanceProfile {
   monthlySalary?: number;
   mixtePartSalaire?: number;
   role?: string;
+  age?: number;
 }
 
 export interface SimulationParams {

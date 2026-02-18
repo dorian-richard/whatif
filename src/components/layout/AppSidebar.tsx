@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Scale, Target, ArrowLeftRight, BarChart3, Settings } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Scale, Target, ArrowLeftRight, BarChart3, Settings, Shield, CalendarDays, Landmark } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 
 const NAV_ITEMS = [
@@ -13,6 +13,9 @@ const NAV_ITEMS = [
   { href: "/objectif", label: "Objectif", icon: Target },
   { href: "/transition", label: "Transition", icon: ArrowLeftRight },
   { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
+  { href: "/acre", label: "ACRE", icon: Shield },
+  { href: "/calendrier", label: "Calendrier", icon: CalendarDays },
+  { href: "/retraite", label: "Retraite", icon: Landmark },
   { href: "/settings", label: "Paramètres", icon: Settings },
 ];
 

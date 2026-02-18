@@ -27,6 +27,7 @@ export const useProfileStore = create<ProfileState>()(
       businessStatus: "micro",
       monthlySalary: 0,
       mixtePartSalaire: 50,
+      age: 35,
       onboardingCompleted: false,
       clients: [],
 

@@ -1,4 +1,4 @@
-import { SlidersHorizontal, BarChart3, ArrowLeftRight, Target, Gauge, Briefcase } from "@/components/ui/icons";
+import { SlidersHorizontal, BarChart3, ArrowLeftRight, Target, Gauge, Briefcase, Shield, CalendarDays, Landmark } from "@/components/ui/icons";
 
 const FEATURES = [
   {
@@ -36,6 +36,24 @@ const FEATURES = [
     title: "12 mois de visibilité",
     desc: "CA, revenu net, trésorerie mois par mois avec les vrais jours ouvrés, la saisonnalité et tous tes clients.",
     color: "#fbbf24",
+  },
+  {
+    icon: Shield,
+    title: "Simulateur ACRE",
+    desc: "Calcule tes économies avec l'ACRE : -50% de charges sociales pendant 4 trimestres, comparaison par statut.",
+    color: "#06b6d4",
+  },
+  {
+    icon: CalendarDays,
+    title: "Calendrier Fiscal",
+    desc: "Toutes tes échéances fiscales sur 12 mois : URSSAF, TVA, IS, IR. Montants provisionnels estimés.",
+    color: "#f97316",
+  },
+  {
+    icon: Landmark,
+    title: "Retraite Freelance vs CDI",
+    desc: "Compare ta pension de retraite par statut freelance vs un CDI équivalent. Trimestres, cotisations, pension estimée.",
+    color: "#8b5cf6",
   },
 ];
 
