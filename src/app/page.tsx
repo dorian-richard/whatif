@@ -4,7 +4,6 @@ import { Hero } from "@/components/landing/Hero";
 import { Features } from "@/components/landing/Features";
 import { Demo } from "@/components/landing/Demo";
 import { Testimonials } from "@/components/landing/Testimonials";
-import { Pricing } from "@/components/landing/Pricing";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import Link from "next/link";
 
@@ -52,10 +51,7 @@ export default function Home() {
             <a href="#demo" className="text-sm text-[#8b8b9e] hover:text-white transition-colors hidden sm:inline">
               Démo
             </a>
-            <a href="#pricing" className="text-sm text-[#8b8b9e] hover:text-white transition-colors hidden sm:inline">
-              Tarifs
-            </a>
-            <Link href="/login" className="text-sm text-[#8b8b9e] hover:text-white transition-colors">
+<Link href="/login" className="text-sm text-[#8b8b9e] hover:text-white transition-colors">
               Connexion
             </Link>
             <Link
@@ -72,7 +68,6 @@ export default function Home() {
       <Features />
       <Demo />
       <Testimonials />
-      <Pricing />
       <FinalCTA />
     </div>
   );
