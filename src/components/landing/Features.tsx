@@ -1,4 +1,4 @@
-import { SlidersHorizontal, BarChart3, ArrowLeftRight, Target, Gauge, Briefcase, Shield, CalendarDays, Landmark } from "@/components/ui/icons";
+import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays } from "@/components/ui/icons";
 
 const FEATURES = [
   {
@@ -8,22 +8,10 @@ const FEATURES = [
     color: "#5682F2",
   },
   {
-    icon: Gauge,
-    title: "Compare tous les statuts",
-    desc: "Micro, EI, EURL IR/IS, SASU IR/IS. Salaire, dividendes, mixte. Vois le net réel côte à côte pour choisir ton statut optimal.",
-    color: "#f87171",
-  },
-  {
     icon: Briefcase,
     title: "Benchmark TJM marché",
     desc: "27 métiers, 7 catégories, données réelles Silkhom 2025. Compare ton TJM au marché par séniorité et localisation.",
     color: "#F4BE7E",
-  },
-  {
-    icon: ArrowLeftRight,
-    title: "Transition CDI → Freelance",
-    desc: "Simule ton passage au freelance. Package CDI total vs objectif freelance, TJM requis par statut, comparaison visuelle.",
-    color: "#4ade80",
   },
   {
     icon: Target,
@@ -38,22 +26,10 @@ const FEATURES = [
     color: "#fbbf24",
   },
   {
-    icon: Shield,
-    title: "Simulateur ACRE",
-    desc: "Calcule tes économies avec l'ACRE : -50% de charges sociales pendant 4 trimestres, comparaison par statut.",
-    color: "#06b6d4",
-  },
-  {
     icon: CalendarDays,
     title: "Calendrier Fiscal",
     desc: "Toutes tes échéances fiscales sur 12 mois : URSSAF, TVA, IS, IR. Montants provisionnels estimés.",
     color: "#f97316",
-  },
-  {
-    icon: Landmark,
-    title: "Retraite Freelance vs CDI",
-    desc: "Compare ta pension de retraite par statut freelance vs un CDI équivalent. Trimestres, cotisations, pension estimée.",
-    color: "#8b5cf6",
   },
 ];
 
@@ -72,7 +48,7 @@ export function Features() {
             <span className="fn-gradient-text">décider sereinement</span>
           </h2>
           <p className="text-lg text-[#8b8b9e] max-w-xl mx-auto">
-            Simulateur, comparateur, benchmark et outils de transition — tout en un.
+            Simulateur, benchmark et outils de décision — tout en un.
           </p>
         </div>
 
