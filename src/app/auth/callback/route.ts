@@ -11,14 +11,14 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      // Create user in DB immediately after successful auth
+      // Create user in DB (non-blocking — auth must not fail if DB is slow)
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        await prisma.user.upsert({
+        prisma.user.upsert({
           where: { id: user.id },
           update: {},
           create: { id: user.id, email: user.email! },
-        });
+        }).catch((err) => console.error("Failed to upsert user:", err));
       }
       return NextResponse.redirect(`${origin}${next}`);
     }
