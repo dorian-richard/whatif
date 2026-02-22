@@ -35,10 +35,10 @@ export function Hero() {
             Essayer gratuitement &rarr;
           </Link>
           <a
-            href="#demo"
+            href="#simulation"
             className="px-8 py-3.5 bg-muted/30 text-foreground rounded-full text-lg font-semibold hover:bg-muted transition-colors border border-border backdrop-blur-sm"
           >
-            Voir la démo
+            Voir la simulation
           </a>
         </div>
         <div className="mb-12" />

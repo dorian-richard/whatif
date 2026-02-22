@@ -1,4 +1,4 @@
-import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays } from "@/components/ui/icons";
+import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent } from "@/components/ui/icons";
 
 const FEATURES = [
   {
@@ -32,9 +32,37 @@ const FEATURES = [
   {
     icon: CalendarDays,
     title: "Calendrier Fiscal",
-    desc: "Toutes tes échéances fiscales sur 12 mois : URSSAF, TVA, IS, IR. Montants provisionnels estimés.",
+    desc: "Toutes tes échéances fiscales sur 12 mois : URSSAF, TVA, IS, IR. Montants provisionnels estimés + export .ics.",
     color: "#f97316",
     pro: true,
+  },
+  {
+    icon: Scale,
+    title: "Comparateur de statuts",
+    desc: "Micro, EURL, SASU, portage salarial — compare ton revenu net, tes charges et ta fiscalité statut par statut.",
+    color: "#10b981",
+    pro: false,
+  },
+  {
+    icon: ArrowLeftRight,
+    title: "Transition CDI → Freelance",
+    desc: "Salaire net CDI vs revenu freelance : combien facturer pour gagner autant (ou plus) qu'en salariat ?",
+    color: "#ec4899",
+    pro: false,
+  },
+  {
+    icon: PiggyBank,
+    title: "Projection Retraite",
+    desc: "Estime ta pension selon ton statut, ton CA et ton âge. Compare les trimestres et points acquis par régime.",
+    color: "#8b5cf6",
+    pro: true,
+  },
+  {
+    icon: BadgePercent,
+    title: "Simulation ACRE",
+    desc: "Calcule tes économies URSSAF avec l'ACRE sur 1 an, statut par statut. Micro, EURL et SASU comparés.",
+    color: "#06b6d4",
+    pro: false,
   },
 ];
 
@@ -53,11 +81,11 @@ export function Features() {
             <span className="fn-gradient-text">décider sereinement</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            Simulateur, benchmark et outils de décision — tout en un.
+            Simulateur, comparateur, benchmark et outils de décision — tout en un.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {FEATURES.map((f) => (
             <div
               key={f.title}

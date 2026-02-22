@@ -44,19 +44,19 @@ export function Demo() {
   const maxVal = Math.max(...projection.before, ...projection.after, 1);
 
   return (
-    <section id="demo" className="snap-section relative flex items-center overflow-hidden">
+    <section id="simulation" className="snap-section relative flex items-center overflow-hidden">
       <div className="absolute inset-0">
         <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] bg-[#F4BE7E]/5 rounded-full blur-[120px]" />
       </div>
 
       <div className="relative max-w-5xl mx-auto px-6 py-20 w-full">
         <div className="text-center mb-12">
-          <span className="text-sm font-medium text-[#F4BE7E] uppercase tracking-widest mb-3 block">Démo interactive</span>
+          <span className="text-sm font-medium text-[#F4BE7E] uppercase tracking-widest mb-3 block">Simulation</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Essaie par toi-même
+            Teste un scénario en 1 clic
           </h2>
           <p className="text-lg text-muted-foreground">
-            Clique sur un scénario et vois l&apos;impact instantanément.
+            Vacances, hausse de tarifs, perte de client — vois l&apos;impact sur ton CA instantanément.
           </p>
         </div>
 
