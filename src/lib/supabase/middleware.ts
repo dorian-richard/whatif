@@ -25,6 +25,17 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
+  // Handle auth code on any route (Supabase PKCE redirects to Site URL with ?code=)
+  const code = request.nextUrl.searchParams.get("code");
+  if (code && !request.nextUrl.pathname.startsWith("/auth/callback")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/callback";
+    if (!url.searchParams.has("next")) {
+      url.searchParams.set("next", "/dashboard");
+    }
+    return NextResponse.redirect(url);
+  }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();

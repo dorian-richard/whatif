@@ -43,18 +43,24 @@ const MONTHS_FULL = [
    ════════════════════════════════════════════════ */
 
 const rate = (s: BusinessStatus) => BUSINESS_STATUS_CONFIG[s].urssaf;
+const irRate = (s: BusinessStatus) => BUSINESS_STATUS_CONFIG[s].ir;
 const isRate = (s: BusinessStatus) => BUSINESS_STATUS_CONFIG[s].is;
+
+/** TVA taux standard */
+const TVA_RATE = 0.20;
+/** CFE estimation forfaitaire (varie selon commune, base minimale courante) */
+const CFE_ESTIMATE = 750;
 
 const DEADLINES: FiscalDeadline[] = [
   // ── MICRO : URSSAF quarterly ──
   { month: 0, day: 31, label: "Declaration CA T4 (N-1)", category: "urssaf", statuses: ["micro"],
-    estimateAmount: (ca) => ca * 0.22 / 4 },
+    estimateAmount: (ca, s) => ca * rate(s) / 4 },
   { month: 3, day: 30, label: "Declaration CA T1", category: "urssaf", statuses: ["micro"],
-    estimateAmount: (ca) => ca * 0.22 / 4 },
+    estimateAmount: (ca, s) => ca * rate(s) / 4 },
   { month: 6, day: 31, label: "Declaration CA T2", category: "urssaf", statuses: ["micro"],
-    estimateAmount: (ca) => ca * 0.22 / 4 },
+    estimateAmount: (ca, s) => ca * rate(s) / 4 },
   { month: 9, day: 31, label: "Declaration CA T3", category: "urssaf", statuses: ["micro"],
-    estimateAmount: (ca) => ca * 0.22 / 4 },
+    estimateAmount: (ca, s) => ca * rate(s) / 4 },
 
   // ── TNS : URSSAF quarterly (EI, EURL IR, EURL IS) ──
   { month: 1, day: 5, label: "Appel provisionnel URSSAF T1", category: "urssaf",
@@ -81,6 +87,8 @@ const DEADLINES: FiscalDeadline[] = [
   ...Array.from({ length: 12 }, (_, i): FiscalDeadline => ({
     month: i, day: 19, label: "Declaration TVA", category: "tva",
     statuses: ["ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"],
+    estimateAmount: (ca) => ca * TVA_RATE / 12,
+    note: "TVA collectee - TVA deductible",
   })),
 
   // ── IS acomptes ──
@@ -99,7 +107,13 @@ const DEADLINES: FiscalDeadline[] = [
 
   // ── IR ──
   { month: 4, day: 25, label: "Declaration de revenus IR", category: "ir",
-    statuses: ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"] },
+    statuses: ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"],
+    estimateAmount: (ca, s) => {
+      if (s === "micro") return ca * irRate(s);
+      // IR structures : IR sur le net apres charges
+      return ca * (1 - rate(s)) * irRate(s);
+    },
+    note: "Solde IR annuel" },
 
   // ── Admin ──
   { month: 4, day: 15, label: "Liasse fiscale (2065 / 2035)", category: "admin",
@@ -108,6 +122,7 @@ const DEADLINES: FiscalDeadline[] = [
     statuses: ["eurl_ir", "eurl_is", "sasu_ir", "sasu_is"] },
   { month: 11, day: 15, label: "CFE (Cotisation Fonciere)", category: "admin",
     statuses: ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"],
+    estimateAmount: () => CFE_ESTIMATE,
     note: "Exonere la 1ere annee" },
 ];
 
@@ -220,7 +235,7 @@ export default function CalendrierPage() {
     return sums;
   }, [filteredByMonth, annualCA, selectedStatus]);
 
-  const totalProvision = totals.urssaf + totals.is;
+  const totalProvision = totals.urssaf + totals.is + totals.ir + totals.admin;
 
   const allStatuts: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
 
@@ -278,10 +293,12 @@ export default function CalendrierPage() {
       </div>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         <SummaryCard icon={Banknote} label="URSSAF / an" value={totals.urssaf} color="#5682F2" />
-        <SummaryCard icon={Shield} label="IS / an" value={totals.is} color="#a78bfa" />
-        <SummaryCard icon={Landmark} label="Total provisions" value={totalProvision} color="#06b6d4" />
+        {totals.tva > 0 && <SummaryCard icon={CircleAlert} label="TVA / an" value={totals.tva} color="#f97316" />}
+        {totals.is > 0 && <SummaryCard icon={Shield} label="IS / an" value={totals.is} color="#a78bfa" />}
+        <SummaryCard icon={Landmark} label="IR estime / an" value={totals.ir} color="#4ade80" />
+        <SummaryCard icon={Landmark} label="Total a provisionner" value={totalProvision} color="#06b6d4" />
         <SummaryCard
           icon={CalendarDays}
           label="Echeances / an"
