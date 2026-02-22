@@ -31,6 +31,16 @@ model User {
   savings             Float              @default(10000)
   adminHoursPerWeek   Float              @default(6)
   workDaysPerWeek     Int                @default(5)
+  workedDaysPerYear   Int?
+  businessStatus      String             @default("micro")
+  remunerationType    String?
+  customUrssafRate    Float?
+  customIrRate        Float?
+  customTaxRate       Float?
+  monthlySalary       Float              @default(0)
+  mixtePartSalaire    Float              @default(50)
+  role                String?
+  age                 Int                @default(35)
   onboardingCompleted Boolean            @default(false)
 
   // Stripe
@@ -57,6 +67,8 @@ model Client {
   // TJM
   dailyRate      Float?
   daysPerMonth   Float?
+  daysPerWeek    Float?
+  daysPerYear    Float?
 
   // Forfait
   monthlyAmount  Float?

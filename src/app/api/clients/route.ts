@@ -39,6 +39,8 @@ export async function POST(request: NextRequest) {
       billing: body.billing,
       dailyRate: body.dailyRate,
       daysPerMonth: body.daysPerMonth,
+      daysPerWeek: body.daysPerWeek,
+      daysPerYear: body.daysPerYear,
       monthlyAmount: body.monthlyAmount,
       totalAmount: body.totalAmount,
       startMonth: body.startMonth,

@@ -70,6 +70,16 @@ export function ProfileSync() {
         if (data.savings != null) profileUpdates.savings = data.savings;
         if (data.adminHoursPerWeek != null) profileUpdates.adminHoursPerWeek = data.adminHoursPerWeek;
         if (data.workDaysPerWeek != null) profileUpdates.workDaysPerWeek = data.workDaysPerWeek;
+        if (data.workedDaysPerYear != null) profileUpdates.workedDaysPerYear = data.workedDaysPerYear;
+        if (data.businessStatus != null) profileUpdates.businessStatus = data.businessStatus;
+        if (data.remunerationType != null) profileUpdates.remunerationType = data.remunerationType;
+        if (data.customUrssafRate != null) profileUpdates.customUrssafRate = data.customUrssafRate;
+        if (data.customIrRate != null) profileUpdates.customIrRate = data.customIrRate;
+        if (data.customTaxRate != null) profileUpdates.customTaxRate = data.customTaxRate;
+        if (data.monthlySalary != null) profileUpdates.monthlySalary = data.monthlySalary;
+        if (data.mixtePartSalaire != null) profileUpdates.mixtePartSalaire = data.mixtePartSalaire;
+        if (data.role != null) profileUpdates.role = data.role;
+        if (data.age != null) profileUpdates.age = data.age;
         if (data.onboardingCompleted != null) store.setOnboardingCompleted(data.onboardingCompleted);
 
         if (Object.keys(profileUpdates).length > 0) {
@@ -92,6 +102,16 @@ export function ProfileSync() {
         "savings",
         "adminHoursPerWeek",
         "workDaysPerWeek",
+        "workedDaysPerYear",
+        "businessStatus",
+        "remunerationType",
+        "customUrssafRate",
+        "customIrRate",
+        "customTaxRate",
+        "monthlySalary",
+        "mixtePartSalaire",
+        "role",
+        "age",
         "onboardingCompleted",
       ] as const;
 
@@ -112,6 +132,16 @@ export function ProfileSync() {
               savings: state.savings,
               adminHoursPerWeek: state.adminHoursPerWeek,
               workDaysPerWeek: state.workDaysPerWeek,
+              workedDaysPerYear: state.workedDaysPerYear,
+              businessStatus: state.businessStatus,
+              remunerationType: state.remunerationType,
+              customUrssafRate: state.customUrssafRate,
+              customIrRate: state.customIrRate,
+              customTaxRate: state.customTaxRate,
+              monthlySalary: state.monthlySalary,
+              mixtePartSalaire: state.mixtePartSalaire,
+              role: state.role,
+              age: state.age,
               onboardingCompleted: state.onboardingCompleted,
             }),
           });

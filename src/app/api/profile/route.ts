@@ -40,7 +40,13 @@ export async function PATCH(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { monthlyExpenses, savings, adminHoursPerWeek, workDaysPerWeek, onboardingCompleted } = body;
+  const {
+    monthlyExpenses, savings, adminHoursPerWeek, workDaysPerWeek,
+    workedDaysPerYear, businessStatus, remunerationType,
+    customUrssafRate, customIrRate, customTaxRate,
+    monthlySalary, mixtePartSalaire, role, age,
+    onboardingCompleted,
+  } = body;
 
   const updated = await prisma.user.update({
     where: { id: user.id },
@@ -49,6 +55,16 @@ export async function PATCH(request: NextRequest) {
       ...(savings !== undefined && { savings }),
       ...(adminHoursPerWeek !== undefined && { adminHoursPerWeek }),
       ...(workDaysPerWeek !== undefined && { workDaysPerWeek }),
+      ...(workedDaysPerYear !== undefined && { workedDaysPerYear }),
+      ...(businessStatus !== undefined && { businessStatus }),
+      ...(remunerationType !== undefined && { remunerationType }),
+      ...(customUrssafRate !== undefined && { customUrssafRate }),
+      ...(customIrRate !== undefined && { customIrRate }),
+      ...(customTaxRate !== undefined && { customTaxRate }),
+      ...(monthlySalary !== undefined && { monthlySalary }),
+      ...(mixtePartSalaire !== undefined && { mixtePartSalaire }),
+      ...(role !== undefined && { role }),
+      ...(age !== undefined && { age }),
       ...(onboardingCompleted !== undefined && { onboardingCompleted }),
     },
   });
