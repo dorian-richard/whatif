@@ -51,5 +51,21 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Protect app routes — redirect unauthenticated users to signup
+  const protectedPrefixes = [
+    "/dashboard", "/simulator", "/onboarding", "/scenarios",
+    "/comparateur", "/objectif", "/calendrier", "/benchmark",
+    "/transition", "/retraite", "/acre", "/settings",
+  ];
+  const isProtected = protectedPrefixes.some((p) =>
+    request.nextUrl.pathname.startsWith(p)
+  );
+
+  if (!user && isProtected) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/signup";
+    return NextResponse.redirect(url);
+  }
+
   return supabaseResponse;
 }

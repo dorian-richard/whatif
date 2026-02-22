@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Hero } from "@/components/landing/Hero";
 import { Features } from "@/components/landing/Features";
 import { Demo } from "@/components/landing/Demo";
@@ -7,6 +8,7 @@ import { Testimonials } from "@/components/landing/Testimonials";
 import { Pricing } from "@/components/landing/Pricing";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
 const jsonLd = {
@@ -32,6 +34,14 @@ const jsonLd = {
 };
 
 export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    createClient().auth.getUser().then(({ data: { user } }) => {
+      setIsLoggedIn(!!user);
+    });
+  }, []);
+
   return (
     <div className="snap-container bg-background">
       <script
@@ -59,15 +69,26 @@ export default function Home() {
               Tarifs
             </a>
             <ThemeToggle />
-            <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Connexion
-            </Link>
-            <Link
-              href="/onboarding"
-              className="px-5 py-2 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
-            >
-              Essai gratuit
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard"
+                className="px-5 py-2 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
+              >
+                Mon dashboard
+              </Link>
+            ) : (
+              <>
+                <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Connexion
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-5 py-2 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
+                >
+                  Essai gratuit
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>

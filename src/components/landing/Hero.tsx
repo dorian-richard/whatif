@@ -29,7 +29,7 @@ export function Hero() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           <Link
-            href="/onboarding"
+            href="/signup"
             className="px-8 py-3.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-lg font-semibold hover:opacity-90 transition-opacity fn-glow"
           >
             Essayer gratuitement &rarr;

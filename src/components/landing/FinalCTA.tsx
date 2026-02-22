@@ -21,7 +21,7 @@ export function FinalCTA() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <Link
-            href="/onboarding"
+            href="/signup"
             className="px-10 py-4 bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white rounded-full text-lg font-bold hover:opacity-90 transition-opacity fn-glow-gold"
           >
             Commencer gratuitement &rarr;
