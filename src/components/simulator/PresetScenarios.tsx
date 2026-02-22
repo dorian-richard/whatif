@@ -18,13 +18,13 @@ export function PresetScenarios() {
     : PRESET_SCENARIOS.filter((s) => s.cat === activeTab);
 
   return (
-    <div className="bg-[#12121c] rounded-2xl p-4 border border-white/[0.06]">
+    <div className="bg-card rounded-2xl p-4 border border-border">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold text-white">Scénarios</h3>
+        <h3 className="text-sm font-bold text-foreground">Scénarios</h3>
         {activePreset && (
           <button
             onClick={reset}
-            className="text-[11px] text-[#5a5a6e] hover:text-[#8b8b9e] transition-colors"
+            className="text-[11px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
           >
             Réinitialiser
           </button>
@@ -39,7 +39,7 @@ export function PresetScenarios() {
             "text-[11px] font-medium px-2.5 py-1 rounded-full transition-colors",
             activeTab === "all"
               ? "bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white"
-              : "text-[#8b8b9e] hover:bg-white/[0.06]"
+              : "text-muted-foreground hover:bg-muted"
           )}
         >
           Tout
@@ -52,7 +52,7 @@ export function PresetScenarios() {
               "text-[11px] font-medium px-2.5 py-1 rounded-full transition-colors",
               activeTab === tab
                 ? "bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white"
-                : "text-[#8b8b9e] hover:bg-white/[0.06]"
+                : "text-muted-foreground hover:bg-muted"
             )}
           >
             {SCENARIO_CATEGORIES[tab]}
@@ -73,7 +73,7 @@ export function PresetScenarios() {
                 "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 border",
                 isActive
                   ? "bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] border-transparent text-white shadow-md shadow-[#5682F2]/20"
-                  : "bg-white/[0.04] border-white/[0.08] text-[#8b8b9e] hover:bg-white/[0.06]"
+                  : "bg-muted/50 border-border text-muted-foreground hover:bg-muted"
               )}
             >
               <Icon

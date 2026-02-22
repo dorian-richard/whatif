@@ -45,7 +45,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#07070e] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-xl">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -54,10 +54,10 @@ export default function OnboardingPage() {
             <img src="/logo.png" alt="Freelens" className="h-14 w-auto opacity-80" />
             <h1 className="text-3xl font-bold fn-gradient-text">Freelens</h1>
           </div>
-          <p className="text-[#8b8b9e]">Simule chaque décision avant de la prendre.</p>
+          <p className="text-muted-foreground">Simule chaque décision avant de la prendre.</p>
         </div>
 
-        <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-8">
+        <div className="bg-card rounded-2xl border border-border p-8">
           {/* Step indicator */}
           <div className="flex items-center gap-2 mb-6">
             {STEPS.map((_, i) => (
@@ -68,13 +68,13 @@ export default function OnboardingPage() {
                       ? "bg-[#5682F2] text-white"
                       : i === step
                         ? "bg-[#5682F2]/15 text-[#5682F2] ring-2 ring-[#5682F2]"
-                        : "bg-white/[0.06] text-[#5a5a6e]"
+                        : "bg-muted text-muted-foreground/70"
                   }`}
                 >
                   {i + 1}
                 </div>
                 {i < STEPS.length - 1 && (
-                  <div className={`w-8 h-0.5 ${i < step ? "bg-[#5682F2]" : "bg-white/[0.1]"}`} />
+                  <div className={`w-8 h-0.5 ${i < step ? "bg-[#5682F2]" : "bg-border"}`} />
                 )}
               </div>
             ))}
@@ -86,7 +86,7 @@ export default function OnboardingPage() {
             {step > 0 ? (
               <button
                 onClick={() => setStep(step - 1)}
-                className="px-5 py-2.5 text-sm font-medium text-[#8b8b9e] hover:text-white transition-colors"
+                className="px-5 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 &larr; Retour
               </button>
@@ -116,7 +116,7 @@ export default function OnboardingPage() {
             seedDefaults();
             finish();
           }}
-          className="w-full text-center mt-4 text-xs text-[#5a5a6e] hover:text-[#5682F2] transition-colors"
+          className="w-full text-center mt-4 text-xs text-muted-foreground/70 hover:text-[#5682F2] transition-colors"
         >
           Passer avec les données de démo &rarr;
         </button>

@@ -30,10 +30,10 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
   const maxAfter = Math.max(...projection.after);
 
   return (
-    <div className="bg-[#12121c] rounded-2xl p-6 border border-white/[0.06] overflow-x-auto">
+    <div className="bg-card rounded-2xl p-6 border border-border overflow-x-auto">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-white">Mensuel</h3>
-        <div className="flex gap-3 text-xs text-[#5a5a6e]">
+        <h3 className="text-sm font-bold text-foreground">Mensuel</h3>
+        <div className="flex gap-3 text-xs text-muted-foreground/60">
           <span>
             Net total :{" "}
             <strong className={totalNet >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}>
@@ -44,7 +44,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
       </div>
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-[10px] text-[#5a5a6e] uppercase tracking-wider border-b border-white/[0.06]">
+          <tr className="text-[10px] text-muted-foreground/60 uppercase tracking-wider border-b border-border">
             <th className="text-left py-2.5 pr-4 font-semibold">Mois</th>
             <th className="text-center py-2.5 px-2 font-semibold">Jours</th>
             <th className="text-right py-2.5 px-3 font-semibold">Actuel</th>
@@ -69,17 +69,17 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
             });
 
             return (
-              <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors group">
-                <td className="py-2.5 pr-4 font-semibold text-[#8b8b9e] text-xs">{m}</td>
-                <td className="text-center py-2.5 px-2 text-[#5a5a6e] tabular-nums text-xs">{JOURS_OUVRES[i]}j</td>
-                <td className="text-right py-2.5 px-3 text-[#5a5a6e] tabular-nums">{fmt(projection.before[i])}&euro;</td>
-                <td className="text-right py-2.5 px-3 font-semibold text-white tabular-nums">
+              <tr key={i} className="border-b border-border hover:bg-muted/30 transition-colors group">
+                <td className="py-2.5 pr-4 font-semibold text-muted-foreground text-xs">{m}</td>
+                <td className="text-center py-2.5 px-2 text-muted-foreground/60 tabular-nums text-xs">{JOURS_OUVRES[i]}j</td>
+                <td className="text-right py-2.5 px-3 text-muted-foreground/60 tabular-nums">{fmt(projection.before[i])}&euro;</td>
+                <td className="text-right py-2.5 px-3 font-semibold text-foreground tabular-nums">
                   {fmt(projection.after[i])}&euro;
                 </td>
                 <td
                   className={cn(
                     "text-right py-2.5 px-3 font-bold tabular-nums",
-                    Math.abs(diff) < 0.5 ? "text-[#5a5a6e]" : diff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"
+                    Math.abs(diff) < 0.5 ? "text-muted-foreground/60" : diff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"
                   )}
                 >
                   {Math.abs(diff) < 0.5 ? "-" : `${diff >= 0 ? "+" : ""}${fmt(diff)}\u20AC`}
@@ -87,14 +87,14 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
                 <td
                   className={cn(
                     "text-right py-2.5 px-3 tabular-nums",
-                    net >= 0 ? "text-[#8b8b9e]" : "text-[#f87171] font-bold"
+                    net >= 0 ? "text-muted-foreground" : "text-[#f87171] font-bold"
                   )}
                 >
                   {fmt(net)}&euro;
                   {net < 0 && <AlertTriangle className="size-3 inline ml-1 text-[#f87171]" />}
                 </td>
                 <td className="py-2.5 px-3">
-                  <div className="w-full h-1.5 rounded-full bg-white/[0.04]">
+                  <div className="w-full h-1.5 rounded-full bg-muted/50">
                     <div
                       className={cn(
                         "h-full rounded-full transition-all duration-500",
@@ -122,11 +122,11 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
               </tr>
             );
           })}
-          <tr className="border-t border-white/[0.06] font-bold bg-white/[0.03]">
-            <td className="py-3 pr-4 text-white text-xs">TOTAL</td>
-            <td className="text-center py-3 px-2 text-[#8b8b9e] tabular-nums text-xs">{JOURS_OUVRES.reduce((a, b) => a + b, 0)}j</td>
-            <td className="text-right py-3 px-3 text-[#8b8b9e] tabular-nums">{fmt(totalBefore)}&euro;</td>
-            <td className="text-right py-3 px-3 text-white tabular-nums">{fmt(totalAfter)}&euro;</td>
+          <tr className="border-t border-border font-bold bg-muted/40">
+            <td className="py-3 pr-4 text-foreground text-xs">TOTAL</td>
+            <td className="text-center py-3 px-2 text-muted-foreground tabular-nums text-xs">{JOURS_OUVRES.reduce((a, b) => a + b, 0)}j</td>
+            <td className="text-right py-3 px-3 text-muted-foreground tabular-nums">{fmt(totalBefore)}&euro;</td>
+            <td className="text-right py-3 px-3 text-foreground tabular-nums">{fmt(totalAfter)}&euro;</td>
             <td
               className={cn(
                 "text-right py-3 px-3 tabular-nums",
@@ -137,7 +137,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
             </td>
             <td className={cn(
               "text-right py-3 px-3 tabular-nums",
-              totalNet >= 0 ? "text-white" : "text-[#f87171]"
+              totalNet >= 0 ? "text-foreground" : "text-[#f87171]"
             )}>
               {fmt(totalNet)}&euro;
             </td>

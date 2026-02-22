@@ -72,7 +72,7 @@ const ICON_OPTIONS = [
 /* ─── Preset category colors ─── */
 const CAT_COLORS: Record<ScenarioCategory, { bg: string; text: string }> = {
   croissance: { bg: "bg-emerald-500/15", text: "text-emerald-400" },
-  equilibre: { bg: "bg-[#5682F2]/15", text: "text-[#5682F2]" },
+  equilibre: { bg: "bg-primary/15", text: "text-primary" },
   risque: { bg: "bg-amber-500/15", text: "text-amber-400" },
 };
 
@@ -237,15 +237,15 @@ export default function ScenariosPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-bold text-white">Mes scénarios</h1>
-          <p className="text-xs text-[#5a5a6e]">
+          <h1 className="text-lg font-bold text-foreground">Mes scénarios</h1>
+          <p className="text-xs text-muted-foreground/60">
             {scenarios.length} scénario{scenarios.length !== 1 ? "s" : ""} sauvegardé{scenarios.length !== 1 ? "s" : ""}
           </p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => setModal("create")}
-            className="px-4 py-2 bg-white/[0.04] border border-white/[0.08] text-[#8b8b9e] rounded-full text-sm font-medium hover:bg-white/[0.06] transition-colors flex items-center gap-1.5"
+            className="px-4 py-2 bg-muted/50 border border-border text-muted-foreground rounded-full text-sm font-medium hover:bg-muted transition-colors flex items-center gap-1.5"
           >
             <Plus className="size-3.5" />
             Créer
@@ -263,15 +263,15 @@ export default function ScenariosPage() {
       </div>
 
       {/* Preset quick-save section */}
-      <div className="bg-[#12121c] rounded-2xl p-5 border border-white/[0.06]">
+      <div className="bg-card rounded-2xl p-5 border border-border">
         <div className="flex items-center gap-2 mb-4">
           <Zap className="size-4 text-[#F4BE7E]" />
-          <h2 className="text-sm font-bold text-white">Scénarios rapides</h2>
+          <h2 className="text-sm font-bold text-foreground">Scénarios rapides</h2>
         </div>
 
         {(["croissance", "equilibre", "risque"] as ScenarioCategory[]).map((cat) => (
           <div key={cat} className="mb-3 last:mb-0">
-            <div className="text-[10px] font-semibold text-[#5a5a6e] uppercase tracking-wider mb-1.5">
+            <div className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1.5">
               {SCENARIO_CATEGORIES[cat]}
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -288,7 +288,7 @@ export default function ScenariosPage() {
                         "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-l-full text-xs font-medium transition-all duration-150 border border-r-0",
                         isActive
                           ? "bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] border-transparent text-white shadow-md shadow-[#5682F2]/20"
-                          : cn("border-white/[0.08]", CAT_COLORS[cat].bg, CAT_COLORS[cat].text, "hover:border-white/[0.15]")
+                          : cn("border-border", CAT_COLORS[cat].bg, CAT_COLORS[cat].text, "hover:border-border")
                       )}
                     >
                       <Icon name={preset.icon} className="size-3.5" />
@@ -301,7 +301,7 @@ export default function ScenariosPage() {
                         "px-1.5 py-1.5 rounded-r-full text-xs transition-all duration-150 border border-l-0",
                         isActive
                           ? "bg-gradient-to-r from-[#7C5BF2] to-[#7C5BF2] border-transparent text-white/70 hover:text-white"
-                          : "border-white/[0.08] bg-white/[0.03] text-[#5a5a6e] hover:text-[#8b8b9e] hover:bg-white/[0.06]"
+                          : "border-border bg-muted/40 text-muted-foreground/60 hover:text-muted-foreground hover:bg-muted"
                       )}
                     >
                       <Plus className="size-3" />
@@ -317,13 +317,13 @@ export default function ScenariosPage() {
       {/* Search bar (if many scenarios) */}
       {scenarios.length > 3 && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-[#5a5a6e]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/60" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher un scénario..."
-            className="w-full pl-10 pr-4 py-2.5 bg-[#12121c] border border-white/[0.06] rounded-xl text-sm text-white placeholder:text-[#5a5a6e] focus:outline-none focus:ring-2 focus:ring-[#5682F2]/30"
+            className="w-full pl-10 pr-4 py-2.5 bg-card border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
         </div>
       )}
@@ -332,18 +332,18 @@ export default function ScenariosPage() {
       {filteredScenarios.length === 0 && scenarios.length === 0 ? (
         <div className="text-center py-16">
           <div className="mb-4 flex justify-center">
-            <div className="size-16 rounded-2xl bg-[#5682F2]/10 flex items-center justify-center">
-              <ClipboardList className="size-8 text-[#5682F2]" />
+            <div className="size-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <ClipboardList className="size-8 text-primary" />
             </div>
           </div>
-          <h2 className="text-lg font-bold text-white mb-2">Aucun scénario sauvegardé</h2>
-          <p className="text-sm text-[#5a5a6e] mb-6 max-w-xs mx-auto">
+          <h2 className="text-lg font-bold text-foreground mb-2">Aucun scénario sauvegardé</h2>
+          <p className="text-sm text-muted-foreground/60 mb-6 max-w-xs mx-auto">
             Crée un scénario personnalisé ou sauvegarde la config actuelle du simulateur.
           </p>
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => setModal("create")}
-              className="px-5 py-2.5 bg-white/[0.04] border border-white/[0.08] text-white rounded-full text-sm font-medium hover:bg-white/[0.06] transition-colors"
+              className="px-5 py-2.5 bg-muted/50 border border-border text-foreground rounded-full text-sm font-medium hover:bg-muted transition-colors"
             >
               Créer un scénario
             </button>
@@ -363,24 +363,24 @@ export default function ScenariosPage() {
             return (
               <div
                 key={s.id}
-                className="bg-[#12121c] rounded-2xl p-5 border border-white/[0.06] hover:border-white/[0.1] transition-colors group"
+                className="bg-card rounded-2xl p-5 border border-border hover:border-border transition-colors group"
               >
                 <div className="flex items-start gap-4">
                   {/* Icon */}
-                  <div className="size-11 rounded-xl bg-[#5682F2]/10 flex items-center justify-center shrink-0">
-                    <Icon name={s.icon} className="size-5 text-[#5682F2]" />
+                  <div className="size-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                    <Icon name={s.icon} className="size-5 text-primary" />
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-white truncate">{s.name}</h3>
-                      <span className="text-[10px] text-[#5a5a6e] shrink-0">
+                      <h3 className="font-semibold text-foreground truncate">{s.name}</h3>
+                      <span className="text-[10px] text-muted-foreground/60 shrink-0">
                         {new Date(s.savedAt).toLocaleDateString("fr-FR")}
                       </span>
                     </div>
                     {s.description && (
-                      <p className="text-xs text-[#8b8b9e] mb-2 line-clamp-1">{s.description}</p>
+                      <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{s.description}</p>
                     )}
 
                     {/* Param tags */}
@@ -389,7 +389,7 @@ export default function ScenariosPage() {
                         {tags.map((tag) => (
                           <span
                             key={tag}
-                            className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] text-[#8b8b9e] font-medium"
+                            className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium"
                           >
                             {tag}
                           </span>
@@ -400,15 +400,15 @@ export default function ScenariosPage() {
                     {/* Impact metrics */}
                     <div className="flex items-center gap-4">
                       <div>
-                        <div className="text-[9px] text-[#5a5a6e] uppercase tracking-wider">CA annuel</div>
-                        <div className="text-sm font-bold text-white">{fmt(impact.annualCA)}&euro;</div>
+                        <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">CA annuel</div>
+                        <div className="text-sm font-bold text-foreground">{fmt(impact.annualCA)}&euro;</div>
                       </div>
                       <div>
-                        <div className="text-[9px] text-[#5a5a6e] uppercase tracking-wider">Net annuel</div>
-                        <div className="text-sm font-bold text-white">{fmt(impact.annualNet)}&euro;</div>
+                        <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Net annuel</div>
+                        <div className="text-sm font-bold text-foreground">{fmt(impact.annualNet)}&euro;</div>
                       </div>
                       <div>
-                        <div className="text-[9px] text-[#5a5a6e] uppercase tracking-wider">Impact CA</div>
+                        <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Impact CA</div>
                         <div
                           className={cn(
                             "text-sm font-bold",
@@ -426,19 +426,19 @@ export default function ScenariosPage() {
                   <div className="flex flex-col gap-1.5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => loadScenario(s)}
-                      className="px-3 py-1.5 bg-[#5682F2]/15 text-[#5682F2] rounded-lg text-[11px] font-medium hover:bg-[#5682F2]/25 transition-colors"
+                      className="px-3 py-1.5 bg-primary/15 text-primary rounded-lg text-[11px] font-medium hover:bg-primary/25 transition-colors"
                     >
                       Charger
                     </button>
                     <button
                       onClick={() => openEdit(s)}
-                      className="px-3 py-1.5 bg-white/[0.04] text-[#8b8b9e] rounded-lg text-[11px] font-medium hover:bg-white/[0.08] transition-colors"
+                      className="px-3 py-1.5 bg-muted/50 text-muted-foreground rounded-lg text-[11px] font-medium hover:bg-muted transition-colors"
                     >
                       Modifier
                     </button>
                     <button
                       onClick={() => deleteScenario(s.id)}
-                      className="px-3 py-1.5 text-[#5a5a6e] rounded-lg text-[11px] font-medium hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                      className="px-3 py-1.5 text-muted-foreground/60 rounded-lg text-[11px] font-medium hover:bg-red-500/10 hover:text-red-400 transition-colors"
                     >
                       Supprimer
                     </button>
@@ -454,11 +454,11 @@ export default function ScenariosPage() {
       {modal === "save" && (
         <ModalWrapper title="Sauvegarder la simulation" onClose={closeModal}>
           {/* Current params preview */}
-          <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] p-4 mb-4">
-            <div className="text-[10px] font-semibold text-[#5a5a6e] uppercase tracking-wider mb-2">Paramètres actuels</div>
+          <div className="bg-muted/40 rounded-xl border border-border p-4 mb-4">
+            <div className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-2">Paramètres actuels</div>
             <div className="flex flex-wrap gap-1.5">
               {getParamTags(currentParams, profile.workDaysPerWeek).map((tag) => (
-                <span key={tag} className="text-[11px] px-2.5 py-1 rounded-full bg-[#5682F2]/15 text-[#5682F2] font-medium">
+                <span key={tag} className="text-[11px] px-2.5 py-1 rounded-full bg-primary/15 text-primary font-medium">
                   {tag}
                 </span>
               ))}
@@ -466,16 +466,16 @@ export default function ScenariosPage() {
             {(() => {
               const impact = computeImpact(currentParams);
               return (
-                <div className="flex gap-4 mt-3 pt-3 border-t border-white/[0.06]">
+                <div className="flex gap-4 mt-3 pt-3 border-t border-border">
                   <div>
-                    <div className="text-[9px] text-[#5a5a6e] uppercase">Impact CA</div>
+                    <div className="text-[9px] text-muted-foreground/60 uppercase">Impact CA</div>
                     <div className={cn("text-sm font-bold", impact.annualDiff >= 0 ? "text-emerald-400" : "text-red-400")}>
                       {impact.annualDiff >= 0 ? "+" : ""}{fmt(impact.annualDiff)}&euro;/an
                     </div>
                   </div>
                   <div>
-                    <div className="text-[9px] text-[#5a5a6e] uppercase">Net annuel</div>
-                    <div className="text-sm font-bold text-white">{fmt(impact.annualNet)}&euro;</div>
+                    <div className="text-[9px] text-muted-foreground/60 uppercase">Net annuel</div>
+                    <div className="text-sm font-bold text-foreground">{fmt(impact.annualNet)}&euro;</div>
                   </div>
                 </div>
               );
@@ -491,7 +491,7 @@ export default function ScenariosPage() {
             onDescChange={setNewDesc}
           />
           <div className="flex justify-end gap-3 mt-6">
-            <button onClick={closeModal} className="px-4 py-2 text-sm text-[#8b8b9e] hover:text-white transition-colors">
+            <button onClick={closeModal} className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
               Annuler
             </button>
             <button
@@ -517,8 +517,8 @@ export default function ScenariosPage() {
           />
 
           {/* Inline sliders */}
-          <div className="mt-4 space-y-4 bg-white/[0.03] rounded-xl border border-white/[0.06] p-4">
-            <div className="text-[10px] font-semibold text-[#5a5a6e] uppercase tracking-wider mb-1">Paramètres du scénario</div>
+          <div className="mt-4 space-y-4 bg-muted/40 rounded-xl border border-border p-4">
+            <div className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1">Paramètres du scénario</div>
 
             <SliderRow
               label="Semaines de vacances"
@@ -557,7 +557,7 @@ export default function ScenariosPage() {
             />
             <div>
               <div className="flex justify-between items-center mb-1">
-                <span className="text-xs text-[#8b8b9e]">Perte client principal</span>
+                <span className="text-xs text-muted-foreground">Perte client principal</span>
                 <button
                   onClick={() =>
                     setCreateParams((p) => ({
@@ -569,7 +569,7 @@ export default function ScenariosPage() {
                     "text-xs font-medium px-3 py-1 rounded-full border transition-all",
                     createParams.lostClientIndex >= 0
                       ? "bg-red-500/15 text-red-400 border-red-500/30"
-                      : "bg-white/[0.03] text-[#5a5a6e] border-white/[0.08] hover:border-white/[0.15]"
+                      : "bg-muted/40 text-muted-foreground/60 border-border hover:border-border"
                   )}
                 >
                   {createParams.lostClientIndex >= 0 ? "Oui" : "Non"}
@@ -586,28 +586,28 @@ export default function ScenariosPage() {
           </div>
 
           {/* Impact preview */}
-          <div className="mt-4 p-4 bg-white/[0.03] rounded-xl border border-white/[0.06]">
-            <div className="text-[10px] font-semibold text-[#5a5a6e] uppercase tracking-wider mb-2">Impact estimé</div>
+          <div className="mt-4 p-4 bg-muted/40 rounded-xl border border-border">
+            <div className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-2">Impact estimé</div>
             <div className="grid grid-cols-3 gap-3">
               <div className="text-center">
-                <div className="text-lg font-bold text-white">{fmt(createPreview.annualCA)}&euro;</div>
-                <div className="text-[9px] text-[#5a5a6e]">CA annuel</div>
+                <div className="text-lg font-bold text-foreground">{fmt(createPreview.annualCA)}&euro;</div>
+                <div className="text-[9px] text-muted-foreground/60">CA annuel</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-bold text-white">{fmt(createPreview.annualNet)}&euro;</div>
-                <div className="text-[9px] text-[#5a5a6e]">Net annuel</div>
+                <div className="text-lg font-bold text-foreground">{fmt(createPreview.annualNet)}&euro;</div>
+                <div className="text-[9px] text-muted-foreground/60">Net annuel</div>
               </div>
               <div className="text-center">
                 <div className={cn("text-lg font-bold", createPreview.annualDiff >= 0 ? "text-emerald-400" : "text-red-400")}>
                   {createPreview.annualDiff >= 0 ? "+" : ""}{fmt(createPreview.annualDiff)}&euro;
                 </div>
-                <div className="text-[9px] text-[#5a5a6e]">Diff. CA</div>
+                <div className="text-[9px] text-muted-foreground/60">Diff. CA</div>
               </div>
             </div>
           </div>
 
           <div className="flex justify-end gap-3 mt-6">
-            <button onClick={closeModal} className="px-4 py-2 text-sm text-[#8b8b9e] hover:text-white transition-colors">
+            <button onClick={closeModal} className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
               Annuler
             </button>
             <button
@@ -632,7 +632,7 @@ export default function ScenariosPage() {
             onDescChange={setNewDesc}
           />
           <div className="flex justify-end gap-3 mt-6">
-            <button onClick={closeModal} className="px-4 py-2 text-sm text-[#8b8b9e] hover:text-white transition-colors">
+            <button onClick={closeModal} className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
               Annuler
             </button>
             <button
@@ -663,10 +663,10 @@ function ModalWrapper({
 }) {
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-2xl border border-border p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-white">{title}</h2>
-          <button onClick={onClose} className="text-[#5a5a6e] hover:text-white transition-colors">
+          <h2 className="text-lg font-bold text-foreground">{title}</h2>
+          <button onClick={onClose} className="text-muted-foreground/60 hover:text-foreground transition-colors">
             <X className="size-5" />
           </button>
         </div>
@@ -695,7 +695,7 @@ function ScenarioForm({
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-xs font-medium text-[#8b8b9e] block mb-2">Icône</label>
+        <label className="text-xs font-medium text-muted-foreground block mb-2">Icône</label>
         <div className="flex gap-1.5 flex-wrap">
           {ICON_OPTIONS.map((ic) => (
             <button
@@ -704,8 +704,8 @@ function ScenarioForm({
               className={cn(
                 "size-9 rounded-xl flex items-center justify-center transition-all",
                 icon === ic
-                  ? "bg-[#5682F2]/15 ring-2 ring-[#5682F2] text-[#5682F2]"
-                  : "bg-white/[0.03] hover:bg-white/[0.06] text-[#5a5a6e]"
+                  ? "bg-primary/15 ring-2 ring-primary text-primary"
+                  : "bg-muted/40 hover:bg-muted text-muted-foreground/60"
               )}
             >
               <Icon name={ic} className="size-4" />
@@ -714,23 +714,23 @@ function ScenarioForm({
         </div>
       </div>
       <div>
-        <label className="text-xs font-medium text-[#8b8b9e] block mb-1">Nom</label>
+        <label className="text-xs font-medium text-muted-foreground block mb-1">Nom</label>
         <input
           type="text"
           value={name}
           onChange={(e) => onNameChange(e.target.value)}
           placeholder="Ex: Vacances été + hausse tarifs"
-          className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.1] text-white placeholder:text-[#5a5a6e] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
+          className="w-full px-3 py-2 bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
       <div>
-        <label className="text-xs font-medium text-[#8b8b9e] block mb-1">Description (optionnel)</label>
+        <label className="text-xs font-medium text-muted-foreground block mb-1">Description (optionnel)</label>
         <input
           type="text"
           value={desc}
           onChange={(e) => onDescChange(e.target.value)}
           placeholder="Ex: Impact de 3 semaines off + augmentation TJM"
-          className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.1] text-white placeholder:text-[#5a5a6e] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
+          className="w-full px-3 py-2 bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
     </div>
@@ -758,8 +758,8 @@ function SliderRow({
   return (
     <div>
       <div className="flex justify-between items-center mb-1">
-        <span className="text-xs text-[#8b8b9e]">{label}</span>
-        <span className="text-xs font-bold text-[#5682F2]">{format(value)}</span>
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <span className="text-xs font-bold text-primary">{format(value)}</span>
       </div>
       <Slider value={[value]} onValueChange={([v]) => onChange(v)} min={min} max={max} step={step} />
     </div>

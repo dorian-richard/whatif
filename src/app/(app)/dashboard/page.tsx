@@ -105,7 +105,7 @@ export default function DashboardPage() {
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">
       {/* Meteo hero */}
-      <div className={cn("bg-[#12121c] rounded-2xl border border-white/[0.06] overflow-hidden", meteoConfig.glow)}>
+      <div className={cn("bg-card rounded-2xl border border-border overflow-hidden", meteoConfig.glow)}>
         <div className="flex">
           <div className="w-1 shrink-0 rounded-l-2xl" style={{ backgroundColor: meteoConfig.accent }} />
           <div className="flex-1 p-6">
@@ -118,9 +118,9 @@ export default function DashboardPage() {
                   <MeteoIcon className={cn("size-9", meteoConfig.color)} />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-[#5a5a6e] uppercase tracking-wider mb-0.5">Météo business</p>
-                  <h2 className="text-2xl font-bold text-white">{meteoConfig.label}</h2>
-                  <p className="text-sm text-[#8b8b9e]">Score santé : <strong className={meteoConfig.color}>{healthScore}/100</strong></p>
+                  <p className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider mb-0.5">Météo business</p>
+                  <h2 className="text-2xl font-bold text-foreground">{meteoConfig.label}</h2>
+                  <p className="text-sm text-muted-foreground">Score santé : <strong className={meteoConfig.color}>{healthScore}/100</strong></p>
                 </div>
               </div>
               <button
@@ -162,13 +162,13 @@ export default function DashboardPage() {
           { icon: <BadgePercent className="size-4 text-[#F4BE7E]" />, iconBg: "bg-[#F4BE7E]/15", label: "Charges totales", value: `${effectiveChargesRate.toFixed(0)}%`, sub: `${fmt(Math.round(totalCharges))}\u20AC/an` },
           { icon: <Banknote className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Taux net effectif", value: `${annualCA > 0 ? ((netAfterAll / annualCA) * 100).toFixed(0) : 0}%`, sub: `${fmt(Math.round(netAfterAll))}\u20AC net fiscal/an` },
         ].map((kpi) => (
-          <div key={kpi.label} className="bg-[#12121c] rounded-xl p-4 border border-white/[0.06] hover:bg-[#1a1a26] transition-colors">
+          <div key={kpi.label} className="bg-card rounded-xl p-4 border border-border hover:bg-muted/50 transition-colors">
             <div className="flex items-center gap-2 mb-2">
               <div className={cn("size-7 rounded-lg flex items-center justify-center", kpi.iconBg)}>{kpi.icon}</div>
-              <span className="text-[11px] text-[#5a5a6e] font-medium uppercase tracking-wider">{kpi.label}</span>
+              <span className="text-[11px] text-muted-foreground/60 font-medium uppercase tracking-wider">{kpi.label}</span>
             </div>
-            <div className="text-xl font-bold text-white">{kpi.value}</div>
-            <div className="text-[11px] text-[#5a5a6e] mt-0.5">{kpi.sub}</div>
+            <div className="text-xl font-bold text-foreground">{kpi.value}</div>
+            <div className="text-[11px] text-muted-foreground/60 mt-0.5">{kpi.sub}</div>
           </div>
         ))}
       </div>
@@ -178,8 +178,8 @@ export default function DashboardPage() {
 
       {/* Client breakdown */}
       {profile.clients.length > 0 && (
-        <div className="bg-[#12121c] rounded-2xl p-6 border border-white/[0.06]">
-          <h3 className="text-sm font-bold text-white mb-4">Répartition clients</h3>
+        <div className="bg-card rounded-2xl p-6 border border-border">
+          <h3 className="text-sm font-bold text-foreground mb-4">Répartition clients</h3>
           <div className="space-y-3">
             {profile.clients.map((c) => {
               const ca = getClientBaseCA(c);
@@ -189,10 +189,10 @@ export default function DashboardPage() {
                   <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color ?? "#5682F2" }} />
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-white truncate">{c.name}</span>
-                      <span className="text-xs text-[#8b8b9e] shrink-0">{fmt(ca)}&euro;/mois &middot; {pct.toFixed(0)}%</span>
+                      <span className="text-sm font-medium text-foreground truncate">{c.name}</span>
+                      <span className="text-xs text-muted-foreground shrink-0">{fmt(ca)}&euro;/mois &middot; {pct.toFixed(0)}%</span>
                     </div>
-                    <div className="w-full h-1.5 bg-white/[0.06] rounded-full">
+                    <div className="w-full h-1.5 bg-muted rounded-full">
                       <div
                         className="h-full rounded-full transition-all duration-300"
                         style={{ width: `${pct}%`, backgroundColor: c.color ?? "#5682F2" }}
@@ -231,7 +231,7 @@ function DashboardFinanceCards({
     <div className="space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {/* Revenu net mensuel */}
-        <div className="bg-[#12121c] rounded-xl border border-white/[0.06] overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="flex h-full">
             <div className="w-1 shrink-0 bg-[#4ade80]" />
             <div className="flex-1 p-5">
@@ -242,16 +242,16 @@ function DashboardFinanceCards({
               <div className={cn("text-2xl font-bold", netMonthly - expenses > 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
                 {fmt(Math.round(netMonthly - expenses))}&euro;
               </div>
-              <div className="text-[11px] text-[#5a5a6e] mt-1">
+              <div className="text-[11px] text-muted-foreground/60 mt-1">
                 CA {fmt(totalCA)}&euro; &rarr; net {fmt(Math.round(netMonthly))}&euro; &minus; charges {fmt(expenses)}&euro;
               </div>
-              <div className="text-[10px] text-[#5a5a6e]/60 mt-0.5">{statusConfig.label} &middot; URSSAF {(urssafRate * 100).toFixed(0)}% + IR {(irRate * 100).toFixed(0)}%{statusConfig.is > 0 ? ` + IS ${(statusConfig.is * 100).toFixed(0)}%` : ""}{statusConfig.is > 0 && remunerationType ? ` \u00B7 ${remunerationType === "salaire" ? "Salaire" : remunerationType === "dividendes" ? "Dividendes" : "Mixte"}` : ""}</div>
+              <div className="text-[10px] text-muted-foreground/60 mt-0.5">{statusConfig.label} &middot; URSSAF {(urssafRate * 100).toFixed(0)}% + IR {(irRate * 100).toFixed(0)}%{statusConfig.is > 0 ? ` + IS ${(statusConfig.is * 100).toFixed(0)}%` : ""}{statusConfig.is > 0 && remunerationType ? ` \u00B7 ${remunerationType === "salaire" ? "Salaire" : remunerationType === "dividendes" ? "Dividendes" : "Mixte"}` : ""}</div>
             </div>
           </div>
         </div>
 
         {/* Net annuel */}
-        <div className="bg-[#12121c] rounded-xl border border-white/[0.06] overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="flex h-full">
             <div className="w-1 shrink-0 bg-[#5682F2]" />
             <div className="flex-1 p-5">
@@ -262,7 +262,7 @@ function DashboardFinanceCards({
               <div className={cn("text-2xl font-bold", netAfterExpenses > 0 ? "text-[#5682F2]" : "text-[#f87171]")}>
                 {fmt(Math.round(netAfterExpenses))}&euro;
               </div>
-              <div className="text-[11px] text-[#5a5a6e] mt-1">
+              <div className="text-[11px] text-muted-foreground/60 mt-1">
                 {fmt(Math.round(netAfterAll))}&euro; net fiscal &minus; {fmt(expenses * 12)}&euro; charges
               </div>
             </div>
@@ -270,7 +270,7 @@ function DashboardFinanceCards({
         </div>
 
         {/* Tresorerie fin d'annee */}
-        <div className="bg-[#12121c] rounded-xl border border-white/[0.06] overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="flex h-full">
             <div className="w-1 shrink-0 bg-[#F4BE7E]" />
             <div className="flex-1 p-5">
@@ -285,7 +285,7 @@ function DashboardFinanceCards({
                     "text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors",
                     includeRem
                       ? "bg-[#a78bfa]/12 text-[#a78bfa] border-[#a78bfa]/20"
-                      : "bg-white/[0.06] text-[#5a5a6e] border-white/[0.06]"
+                      : "bg-muted text-muted-foreground/60 border-border"
                   )}
                 >
                   {includeRem
@@ -296,7 +296,7 @@ function DashboardFinanceCards({
               <div className={cn("text-2xl font-bold", treasuryValue >= 0 ? "text-[#F4BE7E]" : "text-[#f87171]")}>
                 {fmt(Math.round(treasuryValue))}&euro;
               </div>
-              <div className="text-[11px] text-[#5a5a6e] mt-1">
+              <div className="text-[11px] text-muted-foreground/60 mt-1">
                 {fmt(savings)}&euro; {netAfterExpenses >= 0 ? "+" : "\u2212"} {fmt(Math.abs(Math.round(netAfterExpenses)))}&euro; net{includeRem && monthlySalary > 0 ? ` \u2212 ${fmt(annualSalary)}\u20AC rem.` : ""}
               </div>
               {includeRem && monthlySalary === 0 && (
@@ -309,7 +309,7 @@ function DashboardFinanceCards({
 
       {/* Salary recommendation */}
       {available > 0 && (
-        <div className="bg-[#12121c] rounded-xl p-4 border border-white/[0.06]">
+        <div className="bg-card rounded-xl p-4 border border-border">
           <div className="flex items-start gap-3">
             <div className="size-8 rounded-lg bg-[#a78bfa]/12 flex items-center justify-center shrink-0 mt-0.5">
               <Lightbulb className="size-4 text-[#a78bfa]" />
@@ -334,23 +334,23 @@ function DashboardFinanceCards({
                 )}
               </div>
               <div className="flex flex-wrap gap-2">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] rounded-lg border border-white/[0.06]">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />
-                  <span className="text-[11px] text-[#5a5a6e]">Prudent</span>
+                  <span className="text-[11px] text-muted-foreground/60">Prudent</span>
                   <span className="text-sm font-bold text-[#4ade80]">{fmt(remPrudent)}&euro;</span>
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] rounded-lg border border-white/[0.06]">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#5682F2]" />
-                  <span className="text-[11px] text-[#5a5a6e]">Confort</span>
+                  <span className="text-[11px] text-muted-foreground/60">Confort</span>
                   <span className="text-sm font-bold text-[#5682F2]">{fmt(remConfort)}&euro;</span>
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] rounded-lg border border-white/[0.06]">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#fbbf24]" />
-                  <span className="text-[11px] text-[#5a5a6e]">Max</span>
+                  <span className="text-[11px] text-muted-foreground/60">Max</span>
                   <span className="text-sm font-bold text-[#fbbf24]">{fmt(remMax)}&euro;</span>
                 </div>
               </div>
-              <p className="text-[10px] text-[#5a5a6e] mt-2">
+              <p className="text-[10px] text-muted-foreground/60 mt-2">
                 Base : {fmt(Math.round(netMonthly))}&euro; net/mois &minus; {fmt(expenses)}&euro; charges. Prudent garde 50% en trésorerie, confort 30%, max = 100% du disponible.
               </p>
             </div>
@@ -366,11 +366,11 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
   const maxMonthly = Math.max(...projection.before, 1);
 
   return (
-    <div className="bg-[#12121c] rounded-2xl p-6 border border-white/[0.06]">
+    <div className="bg-card rounded-2xl p-6 border border-border">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <div className="flex items-center gap-3">
-          <h3 className="text-sm font-bold text-white">Projection mensuelle</h3>
-          <div className="flex items-center gap-2.5 text-[10px] text-[#5a5a6e]">
+          <h3 className="text-sm font-bold text-foreground">Projection mensuelle</h3>
+          <div className="flex items-center gap-2.5 text-[10px] text-muted-foreground/60">
             <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#5682F2]" /> CA</span>
             <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#F4BE7E]" /> Résultat</span>
             <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#4ade80]" /> Net</span>
@@ -382,7 +382,7 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
           const netRevenue = ca * netRate - expenses;
           return (
             <div className="flex items-center gap-2 text-sm">
-              <span className="font-bold text-white">{MONTHS_SHORT[hoveredMonth]}</span>
+              <span className="font-bold text-foreground">{MONTHS_SHORT[hoveredMonth]}</span>
               <span className="text-xs text-[#5682F2] font-semibold">CA {fmt(ca)}&euro;</span>
               <span className={cn(
                 "text-xs font-semibold px-1.5 py-0.5 rounded-full",
@@ -396,7 +396,7 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
               )}>
                 Net {fmt(Math.round(netRevenue))}&euro;
               </span>
-              <span className="text-[10px] text-[#5a5a6e]">{JOURS_OUVRES[hoveredMonth]}j</span>
+              <span className="text-[10px] text-muted-foreground/60">{JOURS_OUVRES[hoveredMonth]}j</span>
             </div>
           );
         })()}
@@ -448,13 +448,13 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
               </div>
               <span className={cn(
                 "text-[9px] transition-colors",
-                isHovered ? "text-white font-semibold" : "text-[#5a5a6e]"
+                isHovered ? "text-foreground font-semibold" : "text-muted-foreground/60"
               )}>{m}</span>
             </div>
           );
         })}
       </div>
-      <div className="flex justify-between mt-3 pt-3 border-t border-white/[0.06] text-xs text-[#8b8b9e]">
+      <div className="flex justify-between mt-3 pt-3 border-t border-border text-xs text-muted-foreground">
         <span>Jours ouvrés : {JOURS_OUVRES.reduce((a, b) => a + b, 0)}/an &middot; ~{AVG_JOURS_OUVRES.toFixed(0)}/mois</span>
         <span>Taux net : {(netRate * 100).toFixed(0)}% &middot; Charges : {fmt(expenses)}&euro;/mois</span>
       </div>

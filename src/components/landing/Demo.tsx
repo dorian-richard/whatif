@@ -52,10 +52,10 @@ export function Demo() {
       <div className="relative max-w-5xl mx-auto px-6 py-20 w-full">
         <div className="text-center mb-12">
           <span className="text-sm font-medium text-[#F4BE7E] uppercase tracking-widest mb-3 block">Démo interactive</span>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
             Essaie par toi-même
           </h2>
-          <p className="text-lg text-[#8b8b9e]">
+          <p className="text-lg text-muted-foreground">
             Clique sur un scénario et vois l&apos;impact instantanément.
           </p>
         </div>
@@ -69,7 +69,7 @@ export function Demo() {
               className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border ${
                 activeIdx === i
                   ? "bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] border-[#5682F2] text-white fn-glow"
-                  : "bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20"
+                  : "bg-muted/30 border-border text-foreground hover:bg-muted hover:border-border"
               }`}
             >
               <Icon name={s.icon} className="size-4 inline mr-1" /> {s.label}
@@ -78,9 +78,9 @@ export function Demo() {
         </div>
 
         {/* Chart card */}
-        <div className="bg-[#12121c] rounded-2xl p-6 border border-white/[0.06] max-w-3xl mx-auto">
+        <div className="bg-card rounded-2xl p-6 border border-border max-w-3xl mx-auto">
           <div className="flex justify-between items-center mb-6">
-            <div className="flex gap-4 text-xs text-white font-medium">
+            <div className="flex gap-4 text-xs text-foreground font-medium">
               <span className="flex items-center gap-1.5">
                 <span className="w-3 h-1.5 bg-[#5682F2] inline-block rounded" /> Actuel
               </span>
@@ -122,24 +122,24 @@ export function Demo() {
                       }}
                     />
                   </div>
-                  <span className="text-[10px] text-[#5a5a6e]">{month}</span>
+                  <span className="text-[10px] text-muted-foreground/60">{month}</span>
                 </div>
               );
             })}
           </div>
 
           {/* Summary */}
-          <div className="mt-6 pt-4 border-t border-white/[0.06] grid grid-cols-3 gap-4 text-center">
+          <div className="mt-6 pt-4 border-t border-border grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-[11px] text-[#5a5a6e] uppercase tracking-wider">CA actuel</div>
-              <div className="text-lg font-bold text-white mt-1">{fmt(beforeTotal)}&euro;</div>
+              <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">CA actuel</div>
+              <div className="text-lg font-bold text-foreground mt-1">{fmt(beforeTotal)}&euro;</div>
             </div>
             <div>
-              <div className="text-[11px] text-[#5a5a6e] uppercase tracking-wider">CA simulé</div>
-              <div className="text-lg font-bold text-white mt-1">{fmt(afterTotal)}&euro;</div>
+              <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">CA simulé</div>
+              <div className="text-lg font-bold text-foreground mt-1">{fmt(afterTotal)}&euro;</div>
             </div>
             <div>
-              <div className="text-[11px] text-[#5a5a6e] uppercase tracking-wider">Impact</div>
+              <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">Impact</div>
               <div className={`text-lg font-bold mt-1 ${diff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}`}>
                 {diff >= 0 ? "+" : ""}{fmt(diff)}&euro;
               </div>

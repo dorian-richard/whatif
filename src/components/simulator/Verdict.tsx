@@ -106,7 +106,7 @@ export function Verdict({ projection, sim, clients }: VerdictProps) {
           <div className="mt-0.5 shrink-0">{statusIcon}</div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-sm font-bold text-foreground">
                 {pctDiff > 5
                   ? "Positif"
                   : pctDiff > -5
@@ -124,12 +124,12 @@ export function Verdict({ projection, sim, clients }: VerdictProps) {
             </div>
             <div className="space-y-1.5">
               {messages.map((m, i) => (
-                <p key={i} className="text-sm text-[#8b8b9e] leading-relaxed">
-                  <span className="text-[#5a5a6e] mr-1">&rarr;</span> {m}
+                <p key={i} className="text-sm text-muted-foreground leading-relaxed">
+                  <span className="text-muted-foreground/60 mr-1">&rarr;</span> {m}
                 </p>
               ))}
             </div>
-            <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center gap-4 text-xs text-[#5a5a6e]">
+            <div className="mt-3 pt-3 border-t border-border flex items-center gap-4 text-xs text-muted-foreground/60">
               <span>
                 Variation :{" "}
                 <strong className={pctDiff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}>

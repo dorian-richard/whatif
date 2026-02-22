@@ -51,6 +51,7 @@ import {
   Scale,
   ArrowLeftRight,
   Briefcase,
+  Lock,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -159,4 +160,5 @@ export {
   Scale,
   ArrowLeftRight,
   Briefcase,
+  Lock,
 };

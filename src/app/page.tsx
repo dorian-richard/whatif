@@ -4,7 +4,9 @@ import { Hero } from "@/components/landing/Hero";
 import { Features } from "@/components/landing/Features";
 import { Demo } from "@/components/landing/Demo";
 import { Testimonials } from "@/components/landing/Testimonials";
+import { Pricing } from "@/components/landing/Pricing";
 import { FinalCTA } from "@/components/landing/FinalCTA";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 
 const jsonLd = {
@@ -31,27 +33,31 @@ const jsonLd = {
 
 export default function Home() {
   return (
-    <div className="snap-container bg-[#07070e]">
+    <div className="snap-container bg-background">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Floating nav */}
-      <nav className="fixed top-0 w-full z-50 bg-[#07070e]/70 backdrop-blur-xl border-b border-white/5">
+      <nav className="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="Freelens" className="h-9 w-auto opacity-80" />
-            <span className="font-bold text-white text-lg">Freelens</span>
+            <span className="font-bold text-foreground text-lg">Freelens</span>
           </div>
           <div className="flex items-center gap-6">
-            <a href="#features" className="text-sm text-[#8b8b9e] hover:text-white transition-colors hidden sm:inline">
+            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
               Fonctionnalités
             </a>
-            <a href="#demo" className="text-sm text-[#8b8b9e] hover:text-white transition-colors hidden sm:inline">
+            <a href="#demo" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
               Démo
             </a>
-<Link href="/login" className="text-sm text-[#8b8b9e] hover:text-white transition-colors">
+            <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
+              Tarifs
+            </a>
+            <ThemeToggle />
+            <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Connexion
             </Link>
             <Link
@@ -68,6 +74,7 @@ export default function Home() {
       <Features />
       <Demo />
       <Testimonials />
+      <Pricing />
       <FinalCTA />
     </div>
   );

@@ -9,6 +9,7 @@ import {
   CircleAlert,
   Users,
 } from "@/components/ui/icons";
+import { ProBlur } from "@/components/ProBlur";
 import {
   METIERS,
   METIER_CATEGORIES as CATEGORIES,
@@ -167,18 +168,19 @@ export default function BenchmarkPage() {
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white mb-1">
+        <h1 className="text-2xl font-bold text-foreground mb-1">
           Benchmark TJM march&eacute;
         </h1>
-        <p className="text-[#8b8b9e]">
+        <p className="text-muted-foreground">
           Compare ton TJM aux r&eacute;f&eacute;rences du march&eacute;
           freelance fran&ccedil;ais.
         </p>
       </div>
 
+      <ProBlur label="Le Benchmark TJM est réservé au plan Pro">
       {/* User positioning */}
       {userTJM && userPctLabel && (
-        <div className="bg-gradient-to-r from-[#5682F2]/10 to-[#F4BE7E]/10 rounded-2xl border border-white/[0.08] p-6">
+        <div className="bg-gradient-to-r from-[#5682F2]/10 to-[#F4BE7E]/10 rounded-2xl border border-border p-6">
           <div className="flex items-center gap-4">
             <div
               className="size-14 rounded-xl flex items-center justify-center"
@@ -190,13 +192,13 @@ export default function BenchmarkPage() {
               />
             </div>
             <div className="flex-1">
-              <div className="text-xs text-[#5a5a6e] uppercase tracking-wider">
+              <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">
                 Ton TJM moyen
               </div>
-              <div className="text-3xl font-bold text-white">
+              <div className="text-3xl font-bold text-foreground">
                 {userTJM} &euro;/jour
               </div>
-              <div className="text-sm text-[#8b8b9e] mt-0.5">
+              <div className="text-sm text-muted-foreground mt-0.5">
                 {metier.label} {SENIORITY_CONFIG[selectedSeniority].label}{" "}
                 &agrave; {LOCATIONS[selectedLocation].label}
               </div>
@@ -208,7 +210,7 @@ export default function BenchmarkPage() {
               >
                 {userPctLabel.label}
               </div>
-              <div className="text-xs text-[#5a5a6e]">
+              <div className="text-xs text-muted-foreground/60">
                 M&eacute;diane march&eacute; : {adjustedRange.median} &euro;
               </div>
             </div>
@@ -217,11 +219,11 @@ export default function BenchmarkPage() {
       )}
 
       {!userTJM && (
-        <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-5 flex items-center gap-3">
+        <div className="bg-card rounded-2xl border border-border p-5 flex items-center gap-3">
           <CircleAlert className="size-5 text-[#F4BE7E] shrink-0" />
-          <p className="text-sm text-[#8b8b9e]">
+          <p className="text-sm text-muted-foreground">
             Ajoute des clients avec un TJM dans{" "}
-            <span className="text-white font-medium">Param&egrave;tres</span>{" "}
+            <span className="text-foreground font-medium">Param&egrave;tres</span>{" "}
             pour voir ton positionnement march&eacute;.
           </p>
         </div>
@@ -232,8 +234,8 @@ export default function BenchmarkPage() {
         {/* Seniority + Location */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Seniority */}
-          <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-5">
-            <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-3">
+          <div className="bg-card rounded-2xl border border-border p-5">
+            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
               S&eacute;niorit&eacute;
             </div>
             <div className="flex gap-2 flex-wrap">
@@ -246,8 +248,8 @@ export default function BenchmarkPage() {
                     className={cn(
                       "px-3 py-2 rounded-xl text-sm font-medium transition-all",
                       selectedSeniority === s
-                        ? "ring-1 ring-[#5682F2]/30"
-                        : "bg-white/[0.04] text-[#8b8b9e] hover:text-white hover:bg-white/[0.06]"
+                        ? "ring-1 ring-primary/30"
+                        : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
                     )}
                     style={
                       selectedSeniority === s
@@ -267,8 +269,8 @@ export default function BenchmarkPage() {
           </div>
 
           {/* Location */}
-          <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-5">
-            <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-3">
+          <div className="bg-card rounded-2xl border border-border p-5">
+            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
               Localisation
             </div>
             <div className="flex gap-2 flex-wrap">
@@ -281,8 +283,8 @@ export default function BenchmarkPage() {
                     className={cn(
                       "px-3 py-2 rounded-xl text-sm font-medium transition-all",
                       selectedLocation === l
-                        ? "bg-[#5682F2]/15 text-[#5682F2] ring-1 ring-[#5682F2]/30"
-                        : "bg-white/[0.04] text-[#8b8b9e] hover:text-white hover:bg-white/[0.06]"
+                        ? "bg-primary/15 text-primary ring-1 ring-primary/30"
+                        : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
                     )}
                   >
                     <div>{loc.label}</div>
@@ -299,8 +301,8 @@ export default function BenchmarkPage() {
         </div>
 
         {/* Metier selector by category */}
-        <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-5">
-          <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-4">
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-4">
             M&eacute;tier
           </div>
           <div className="space-y-4">
@@ -321,7 +323,7 @@ export default function BenchmarkPage() {
                         "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
                         selectedMetier === m.id
                           ? "ring-1"
-                          : "bg-white/[0.04] text-[#8b8b9e] hover:text-white hover:bg-white/[0.06]"
+                          : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
                       )}
                       style={
                         selectedMetier === m.id
@@ -344,7 +346,7 @@ export default function BenchmarkPage() {
       </div>
 
       {/* Selected metier detail */}
-      <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6">
+      <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center gap-3 mb-6">
           <div
             className="size-10 rounded-xl flex items-center justify-center"
@@ -358,14 +360,14 @@ export default function BenchmarkPage() {
             />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white">{metier.label}</h2>
-            <p className="text-xs text-[#5a5a6e]">
+            <h2 className="text-lg font-bold text-foreground">{metier.label}</h2>
+            <p className="text-xs text-muted-foreground/60">
               {SENIORITY_CONFIG[selectedSeniority].label} &middot;{" "}
               {LOCATIONS[selectedLocation].label}
             </p>
           </div>
           <div className="ml-auto text-right">
-            <div className="text-xs text-[#5a5a6e]">TJM m&eacute;dian</div>
+            <div className="text-xs text-muted-foreground/60">TJM m&eacute;dian</div>
             <div
               className="text-2xl font-bold"
               style={{ color: CATEGORY_COLORS[metier.category] }}
@@ -377,14 +379,14 @@ export default function BenchmarkPage() {
 
         {/* Range visualization */}
         <div className="mb-2">
-          <div className="flex justify-between text-xs text-[#5a5a6e] mb-2">
+          <div className="flex justify-between text-xs text-muted-foreground/60 mb-2">
             <span>{adjustedRange.min} &euro;</span>
             <span>M&eacute;diane : {adjustedRange.median} &euro;</span>
             <span>{adjustedRange.max} &euro;</span>
           </div>
 
           {/* Bar */}
-          <div className="relative h-4 bg-white/[0.04] rounded-full overflow-visible">
+          <div className="relative h-4 bg-muted/50 rounded-full overflow-visible">
             {/* Full range fill */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#5682F2]/20 via-[#5682F2]/40 to-[#5682F2]/20" />
 
@@ -403,7 +405,7 @@ export default function BenchmarkPage() {
                   transform: "translateX(-50%)",
                 }}
               >
-                <div className="w-4 h-6 rounded-full bg-[#F4BE7E] border-2 border-[#12121c] shadow-lg" />
+                <div className="w-4 h-6 rounded-full bg-[#F4BE7E] border-2 border-card shadow-lg" />
               </div>
             )}
           </div>
@@ -428,21 +430,21 @@ export default function BenchmarkPage() {
 
         {/* Range details row */}
         <div className="grid grid-cols-3 gap-4 mt-4">
-          <div className="text-center p-3 rounded-xl bg-white/[0.02]">
-            <div className="text-xs text-[#5a5a6e] mb-1">Plancher</div>
-            <div className="text-lg font-bold text-white">
+          <div className="text-center p-3 rounded-xl bg-muted/30">
+            <div className="text-xs text-muted-foreground/60 mb-1">Plancher</div>
+            <div className="text-lg font-bold text-foreground">
               {adjustedRange.min} &euro;
             </div>
           </div>
-          <div className="text-center p-3 rounded-xl bg-[#5682F2]/8 border border-[#5682F2]/15">
-            <div className="text-xs text-[#5a5a6e] mb-1">M&eacute;diane</div>
-            <div className="text-lg font-bold text-[#5682F2]">
+          <div className="text-center p-3 rounded-xl bg-primary/8 border border-primary/15">
+            <div className="text-xs text-muted-foreground/60 mb-1">M&eacute;diane</div>
+            <div className="text-lg font-bold text-primary">
               {adjustedRange.median} &euro;
             </div>
           </div>
-          <div className="text-center p-3 rounded-xl bg-white/[0.02]">
-            <div className="text-xs text-[#5a5a6e] mb-1">Plafond</div>
-            <div className="text-lg font-bold text-white">
+          <div className="text-center p-3 rounded-xl bg-muted/30">
+            <div className="text-xs text-muted-foreground/60 mb-1">Plafond</div>
+            <div className="text-lg font-bold text-foreground">
               {adjustedRange.max} &euro;
             </div>
           </div>
@@ -450,7 +452,7 @@ export default function BenchmarkPage() {
 
         {/* Seniority comparison for this metier */}
         <div className="mt-6">
-          <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-3">
+          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
             &Eacute;volution par s&eacute;niorit&eacute;
           </div>
           <div className="space-y-2">
@@ -467,14 +469,14 @@ export default function BenchmarkPage() {
                   className={cn(
                     "flex items-center gap-3 w-full p-2.5 rounded-xl transition-all text-left",
                     isSelected
-                      ? "bg-white/[0.04] border border-white/[0.08]"
-                      : "hover:bg-white/[0.02]"
+                      ? "bg-muted/50 border border-border"
+                      : "hover:bg-muted/30"
                   )}
                 >
                   <div className="w-20 text-xs font-medium" style={{ color: cfg.color }}>
                     {cfg.label}
                   </div>
-                  <div className="flex-1 h-2.5 bg-white/[0.04] rounded-full overflow-hidden">
+                  <div className="flex-1 h-2.5 bg-muted/50 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-300"
                       style={{
@@ -484,7 +486,7 @@ export default function BenchmarkPage() {
                     />
                   </div>
                   <div className="w-24 text-right">
-                    <span className="text-sm font-bold text-white">
+                    <span className="text-sm font-bold text-foreground">
                       {r.min}-{r.max} &euro;
                     </span>
                   </div>
@@ -496,14 +498,14 @@ export default function BenchmarkPage() {
       </div>
 
       {/* Ranking table */}
-      <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6">
+      <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center gap-3 mb-5">
-          <Users className="size-5 text-[#8b8b9e]" />
+          <Users className="size-5 text-muted-foreground" />
           <div>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold text-foreground">
               Classement des m&eacute;tiers
             </h3>
-            <p className="text-xs text-[#5a5a6e]">
+            <p className="text-xs text-muted-foreground/60">
               {SENIORITY_CONFIG[selectedSeniority].label} &middot;{" "}
               {LOCATIONS[selectedLocation].label} &middot; Tri&eacute; par TJM
               m&eacute;dian
@@ -526,12 +528,12 @@ export default function BenchmarkPage() {
                 className={cn(
                   "flex items-center gap-3 w-full p-3 rounded-xl transition-all text-left",
                   isSelected
-                    ? "border border-white/[0.1] bg-white/[0.03]"
-                    : "hover:bg-white/[0.02]"
+                    ? "border border-border bg-muted/40"
+                    : "hover:bg-muted/30"
                 )}
               >
                 {/* Rank */}
-                <div className="w-6 text-center text-xs font-bold text-[#5a5a6e]">
+                <div className="w-6 text-center text-xs font-bold text-muted-foreground/60">
                   {i + 1}
                 </div>
 
@@ -546,7 +548,7 @@ export default function BenchmarkPage() {
                   <div
                     className={cn(
                       "text-sm font-medium",
-                      isSelected ? "text-white" : "text-[#8b8b9e]"
+                      isSelected ? "text-foreground" : "text-muted-foreground"
                     )}
                   >
                     {m.label}
@@ -554,7 +556,7 @@ export default function BenchmarkPage() {
                 </div>
 
                 {/* Bar */}
-                <div className="flex-1 h-2.5 bg-white/[0.04] rounded-full overflow-hidden relative">
+                <div className="flex-1 h-2.5 bg-muted/50 rounded-full overflow-hidden relative">
                   <div
                     className="h-full rounded-full transition-all duration-300"
                     style={{
@@ -564,7 +566,7 @@ export default function BenchmarkPage() {
                   />
                   {isUserHere && userTJM && (
                     <div
-                      className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#F4BE7E] border border-[#12121c]"
+                      className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#F4BE7E] border border-card"
                       style={{
                         left: `${Math.max(0, Math.min(100, ((userTJM - m.adjusted.min) / (m.adjusted.max - m.adjusted.min)) * barW))}%`,
                       }}
@@ -574,10 +576,10 @@ export default function BenchmarkPage() {
 
                 {/* Range */}
                 <div className="w-28 text-right shrink-0">
-                  <span className="text-sm font-bold text-white">
+                  <span className="text-sm font-bold text-foreground">
                     {m.adjusted.median} &euro;
                   </span>
-                  <span className="text-xs text-[#5a5a6e] ml-1">
+                  <span className="text-xs text-muted-foreground/60 ml-1">
                     ({m.adjusted.min}-{m.adjusted.max})
                   </span>
                 </div>
@@ -588,7 +590,7 @@ export default function BenchmarkPage() {
       </div>
 
       {/* Sources & disclaimer */}
-      <div className="text-center text-xs text-[#5a5a6e] pb-8 space-y-1">
+      <div className="text-center text-xs text-muted-foreground/60 pb-8 space-y-1">
         <p>
           Sources : Barom&egrave;tre Silkhom 2025 (20 000+ placements IT),
           Embarq 2025. Multiplicateurs g&eacute;ographiques
@@ -600,6 +602,7 @@ export default function BenchmarkPage() {
           secteur, le type de mission et la n&eacute;gociation.
         </p>
       </div>
+      </ProBlur>
     </div>
   );
 }

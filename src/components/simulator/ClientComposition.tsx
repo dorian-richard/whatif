@@ -30,9 +30,9 @@ export function ClientComposition({ clients, lostClientIndex }: ClientCompositio
   const isConcentrated = topClientPct > 50;
 
   return (
-    <div className="bg-[#12121c] rounded-2xl p-6 border border-white/[0.06]">
+    <div className="bg-card rounded-2xl p-6 border border-border">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-white">Clients</h3>
+        <h3 className="text-sm font-bold text-foreground">Clients</h3>
         {isConcentrated && (
           <span className="text-[10px] text-[#fbbf24] bg-[#fbbf24]/12 px-2 py-1 rounded-full font-medium border border-[#fbbf24]/20">
             Client dominant : {topClientPct.toFixed(0)}%
@@ -41,7 +41,7 @@ export function ClientComposition({ clients, lostClientIndex }: ClientCompositio
       </div>
 
       {/* Stacked bar */}
-      <div className="flex h-10 rounded-xl overflow-hidden mb-5 bg-white/[0.04]">
+      <div className="flex h-10 rounded-xl overflow-hidden mb-5 bg-muted/50">
         {activeClients.map((client, i) => {
           const ca = getClientBaseCA(client);
           const pct = totalCA > 0 ? (ca / totalCA) * 100 : 0;
@@ -74,25 +74,25 @@ export function ClientComposition({ clients, lostClientIndex }: ClientCompositio
           const badge = BILLING_BADGES[client.billing];
           const color = client.color ?? CLIENT_COLORS[i % CLIENT_COLORS.length];
           return (
-            <div key={client.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/[0.04] transition-colors">
+            <div key={client.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
               <div
-                className="w-3 h-3 rounded-full shrink-0 ring-2 ring-[#12121c]"
+                className="w-3 h-3 rounded-full shrink-0 ring-2 ring-card"
                 style={{ backgroundColor: color }}
               />
-              <span className="text-sm text-white font-medium truncate flex-1">{client.name}</span>
+              <span className="text-sm text-foreground font-medium truncate flex-1">{client.name}</span>
               <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5", badge.color)}>
                 <badge.Icon className="size-2.5" /> {badge.label}
               </span>
-              <span className="text-sm font-semibold text-[#8b8b9e] tabular-nums shrink-0">
+              <span className="text-sm font-semibold text-muted-foreground tabular-nums shrink-0">
                 {fmt(ca)}&euro;
               </span>
-              <div className="w-12 h-1.5 rounded-full bg-white/[0.04] shrink-0">
+              <div className="w-12 h-1.5 rounded-full bg-muted/50 shrink-0">
                 <div
                   className="h-full rounded-full transition-all duration-500"
                   style={{ width: `${pct}%`, backgroundColor: color }}
                 />
               </div>
-              <span className="text-xs text-[#5a5a6e] shrink-0 w-8 text-right tabular-nums">
+              <span className="text-xs text-muted-foreground/60 shrink-0 w-8 text-right tabular-nums">
                 {pct.toFixed(0)}%
               </span>
             </div>
@@ -108,23 +108,23 @@ export function ClientComposition({ clients, lostClientIndex }: ClientCompositio
         const ponctual = totalCA - recurring;
         const recurringPct = totalCA > 0 ? (recurring / totalCA) * 100 : 0;
         return (
-          <div className="mt-4 pt-4 border-t border-white/[0.06]">
+          <div className="mt-4 pt-4 border-t border-border">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex-1 h-2 rounded-full bg-white/[0.04] overflow-hidden">
+              <div className="flex-1 h-2 rounded-full bg-muted/50 overflow-hidden">
                 <div
                   className="h-full rounded-full bg-[#5682F2] transition-all duration-500"
                   style={{ width: `${recurringPct}%` }}
                 />
               </div>
             </div>
-            <div className="flex justify-between text-xs text-[#8b8b9e]">
+            <div className="flex justify-between text-xs text-muted-foreground">
               <span>
                 Récurrent : <strong className="text-[#5682F2]">{recurringPct.toFixed(0)}%</strong>{" "}
-                <span className="text-[#5a5a6e]">({fmt(recurring)}&euro;)</span>
+                <span className="text-muted-foreground/60">({fmt(recurring)}&euro;)</span>
               </span>
               <span>
                 Ponctuel : <strong className="text-[#F4BE7E]">{(100 - recurringPct).toFixed(0)}%</strong>{" "}
-                <span className="text-[#5a5a6e]">({fmt(ponctual)}&euro;)</span>
+                <span className="text-muted-foreground/60">({fmt(ponctual)}&euro;)</span>
               </span>
             </div>
           </div>

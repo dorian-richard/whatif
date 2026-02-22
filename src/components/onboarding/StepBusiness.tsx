@@ -17,8 +17,8 @@ export function StepBusiness() {
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-white mb-1">Ton statut juridique</h2>
-      <p className="text-sm text-[#8b8b9e] mb-5">
+      <h2 className="text-xl font-bold text-foreground mb-1">Ton statut juridique</h2>
+      <p className="text-sm text-muted-foreground mb-5">
         Détermine les taux de cotisations, d&apos;IR et d&apos;IS appliqués à tes revenus.
       </p>
 
@@ -32,18 +32,18 @@ export function StepBusiness() {
                 "p-3 rounded-xl border text-left transition-all duration-150",
                 businessStatus === key
                   ? "bg-[#5682F2]/15 border-[#5682F2]/30"
-                  : "bg-white/[0.03] border-white/[0.06] hover:border-white/[0.1]"
+                  : "bg-muted/50 border-border hover:border-border"
               )}
             >
               <div className={cn(
                 "text-xs font-semibold",
-                businessStatus === key ? "text-[#5682F2]" : "text-white"
+                businessStatus === key ? "text-[#5682F2]" : "text-foreground"
               )}>
                 {cfg.label}
               </div>
-              <div className="text-[10px] text-[#5a5a6e] mt-0.5 leading-relaxed">{cfg.desc}</div>
+              <div className="text-[10px] text-muted-foreground/70 mt-0.5 leading-relaxed">{cfg.desc}</div>
               <div className="flex flex-wrap gap-1 mt-1.5">
-                <span className="text-[9px] bg-white/[0.06] text-[#8b8b9e] px-1.5 py-0.5 rounded font-medium">
+                <span className="text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-medium">
                   {cfg.regime}
                 </span>
                 {cfg.plafond && (
@@ -58,50 +58,50 @@ export function StepBusiness() {
       </div>
 
       {/* Detail for selected status */}
-      <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] p-4 space-y-3">
+      <div className="bg-muted/50 rounded-xl border border-border p-4 space-y-3">
         <div className="flex items-center gap-2 mb-1">
           <Landmark className="size-4 text-[#5682F2]" />
-          <span className="text-sm font-semibold text-white">{config.label}</span>
+          <span className="text-sm font-semibold text-foreground">{config.label}</span>
           <span className="text-[10px] bg-[#5682F2]/10 text-[#5682F2] px-2 py-0.5 rounded-full font-medium">{config.regime}</span>
         </div>
 
-        <p className="text-[11px] text-[#8b8b9e] leading-relaxed">{config.details}</p>
+        <p className="text-[11px] text-muted-foreground leading-relaxed">{config.details}</p>
 
         <div className="grid grid-cols-3 gap-3">
-          <div className="text-center p-2 bg-white/[0.03] rounded-lg">
+          <div className="text-center p-2 bg-muted/50 rounded-lg">
             <div className="text-lg font-bold text-[#5682F2]">
               {(config.urssaf * 100).toFixed(0)}%
             </div>
-            <div className="text-[9px] text-[#5a5a6e] uppercase tracking-wider font-medium">Cotisations</div>
-            <div className="text-[9px] text-[#5a5a6e]">
+            <div className="text-[9px] text-muted-foreground/70 uppercase tracking-wider font-medium">Cotisations</div>
+            <div className="text-[9px] text-muted-foreground/70">
               {config.is > 0 ? "sur rémunération" : businessStatus === "micro" ? "sur le CA" : "sur bénéfice"}
             </div>
           </div>
-          <div className="text-center p-2 bg-white/[0.03] rounded-lg">
+          <div className="text-center p-2 bg-muted/50 rounded-lg">
             <div className="text-lg font-bold text-[#F4BE7E]">
               {(config.ir * 100).toFixed(1)}%
             </div>
-            <div className="text-[9px] text-[#5a5a6e] uppercase tracking-wider font-medium">IR estimé</div>
-            <div className="text-[9px] text-[#5a5a6e]">
+            <div className="text-[9px] text-muted-foreground/70 uppercase tracking-wider font-medium">IR estimé</div>
+            <div className="text-[9px] text-muted-foreground/70">
               {businessStatus === "micro" ? "après abattement 34%" : "barème progressif"}
             </div>
           </div>
           {config.is > 0 && (
-            <div className="text-center p-2 bg-white/[0.03] rounded-lg">
+            <div className="text-center p-2 bg-muted/50 rounded-lg">
               <div className="text-lg font-bold text-[#a78bfa]">
                 {(config.is * 100).toFixed(0)}%
               </div>
-              <div className="text-[9px] text-[#5a5a6e] uppercase tracking-wider font-medium">IS</div>
-              <div className="text-[9px] text-[#5a5a6e]">15% &le; 42 500&euro;, 25% après</div>
+              <div className="text-[9px] text-muted-foreground/70 uppercase tracking-wider font-medium">IS</div>
+              <div className="text-[9px] text-muted-foreground/70">15% &le; 42 500&euro;, 25% après</div>
             </div>
           )}
         </div>
 
         {/* Avantages / Inconvenients compact */}
-        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-white/[0.06]">
+        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border">
           <ul className="space-y-0.5">
             {config.avantages.slice(0, 3).map((a) => (
-              <li key={a} className="flex items-start gap-1 text-[10px] text-[#8b8b9e] leading-tight">
+              <li key={a} className="flex items-start gap-1 text-[10px] text-muted-foreground leading-tight">
                 <Check className="size-2.5 text-[#4ade80] shrink-0 mt-0.5" />
                 {a}
               </li>
@@ -109,7 +109,7 @@ export function StepBusiness() {
           </ul>
           <ul className="space-y-0.5">
             {config.inconvenients.slice(0, 3).map((i) => (
-              <li key={i} className="flex items-start gap-1 text-[10px] text-[#8b8b9e] leading-tight">
+              <li key={i} className="flex items-start gap-1 text-[10px] text-muted-foreground leading-tight">
                 <X className="size-2.5 text-[#f87171] shrink-0 mt-0.5" />
                 {i}
               </li>
@@ -119,7 +119,7 @@ export function StepBusiness() {
 
         {/* SASU IR: option to disable social charges */}
         {businessStatus === "sasu_ir" && (
-          <div className="pt-3 border-t border-white/[0.06]">
+          <div className="pt-3 border-t border-border">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -128,11 +128,11 @@ export function StepBusiness() {
                   const current = useProfileStore.getState().customUrssafRate;
                   setProfile({ customUrssafRate: current === 0 ? undefined : 0 });
                 }}
-                className="w-4 h-4 rounded border-white/[0.1] bg-white/[0.04] text-[#5682F2] focus:ring-[#5682F2]/40"
+                className="w-4 h-4 rounded border-border bg-muted/50 text-[#5682F2] focus:ring-[#5682F2]/40"
               />
               <div>
-                <div className="text-xs font-medium text-white">Pas de rémunération président</div>
-                <div className="text-[10px] text-[#5a5a6e]">0% de charges sociales, bénéfice imposé à l&apos;IR</div>
+                <div className="text-xs font-medium text-foreground">Pas de rémunération président</div>
+                <div className="text-[10px] text-muted-foreground/70">0% de charges sociales, bénéfice imposé à l&apos;IR</div>
               </div>
             </label>
           </div>
@@ -140,8 +140,8 @@ export function StepBusiness() {
 
         {/* Rémunération type — only for IS structures */}
         {(businessStatus === "eurl_is" || businessStatus === "sasu_is") && (
-          <div className="pt-3 border-t border-white/[0.06]">
-            <label className="text-xs font-semibold text-[#8b8b9e] mb-2 block">Mode de rémunération</label>
+          <div className="pt-3 border-t border-border">
+            <label className="text-xs font-semibold text-muted-foreground mb-2 block">Mode de rémunération</label>
             <div className="grid grid-cols-3 gap-2">
               {([
                 { key: "salaire" as RemunerationType, label: "Salaire", icon: <Banknote className="size-3.5 text-emerald-400" />, desc: `Charges ${(config.urssaf * 100).toFixed(0)}% + IR` },
@@ -157,24 +157,24 @@ export function StepBusiness() {
                       "p-2.5 rounded-xl border text-left transition-all duration-150",
                       currentRemType === opt.key
                         ? "bg-[#5682F2]/15 border-[#5682F2]/30"
-                        : "bg-white/[0.03] border-white/[0.06] hover:border-white/[0.1]"
+                        : "bg-muted/50 border-border hover:border-border"
                     )}
                   >
                     <div className="flex items-center gap-1 mb-0.5">
                       {opt.icon}
                       <span className={cn(
                         "text-[11px] font-semibold",
-                        currentRemType === opt.key ? "text-[#5682F2]" : "text-white"
+                        currentRemType === opt.key ? "text-[#5682F2]" : "text-foreground"
                       )}>{opt.label}</span>
                     </div>
-                    <div className="text-[9px] text-[#5a5a6e]">{opt.desc}</div>
+                    <div className="text-[9px] text-muted-foreground/70">{opt.desc}</div>
                   </button>
                 );
               })}
             </div>
             <div className="flex items-start gap-1.5 mt-2">
-              <Info className="size-3 text-[#5a5a6e] shrink-0 mt-0.5" />
-              <p className="text-[9px] text-[#5a5a6e]">
+              <Info className="size-3 text-muted-foreground/70 shrink-0 mt-0.5" />
+              <p className="text-[9px] text-muted-foreground/70">
                 {businessStatus === "sasu_is"
                   ? "SASU : dividendes au PFU 30% flat, sans cotisations TNS."
                   : "EURL : dividendes > 10% du capital soumis aux cotisations TNS (~45%)."}

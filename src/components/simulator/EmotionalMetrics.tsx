@@ -241,12 +241,12 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
   }));
 
   return (
-    <div className="bg-[#12121c] rounded-2xl p-6 border border-white/[0.06]">
+    <div className="bg-card rounded-2xl p-6 border border-border">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-bold text-white">Impact du scénario</h3>
-        <span className="text-[10px] text-[#5a5a6e] uppercase tracking-wider">{metrics.length} indicateurs</span>
+        <h3 className="text-sm font-bold text-foreground">Impact du scénario</h3>
+        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">{metrics.length} indicateurs</span>
       </div>
-      <p className="text-[11px] text-[#5a5a6e] mb-5">
+      <p className="text-[11px] text-muted-foreground/60 mb-5">
         Comparaison avant / après votre scénario. Les badges indiquent la santé de chaque indicateur.
       </p>
 
@@ -282,13 +282,13 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
                           <div className="absolute inset-0 flex items-center justify-center">{m.icon}</div>
                         </div>
                       ) : (
-                        <div className="size-11 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center shrink-0">
+                        <div className="size-11 rounded-xl bg-muted/50 border border-border flex items-center justify-center shrink-0">
                           {m.icon}
                         </div>
                       )}
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <p className="text-xs font-semibold text-white truncate">{m.label}</p>
+                          <p className="text-xs font-semibold text-foreground truncate">{m.label}</p>
                           <span className={cn(
                             "text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0",
                             vc.color, vc.bg
@@ -297,9 +297,9 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
                           </span>
                         </div>
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-lg font-bold text-white tracking-tight">
+                          <span className="text-lg font-bold text-foreground tracking-tight">
                             {Math.abs(m.after) > 999 ? fmt(m.after) : m.after}
-                            <span className="text-xs font-normal text-[#5a5a6e] ml-0.5">{m.unit}</span>
+                            <span className="text-xs font-normal text-muted-foreground/60 ml-0.5">{m.unit}</span>
                           </span>
                           {!isNeutral && (
                             <span className={cn(
@@ -313,13 +313,13 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
                           )}
                         </div>
                         {!isNeutral && (
-                          <p className="text-[10px] text-[#5a5a6e] mt-0.5">
+                          <p className="text-[10px] text-muted-foreground/60 mt-0.5">
                             Avant : {Math.abs(m.before) > 999 ? fmt(m.before) : m.before}{m.unit}
                           </p>
                         )}
                       </div>
                     </div>
-                    <p className="text-[10px] text-[#8b8b9e]/60 mt-2 leading-relaxed">{m.explanation}</p>
+                    <p className="text-[10px] text-muted-foreground/60 mt-2 leading-relaxed">{m.explanation}</p>
                   </div>
                 );
               })}

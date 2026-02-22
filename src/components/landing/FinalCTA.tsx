@@ -10,12 +10,12 @@ export function FinalCTA() {
       </div>
 
       <div className="relative text-center px-6 max-w-3xl mx-auto">
-        <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+        <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-tight mb-6">
           Prêt à{" "}
           <span className="fn-gradient-text">piloter</span>
           {" "}ton activité ?
         </h2>
-        <p className="text-lg text-[#8b8b9e] mb-10 max-w-xl mx-auto">
+        <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
           Rejoins les freelances qui prennent des décisions éclairées.
           Dashboard, scénarios et fiscalité en 2 minutes.
         </p>
@@ -31,19 +31,19 @@ export function FinalCTA() {
       </div>
 
       {/* Footer */}
-      <footer className="absolute bottom-0 w-full py-6 px-6 border-t border-white/5">
+      <footer className="absolute bottom-0 w-full py-6 px-6 border-t border-border">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="Freelens" className="h-6 w-auto opacity-70" />
-            <span className="text-sm text-[#5a5a6e]">
+            <span className="text-sm text-muted-foreground/60">
               Freelens &mdash; Le copilote financier des freelances
             </span>
           </div>
-          <div className="flex gap-6 text-sm text-[#5a5a6e]">
-            <a href="#" className="hover:text-white transition-colors">CGU</a>
-            <a href="#" className="hover:text-white transition-colors">Confidentialité</a>
-            <a href="#" className="hover:text-white transition-colors">Contact</a>
+          <div className="flex gap-6 text-sm text-muted-foreground/60">
+            <a href="#" className="hover:text-foreground transition-colors">CGU</a>
+            <a href="#" className="hover:text-foreground transition-colors">Confidentialité</a>
+            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
           </div>
         </div>
       </footer>

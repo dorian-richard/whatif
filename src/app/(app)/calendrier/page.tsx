@@ -7,6 +7,7 @@ import { BUSINESS_STATUS_CONFIG, MONTHS_SHORT } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus } from "@/types";
 import { CalendarDays, Banknote, Shield, Landmark, CircleAlert } from "@/components/ui/icons";
+import { ProBlur } from "@/components/ProBlur";
 
 /* ════════════════════════════════════════════════
    Types & Config
@@ -159,12 +160,13 @@ export default function CalendrierPage() {
     <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white mb-1">Calendrier Fiscal</h1>
-        <p className="text-[#8b8b9e]">
+        <h1 className="text-2xl font-bold text-foreground mb-1">Calendrier Fiscal</h1>
+        <p className="text-muted-foreground">
           Toutes tes &eacute;ch&eacute;ances fiscales sur 12 mois avec les montants &agrave; provisionner.
         </p>
       </div>
 
+      <ProBlur label="Le Calendrier Fiscal est réservé au plan Pro">
       {/* Status selector */}
       <div className="flex flex-wrap gap-2">
         {allStatuts.map((s) => (
@@ -174,8 +176,8 @@ export default function CalendrierPage() {
             className={cn(
               "px-3 py-1.5 rounded-full text-xs font-medium transition-all",
               selectedStatus === s
-                ? "bg-[#5682F2]/15 text-[#5682F2] ring-1 ring-[#5682F2]/30"
-                : "bg-white/[0.04] text-[#8b8b9e] hover:text-white hover:bg-white/[0.06]"
+                ? "bg-primary/15 text-primary ring-1 ring-primary/30"
+                : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
             {BUSINESS_STATUS_CONFIG[s].label}
@@ -187,7 +189,7 @@ export default function CalendrierPage() {
       <div className="flex flex-wrap gap-3">
         {(Object.entries(CATEGORY_CONFIG) as [DeadlineCategory, { label: string; color: string }][]).map(
           ([key, cfg]) => (
-            <div key={key} className="flex items-center gap-1.5 text-xs text-[#8b8b9e]">
+            <div key={key} className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <div className="size-2.5 rounded-full" style={{ backgroundColor: cfg.color }} />
               {cfg.label}
             </div>
@@ -218,21 +220,21 @@ export default function CalendrierPage() {
           return (
             <div
               key={i}
-              className={cn("relative pl-8 pb-6 border-l-2", isCurrentMo ? "border-[#5682F2]" : "border-white/[0.06]")}
+              className={cn("relative pl-8 pb-6 border-l-2", isCurrentMo ? "border-[#5682F2]" : "border-border")}
             >
               {/* Month dot */}
               <div
                 className={cn(
                   "absolute -left-[9px] top-0 size-4 rounded-full border-2",
-                  isCurrentMo ? "bg-[#5682F2] border-[#5682F2]" : "bg-[#0a0a14] border-white/[0.12]"
+                  isCurrentMo ? "bg-[#5682F2] border-[#5682F2]" : "bg-background border-border"
                 )}
               />
 
               {/* Month name */}
-              <div className={cn("text-sm font-bold mb-3", isCurrentMo ? "text-[#5682F2]" : "text-white")}>
+              <div className={cn("text-sm font-bold mb-3", isCurrentMo ? "text-primary" : "text-foreground")}>
                 {MONTHS_FULL[i]}
                 {isCurrentMo && (
-                  <span className="ml-2 text-[10px] font-normal text-[#5682F2] uppercase tracking-wider">
+                  <span className="ml-2 text-[10px] font-normal text-primary uppercase tracking-wider">
                     Mois en cours
                   </span>
                 )}
@@ -240,7 +242,7 @@ export default function CalendrierPage() {
 
               {/* Deadlines */}
               {deadlines.length === 0 ? (
-                <div className="text-xs text-[#5a5a6e] italic">Aucune &eacute;ch&eacute;ance</div>
+                <div className="text-xs text-muted-foreground/60 italic">Aucune &eacute;ch&eacute;ance</div>
               ) : (
                 <div className="space-y-2">
                   {deadlines.map((d, j) => {
@@ -250,12 +252,12 @@ export default function CalendrierPage() {
                     return (
                       <div
                         key={j}
-                        className="flex items-center gap-3 py-2.5 px-3 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] transition-colors"
+                        className="flex items-center gap-3 py-2.5 px-3 rounded-xl bg-muted/30 border border-border hover:bg-muted/50 transition-colors"
                       >
                         <div className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: catCfg.color }} />
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm text-white truncate">{d.label}</div>
-                          <div className="flex items-center gap-2 text-[11px] text-[#5a5a6e]">
+                          <div className="text-sm text-foreground truncate">{d.label}</div>
+                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground/60">
                             <span>{d.day} {MONTHS_SHORT[i]}</span>
                             {d.note && (
                               <>
@@ -281,11 +283,12 @@ export default function CalendrierPage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="text-center text-xs text-[#5a5a6e] pb-8">
+      <div className="text-center text-xs text-muted-foreground/60 pb-8">
         Dates indicatives bas&eacute;es sur le calendrier fiscal standard.
         Les montants estim&eacute;s sont calcul&eacute;s &agrave; partir de ton CA actuel et des taux moyens.
         Consulte ton expert-comptable pour les dates exactes.
       </div>
+      </ProBlur>
     </div>
   );
 }
@@ -306,12 +309,12 @@ function SummaryCard({
   isCount?: boolean;
 }) {
   return (
-    <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-4">
+    <div className="bg-card rounded-2xl border border-border p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon className="size-4" style={{ color }} />
-        <span className="text-[10px] text-[#5a5a6e] uppercase tracking-wider">{label}</span>
+        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">{label}</span>
       </div>
-      <div className="text-xl font-bold text-white">
+      <div className="text-xl font-bold text-foreground">
         {isCount ? value : <>{fmt(value)} &euro;</>}
       </div>
     </div>

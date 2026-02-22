@@ -38,7 +38,7 @@ function ImpactCard({ label, before, after, unit, icon, reverse, highlight }: Im
         "rounded-2xl p-4 border transition-all duration-200 relative overflow-hidden",
         highlight && "col-span-2 md:col-span-1",
         isNeutral
-          ? "bg-[#12121c] border-white/[0.06]"
+          ? "bg-card border-border"
           : isPositive
             ? "bg-[#4ade80]/8 border-[#4ade80]/15"
             : "bg-[#f87171]/8 border-[#f87171]/15"
@@ -48,25 +48,25 @@ function ImpactCard({ label, before, after, unit, icon, reverse, highlight }: Im
         <div className={cn(
           "size-7 rounded-lg flex items-center justify-center",
           isNeutral
-            ? "bg-white/[0.06]"
+            ? "bg-muted"
             : isPositive
               ? "bg-[#4ade80]/12"
               : "bg-[#f87171]/12"
         )}>
           {icon}
         </div>
-        <span className="text-[11px] font-medium uppercase tracking-wider text-[#8b8b9e]">
+        <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
           {label}
         </span>
       </div>
       <div className="space-y-1">
-        <div className="text-2xl font-bold text-white tracking-tight">
+        <div className="text-2xl font-bold text-foreground tracking-tight">
           {fmt(after)}
-          <span className="text-sm font-normal text-[#5a5a6e] ml-0.5">{unit}</span>
+          <span className="text-sm font-normal text-muted-foreground/60 ml-0.5">{unit}</span>
         </div>
         {!isNeutral && (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#5a5a6e] line-through">
+            <span className="text-xs text-muted-foreground/60 line-through">
               {fmt(before)}{unit}
             </span>
             <span className={cn(
@@ -109,7 +109,7 @@ export function ImpactCards({ projection, profile, sim }: ImpactCardsProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
       <ImpactCard
-        icon={<Wallet className="size-4 text-[#8b8b9e]" />}
+        icon={<Wallet className="size-4 text-muted-foreground" />}
         label="CA annuel"
         before={beforeAnnual}
         after={afterAnnual}
@@ -117,35 +117,35 @@ export function ImpactCards({ projection, profile, sim }: ImpactCardsProps) {
         highlight
       />
       <ImpactCard
-        icon={<CalendarDays className="size-4 text-[#8b8b9e]" />}
+        icon={<CalendarDays className="size-4 text-muted-foreground" />}
         label="Mensuel moy."
         before={beforeAnnual / 12}
         after={afterAnnual / 12}
         unit="&euro;"
       />
       <ImpactCard
-        icon={<PiggyBank className="size-4 text-[#8b8b9e]" />}
+        icon={<PiggyBank className="size-4 text-muted-foreground" />}
         label="Net annuel"
         before={netBefore}
         after={netAfter}
         unit="&euro;"
       />
       <ImpactCard
-        icon={<Timer className="size-4 text-[#8b8b9e]" />}
+        icon={<Timer className="size-4 text-muted-foreground" />}
         label="Taux horaire"
         before={hourlyBefore}
         after={hourlyAfter}
         unit="&euro;/h"
       />
       <ImpactCard
-        icon={<TrendingDown className="size-4 text-[#8b8b9e]" />}
+        icon={<TrendingDown className="size-4 text-muted-foreground" />}
         label="Mois min"
         before={Math.min(...projection.before)}
         after={Math.min(...projection.after)}
         unit="&euro;"
       />
       <ImpactCard
-        icon={<TrendingUp className="size-4 text-[#8b8b9e]" />}
+        icon={<TrendingUp className="size-4 text-muted-foreground" />}
         label="Mois max"
         before={Math.max(...projection.before)}
         after={Math.max(...projection.after)}

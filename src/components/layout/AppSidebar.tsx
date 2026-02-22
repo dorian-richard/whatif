@@ -1,9 +1,12 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, Settings, CalendarDays } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, Settings, CalendarDays, Sun, Moon } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
+import { useProfileStore } from "@/stores/useProfileStore";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -18,6 +21,11 @@ const NAV_ITEMS = [
 export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const subscriptionStatus = useProfileStore((s) => s.subscriptionStatus);
+  const isPro = subscriptionStatus === "ACTIVE";
+  useEffect(() => setMounted(true), []);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -28,7 +36,7 @@ export function AppSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-[220px] flex-col bg-[#0a0a14] border-r border-white/[0.06] z-20">
+      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-[220px] flex-col bg-sidebar border-r border-border z-20">
         {/* Logo */}
         <button
           onClick={() => router.push("/dashboard")}
@@ -36,7 +44,7 @@ export function AppSidebar() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Freelens" className="h-9 w-auto opacity-80" />
-          <span className="text-lg font-bold text-white">Freelens</span>
+          <span className="text-lg font-bold text-foreground">Freelens</span>
         </button>
 
         {/* Nav */}
@@ -50,8 +58,8 @@ export function AppSidebar() {
                 className={cn(
                   "flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
                   isActive
-                    ? "bg-[#5682F2]/15 text-[#5682F2]"
-                    : "text-[#8b8b9e] hover:text-white hover:bg-white/[0.04]"
+                    ? "bg-primary/15 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 )}
               >
                 <item.icon className="size-[18px]" />
@@ -62,14 +70,22 @@ export function AppSidebar() {
         </nav>
 
         {/* Bottom */}
-        <div className="px-3 py-4 border-t border-white/[0.06] space-y-3">
-          <div className="px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-            <div className="text-[11px] text-[#5a5a6e] uppercase tracking-wider mb-0.5">Plan</div>
-            <div className="text-sm font-semibold text-white">Free</div>
+        <div className="px-3 py-4 border-t border-border space-y-3">
+          <div className={cn("px-3 py-2 rounded-xl border", isPro ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-border")}>
+            <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">Plan</div>
+            <div className={cn("text-sm font-semibold", isPro ? "text-primary" : "text-foreground")}>{isPro ? "Pro" : "Free"}</div>
           </div>
           <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-150"
+          >
+            {mounted && (theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />)}
+            {!mounted && <Sun className="size-[18px]" />}
+            <span>{mounted ? (theme === "dark" ? "Mode clair" : "Mode sombre") : "Thème"}</span>
+          </button>
+          <button
             onClick={handleLogout}
-            className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium text-[#8b8b9e] hover:text-red-400 hover:bg-red-500/[0.08] transition-all duration-150"
+            className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/[0.08] transition-all duration-150"
           >
             <svg className="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -82,7 +98,7 @@ export function AppSidebar() {
       </aside>
 
       {/* Mobile bottom bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0a0a14]/90 backdrop-blur-xl border-t border-white/[0.06] z-20 flex items-center justify-around h-14 px-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-sidebar/90 backdrop-blur-xl border-t border-border z-20 flex items-center justify-around h-14 px-2">
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -91,7 +107,7 @@ export function AppSidebar() {
               onClick={() => router.push(item.href)}
               className={cn(
                 "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors",
-                isActive ? "text-[#5682F2]" : "text-[#5a5a6e]"
+                isActive ? "text-primary" : "text-muted-foreground/60"
               )}
             >
               <item.icon className="size-5" />

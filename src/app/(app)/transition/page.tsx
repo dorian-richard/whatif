@@ -346,37 +346,37 @@ export default function TransitionPage() {
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white mb-1">
+        <h1 className="text-2xl font-bold text-foreground mb-1">
           Transition CDI &rarr; Freelance
         </h1>
-        <p className="text-[#8b8b9e]">
+        <p className="text-muted-foreground">
           Combien tu dois facturer en freelance pour gagner autant (ou plus)
           qu&apos;en CDI ?
         </p>
       </div>
 
       {/* CDI Salary */}
-      <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6">
+      <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="size-10 rounded-xl bg-[#5682F2]/10 flex items-center justify-center">
-            <Briefcase className="size-5 text-[#5682F2]" />
+            <Briefcase className="size-5 text-primary" />
           </div>
           <div>
-            <div className="text-xs text-[#5a5a6e] uppercase tracking-wider">
+            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">
               Mon salaire CDI
             </div>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {fmt(salaireBrut)} &euro;{" "}
-              <span className="text-sm font-normal text-[#5a5a6e]">
+              <span className="text-sm font-normal text-muted-foreground/60">
                 brut/an
               </span>
             </div>
           </div>
           <div className="ml-auto text-right">
-            <div className="text-sm text-[#8b8b9e]">
+            <div className="text-sm text-muted-foreground">
               {fmt(Math.round(salaireBrut / 12))} &euro;/mois brut
             </div>
-            <div className="text-sm font-semibold text-white">
+            <div className="text-sm font-semibold text-foreground">
               {fmt(Math.round(cdiNetMensuel))} &euro;/mois net
             </div>
           </div>
@@ -388,9 +388,9 @@ export default function TransitionPage() {
           step={1000}
           value={salaireBrut}
           onChange={(e) => setSalaireBrut(Number(e.target.value))}
-          className="w-full accent-[#5682F2] h-2 bg-white/[0.06] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
+          className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
         />
-        <div className="flex justify-between text-xs text-[#5a5a6e] mt-2">
+        <div className="flex justify-between text-xs text-muted-foreground/60 mt-2">
           <span>20 000 &euro;</span>
           <span>70 000 &euro;</span>
           <span>120 000 &euro;</span>
@@ -400,8 +400,8 @@ export default function TransitionPage() {
       {/* Avantages CDI + Coûts freelance */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Avantages CDI */}
-        <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6">
-          <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-4">
+        <div className="bg-card rounded-2xl border border-border p-6">
+          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-4">
             Avantages CDI
           </div>
           <div className="space-y-3">
@@ -416,58 +416,58 @@ export default function TransitionPage() {
                     "flex items-center gap-3 w-full p-3 rounded-xl transition-all text-left",
                     checked
                       ? "bg-[#5682F2]/8 border border-[#5682F2]/20"
-                      : "bg-white/[0.02] border border-white/[0.04] opacity-60"
+                      : "bg-muted/30 border border-border opacity-60"
                   )}
                 >
                   <div
                     className={cn(
                       "size-5 rounded-md flex items-center justify-center text-xs shrink-0",
-                      checked ? "bg-[#5682F2] text-white" : "bg-white/[0.06]"
+                      checked ? "bg-[#5682F2] text-white" : "bg-muted"
                     )}
                   >
                     {checked && <Check className="size-3" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-white">
+                    <div className="text-sm font-medium text-foreground">
                       {a.label}
                     </div>
-                    <div className="text-xs text-[#5a5a6e]">{a.desc}</div>
+                    <div className="text-xs text-muted-foreground/60">{a.desc}</div>
                   </div>
-                  <div className="text-sm font-semibold text-[#5682F2] shrink-0">
+                  <div className="text-sm font-semibold text-primary shrink-0">
                     +{fmt(val)} &euro;/an
                   </div>
                 </button>
               );
             })}
           </div>
-          <div className="mt-4 pt-3 border-t border-white/[0.06] flex justify-between">
-            <span className="text-sm text-[#8b8b9e]">Total avantages</span>
-            <span className="text-sm font-bold text-[#5682F2]">
+          <div className="mt-4 pt-3 border-t border-border flex justify-between">
+            <span className="text-sm text-muted-foreground">Total avantages</span>
+            <span className="text-sm font-bold text-primary">
               +{fmt(avantagesTotal)} &euro;/an
             </span>
           </div>
         </div>
 
         {/* Coûts freelance */}
-        <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6">
-          <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-4">
+        <div className="bg-card rounded-2xl border border-border p-6">
+          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-4">
             Co&ucirc;ts freelance &agrave; pr&eacute;voir
           </div>
           <div className="space-y-3">
             {COUTS_FREELANCE.map((c) => (
               <div
                 key={c.id}
-                className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]"
+                className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border"
               >
-                <span className="text-sm text-[#8b8b9e]">{c.label}</span>
+                <span className="text-sm text-muted-foreground">{c.label}</span>
                 <span className="text-sm font-medium text-[#f87171]">
                   {c.monthly} &euro;/mois
                 </span>
               </div>
             ))}
           </div>
-          <div className="mt-4 pt-3 border-t border-white/[0.06] flex justify-between">
-            <span className="text-sm text-[#8b8b9e]">Total co&ucirc;ts</span>
+          <div className="mt-4 pt-3 border-t border-border flex justify-between">
+            <span className="text-sm text-muted-foreground">Total co&ucirc;ts</span>
             <span className="text-sm font-bold text-[#f87171]">
               {freelanceCostsMensuel} &euro;/mois &middot;{" "}
               {fmt(freelanceCostsAnnuel)} &euro;/an
@@ -475,12 +475,12 @@ export default function TransitionPage() {
           </div>
 
           {/* Vacation weeks */}
-          <div className="mt-5 pt-4 border-t border-white/[0.06]">
+          <div className="mt-5 pt-4 border-t border-border">
             <div className="flex justify-between mb-2">
-              <span className="text-xs text-[#5a5a6e] uppercase tracking-wider">
+              <span className="text-xs text-muted-foreground/60 uppercase tracking-wider">
                 Vacances
               </span>
-              <span className="text-sm font-bold text-white">
+              <span className="text-sm font-bold text-foreground">
                 {vacationWeeks} sem. &middot; {workedDaysPerYear}j/an
               </span>
             </div>
@@ -491,13 +491,13 @@ export default function TransitionPage() {
               step={1}
               value={vacationWeeks}
               onChange={(e) => setVacationWeeks(Number(e.target.value))}
-              className="w-full accent-[#F4BE7E] h-2 bg-white/[0.06] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F4BE7E] [&::-webkit-slider-thumb]:shadow-lg"
+              className="w-full accent-[#F4BE7E] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F4BE7E] [&::-webkit-slider-thumb]:shadow-lg"
             />
           </div>
 
           {/* Remuneration type */}
-          <div className="mt-5 pt-4 border-t border-white/[0.06]">
-            <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-3">
+          <div className="mt-5 pt-4 border-t border-border">
+            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
               R&eacute;mun&eacute;ration (SASU IR / EURL IS / SASU IS)
             </div>
             <div className="flex gap-2 mb-3">
@@ -512,8 +512,8 @@ export default function TransitionPage() {
                   className={cn(
                     "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
                     localRemType === opt.value
-                      ? "bg-[#5682F2]/15 text-[#5682F2] ring-1 ring-[#5682F2]/30"
-                      : "bg-white/[0.04] text-[#8b8b9e] hover:text-white"
+                      ? "bg-primary/15 text-primary ring-1 ring-primary/30"
+                      : "bg-muted/50 text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {opt.label}
@@ -523,8 +523,8 @@ export default function TransitionPage() {
             {localRemType === "mixte" && (
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs text-[#8b8b9e]">Salaire / Dividendes</span>
-                  <span className="text-xs font-bold text-white">{localMixte}% / {100 - localMixte}%</span>
+                  <span className="text-xs text-muted-foreground">Salaire / Dividendes</span>
+                  <span className="text-xs font-bold text-foreground">{localMixte}% / {100 - localMixte}%</span>
                 </div>
                 <input
                   type="range"
@@ -533,7 +533,7 @@ export default function TransitionPage() {
                   step={5}
                   value={localMixte}
                   onChange={(e) => setLocalMixte(Number(e.target.value))}
-                  className="w-full accent-[#5682F2] h-1.5 bg-white/[0.06] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2]"
+                  className="w-full accent-[#5682F2] h-1.5 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2]"
                 />
               </div>
             )}
@@ -542,34 +542,34 @@ export default function TransitionPage() {
       </div>
 
       {/* Summary card */}
-      <div className="bg-gradient-to-r from-[#5682F2]/10 to-[#F4BE7E]/10 rounded-2xl border border-white/[0.08] p-6">
+      <div className="bg-gradient-to-r from-[#5682F2]/10 to-[#F4BE7E]/10 rounded-2xl border border-border p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <div className="text-center">
-            <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-1">
+            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">
               Package CDI total
             </div>
-            <div className="text-2xl font-bold text-[#5682F2]">
+            <div className="text-2xl font-bold text-primary">
               {fmt(Math.round(cdiPackageMensuel))} &euro;
-              <span className="text-sm font-normal text-[#5a5a6e]">/mois</span>
+              <span className="text-sm font-normal text-muted-foreground/60">/mois</span>
             </div>
-            <div className="text-xs text-[#5a5a6e]">
+            <div className="text-xs text-muted-foreground/60">
               {fmt(cdiPackageAnnuel)} &euro;/an
             </div>
           </div>
           <div className="flex justify-center">
-            <div className="size-10 rounded-full bg-white/[0.06] flex items-center justify-center">
-              <ArrowLeftRight className="size-5 text-[#8b8b9e]" />
+            <div className="size-10 rounded-full bg-muted flex items-center justify-center">
+              <ArrowLeftRight className="size-5 text-muted-foreground" />
             </div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-1">
+            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">
               Objectif freelance net
             </div>
             <div className="text-2xl font-bold text-[#F4BE7E]">
               {fmt(Math.round(targetFreelanceNet / 12))} &euro;
-              <span className="text-sm font-normal text-[#5a5a6e]">/mois</span>
+              <span className="text-sm font-normal text-muted-foreground/60">/mois</span>
             </div>
-            <div className="text-xs text-[#5a5a6e]">
+            <div className="text-xs text-muted-foreground/60">
               {fmt(targetFreelanceNet)} &euro;/an (CDI + co&ucirc;ts)
             </div>
           </div>
@@ -577,7 +577,7 @@ export default function TransitionPage() {
       </div>
 
       {/* Best status badge */}
-      <div className="flex items-center gap-3 bg-[#12121c] rounded-2xl border border-white/[0.06] p-5">
+      <div className="flex items-center gap-3 bg-card rounded-2xl border border-border p-5">
         <div
           className="size-12 rounded-xl flex items-center justify-center"
           style={{ backgroundColor: `${best.color}15` }}
@@ -585,12 +585,12 @@ export default function TransitionPage() {
           <TrendingUp className="size-6" style={{ color: best.color }} />
         </div>
         <div className="flex-1">
-          <div className="text-xs text-[#5a5a6e] uppercase tracking-wider">
+          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">
             TJM minimum pour &eacute;galer ton CDI
           </div>
-          <div className="text-lg font-bold text-white">
+          <div className="text-lg font-bold text-foreground">
             {fmt(best.requiredTJM)} &euro;/jour{" "}
-            <span className="text-sm font-normal text-[#8b8b9e]">
+            <span className="text-sm font-normal text-muted-foreground">
               en {best.label}
             </span>
           </div>
@@ -616,12 +616,12 @@ export default function TransitionPage() {
             <div
               key={r.status}
               className={cn(
-                "bg-[#12121c] rounded-2xl border p-5 transition-all",
+                "bg-card rounded-2xl border p-5 transition-all",
                 r.ineligible
                   ? "border-[#f87171]/20 opacity-60"
                   : isBest
-                    ? "border-white/[0.15] ring-1 ring-white/[0.08]"
-                    : "border-white/[0.06]"
+                    ? "border-border ring-1 ring-border"
+                    : "border-border"
               )}
             >
               {/* Tags */}
@@ -661,10 +661,10 @@ export default function TransitionPage() {
               )}
 
               {/* Status name */}
-              <h3 className="text-base font-bold text-white mb-0.5">
+              <h3 className="text-base font-bold text-foreground mb-0.5">
                 {r.label}
               </h3>
-              <p className="text-xs text-[#5a5a6e] mb-4">
+              <p className="text-xs text-muted-foreground/60 mb-4">
                 {BUSINESS_STATUS_CONFIG[r.status].regime}
               </p>
 
@@ -672,7 +672,7 @@ export default function TransitionPage() {
               <div className="mb-4">
                 <div className="text-2xl font-bold" style={{ color: r.color }}>
                   {fmt(r.requiredTJM)} &euro;
-                  <span className="text-sm font-normal text-[#5a5a6e]">
+                  <span className="text-sm font-normal text-muted-foreground/60">
                     /jour
                   </span>
                 </div>
@@ -681,20 +681,20 @@ export default function TransitionPage() {
               {/* Details */}
               <div className="space-y-2.5 text-sm">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#8b8b9e]">
+                  <div className="flex items-center gap-2 text-muted-foreground">
                     <Banknote className="size-3.5" />
                     <span>CA requis</span>
                   </div>
-                  <span className="font-medium text-white">
+                  <span className="font-medium text-foreground">
                     {fmt(r.requiredCA)} &euro;/an
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#8b8b9e]">
+                  <div className="flex items-center gap-2 text-muted-foreground">
                     <Gauge className="size-3.5" />
                     <span>Taux effectif</span>
                   </div>
-                  <span className="font-bold text-white">
+                  <span className="font-bold text-foreground">
                     {Math.round(r.tauxEffectif * 100)}%
                   </span>
                 </div>
@@ -705,10 +705,10 @@ export default function TransitionPage() {
       </div>
 
       {/* TJM Explorer */}
-      <div className="bg-[#12121c] rounded-2xl border border-white/[0.06] p-6">
+      <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-xs text-[#5a5a6e] uppercase tracking-wider mb-1">
+            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">
               Explorateur TJM
             </div>
             <div className="text-3xl font-bold fn-gradient-text">
@@ -716,8 +716,8 @@ export default function TransitionPage() {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xs text-[#5a5a6e]">CA annuel</div>
-            <div className="text-lg font-bold text-white">
+            <div className="text-xs text-muted-foreground/60">CA annuel</div>
+            <div className="text-lg font-bold text-foreground">
               {fmt(explorerTJM * workedDaysPerYear)} &euro;
             </div>
           </div>
@@ -729,9 +729,9 @@ export default function TransitionPage() {
           step={10}
           value={explorerTJM}
           onChange={(e) => setExplorerTJM(Number(e.target.value))}
-          className="w-full accent-[#5682F2] h-2 bg-white/[0.06] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
+          className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
         />
-        <div className="flex justify-between text-xs text-[#5a5a6e] mt-2 mb-6">
+        <div className="flex justify-between text-xs text-muted-foreground/60 mt-2 mb-6">
           <span>200 &euro;</span>
           <span>850 &euro;</span>
           <span>1 500 &euro;</span>
@@ -741,25 +741,25 @@ export default function TransitionPage() {
         <div className="space-y-3">
           {/* CDI reference */}
           <div className="flex items-center gap-3">
-            <div className="w-24 text-xs font-medium text-[#8b8b9e] text-right shrink-0">
+            <div className="w-24 text-xs font-medium text-muted-foreground text-right shrink-0">
               CDI actuel
             </div>
-            <div className="flex-1 h-8 bg-white/[0.04] rounded-lg overflow-hidden relative">
+            <div className="flex-1 h-8 bg-muted/50 rounded-lg overflow-hidden relative">
               <div
-                className="h-full rounded-lg bg-white/[0.12] transition-all duration-300"
+                className="h-full rounded-lg bg-muted transition-all duration-300"
                 style={{
                   width: `${(cdiPackageMensuel / maxExplorerNet) * 100}%`,
                 }}
               />
             </div>
             <div className="w-28 text-right shrink-0">
-              <span className="text-sm font-bold text-white">
+              <span className="text-sm font-bold text-foreground">
                 {fmt(Math.round(cdiPackageMensuel))} &euro;
               </span>
             </div>
           </div>
 
-          <div className="h-px bg-white/[0.06] my-1" />
+          <div className="h-px bg-muted my-1" />
 
           {/* Freelance bars */}
           {explorerResults.map((r) => {
@@ -783,7 +783,7 @@ export default function TransitionPage() {
                 >
                   {r.label}
                 </div>
-                <div className="flex-1 h-8 bg-white/[0.04] rounded-lg overflow-hidden relative">
+                <div className="flex-1 h-8 bg-muted/50 rounded-lg overflow-hidden relative">
                   <div
                     className="h-full rounded-lg transition-all duration-300"
                     style={{
@@ -800,7 +800,7 @@ export default function TransitionPage() {
                   />
                 </div>
                 <div className="w-28 text-right shrink-0">
-                  <div className="text-sm font-bold text-white">
+                  <div className="text-sm font-bold text-foreground">
                     {fmt(Math.round(r.netMensuel))} &euro;
                   </div>
                   <div
@@ -820,7 +820,7 @@ export default function TransitionPage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="text-center text-xs text-[#5a5a6e] pb-8">
+      <div className="text-center text-xs text-muted-foreground/60 pb-8">
         Simulation indicative. Les charges salariales (~23%) et avantages sont
         estim&eacute;s. Consulte un expert-comptable pour un conseil
         personnalis&eacute;.

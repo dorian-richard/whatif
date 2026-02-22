@@ -33,22 +33,22 @@ function LabeledSlider({
   const isModified = value !== min && !(unit === "j" && value === 5);
 
   return (
-    <div className="group p-3 rounded-xl hover:bg-white/[0.02] transition-colors">
+    <div className="group p-3 rounded-xl hover:bg-muted/30 transition-colors">
       <div className="flex justify-between items-center mb-2.5">
-        <label className="text-sm font-medium text-[#8b8b9e] flex items-center gap-2" title={tooltip}>
+        <label className="text-sm font-medium text-muted-foreground flex items-center gap-2" title={tooltip}>
           <div className="size-7 rounded-lg bg-[#5682F2]/15 flex items-center justify-center group-hover:bg-[#5682F2]/20 transition-colors">
             {icon}
           </div>
           <span>{label}</span>
           {tooltip && (
-            <span className="text-[10px] text-[#5a5a6e] hidden group-hover:inline" title={tooltip}>?</span>
+            <span className="text-[10px] text-muted-foreground/60 hidden group-hover:inline" title={tooltip}>?</span>
           )}
         </label>
         <span className={cn(
           "text-sm font-bold px-2.5 py-1 rounded-lg transition-colors",
           isModified
             ? "text-[#5682F2] bg-[#5682F2]/15"
-            : "text-[#5a5a6e] bg-white/[0.04]"
+            : "text-muted-foreground/60 bg-muted/50"
         )}>
           {value}{unit}
         </span>
@@ -60,7 +60,7 @@ function LabeledSlider({
         max={max}
         step={step}
       />
-      <div className="flex justify-between text-[10px] text-[#5a5a6e] mt-1.5 px-0.5">
+      <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1.5 px-0.5">
         <span>{min}{unit}</span>
         <span>{max}{unit}</span>
       </div>
@@ -74,9 +74,9 @@ export function SliderPanel() {
   const totalCA = clients.reduce((sum, c) => sum + getClientBaseCA(c), 0);
 
   return (
-    <div className="bg-[#12121c] rounded-2xl p-5 border border-white/[0.06]">
+    <div className="bg-card rounded-2xl p-5 border border-border">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold text-white">Paramètres</h3>
+        <h3 className="text-sm font-bold text-foreground">Paramètres</h3>
         {sim.activePreset && (
           <span className="text-xs text-[#5682F2] bg-[#5682F2]/15 px-2.5 py-1 rounded-full font-medium border border-[#5682F2]/20">
             {PRESET_SCENARIOS.find((p) => p.id === sim.activePreset)?.title}
@@ -128,8 +128,8 @@ export function SliderPanel() {
           tooltip="Affecte uniquement les clients TJM (proportionnel)."
         />
 
-        <div className="p-3 rounded-xl hover:bg-white/[0.02] transition-colors">
-          <label className="text-sm font-medium text-[#8b8b9e] flex items-center gap-2 mb-2.5">
+        <div className="p-3 rounded-xl hover:bg-muted/30 transition-colors">
+          <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 mb-2.5">
             <div className="size-7 rounded-lg bg-[#5682F2]/15 flex items-center justify-center">
               <HeartCrack className="size-4 text-[#5682F2]" />
             </div>
@@ -142,7 +142,7 @@ export function SliderPanel() {
               "w-full p-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#5682F2]/30 transition-colors",
               sim.lostClientIndex >= 0
                 ? "border-[#f87171]/30 bg-[#f87171]/8 text-[#f87171]"
-                : "border-white/[0.1] bg-[#12121c] text-white"
+                : "border-border bg-card text-foreground"
             )}
           >
             <option value={-1}>&mdash; Aucune perte &mdash;</option>

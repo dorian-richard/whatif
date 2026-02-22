@@ -39,7 +39,7 @@ export function Testimonials() {
       <div className="relative max-w-5xl mx-auto px-6 py-20 w-full">
         <div className="text-center mb-16">
           <span className="text-sm font-medium text-[#4ade80] uppercase tracking-widest mb-3 block">Témoignages</span>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
             Ils ont simulé avant de{" "}
             <span className="fn-gradient-text">décider</span>
           </h2>
@@ -48,9 +48,9 @@ export function Testimonials() {
         {/* Stats bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {STATS.map((s) => (
-            <div key={s.label} className="text-center py-4 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
-              <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
-              <div className="text-xs text-[#5a5a6e]">{s.label}</div>
+            <div key={s.label} className="text-center py-4 bg-muted/40 border border-border rounded-2xl">
+              <div className="text-2xl font-bold text-foreground mb-1">{s.value}</div>
+              <div className="text-xs text-muted-foreground/60">{s.label}</div>
             </div>
           ))}
         </div>
@@ -60,7 +60,7 @@ export function Testimonials() {
           {TESTIMONIALS.map((t) => (
             <div
               key={t.name}
-              className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 hover:bg-white/[0.06] transition-all duration-300"
+              className="bg-muted/40 border border-border rounded-2xl p-6 hover:bg-muted transition-all duration-300"
             >
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -69,19 +69,19 @@ export function Testimonials() {
                   </svg>
                 ))}
               </div>
-              <p className="text-sm text-[#c0c0d0] mb-6 leading-relaxed">
+              <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
                 &ldquo;{t.text}&rdquo;
               </p>
               <div className="flex items-center gap-3">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-foreground"
                   style={{ backgroundColor: `${t.color}30` }}
                 >
                   {t.avatar}
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-white">{t.name}</div>
-                  <div className="text-xs text-[#5a5a6e]">{t.role}</div>
+                  <div className="text-sm font-semibold text-foreground">{t.name}</div>
+                  <div className="text-xs text-muted-foreground/60">{t.role}</div>
                 </div>
               </div>
             </div>

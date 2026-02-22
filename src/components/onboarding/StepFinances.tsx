@@ -13,8 +13,8 @@ export function StepFinances() {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-bold text-white mb-1">Ta situation financière</h2>
-        <p className="text-sm text-[#8b8b9e] mb-6">
+        <h2 className="text-xl font-bold text-foreground mb-1">Ta situation financière</h2>
+        <p className="text-sm text-muted-foreground mb-6">
           Pour calculer ton runway et tes marges de manœuvre.
         </p>
       </div>
@@ -22,7 +22,7 @@ export function StepFinances() {
       <div className="space-y-8">
         <div>
           <div className="flex justify-between items-center mb-3">
-            <label className="text-sm font-medium text-[#8b8b9e] flex items-center gap-1.5">
+            <label className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
               <Receipt className="size-4 text-[#5682F2]" /> Charges mensuelles fixes
             </label>
             <span className="text-sm font-bold text-[#5682F2] bg-[#5682F2]/10 px-2.5 py-1 rounded-md">
@@ -36,7 +36,7 @@ export function StepFinances() {
             max={6000}
             step={100}
           />
-          <div className="flex justify-between text-xs text-[#5a5a6e] mt-1">
+          <div className="flex justify-between text-xs text-muted-foreground/70 mt-1">
             <span>500&euro;</span>
             <span>6 000&euro;</span>
           </div>
@@ -44,7 +44,7 @@ export function StepFinances() {
 
         <div>
           <div className="flex justify-between items-center mb-3">
-            <label className="text-sm font-medium text-[#8b8b9e] flex items-center gap-1.5">
+            <label className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
               <Landmark className="size-4 text-[#5682F2]" /> Trésorerie de sécurité
             </label>
             <span className="text-sm font-bold text-[#5682F2] bg-[#5682F2]/10 px-2.5 py-1 rounded-md">
@@ -58,15 +58,15 @@ export function StepFinances() {
             max={60000}
             step={1000}
           />
-          <div className="flex justify-between text-xs text-[#5a5a6e] mt-1">
+          <div className="flex justify-between text-xs text-muted-foreground/70 mt-1">
             <span>0&euro;</span>
             <span>60 000&euro;</span>
           </div>
         </div>
       </div>
 
-      <div className="p-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-center">
-        <span className="text-sm text-[#8b8b9e]">
+      <div className="p-3 bg-muted/50 border border-border rounded-xl text-center">
+        <span className="text-sm text-muted-foreground">
           Runway actuel : <strong className="text-[#5682F2]">{runway.toFixed(1)} mois</strong>
         </span>
       </div>

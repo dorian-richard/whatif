@@ -3,9 +3,12 @@ import { persist } from "zustand/middleware";
 import type { ClientData, FreelanceProfile } from "@/types";
 import { CLIENT_COLORS } from "@/lib/constants";
 
+export type SubscriptionStatus = "FREE" | "ACTIVE" | "CANCELED" | "PAST_DUE";
+
 interface ProfileState extends FreelanceProfile {
   clients: ClientData[];
   onboardingCompleted: boolean;
+  subscriptionStatus: SubscriptionStatus;
 
   setClients: (clients: ClientData[]) => void;
   addClient: (client: Omit<ClientData, "id" | "color">) => void;
@@ -13,6 +16,7 @@ interface ProfileState extends FreelanceProfile {
   removeClient: (id: string) => void;
   setProfile: (profile: Partial<FreelanceProfile>) => void;
   setOnboardingCompleted: (completed: boolean) => void;
+  setSubscriptionStatus: (status: SubscriptionStatus) => void;
 }
 
 export const useProfileStore = create<ProfileState>()(
@@ -29,6 +33,7 @@ export const useProfileStore = create<ProfileState>()(
       mixtePartSalaire: 50,
       age: 35,
       onboardingCompleted: false,
+      subscriptionStatus: "FREE",
       clients: [],
 
       setClients: (clients) => set({ clients }),
@@ -61,6 +66,9 @@ export const useProfileStore = create<ProfileState>()(
 
       setOnboardingCompleted: (completed) =>
         set({ onboardingCompleted: completed }),
+
+      setSubscriptionStatus: (status) =>
+        set({ subscriptionStatus: status }),
     }),
     {
       name: "freelens-profile",

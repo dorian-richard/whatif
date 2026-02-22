@@ -6,30 +6,35 @@ const FEATURES = [
     title: "Et si je perdais un client ?",
     desc: "Vacances, hausse de TJM, passage à 4 jours, perte d'un client — simule le scénario, vois le résultat avant de décider.",
     color: "#5682F2",
+    pro: false,
   },
   {
     icon: Briefcase,
     title: "Benchmark TJM marché",
     desc: "27 métiers, 7 catégories, données réelles Silkhom 2025. Compare ton TJM au marché par séniorité et localisation.",
     color: "#F4BE7E",
+    pro: true,
   },
   {
     icon: Target,
     title: "Objectif Revenu",
     desc: "Tu vises un net mensuel ? On calcule le CA, le TJM et le nombre de clients nécessaires, statut par statut.",
     color: "#a78bfa",
+    pro: true,
   },
   {
     icon: BarChart3,
     title: "12 mois de visibilité",
     desc: "CA, revenu net, trésorerie mois par mois avec les vrais jours ouvrés, la saisonnalité et tous tes clients.",
     color: "#fbbf24",
+    pro: false,
   },
   {
     icon: CalendarDays,
     title: "Calendrier Fiscal",
     desc: "Toutes tes échéances fiscales sur 12 mois : URSSAF, TVA, IS, IR. Montants provisionnels estimés.",
     color: "#f97316",
+    pro: true,
   },
 ];
 
@@ -42,12 +47,12 @@ export function Features() {
 
       <div className="relative max-w-5xl mx-auto px-6 py-20 w-full">
         <div className="text-center mb-16">
-          <span className="text-sm font-medium text-[#5682F2] uppercase tracking-widest mb-3 block">Fonctionnalités</span>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+          <span className="text-sm font-medium text-primary uppercase tracking-widest mb-3 block">Fonctionnalités</span>
+          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
             Tout ce qu&apos;il faut pour{" "}
             <span className="fn-gradient-text">décider sereinement</span>
           </h2>
-          <p className="text-lg text-[#8b8b9e] max-w-xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
             Simulateur, benchmark et outils de décision — tout en un.
           </p>
         </div>
@@ -56,7 +61,7 @@ export function Features() {
           {FEATURES.map((f) => (
             <div
               key={f.title}
-              className="group relative bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 hover:bg-white/[0.06] hover:border-white/[0.1] transition-all duration-300"
+              className="group relative bg-muted/40 border border-border rounded-2xl p-6 hover:bg-muted hover:border-border transition-all duration-300"
             >
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
@@ -64,8 +69,15 @@ export function Features() {
               >
                 <f.icon className="size-6" style={{ color: f.color }} />
               </div>
-              <h3 className="text-base font-semibold text-white mb-2">{f.title}</h3>
-              <p className="text-sm text-[#8b8b9e] leading-relaxed">{f.desc}</p>
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="text-base font-semibold text-foreground">{f.title}</h3>
+                {f.pro && (
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white px-2 py-0.5 rounded-full">
+                    Pro
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>
