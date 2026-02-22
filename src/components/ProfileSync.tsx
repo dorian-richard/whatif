@@ -16,7 +16,9 @@ import { CLIENT_COLORS } from "@/lib/constants";
  */
 export function ProfileSync() {
   const hydrated = useRef(false);
+  const syncing = useRef(true);
   const profileSaveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const clientsSnapshot = useRef(useProfileStore.getState().clients);
 
   useEffect(() => {
     if (hydrated.current) return;
@@ -28,11 +30,17 @@ export function ProfileSync() {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (!user) return;
+      if (!user) {
+        syncing.current = false;
+        return;
+      }
 
       try {
         const res = await fetch("/api/profile");
-        if (!res.ok) return;
+        if (!res.ok) {
+          syncing.current = false;
+          return;
+        }
 
         const data = await res.json();
 
@@ -87,6 +95,10 @@ export function ProfileSync() {
         }
       } catch {
         // Silently fail — localStorage remains source of truth offline
+      } finally {
+        // Snapshot current clients so the subscriber doesn't re-POST hydrated data
+        clientsSnapshot.current = useProfileStore.getState().clients;
+        syncing.current = false;
       }
     }
 
@@ -96,6 +108,8 @@ export function ProfileSync() {
   // Subscribe to profile changes and debounce-sync to API
   useEffect(() => {
     const unsub = useProfileStore.subscribe((state, prevState) => {
+      if (syncing.current) return;
+
       // Only sync profile fields (not clients — those are synced individually)
       const profileFields = [
         "monthlyExpenses",
@@ -156,16 +170,16 @@ export function ProfileSync() {
 
   // Subscribe to client changes and sync to API
   useEffect(() => {
-    let prevClients = useProfileStore.getState().clients;
-
     const unsub = useProfileStore.subscribe((state) => {
+      if (syncing.current) return;
+
       const curr = state.clients;
-      if (curr === prevClients) return;
+      const prev = clientsSnapshot.current;
+      if (curr === prev) return;
 
       // Detect added clients
       for (const c of curr) {
-        if (!prevClients.find((p) => p.id === c.id)) {
-          // New client — POST to API
+        if (!prev.find((p) => p.id === c.id)) {
           fetch("/api/clients", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -175,9 +189,8 @@ export function ProfileSync() {
       }
 
       // Detect removed clients
-      for (const p of prevClients) {
+      for (const p of prev) {
         if (!curr.find((c) => c.id === p.id)) {
-          // Client removed — DELETE from API
           fetch(`/api/clients?id=${p.id}`, {
             method: "DELETE",
           }).catch(() => {});
@@ -186,9 +199,8 @@ export function ProfileSync() {
 
       // Detect updated clients
       for (const c of curr) {
-        const prev = prevClients.find((p) => p.id === c.id);
-        if (prev && JSON.stringify(prev) !== JSON.stringify(c)) {
-          // Client updated — PUT to API
+        const p = prev.find((x) => x.id === c.id);
+        if (p && JSON.stringify(p) !== JSON.stringify(c)) {
           fetch("/api/clients", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -197,7 +209,7 @@ export function ProfileSync() {
         }
       }
 
-      prevClients = curr;
+      clientsSnapshot.current = curr;
     });
 
     return () => unsub();
