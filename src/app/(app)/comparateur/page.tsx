@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/icons";
 
 /** Statuts à comparer */
-const STATUTS: BusinessStatus[] = ["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"];
+const STATUTS: BusinessStatus[] = ["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
 
 const STATUT_COLORS: Record<string, string> = {
   micro: "#F4BE7E",
@@ -24,6 +24,7 @@ const STATUT_COLORS: Record<string, string> = {
   eurl_is: "#a78bfa",
   sasu_ir: "#f87171",
   sasu_is: "#4ade80",
+  portage: "#06b6d4",
 };
 
 const PFU_RATE = 0.30;
@@ -317,7 +318,7 @@ export default function ComparateurPage() {
         </div>
 
         {/* Comparison cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {results.map((r) => {
             const isBest = r.status === best.status && !r.ineligible;
             const isCurrent = r.status === businessStatus;

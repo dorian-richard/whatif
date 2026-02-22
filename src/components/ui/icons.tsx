@@ -52,6 +52,7 @@ import {
   ArrowLeftRight,
   Briefcase,
   Lock,
+  Download,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -161,4 +162,5 @@ export {
   ArrowLeftRight,
   Briefcase,
   Lock,
+  Download,
 };

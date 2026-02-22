@@ -41,7 +41,7 @@ const RETRAITE_RATE_SALARIE = 0.15;
 const CDI_CHARGES_PATRONALES = 0.42;
 
 // SASU IR exclue : option IR limitee a 5 ans, pas pertinent pour la retraite long terme
-const STATUTS: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_is"];
+const STATUTS: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_is", "portage"];
 
 const STATUT_COLORS: Record<string, string> = {
   micro: "#F4BE7E",
@@ -50,6 +50,7 @@ const STATUT_COLORS: Record<string, string> = {
   eurl_is: "#a78bfa",
   sasu_ir: "#f87171",
   sasu_is: "#4ade80",
+  portage: "#06b6d4",
   cdi: "#8b8b9e",
 };
 
@@ -73,7 +74,7 @@ function getRevenuCotise(annualCA: number, status: BusinessStatus): number {
   if (status === "ei" || status === "eurl_ir" || status === "eurl_is") {
     return annualCA * (1 - BUSINESS_STATUS_CONFIG[status].urssaf);
   }
-  // SASU: brut ~ CA * (1 - charges patronales 45%) / (1 + charges salariales)
+  // SASU / Portage: brut ~ CA * (1 - charges patronales 45%) / (1 + charges salariales)
   // Simplified: ~55% of CA
   return annualCA * 0.55;
 }
@@ -87,7 +88,7 @@ function computeRetraite(
   const revenuCotise = getRevenuCotise(annualCA, status);
   const trimestres = Math.min(4, Math.floor(revenuCotise / TRIMESTRE_THRESHOLD));
 
-  const isSalarie = status === "sasu_ir" || status === "sasu_is";
+  const isSalarie = status === "sasu_ir" || status === "sasu_is" || status === "portage";
   const retraiteRate = isSalarie ? RETRAITE_RATE_SALARIE : RETRAITE_RATE_TNS;
   const cotisation = revenuCotise * retraiteRate;
 

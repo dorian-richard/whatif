@@ -15,7 +15,7 @@ import {
   ArrowLeftRight,
 } from "@/components/ui/icons";
 
-const STATUTS: BusinessStatus[] = ["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"];
+const STATUTS: BusinessStatus[] = ["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
 
 const STATUT_COLORS: Record<string, string> = {
   micro: "#F4BE7E",
@@ -23,6 +23,7 @@ const STATUT_COLORS: Record<string, string> = {
   eurl_is: "#a78bfa",
   sasu_ir: "#f87171",
   sasu_is: "#4ade80",
+  portage: "#06b6d4",
 };
 
 const CHARGES_SALARIALES = 0.23;

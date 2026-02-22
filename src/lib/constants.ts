@@ -74,14 +74,14 @@ export const BUSINESS_STATUS_CONFIG: Record<
 > = {
   micro: {
     label: "Micro-entreprise",
-    urssaf: 0.22,
+    urssaf: 0.256,
     ir: 0.11,
     is: 0,
-    desc: "22% du CA \u00B7 Abattement BNC 34% \u00B7 Plafond 77 700\u20AC",
+    desc: "25.6% du CA \u00B7 Abattement BNC 34% \u00B7 Plafond 77 700\u20AC",
     regime: "TNS simplifié",
     plafond: "77 700\u20AC/an (BNC)",
     details:
-      "Cotisations sociales 21.1% (BNC) à 22% prélevées sur le CA. IR calculé après abattement forfaitaire de 34% : seuls 66% du CA sont imposés. Option versement libératoire à 2.2% si éligible. Franchise de TVA sous 36 800\u20AC. Comptabilité ultra-simplifiée.",
+      "Cotisations sociales 25.6% (BNC) prélevées sur le CA. IR calculé après abattement forfaitaire de 34% : seuls 66% du CA sont imposés. Option versement libératoire à 2.2% si éligible. Franchise de TVA sous 36 800\u20AC. Comptabilité ultra-simplifiée.",
     avantages: [
       "Comptabilité simplifiée, pas de bilan",
       "Cotisations calculées sur le CA réel",
@@ -203,6 +203,28 @@ export const BUSINESS_STATUS_CONFIG: Record<
       "Pas de droit au chômage",
       "Bulletins de paie obligatoires",
       "Gestion plus lourde (AG, comptes annuels)",
+    ],
+  },
+  portage: {
+    label: "Portage salarial",
+    urssaf: 0.50,
+    ir: 0.30,
+    is: 0,
+    desc: "Assimilé salarié ~50% charges · Frais gestion ~8% · Pas de création d'entreprise",
+    regime: "Assimilé salarié (portage)",
+    details:
+      "Salarié d'une société de portage qui facture vos clients. Charges sociales ~50% (patronales + salariales) gérées par le porteur. Frais de gestion ~5-10% du CA en sus. Protection sociale CDI (maladie, retraite, chômage). Bulletin de paie mensuel. Idéal pour débuter ou si création d'entreprise impossible (visa, simplicité).",
+    avantages: [
+      "Protection sociale complète (maladie, retraite, chômage)",
+      "Aucune création d'entreprise nécessaire",
+      "Comptabilité entièrement gérée par le porteur",
+      "Fiches de paie (crédibilité prêts, location, visa)",
+    ],
+    inconvenients: [
+      "Charges sociales élevées (~50%)",
+      "Frais de gestion ~5-10% du CA en plus",
+      "Moins d'optimisation fiscale possible",
+      "Dépendance vis-à-vis de la société de portage",
     ],
   },
 };

@@ -22,7 +22,8 @@ export type BusinessStatus =
   | "eurl_ir"
   | "eurl_is"
   | "sasu_ir"
-  | "sasu_is";
+  | "sasu_is"
+  | "portage";
 
 export type RemunerationType = "salaire" | "dividendes" | "mixte";
 

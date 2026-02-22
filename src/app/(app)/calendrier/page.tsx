@@ -6,7 +6,7 @@ import { getAnnualCA } from "@/lib/simulation-engine";
 import { BUSINESS_STATUS_CONFIG, MONTHS_SHORT } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus } from "@/types";
-import { CalendarDays, Banknote, Shield, Landmark, CircleAlert } from "@/components/ui/icons";
+import { CalendarDays, Banknote, Shield, Landmark, CircleAlert, Download } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 
 /* ════════════════════════════════════════════════
@@ -99,7 +99,7 @@ const DEADLINES: FiscalDeadline[] = [
 
   // ── IR ──
   { month: 4, day: 25, label: "Declaration de revenus IR", category: "ir",
-    statuses: ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"] },
+    statuses: ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"] },
 
   // ── Admin ──
   { month: 4, day: 15, label: "Liasse fiscale (2065 / 2035)", category: "admin",
@@ -110,6 +110,74 @@ const DEADLINES: FiscalDeadline[] = [
     statuses: ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"],
     note: "Exonere la 1ere annee" },
 ];
+
+/* ════════════════════════════════════════════════
+   ICS Export
+   ════════════════════════════════════════════════ */
+
+function pad2(n: number) {
+  return n.toString().padStart(2, "0");
+}
+
+function generateICS(
+  deadlines: FiscalDeadline[][],
+  status: BusinessStatus,
+  annualCA: number,
+): string {
+  const year = new Date().getFullYear();
+  const lines: string[] = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Freelens//Calendrier Fiscal//FR",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "X-WR-CALNAME:Freelens - Calendrier Fiscal",
+    "X-WR-TIMEZONE:Europe/Paris",
+  ];
+
+  for (let month = 0; month < 12; month++) {
+    for (const d of deadlines[month]) {
+      // Clamp day to valid range for the month
+      const maxDay = new Date(year, month + 1, 0).getDate();
+      const day = Math.min(d.day, maxDay);
+      const dateStr = `${year}${pad2(month + 1)}${pad2(day)}`;
+      const amount = d.estimateAmount?.(annualCA, status);
+      const catLabel = CATEGORY_CONFIG[d.category].label;
+
+      let description = catLabel;
+      if (amount != null && amount > 0) {
+        description += ` — Montant estime: ~${Math.round(amount)} EUR`;
+      }
+      if (d.note) {
+        description += ` (${d.note})`;
+      }
+
+      lines.push("BEGIN:VEVENT");
+      lines.push(`DTSTART;VALUE=DATE:${dateStr}`);
+      lines.push(`DTEND;VALUE=DATE:${dateStr}`);
+      lines.push(`SUMMARY:${d.label}`);
+      lines.push(`DESCRIPTION:${description}`);
+      lines.push(`CATEGORIES:${catLabel}`);
+      lines.push(`UID:freelens-${status}-${month}-${d.day}-${d.label.replace(/\s/g, "-")}@freelens.app`);
+      lines.push("END:VEVENT");
+    }
+  }
+
+  lines.push("END:VCALENDAR");
+  return lines.join("\r\n");
+}
+
+function downloadICS(content: string) {
+  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "calendrier-fiscal-freelens.ics";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 /* ════════════════════════════════════════════════
    Component
@@ -154,16 +222,28 @@ export default function CalendrierPage() {
 
   const totalProvision = totals.urssaf + totals.is;
 
-  const allStatuts: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"];
+  const allStatuts: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground mb-1">Calendrier Fiscal</h1>
-        <p className="text-muted-foreground">
-          Toutes tes &eacute;ch&eacute;ances fiscales sur 12 mois avec les montants &agrave; provisionner.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground mb-1">Calendrier Fiscal</h1>
+          <p className="text-muted-foreground">
+            Toutes tes &eacute;ch&eacute;ances fiscales sur 12 mois avec les montants &agrave; provisionner.
+          </p>
+        </div>
+        <button
+          onClick={() => {
+            const ics = generateICS(filteredByMonth, selectedStatus, annualCA);
+            downloadICS(ics);
+          }}
+          className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors"
+        >
+          <Download className="size-4" />
+          <span className="hidden sm:inline">Exporter .ics</span>
+        </button>
       </div>
 
       <ProBlur label="Le Calendrier Fiscal est réservé au plan Pro">
