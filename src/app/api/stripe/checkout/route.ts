@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe, PLANS } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,8 +17,16 @@ export async function POST(request: NextRequest) {
     const { plan = "monthly" } = await request.json();
     const priceId = plan === "annual" ? PLANS.annual.priceId : PLANS.monthly.priceId;
 
+    // Reuse existing Stripe customer if available (avoid duplicates)
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { stripeCustomerId: true },
+    });
+
     const session = await stripe.checkout.sessions.create({
-      customer_email: user.email,
+      ...(dbUser?.stripeCustomerId
+        ? { customer: dbUser.stripeCustomerId }
+        : { customer_email: user.email }),
       line_items: [{ price: priceId, quantity: 1 }],
       mode: "subscription",
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/simulator?success=true`,
