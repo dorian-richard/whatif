@@ -23,7 +23,7 @@ export function Hero() {
         </h1>
 
         <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-          Simulateur, comparateur de statuts, benchmark TJM, transition CDI&nbsp;&rarr;&nbsp;Freelance et objectif revenu.
+          Simulateur, comparateur de statuts (micro, EURL, SASU, portage), benchmark TJM, transition CDI&nbsp;&rarr;&nbsp;Freelance et objectif revenu.
           Tous les outils pour piloter ton activité.
         </p>
 
