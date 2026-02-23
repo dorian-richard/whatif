@@ -43,10 +43,12 @@ export default function SettingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan }),
       });
-      const { url } = await res.json();
-      if (url) window.location.href = url;
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else alert("Erreur checkout : " + (data.error || "erreur inconnue"));
     } catch (err) {
       console.error("Checkout error:", err);
+      alert("Erreur de connexion au checkout.");
     }
   };
 
@@ -528,9 +530,10 @@ export default function SettingsPage() {
                   const res = await fetch("/api/stripe/portal", { method: "POST" });
                   const data = await res.json();
                   if (data.url) window.location.href = data.url;
-                  else console.error("Portal error:", data.error);
+                  else alert("Impossible d\u2019ouvrir le portail : " + (data.error || "erreur inconnue"));
                 } catch (err) {
                   console.error("Portal error:", err);
+                  alert("Erreur de connexion au portail de paiement.");
                 }
               }}
               className="w-full py-3 bg-muted/50 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-muted transition-colors"
