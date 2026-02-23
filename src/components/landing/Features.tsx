@@ -89,7 +89,7 @@ export function Features() {
         <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#5682F2]/5 rounded-full blur-[100px]" />
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-6 py-20 w-full">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
         <div className="text-center mb-16">
           <span className="text-sm font-medium text-primary uppercase tracking-widest mb-3 block">Fonctionnalités</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">

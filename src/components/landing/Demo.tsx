@@ -49,7 +49,7 @@ export function Demo() {
         <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] bg-[#F4BE7E]/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-6 py-20 w-full">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
         <div className="text-center mb-12">
           <span className="text-sm font-medium text-[#F4BE7E] uppercase tracking-widest mb-3 block">Simulation</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
@@ -61,12 +61,12 @@ export function Demo() {
         </div>
 
         {/* Scenario buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
+        <div className="flex gap-3 mb-8 overflow-x-auto pb-1 justify-start sm:justify-center sm:flex-wrap">
           {DEMO_SCENARIOS.map((s, i) => (
             <button
               key={i}
               onClick={() => setActiveIdx(activeIdx === i ? null : i)}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border ${
+              className={`shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border ${
                 activeIdx === i
                   ? "bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] border-[#5682F2] text-white fn-glow"
                   : "bg-muted/30 border-border text-foreground hover:bg-muted hover:border-border"
@@ -102,7 +102,7 @@ export function Demo() {
           </div>
 
           {/* Bar chart */}
-          <div className="flex items-end gap-2 h-44">
+          <div className="flex items-end gap-1 sm:gap-2 h-36 sm:h-44">
             {MONTHS_SHORT.map((month, i) => {
               const beforeH = (projection.before[i] / maxVal) * 100;
               const afterH = (projection.after[i] / maxVal) * 100;

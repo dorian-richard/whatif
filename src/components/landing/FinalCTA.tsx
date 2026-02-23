@@ -9,7 +9,7 @@ export function FinalCTA() {
         <div className="absolute top-1/3 right-1/3 w-[400px] h-[400px] bg-[#F4BE7E]/6 rounded-full blur-[120px]" />
       </div>
 
-      <div className="relative text-center px-6 max-w-3xl mx-auto">
+      <div className="relative text-center px-4 sm:px-6 max-w-3xl mx-auto">
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-tight mb-6">
           Prêt à{" "}
           <span className="fn-gradient-text">piloter</span>
@@ -31,7 +31,7 @@ export function FinalCTA() {
       </div>
 
       {/* Footer */}
-      <footer className="absolute bottom-0 w-full py-6 px-6 border-t border-border">
+      <footer className="absolute bottom-0 w-full py-4 sm:py-6 px-4 sm:px-6 border-t border-border">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}

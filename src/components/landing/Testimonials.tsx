@@ -36,7 +36,7 @@ export function Testimonials() {
         <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] bg-[#4ade80]/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-6 py-20 w-full">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
         <div className="text-center mb-16">
           <span className="text-sm font-medium text-[#4ade80] uppercase tracking-widest mb-3 block">Témoignages</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
@@ -56,7 +56,7 @@ export function Testimonials() {
         </div>
 
         {/* Testimonial cards */}
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid gap-4 sm:gap-5 md:grid-cols-3">
           {TESTIMONIALS.map((t) => (
             <div
               key={t.name}

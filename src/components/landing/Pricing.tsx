@@ -50,7 +50,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
         <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] bg-[#a78bfa]/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-6 py-20 w-full">
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
         <div className="text-center mb-10">
           <span className="text-sm font-medium text-[#a78bfa] uppercase tracking-widest mb-3 block">Tarifs</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">

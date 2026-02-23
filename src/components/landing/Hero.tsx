@@ -9,7 +9,7 @@ export function Hero() {
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#F4BE7E]/5 rounded-full blur-[100px]" />
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-6 text-center pt-20">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center pt-20">
         <div className="inline-flex items-center gap-2 bg-muted/30 border border-border px-4 py-1.5 rounded-full text-sm font-medium text-[#F4BE7E] mb-8 backdrop-blur-sm">
           <span className="w-2 h-2 rounded-full bg-[#F4BE7E] animate-pulse" />
           Le copilote financier des freelances
@@ -68,7 +68,7 @@ function DashboardMockup() {
       </div>
 
       {/* KPI row */}
-      <div className="grid grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6">
         {[
           { label: "CA mensuel", value: "8 750 \u20AC", color: "#5682F2" },
           { label: "Net mensuel", value: "5 420 \u20AC", color: "#4ade80" },

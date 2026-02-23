@@ -50,15 +50,15 @@ export default function Home() {
       />
       {/* Floating nav */}
       <nav className="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Freelens" className="h-9 w-auto opacity-80 hidden dark:block" />
+            <img src="/logo.png" alt="Freelens" className="h-8 sm:h-9 w-auto opacity-80 hidden dark:block" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-light.png" alt="Freelens" className="h-9 w-auto opacity-80 block dark:hidden" />
-            <span className="font-bold text-foreground text-lg">Freelens</span>
+            <img src="/logo-light.png" alt="Freelens" className="h-8 sm:h-9 w-auto opacity-80 block dark:hidden" />
+            <span className="font-bold text-foreground text-base sm:text-lg">Freelens</span>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
               Fonctionnalités
             </a>
@@ -72,18 +72,18 @@ export default function Home() {
             {isLoggedIn ? (
               <Link
                 href="/dashboard"
-                className="px-5 py-2 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
+                className="px-4 sm:px-5 py-2 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
               >
-                Mon dashboard
+                Dashboard
               </Link>
             ) : (
               <>
-                <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
                   Connexion
                 </Link>
                 <Link
                   href="/signup"
-                  className="px-5 py-2 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
+                  className="px-4 sm:px-5 py-2 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
                 >
                   Essai gratuit
                 </Link>
