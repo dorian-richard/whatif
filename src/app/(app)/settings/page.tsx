@@ -383,7 +383,7 @@ export default function SettingsPage() {
           {/* Vacation days per month */}
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label className="text-sm font-medium text-muted-foreground flex items-center gap-1.5"><Sun className="size-4 text-[#fbbf24]" /> Congés par mois</label>
+              <label className="text-sm font-medium text-muted-foreground flex items-center gap-1.5"><Sun className="size-4 text-[#fbbf24]" /> Congés par mois ({(profile.vacationDaysPerMonth ?? [0,0,0,0,0,0,0,0,0,0,0,0]).reduce((a, b) => a + b, 0)}j/an)</label>
               <span className="text-sm font-bold text-[#fbbf24]">
                 {(profile.vacationDaysPerMonth ?? [0,0,0,0,0,0,0,0,0,0,0,0]).reduce((a, b) => a + b, 0)}j
               </span>
