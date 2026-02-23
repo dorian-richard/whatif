@@ -10,6 +10,7 @@ export function Hero() {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center pt-20">
+        <div className="mb-8" />
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] mb-6 tracking-tight">
           <span className="text-foreground">Anticipe</span>
           <br />
