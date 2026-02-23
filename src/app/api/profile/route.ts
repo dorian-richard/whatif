@@ -45,7 +45,7 @@ export async function PATCH(request: NextRequest) {
     workedDaysPerYear, businessStatus, remunerationType,
     customUrssafRate, customIrRate, customTaxRate,
     monthlySalary, mixtePartSalaire, role, age,
-    onboardingCompleted,
+    vacationDaysPerMonth, onboardingCompleted,
   } = body;
 
   const updated = await prisma.user.update({
@@ -65,6 +65,7 @@ export async function PATCH(request: NextRequest) {
       ...(mixtePartSalaire !== undefined && { mixtePartSalaire }),
       ...(role !== undefined && { role }),
       ...(age !== undefined && { age }),
+      ...(vacationDaysPerMonth !== undefined && { vacationDaysPerMonth }),
       ...(onboardingCompleted !== undefined && { onboardingCompleted }),
     },
   });

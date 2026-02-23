@@ -32,11 +32,12 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
 
+  const billing = (body.billing as string).toUpperCase();
   const client = await prisma.client.create({
     data: {
       userId: user.id,
       name: body.name,
-      billing: body.billing,
+      billing: billing as "TJM" | "FORFAIT" | "MISSION",
       dailyRate: body.dailyRate,
       daysPerMonth: body.daysPerMonth,
       daysPerWeek: body.daysPerWeek,
@@ -64,6 +65,11 @@ export async function PUT(request: NextRequest) {
 
   const body = await request.json();
   const { id, ...data } = body;
+
+  // Convert billing to uppercase for Prisma enum
+  if (data.billing) {
+    data.billing = (data.billing as string).toUpperCase();
+  }
 
   const client = await prisma.client.updateMany({
     where: { id, userId: user.id },

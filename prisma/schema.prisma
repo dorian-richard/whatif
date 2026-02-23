@@ -41,6 +41,7 @@ model User {
   mixtePartSalaire    Float              @default(50)
   role                String?
   age                 Int                @default(35)
+  vacationDaysPerMonth Json?
   onboardingCompleted Boolean            @default(false)
 
   // Stripe

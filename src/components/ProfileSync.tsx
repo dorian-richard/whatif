@@ -88,6 +88,7 @@ export function ProfileSync() {
         if (data.mixtePartSalaire != null) profileUpdates.mixtePartSalaire = data.mixtePartSalaire;
         if (data.role != null) profileUpdates.role = data.role;
         if (data.age != null) profileUpdates.age = data.age;
+        if (data.vacationDaysPerMonth != null) profileUpdates.vacationDaysPerMonth = data.vacationDaysPerMonth;
         if (data.onboardingCompleted != null) store.setOnboardingCompleted(data.onboardingCompleted);
 
         if (Object.keys(profileUpdates).length > 0) {
@@ -126,6 +127,7 @@ export function ProfileSync() {
         "mixtePartSalaire",
         "role",
         "age",
+        "vacationDaysPerMonth",
         "onboardingCompleted",
       ] as const;
 
@@ -156,6 +158,7 @@ export function ProfileSync() {
               mixtePartSalaire: state.mixtePartSalaire,
               role: state.role,
               age: state.age,
+              vacationDaysPerMonth: state.vacationDaysPerMonth,
               onboardingCompleted: state.onboardingCompleted,
             }),
           });
