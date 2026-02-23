@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, Settings, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
 
@@ -29,7 +29,7 @@ const NAV_MOBILE = [
   { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
   { href: "/comparateur", label: "Comparateur", icon: Scale },
   { href: "/objectif", label: "Objectif", icon: Target },
-  { href: "/settings", label: "Mon profil", icon: Settings },
+  { href: "/settings", label: "Mon profil", icon: UserRound },
 ];
 
 export function AppSidebar() {
@@ -119,7 +119,7 @@ export function AppSidebar() {
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               )}
             >
-              <Settings className="size-[18px]" />
+              <UserRound className="size-[18px]" />
               <span>Mon profil</span>
             </button>
           </div>
