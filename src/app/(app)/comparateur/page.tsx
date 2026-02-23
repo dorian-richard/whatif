@@ -171,11 +171,11 @@ function computeForStatus(
 }
 
 export default function ComparateurPage() {
-  const { clients, businessStatus, remunerationType, mixtePartSalaire, monthlyExpenses, customIrRate } =
+  const { clients, businessStatus, remunerationType, mixtePartSalaire, monthlyExpenses, customIrRate, vacationDaysPerMonth } =
     useProfileStore();
 
   // CA from clients
-  const baseAnnualCA = useMemo(() => getAnnualCA(clients), [clients]);
+  const baseAnnualCA = useMemo(() => getAnnualCA(clients, vacationDaysPerMonth), [clients, vacationDaysPerMonth]);
 
   const [caOverride, setCaOverride] = useState<number | null>(null);
   const annualCA = caOverride ?? baseAnnualCA;

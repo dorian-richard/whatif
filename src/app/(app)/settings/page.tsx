@@ -7,7 +7,8 @@ import { fmt, cn } from "@/lib/utils";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import type { BusinessStatus, RemunerationType } from "@/types";
-import { CalendarDays, ClipboardList, Receipt, Landmark, HandCoins, Target, Banknote, Users, Check, X, Info, Briefcase } from "@/components/ui/icons";
+import { CalendarDays, ClipboardList, Receipt, Landmark, HandCoins, Target, Banknote, Users, Check, X, Info, Briefcase, Sun } from "@/components/ui/icons";
+import { MONTHS_SHORT } from "@/lib/constants";
 import { METIERS, METIER_CATEGORIES, CATEGORY_COLORS } from "@/lib/benchmark-data";
 
 export default function SettingsPage() {
@@ -377,6 +378,63 @@ export default function SettingsPage() {
               >
                 5 sem. congés ({profile.workDaysPerWeek * 52 - 25}j)
               </button>
+            </div>
+          </div>
+          {/* Vacation days per month */}
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-sm font-medium text-muted-foreground flex items-center gap-1.5"><Sun className="size-4 text-[#fbbf24]" /> Congés par mois</label>
+              <span className="text-sm font-bold text-[#fbbf24]">
+                {(profile.vacationDaysPerMonth ?? [0,0,0,0,0,0,0,0,0,0,0,0]).reduce((a, b) => a + b, 0)}j
+              </span>
+            </div>
+            <div className="grid grid-cols-6 gap-1.5">
+              {MONTHS_SHORT.map((m, i) => {
+                const vacDays = profile.vacationDaysPerMonth ?? [0,0,0,0,0,0,0,0,0,0,0,0];
+                const val = vacDays[i] ?? 0;
+                return (
+                  <div key={i} className="flex flex-col items-center gap-1">
+                    <span className="text-[10px] text-muted-foreground/60 font-medium">{m}</span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={22}
+                      value={val}
+                      onChange={(e) => {
+                        const newVal = Math.max(0, Math.min(22, parseInt(e.target.value) || 0));
+                        const newDays = [...vacDays];
+                        newDays[i] = newVal;
+                        profile.setProfile({ vacationDaysPerMonth: newDays });
+                      }}
+                      className={cn(
+                        "w-full text-center text-sm font-semibold py-1.5 rounded-lg border bg-muted/30 focus:outline-none focus:ring-1 focus:ring-[#fbbf24]/40 transition-colors",
+                        val > 0 ? "border-[#fbbf24]/30 text-[#fbbf24]" : "border-border text-muted-foreground/60"
+                      )}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex items-center justify-between mt-2">
+              <p className="text-[10px] text-muted-foreground/70">Répartis tes jours de congés pour refléter l&apos;impact sur ton CA mensuel.</p>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => {
+                    profile.setProfile({ vacationDaysPerMonth: [0,0,0,0,0,0,5,10,0,0,0,5] });
+                  }}
+                  className="text-[10px] font-medium px-2 py-0.5 rounded-full border bg-muted/50 text-muted-foreground border-border hover:border-border transition-colors"
+                >
+                  Classique (20j)
+                </button>
+                <button
+                  onClick={() => {
+                    profile.setProfile({ vacationDaysPerMonth: [0,0,0,0,0,0,0,0,0,0,0,0] });
+                  }}
+                  className="text-[10px] font-medium px-2 py-0.5 rounded-full border bg-muted/50 text-muted-foreground border-border hover:border-border transition-colors"
+                >
+                  Aucun
+                </button>
+              </div>
             </div>
           </div>
           <div>

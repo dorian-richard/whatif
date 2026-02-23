@@ -199,9 +199,9 @@ function downloadICS(content: string) {
    ════════════════════════════════════════════════ */
 
 export default function CalendrierPage() {
-  const { clients, businessStatus, subscriptionStatus } = useProfileStore();
+  const { clients, businessStatus, subscriptionStatus, vacationDaysPerMonth } = useProfileStore();
 
-  const annualCA = useMemo(() => getAnnualCA(clients), [clients]);
+  const annualCA = useMemo(() => getAnnualCA(clients, vacationDaysPerMonth), [clients, vacationDaysPerMonth]);
 
   const [selectedStatus, setSelectedStatus] = useState<BusinessStatus>(businessStatus);
 
@@ -374,6 +374,19 @@ export default function CalendrierPage() {
                       </div>
                     );
                   })}
+                  {/* Monthly subtotal */}
+                  {(() => {
+                    const monthTotal = deadlines.reduce((sum, d) => {
+                      const amt = d.estimateAmount?.(annualCA, selectedStatus);
+                      return sum + (amt != null && amt > 0 ? amt : 0);
+                    }, 0);
+                    return monthTotal > 0 ? (
+                      <div className="flex items-center justify-end gap-2 pt-1 pr-3 text-sm text-muted-foreground">
+                        <span>Total du mois :</span>
+                        <span className="font-bold text-foreground">~{fmt(monthTotal)} &euro;</span>
+                      </div>
+                    ) : null;
+                  })()}
                 </div>
               )}
             </div>

@@ -83,12 +83,12 @@ function percentileLabel(p: number): {
    ════════════════════════════════════════════════ */
 
 export default function BenchmarkPage() {
-  const { clients, role, setProfile, workDaysPerWeek, workedDaysPerYear } = useProfileStore();
+  const { clients, role, setProfile, workDaysPerWeek, workedDaysPerYear, vacationDaysPerMonth } = useProfileStore();
 
   // TJM effectif = CA annuel réel / jours travaillés par an
   // Utilise getAnnualCA qui tient compte de la saisonnalité et des périodes contrats
   const userTJM = useMemo(() => {
-    const annualCA = getAnnualCA(clients);
+    const annualCA = getAnnualCA(clients, vacationDaysPerMonth);
     if (annualCA <= 0) return null;
 
     const daysPerYear = workedDaysPerYear
@@ -96,7 +96,7 @@ export default function BenchmarkPage() {
       : (workDaysPerWeek / 5) * AVG_JOURS_OUVRES * 12;
 
     return Math.round(annualCA / daysPerYear);
-  }, [clients, workDaysPerWeek, workedDaysPerYear]);
+  }, [clients, workDaysPerWeek, workedDaysPerYear, vacationDaysPerMonth]);
 
   // Initialize m\u00e9tier from profile role (if set)
   const [selectedMetier, setSelectedMetier] = useState(

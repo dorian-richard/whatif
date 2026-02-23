@@ -110,9 +110,9 @@ function computeNet(
 }
 
 export default function AcrePage() {
-  const { clients, remunerationType, mixtePartSalaire, customIrRate } = useProfileStore();
+  const { clients, remunerationType, mixtePartSalaire, customIrRate, vacationDaysPerMonth } = useProfileStore();
 
-  const baseAnnualCA = useMemo(() => getAnnualCA(clients), [clients]);
+  const baseAnnualCA = useMemo(() => getAnnualCA(clients, vacationDaysPerMonth), [clients, vacationDaysPerMonth]);
 
   const [caOverride, setCaOverride] = useState<number | null>(null);
   const annualCA = caOverride ?? baseAnnualCA;

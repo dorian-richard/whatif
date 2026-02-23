@@ -33,6 +33,7 @@ export interface FreelanceProfile {
   adminHoursPerWeek: number;
   workDaysPerWeek: number;
   workedDaysPerYear?: number;
+  vacationDaysPerMonth?: number[];
   businessStatus: BusinessStatus;
   remunerationType?: RemunerationType;
   customUrssafRate?: number;

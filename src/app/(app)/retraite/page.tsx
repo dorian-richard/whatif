@@ -137,9 +137,9 @@ function computeRetraiteCDI(annualCA: number, age: number): RetraiteResult {
    ════════════════════════════════════════════════ */
 
 export default function RetraitePage() {
-  const { clients, age: profileAge } = useProfileStore();
+  const { clients, age: profileAge, vacationDaysPerMonth } = useProfileStore();
 
-  const baseAnnualCA = useMemo(() => getAnnualCA(clients), [clients]);
+  const baseAnnualCA = useMemo(() => getAnnualCA(clients, vacationDaysPerMonth), [clients, vacationDaysPerMonth]);
 
   const [caOverride, setCaOverride] = useState<number | null>(null);
   const annualCA = caOverride ?? baseAnnualCA;

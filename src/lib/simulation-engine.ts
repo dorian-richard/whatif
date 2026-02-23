@@ -35,7 +35,8 @@ export const AVG_JOURS_OUVRES = JOURS_OUVRES.reduce((a, b) => a + b, 0) / 12;
 export function getClientMonthlyCA(
   client: ClientData,
   monthIndex: number,
-  season: number
+  season: number,
+  vacationDaysThisMonth = 0
 ): number {
   if (client.isActive === false) return 0;
 
@@ -46,10 +47,11 @@ export function getClientMonthlyCA(
   switch (client.billing) {
     case "tjm": {
       if (client.daysPerYear) {
+        // daysPerYear is already a total — vacation is already factored in by the user
         return (client.dailyRate ?? 0) * (client.daysPerYear / 12) * season;
       }
       if (client.daysPerWeek != null) {
-        const businessDays = JOURS_OUVRES[monthIndex];
+        const businessDays = Math.max(0, JOURS_OUVRES[monthIndex] - vacationDaysThisMonth);
         return (client.dailyRate ?? 0) * (client.daysPerWeek / 5) * businessDays * season;
       }
       return (client.dailyRate ?? 0) * (client.daysPerMonth ?? 0) * season;
@@ -87,12 +89,13 @@ export function getClientBaseCA(client: ClientData): number {
  * saisonnalite, des periodes de contrat et des clients inactifs.
  * Resultat coherent avec simulate().
  */
-export function getAnnualCA(clients: ClientData[]): number {
+export function getAnnualCA(clients: ClientData[], vacationDaysPerMonth?: number[]): number {
   let total = 0;
   for (let month = 0; month < 12; month++) {
     const season = SEASONALITY[month];
+    const vacDays = vacationDaysPerMonth?.[month] ?? 0;
     for (const client of clients) {
-      total += getClientMonthlyCA(client, month, season);
+      total += getClientMonthlyCA(client, month, season, vacDays);
     }
   }
   return total;
@@ -223,13 +226,16 @@ export function simulate(
   );
   const clientCount = clients.filter((c) => c.isActive !== false).length;
 
+  const vacDaysPerMonth = profile.vacationDaysPerMonth;
+
   for (let month = 0; month < 12; month++) {
     const season = SEASONALITY[month];
+    const vacDays = vacDaysPerMonth?.[month] ?? 0;
     let beforeTotal = 0;
     let afterTotal = 0;
 
     clients.forEach((client, clientIndex) => {
-      const base = getClientMonthlyCA(client, month, season);
+      const base = getClientMonthlyCA(client, month, season, vacDays);
       beforeTotal += base;
 
       if (params.lostClientIndex === clientIndex) return;

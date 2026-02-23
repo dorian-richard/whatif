@@ -64,7 +64,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
             const activeBillings = new Set<string>();
             clients.forEach((c, ci) => {
               if (sim.lostClientIndex === ci) return;
-              const ca = getClientMonthlyCA(c, i, SEASONALITY[i]);
+              const ca = getClientMonthlyCA(c, i, SEASONALITY[i], profile.vacationDaysPerMonth?.[i] ?? 0);
               if (ca > 0) activeBillings.add(c.billing);
             });
 
