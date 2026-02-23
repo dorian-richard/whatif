@@ -191,89 +191,152 @@ export default function PaiementsPage() {
         </div>
       </div>
 
-      {/* Client payment table */}
+      {/* Client payment table / cards */}
       {clients.length === 0 ? (
         <div className="bg-card rounded-2xl border border-border p-8 text-center">
           <CreditCard className="size-8 text-muted-foreground/40 mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">Ajoute des clients dans ton profil pour suivre leurs paiements.</p>
         </div>
       ) : (
-        <div className="bg-card rounded-2xl border border-border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Client</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Attendu</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Reçu</th>
-                  <th className="text-center px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Statut</th>
-                  <th className="text-center px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {monthPayments.map(({ client, expected, received, status }) => {
-                  const cfg = STATUS_CONFIG[status];
-                  return (
-                    <tr key={client.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: client.color ?? "#5682F2" }} />
-                          <span className="font-medium text-foreground">{client.name}</span>
-                          <span className="text-[10px] text-muted-foreground/60 uppercase">{client.billing}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-right font-medium text-foreground">{fmt(expected)}&euro;</td>
-                      <td className="px-4 py-3 text-right font-medium" style={{ color: cfg.color }}>{fmt(received)}&euro;</td>
-                      <td className="px-4 py-3 text-center">
-                        <span
-                          className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold", cfg.bg)}
-                          style={{ color: cfg.color }}
-                        >
-                          {cfg.label}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          {status !== "paid" && (
-                            <button
-                              onClick={() => handleStatusChange(client.id, selectedMonth, "paid")}
-                              className="px-2 py-1 rounded-lg text-[10px] font-semibold bg-[#4ade80]/12 text-[#4ade80] hover:bg-[#4ade80]/20 transition-colors"
-                            >
-                              Payé
-                            </button>
-                          )}
-                          {status !== "late" && status !== "paid" && (
-                            <button
-                              onClick={() => handleStatusChange(client.id, selectedMonth, "late")}
-                              className="px-2 py-1 rounded-lg text-[10px] font-semibold bg-[#f87171]/12 text-[#f87171] hover:bg-[#f87171]/20 transition-colors"
-                            >
-                              Retard
-                            </button>
-                          )}
-                          {status === "paid" && (
-                            <button
-                              onClick={() => handleStatusChange(client.id, selectedMonth, "pending")}
-                              className="px-2 py-1 rounded-lg text-[10px] font-semibold bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
-                            >
-                              Annuler
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        <>
+          {/* Desktop table */}
+          <div className="hidden md:block bg-card rounded-2xl border border-border overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Client</th>
+                    <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Attendu</th>
+                    <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Reçu</th>
+                    <th className="text-center px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Statut</th>
+                    <th className="text-center px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {monthPayments.map(({ client, expected, received, status }) => {
+                    const cfg = STATUS_CONFIG[status];
+                    return (
+                      <tr key={client.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: client.color ?? "#5682F2" }} />
+                            <span className="font-medium text-foreground">{client.name}</span>
+                            <span className="text-[10px] text-muted-foreground/60 uppercase">{client.billing}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-right font-medium text-foreground">{fmt(expected)}&euro;</td>
+                        <td className="px-4 py-3 text-right font-medium" style={{ color: cfg.color }}>{fmt(received)}&euro;</td>
+                        <td className="px-4 py-3 text-center">
+                          <span
+                            className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold", cfg.bg)}
+                            style={{ color: cfg.color }}
+                          >
+                            {cfg.label}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <div className="flex items-center justify-center gap-1">
+                            {status !== "paid" && (
+                              <button
+                                onClick={() => handleStatusChange(client.id, selectedMonth, "paid")}
+                                className="px-2 py-1 rounded-lg text-[10px] font-semibold bg-[#4ade80]/12 text-[#4ade80] hover:bg-[#4ade80]/20 transition-colors"
+                              >
+                                Payé
+                              </button>
+                            )}
+                            {status !== "late" && status !== "paid" && (
+                              <button
+                                onClick={() => handleStatusChange(client.id, selectedMonth, "late")}
+                                className="px-2 py-1 rounded-lg text-[10px] font-semibold bg-[#f87171]/12 text-[#f87171] hover:bg-[#f87171]/20 transition-colors"
+                              >
+                                Retard
+                              </button>
+                            )}
+                            {status === "paid" && (
+                              <button
+                                onClick={() => handleStatusChange(client.id, selectedMonth, "pending")}
+                                className="px-2 py-1 rounded-lg text-[10px] font-semibold bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                              >
+                                Annuler
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {monthPayments.map(({ client, expected, received, status }) => {
+              const cfg = STATUS_CONFIG[status];
+              return (
+                <div key={client.id} className="bg-card rounded-xl border border-border p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="size-3 rounded-full shrink-0" style={{ backgroundColor: client.color ?? "#5682F2" }} />
+                      <span className="font-medium text-foreground truncate">{client.name}</span>
+                      <span className="text-[10px] text-muted-foreground/60 uppercase shrink-0">{client.billing}</span>
+                    </div>
+                    <span
+                      className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ml-2", cfg.bg)}
+                      style={{ color: cfg.color }}
+                    >
+                      {cfg.label}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 mb-3">
+                    <div>
+                      <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Attendu</div>
+                      <div className="text-sm font-bold text-foreground">{fmt(expected)}&euro;</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Reçu</div>
+                      <div className="text-sm font-bold" style={{ color: cfg.color }}>{fmt(received)}&euro;</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {status !== "paid" && (
+                      <button
+                        onClick={() => handleStatusChange(client.id, selectedMonth, "paid")}
+                        className="flex-1 py-2 rounded-lg text-xs font-semibold bg-[#4ade80]/12 text-[#4ade80] hover:bg-[#4ade80]/20 transition-colors"
+                      >
+                        Payé
+                      </button>
+                    )}
+                    {status !== "late" && status !== "paid" && (
+                      <button
+                        onClick={() => handleStatusChange(client.id, selectedMonth, "late")}
+                        className="flex-1 py-2 rounded-lg text-xs font-semibold bg-[#f87171]/12 text-[#f87171] hover:bg-[#f87171]/20 transition-colors"
+                      >
+                        Retard
+                      </button>
+                    )}
+                    {status === "paid" && (
+                      <button
+                        onClick={() => handleStatusChange(client.id, selectedMonth, "pending")}
+                        className="flex-1 py-2 rounded-lg text-xs font-semibold bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                      >
+                        Annuler
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
 
       {/* Annual overview mini-grid */}
       <div className="bg-card rounded-2xl border border-border p-6">
         <h3 className="text-sm font-bold text-foreground mb-4">Vue annuelle {year}</h3>
-        <div className="overflow-x-auto">
-          <div className="grid grid-cols-12 gap-1 min-w-[600px]">
+        <div>
+          <div className="grid grid-cols-6 md:grid-cols-12 gap-1">
             {MONTHS_SHORT.map((m, i) => {
               const monthTotal = clients.reduce((s, c) => s + (monthlyExpected[c.id]?.[i] ?? 0), 0);
               const monthPaid = payments

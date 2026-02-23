@@ -26,11 +26,21 @@ const NAV_TOOLS = [
   { href: "/calendrier", label: "Calendrier", icon: CalendarDays },
 ];
 
-const NAV_MOBILE = [
+const NAV_MOBILE_TABS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
+  { href: "/paiements", label: "Paiements", icon: CreditCard },
+];
+
+const NAV_MOBILE_MORE = [
   { href: "/comparateur", label: "Comparateur", icon: Scale },
   { href: "/objectif", label: "Objectif", icon: Target },
+  { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+  { href: "/transition", label: "Transition", icon: Briefcase },
+  { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
+  { href: "/retraite", label: "Retraite", icon: Landmark },
+  { href: "/acre", label: "ACRE", icon: BadgePercent },
+  { href: "/calendrier", label: "Calendrier", icon: CalendarDays },
   { href: "/settings", label: "Mon profil", icon: UserRound },
 ];
 
@@ -39,10 +49,16 @@ export function AppSidebar() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const subscriptionStatus = useProfileStore((s) => s.subscriptionStatus);
   const businessStatus = useProfileStore((s) => s.businessStatus);
   const isPro = subscriptionStatus === "ACTIVE";
   useEffect(() => setMounted(true), []);
+
+  // Close drawer on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const upcomingDeadlines = mounted ? getUpcomingDeadlines(businessStatus, 7) : [];
   const hasUpcoming = upcomingDeadlines.length > 0;
@@ -168,9 +184,77 @@ export function AppSidebar() {
         </div>
       </aside>
 
+      {/* Mobile drawer overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/40 z-20"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <div
+        className={cn(
+          "md:hidden fixed bottom-14 left-0 right-0 z-20 bg-sidebar/95 backdrop-blur-xl border-t border-border rounded-t-2xl transition-transform duration-200 ease-out",
+          mobileMenuOpen ? "translate-y-0" : "translate-y-full"
+        )}
+      >
+        <div className="px-4 pt-4 pb-3">
+          <div className="w-10 h-1 bg-muted-foreground/20 rounded-full mx-auto mb-4" />
+          <div className="grid grid-cols-4 gap-3">
+            {NAV_MOBILE_MORE.map((item) => {
+              const isActive = pathname === item.href;
+              const showBadge = item.href === "/calendrier" && hasUpcoming;
+              return (
+                <button
+                  key={item.href}
+                  onClick={() => {
+                    router.push(item.href);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={cn(
+                    "flex flex-col items-center gap-1 py-3 rounded-xl transition-colors",
+                    isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"
+                  )}
+                >
+                  <span className="relative">
+                    <item.icon className="size-5" />
+                    {showBadge && (
+                      <span className="absolute -top-1 -right-1 size-2 rounded-full bg-[#f87171] ring-2 ring-sidebar" />
+                    )}
+                  </span>
+                  <span className="text-[10px] font-medium">{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Theme + logout */}
+        <div className="flex items-center gap-2 px-4 pb-4 pt-2 border-t border-border mt-1">
+          <button
+            onClick={() => { setTheme(theme === "dark" ? "light" : "dark"); setMobileMenuOpen(false); }}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
+          >
+            {mounted && (theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />)}
+            <span>{mounted ? (theme === "dark" ? "Mode clair" : "Mode sombre") : "Thème"}</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/[0.08] transition-colors"
+          >
+            <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
       {/* Mobile bottom bar */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-sidebar/90 backdrop-blur-xl border-t border-border z-20 flex items-center justify-around h-14 px-2">
-        {NAV_MOBILE.map((item) => {
+        {NAV_MOBILE_TABS.map((item) => {
           const isActive = pathname === item.href;
           return (
             <button
@@ -186,6 +270,23 @@ export function AppSidebar() {
             </button>
           );
         })}
+        {/* Plus button */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className={cn(
+            "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors",
+            mobileMenuOpen ? "text-primary" : "text-muted-foreground/60"
+          )}
+        >
+          <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {mobileMenuOpen ? (
+              <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>
+            ) : (
+              <><circle cx="4" cy="4" r="1.5" fill="currentColor" stroke="none" /><circle cx="12" cy="4" r="1.5" fill="currentColor" stroke="none" /><circle cx="20" cy="4" r="1.5" fill="currentColor" stroke="none" /><circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none" /><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" /><circle cx="20" cy="12" r="1.5" fill="currentColor" stroke="none" /></>
+            )}
+          </svg>
+          <span className="text-[10px] font-medium">{mobileMenuOpen ? "Fermer" : "Plus"}</span>
+        </button>
       </nav>
     </>
   );

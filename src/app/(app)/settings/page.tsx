@@ -223,7 +223,7 @@ export default function SettingsPage() {
         {(profile.businessStatus === "eurl_is" || profile.businessStatus === "sasu_is") && (
           <div className="mt-4 p-4 bg-muted/50 rounded-xl border border-border">
             <label className="text-sm font-medium text-muted-foreground mb-3 block">Mode de rémunération</label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               {([
                 { key: "salaire" as RemunerationType, label: "Salaire", icon: <Banknote className="size-4 text-emerald-400" />, desc: `Charges ${(currentConfig.urssaf * 100).toFixed(0)}% + IR, pas d'IS` },
                 { key: "dividendes" as RemunerationType, label: "Dividendes", icon: <HandCoins className="size-4 text-purple-400" />, desc: profile.businessStatus === "sasu_is" ? "IS 15% + PFU 30% flat" : "IS 15% + cotisations TNS + IR" },
@@ -408,7 +408,7 @@ export default function SettingsPage() {
                 {(profile.vacationDaysPerMonth ?? [0,0,0,0,0,0,0,0,0,0,0,0]).reduce((a, b) => a + b, 0)}j
               </span>
             </div>
-            <div className="grid grid-cols-6 gap-1.5">
+            <div className="grid grid-cols-4 md:grid-cols-6 gap-1.5">
               {MONTHS_SHORT.map((m, i) => {
                 const vacDays = profile.vacationDaysPerMonth ?? [0,0,0,0,0,0,0,0,0,0,0,0];
                 const val = vacDays[i] ?? 0;

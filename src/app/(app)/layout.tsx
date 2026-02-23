@@ -15,7 +15,7 @@ export default function AppLayout({
     <div className="min-h-screen bg-background">
       <ProfileSync />
       <AppSidebar />
-      <main className="md:ml-[220px] min-h-screen pt-8 md:pt-10 pb-16 md:pb-0">
+      <main className="md:ml-[220px] min-h-screen pt-8 md:pt-10 pb-20 md:pb-0">
         {children}
       </main>
     </div>

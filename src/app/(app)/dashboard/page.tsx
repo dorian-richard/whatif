@@ -296,8 +296,8 @@ export default function DashboardPage() {
         remunerationType={remunerationType}
       />
 
-      {/* KPI grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {/* KPI grid — horizontal scroll on mobile */}
+      <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-1 md:grid md:grid-cols-4 md:overflow-visible md:pb-0">
         {[
           { icon: <Wallet className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "CA mensuel", value: `${fmt(totalCA)}\u20AC`, sub: `${fmt(annualCA)}\u20AC/an`, tip: "Somme des revenus mensuels de tous tes clients actifs" },
           { icon: <Users className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "Clients actifs", value: String(profile.clients.length), sub: `${totalDaysPerWeek}j/sem facturés`, tip: "Nombre de clients configurés dans ton profil" },
@@ -308,7 +308,7 @@ export default function DashboardPage() {
           { icon: <BadgePercent className="size-4 text-[#F4BE7E]" />, iconBg: "bg-[#F4BE7E]/15", label: "Charges totales", value: `${effectiveChargesRate.toFixed(0)}%`, sub: `${fmt(Math.round(totalCharges))}\u20AC/an`, tip: "Cotisations sociales + IR en % du CA brut" },
           { icon: <Banknote className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Taux net effectif", value: `${annualCA > 0 ? ((netAfterAll / annualCA) * 100).toFixed(0) : 0}%`, sub: `${fmt(Math.round(netAfterAll))}\u20AC net fiscal/an`, tip: "Ce qui te reste réellement après toutes les charges et impôts" },
         ].map((kpi) => (
-          <div key={kpi.label} className="bg-card rounded-xl p-4 border border-border hover:bg-muted/50 transition-colors">
+          <div key={kpi.label} className="min-w-[150px] snap-center shrink-0 md:min-w-0 md:shrink bg-card rounded-xl p-4 border border-border hover:bg-muted/50 transition-colors">
             <div className="flex items-center gap-2 mb-2">
               <div className={cn("size-7 rounded-lg flex items-center justify-center", kpi.iconBg)}>{kpi.icon}</div>
               <Tooltip content={kpi.tip}>
@@ -338,7 +338,7 @@ export default function DashboardPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-center mb-1">
                       <span className="text-sm font-medium text-foreground truncate">{c.name}</span>
-                      <span className="text-xs text-muted-foreground shrink-0">{fmt(ca)}&euro;/mois &middot; {pct.toFixed(0)}%</span>
+                      <span className="text-xs text-muted-foreground shrink-0"><span className="hidden sm:inline">{fmt(ca)}&euro;/mois &middot; </span>{pct.toFixed(0)}%</span>
                     </div>
                     <div className="w-full h-1.5 bg-muted rounded-full">
                       <div
@@ -514,7 +514,7 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
   const maxMonthly = Math.max(...projection.before, 1);
 
   return (
-    <div className="bg-card rounded-2xl p-6 border border-border">
+    <div className="bg-card rounded-2xl p-4 md:p-6 border border-border">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <div className="flex items-center gap-3">
           <h3 className="text-sm font-bold text-foreground">Projection mensuelle</h3>
@@ -549,7 +549,8 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
           );
         })()}
       </div>
-      <div className="flex items-end gap-1 h-36">
+      <div className="overflow-x-auto">
+      <div className="flex items-end gap-1 h-36 min-w-[480px]">
         {MONTHS_SHORT.map((m, i) => {
           const ca = projection.before[i];
           const caPct = (ca / maxMonthly) * 100;
@@ -601,6 +602,7 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
             </div>
           );
         })}
+      </div>
       </div>
       <div className="flex justify-between mt-3 pt-3 border-t border-border text-xs text-muted-foreground">
         <span>Jours ouvrés : {JOURS_OUVRES.reduce((a, b) => a + b, 0)}/an &middot; ~{AVG_JOURS_OUVRES.toFixed(0)}/mois</span>

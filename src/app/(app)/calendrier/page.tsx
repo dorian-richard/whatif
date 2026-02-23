@@ -162,13 +162,13 @@ export default function CalendrierPage() {
 
       <ProBlur label="Le Calendrier Fiscal est réservé au plan Pro">
       {/* Status selector */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex gap-2 overflow-x-auto pb-1">
         {allStatuts.map((s) => (
           <button
             key={s}
             onClick={() => setSelectedStatus(s)}
             className={cn(
-              "px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+              "px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap shrink-0",
               selectedStatus === s
                 ? "bg-primary/15 text-primary ring-1 ring-primary/30"
                 : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -217,7 +217,7 @@ export default function CalendrierPage() {
           return (
             <div
               key={i}
-              className={cn("relative pl-8 pb-6 border-l-2", isCurrentMo ? "border-[#5682F2]" : "border-border")}
+              className={cn("relative pl-5 md:pl-8 pb-6 border-l-2", isCurrentMo ? "border-[#5682F2]" : "border-border")}
             >
               {/* Month dot */}
               <div
