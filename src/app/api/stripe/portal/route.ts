@@ -14,20 +14,52 @@ export async function POST() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const dbUser = await prisma.user.findUnique({
-      where: { id: user.id },
-      select: { stripeCustomerId: true },
-    });
-
-    if (!dbUser?.stripeCustomerId) {
+    // Look up existing Stripe customer
+    let dbUser;
+    try {
+      dbUser = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { stripeCustomerId: true, subscriptionId: true },
+      });
+    } catch {
       return NextResponse.json(
-        { error: "No Stripe customer found" },
-        { status: 400 }
+        { error: "Database error" },
+        { status: 500 }
       );
     }
 
+    let customerId = dbUser?.stripeCustomerId;
+
+    // If no Stripe customer, try to find by email or create one
+    if (!customerId) {
+      const existing = await stripe.customers.list({
+        email: user.email,
+        limit: 1,
+      });
+
+      if (existing.data.length > 0) {
+        customerId = existing.data[0].id;
+      } else {
+        const newCustomer = await stripe.customers.create({
+          email: user.email!,
+          metadata: { userId: user.id },
+        });
+        customerId = newCustomer.id;
+      }
+
+      // Save to DB
+      try {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { stripeCustomerId: customerId },
+        });
+      } catch {
+        // Non-blocking
+      }
+    }
+
     const session = await stripe.billingPortal.sessions.create({
-      customer: dbUser.stripeCustomerId,
+      customer: customerId,
       return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
     });
 

@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useProfileStore } from "@/stores/useProfileStore";
+import { useProfileStore, type SubscriptionStatus } from "@/stores/useProfileStore";
 import { Slider } from "@/components/ui/slider";
 import { fmt, cn } from "@/lib/utils";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
@@ -15,6 +16,24 @@ export default function SettingsPage() {
   const router = useRouter();
   const profile = useProfileStore();
   const currentConfig = BUSINESS_STATUS_CONFIG[profile.businessStatus ?? "micro"];
+
+  // Refresh subscription status when page gets focus (returning from Stripe portal)
+  useEffect(() => {
+    async function refreshSubscription() {
+      try {
+        const res = await fetch("/api/profile");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.subscriptionStatus) {
+          profile.setSubscriptionStatus(data.subscriptionStatus as SubscriptionStatus);
+        }
+      } catch { /* ignore */ }
+    }
+
+    const onFocus = () => refreshSubscription();
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleUpgrade = async (plan: "monthly" | "annual") => {
     try {
@@ -498,8 +517,9 @@ export default function SettingsPage() {
               onClick={async () => {
                 try {
                   const res = await fetch("/api/stripe/portal", { method: "POST" });
-                  const { url } = await res.json();
-                  if (url) window.location.href = url;
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                  else console.error("Portal error:", data.error);
                 } catch (err) {
                   console.error("Portal error:", err);
                 }
@@ -508,6 +528,51 @@ export default function SettingsPage() {
             >
               Gérer mon abonnement
             </button>
+          </>
+        ) : profile.subscriptionStatus === "PAST_DUE" ? (
+          <>
+            <div className="flex items-center justify-between p-4 bg-[#fbbf24]/10 rounded-xl border border-[#fbbf24]/20 mb-4">
+              <div>
+                <span className="text-sm font-semibold text-[#fbbf24]">Plan Pro</span>
+                <p className="text-xs text-muted-foreground">Paiement en attente &mdash; mettez à jour votre moyen de paiement</p>
+              </div>
+              <span className="text-xs font-bold text-[#fbbf24] bg-[#fbbf24]/15 px-3 py-1 rounded-full">Impayé</span>
+            </div>
+            <button
+              onClick={async () => {
+                try {
+                  const res = await fetch("/api/stripe/portal", { method: "POST" });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                } catch (err) {
+                  console.error("Portal error:", err);
+                }
+              }}
+              className="w-full py-3 bg-[#fbbf24]/10 border border-[#fbbf24]/20 rounded-xl text-sm font-semibold text-[#fbbf24] hover:bg-[#fbbf24]/20 transition-colors"
+            >
+              Mettre à jour le paiement
+            </button>
+          </>
+        ) : profile.subscriptionStatus === "CANCELED" ? (
+          <>
+            <div className="flex items-center justify-between p-4 bg-muted/50 rounded-xl border border-border mb-4">
+              <div>
+                <span className="text-sm font-semibold text-muted-foreground">Plan Pro annulé</span>
+                <p className="text-xs text-muted-foreground/70">Votre abonnement a été annulé</p>
+              </div>
+              <span className="text-xs font-medium text-[#f87171] bg-[#f87171]/10 px-2 py-1 rounded-full">Annulé</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <button onClick={() => handleUpgrade("monthly")} className="p-4 border-2 border-[#5682F2]/50 rounded-xl text-center bg-[#5682F2]/10 hover:bg-[#5682F2]/20 transition-colors">
+                <div className="text-lg font-bold text-[#5682F2]">9&euro;/mois</div>
+                <div className="text-xs text-muted-foreground">Se réabonner</div>
+              </button>
+              <button onClick={() => handleUpgrade("annual")} className="p-4 border-2 border-[#5682F2]/50 rounded-xl text-center bg-[#5682F2]/10 hover:bg-[#5682F2]/20 transition-colors relative">
+                <span className="absolute -top-2 right-2 text-[10px] font-bold bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white px-2 py-0.5 rounded-full">-26%</span>
+                <div className="text-lg font-bold text-[#5682F2]">79&euro;/an</div>
+                <div className="text-xs text-muted-foreground">Se réabonner</div>
+              </button>
+            </div>
           </>
         ) : (
           <>
