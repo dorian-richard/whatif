@@ -199,7 +199,7 @@ function downloadICS(content: string) {
    ════════════════════════════════════════════════ */
 
 export default function CalendrierPage() {
-  const { clients, businessStatus } = useProfileStore();
+  const { clients, businessStatus, subscriptionStatus } = useProfileStore();
 
   const annualCA = useMemo(() => getAnnualCA(clients), [clients]);
 
@@ -249,16 +249,18 @@ export default function CalendrierPage() {
             Toutes tes &eacute;ch&eacute;ances fiscales sur 12 mois avec les montants &agrave; provisionner.
           </p>
         </div>
-        <button
-          onClick={() => {
-            const ics = generateICS(filteredByMonth, selectedStatus, annualCA);
-            downloadICS(ics);
-          }}
-          className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors"
-        >
-          <Download className="size-4" />
-          <span className="hidden sm:inline">Exporter .ics</span>
-        </button>
+        {subscriptionStatus === "ACTIVE" && (
+          <button
+            onClick={() => {
+              const ics = generateICS(filteredByMonth, selectedStatus, annualCA);
+              downloadICS(ics);
+            }}
+            className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors"
+          >
+            <Download className="size-4" />
+            <span className="hidden sm:inline">Exporter .ics</span>
+          </button>
+        )}
       </div>
 
       <ProBlur label="Le Calendrier Fiscal est réservé au plan Pro">
