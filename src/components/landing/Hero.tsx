@@ -10,11 +10,6 @@ export function Hero() {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center pt-20">
-        <div className="inline-flex items-center gap-2 bg-muted/30 border border-border px-4 py-1.5 rounded-full text-sm font-medium text-[#F4BE7E] mb-8 backdrop-blur-sm">
-          <span className="w-2 h-2 rounded-full bg-[#F4BE7E] animate-pulse" />
-          Le copilote financier des freelances
-        </div>
-
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] mb-6 tracking-tight">
           <span className="text-foreground">Anticipe</span>
           <br />
