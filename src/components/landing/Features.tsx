@@ -15,19 +15,25 @@ const FREE_FEATURES = [
     color: "#fbbf24",
   },
   {
-    icon: ArrowLeftRight,
-    title: "Transition CDI → Freelance",
-    desc: "Salaire net CDI vs revenu freelance : combien facturer pour gagner autant (ou plus) qu'en salariat ?",
+    icon: Scale,
+    title: "Scénarios comparés",
+    desc: "Sauvegarde plusieurs configurations, compare-les côte à côte. Visualise l'impact de chaque décision avant de la prendre.",
     color: "#ec4899",
   },
 ];
 
 const PRO_FEATURES = [
   {
+    icon: ArrowLeftRight,
+    title: "Transition CDI → Freelance",
+    desc: "Salaire net CDI vs revenu freelance : combien facturer pour gagner autant (ou plus) qu'en salariat ?",
+    color: "#10b981",
+  },
+  {
     icon: Scale,
     title: "Comparateur de statuts",
     desc: "Micro, EURL, SASU, portage salarial — compare ton revenu net, tes charges et ta fiscalité statut par statut.",
-    color: "#10b981",
+    color: "#5682F2",
   },
   {
     icon: Briefcase,
@@ -50,7 +56,7 @@ const PRO_FEATURES = [
   {
     icon: PiggyBank,
     title: "Projection Retraite",
-    desc: "Estime ta pension selon ton statut, ton CA et ton âge. Compare les trimestres et points acquis par régime.",
+    desc: "Estime ta pension selon ton statut, ton CA et ton âge. Compare avec un CDI et calcule l'écart à combler.",
     color: "#8b5cf6",
   },
   {

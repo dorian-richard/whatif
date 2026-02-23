@@ -4,17 +4,31 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, Settings, CalendarDays, Sun, Moon } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, Settings, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
 
-const NAV_ITEMS = [
+const NAV_MAIN = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
   { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+];
+
+const NAV_TOOLS = [
+  { href: "/comparateur", label: "Comparateur", icon: Scale },
   { href: "/objectif", label: "Objectif", icon: Target },
+  { href: "/transition", label: "Transition", icon: Briefcase },
   { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
+  { href: "/retraite", label: "Retraite", icon: Landmark },
+  { href: "/acre", label: "ACRE", icon: BadgePercent },
   { href: "/calendrier", label: "Calendrier", icon: CalendarDays },
+];
+
+const NAV_MOBILE = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
+  { href: "/comparateur", label: "Comparateur", icon: Scale },
+  { href: "/objectif", label: "Objectif", icon: Target },
   { href: "/settings", label: "Paramètres", icon: Settings },
 ];
 
@@ -52,8 +66,8 @@ export function AppSidebar() {
         </button>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-2 space-y-1">
-          {NAV_ITEMS.map((item) => {
+        <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+          {NAV_MAIN.map((item) => {
             const isActive = pathname === item.href;
             return (
               <button
@@ -71,6 +85,44 @@ export function AppSidebar() {
               </button>
             );
           })}
+
+          <div className="pt-3 pb-1 px-3">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Outils</span>
+          </div>
+
+          {NAV_TOOLS.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <button
+                key={item.href}
+                onClick={() => router.push(item.href)}
+                className={cn(
+                  "flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
+                  isActive
+                    ? "bg-primary/15 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+              >
+                <item.icon className="size-[18px]" />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+
+          <div className="pt-2">
+            <button
+              onClick={() => router.push("/settings")}
+              className={cn(
+                "flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
+                pathname === "/settings"
+                  ? "bg-primary/15 text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              )}
+            >
+              <Settings className="size-[18px]" />
+              <span>Paramètres</span>
+            </button>
+          </div>
         </nav>
 
         {/* Bottom */}
@@ -103,7 +155,7 @@ export function AppSidebar() {
 
       {/* Mobile bottom bar */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-sidebar/90 backdrop-blur-xl border-t border-border z-20 flex items-center justify-around h-14 px-2">
-        {NAV_ITEMS.map((item) => {
+        {NAV_MOBILE.map((item) => {
           const isActive = pathname === item.href;
           return (
             <button

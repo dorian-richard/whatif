@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
-import { AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
+import { AVG_JOURS_OUVRES, getAnnualCA } from "@/lib/simulation-engine";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
 import {
@@ -137,19 +137,40 @@ const DIFFICULTY_CONFIG = {
 };
 
 export default function ObjectifPage() {
-  const { workDaysPerWeek, monthlyExpenses, remunerationType, mixtePartSalaire, customIrRate } =
+  const { clients, businessStatus, workDaysPerWeek, monthlyExpenses, remunerationType, mixtePartSalaire, customIrRate, vacationDaysPerMonth } =
     useProfileStore();
 
-  const [targetNet, setTargetNet] = useState(4000);
-  const [vacationWeeks, setVacationWeeks] = useState(5);
+  // Compute user's actual monthly net from their profile data
+  const userMonthlyNet = useMemo(() => {
+    const annualCA = getAnnualCA(clients, vacationDaysPerMonth);
+    if (annualCA <= 0) return 4000; // fallback
+    const cfg = BUSINESS_STATUS_CONFIG[businessStatus];
+    const urssaf = cfg.urssaf;
+    const ir = customIrRate ?? cfg.ir;
+    const netAnnual = annualCA * (1 - urssaf) * (1 - ir);
+    return Math.round(netAnnual / 12 / 100) * 100; // round to nearest 100
+  }, [clients, businessStatus, customIrRate, vacationDaysPerMonth]);
+
+  const [targetNet, setTargetNet] = useState<number | null>(null);
+  const effectiveTargetNet = targetNet ?? userMonthlyNet;
+
+  // Compute vacation weeks from profile vacation days
+  const profileVacationWeeks = useMemo(() => {
+    if (!vacationDaysPerMonth) return 5;
+    const totalDays = vacationDaysPerMonth.reduce((s, d) => s + d, 0);
+    return Math.round(totalDays / 5); // 5 days per week
+  }, [vacationDaysPerMonth]);
+
+  const [vacationWeeks, setVacationWeeks] = useState<number | null>(null);
+  const effectiveVacationWeeks = vacationWeeks ?? profileVacationWeeks;
   const [localRemType, setLocalRemType] = useState<RemunerationType>(remunerationType ?? "salaire");
   const [localMixte, setLocalMixte] = useState(mixtePartSalaire ?? 50);
 
   // Worked days per year
-  const workedWeeks = 52 - vacationWeeks;
+  const workedWeeks = 52 - effectiveVacationWeeks;
   const workedDaysPerYear = workedWeeks * workDaysPerWeek;
 
-  const targetAnnualNet = targetNet * 12;
+  const targetAnnualNet = effectiveTargetNet * 12;
 
   const results = useMemo((): GoalResult[] => {
     return STATUTS.map((s) => {
@@ -207,7 +228,7 @@ export default function ObjectifPage() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Mon objectif net mensuel</div>
-            <div className="text-3xl font-bold fn-gradient-text">{fmt(targetNet)} &euro;/mois</div>
+            <div className="text-3xl font-bold fn-gradient-text">{fmt(effectiveTargetNet)} &euro;/mois</div>
           </div>
           <div className="text-right">
             <div className="text-xs text-muted-foreground/60">Soit par an</div>
@@ -219,7 +240,7 @@ export default function ObjectifPage() {
           min={1500}
           max={15000}
           step={100}
-          value={targetNet}
+          value={effectiveTargetNet}
           onChange={(e) => setTargetNet(Number(e.target.value))}
           className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
         />
@@ -236,7 +257,7 @@ export default function ObjectifPage() {
         <div className="bg-card rounded-2xl border border-border p-6">
           <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">Semaines de vacances</div>
           <div className="flex items-center justify-between mb-3">
-            <span className="text-2xl font-bold text-foreground">{vacationWeeks} sem.</span>
+            <span className="text-2xl font-bold text-foreground">{effectiveVacationWeeks} sem.</span>
             <span className="text-sm text-muted-foreground">{workedDaysPerYear} jours travaillés/an</span>
           </div>
           <input
@@ -244,7 +265,7 @@ export default function ObjectifPage() {
             min={0}
             max={12}
             step={1}
-            value={vacationWeeks}
+            value={effectiveVacationWeeks}
             onChange={(e) => setVacationWeeks(Number(e.target.value))}
             className="w-full accent-[#F4BE7E] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F4BE7E] [&::-webkit-slider-thumb]:shadow-lg"
           />
@@ -416,10 +437,10 @@ export default function ObjectifPage() {
         <div className="flex items-center gap-3">
           <CircleAlert className="size-5 text-[#F4BE7E] shrink-0" />
           <div className="text-sm text-muted-foreground">
-            Ton objectif de <strong className="text-foreground">{fmt(targetNet)} &euro; net/mois</strong> inclut tes charges de vie.
+            Ton objectif de <strong className="text-foreground">{fmt(effectiveTargetNet)} &euro; net/mois</strong> inclut tes charges de vie.
             Avec <strong className="text-foreground">{fmt(monthlyExpenses)} &euro;/mois</strong> de charges,
-            il te reste <strong className={cn(targetNet - monthlyExpenses >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
-              {fmt(targetNet - monthlyExpenses)} &euro;
+            il te reste <strong className={cn(effectiveTargetNet - monthlyExpenses >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
+              {fmt(effectiveTargetNet - monthlyExpenses)} &euro;
             </strong> d&apos;épargne/loisirs.
           </div>
         </div>

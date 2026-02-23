@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
+import { getAnnualCA, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
 import {
@@ -218,7 +219,22 @@ const DIFFICULTY_CONFIG = {
 /* ── Component ── */
 
 export default function TransitionPage() {
-  const { customIrRate, workDaysPerWeek, remunerationType, mixtePartSalaire } = useProfileStore();
+  const { clients, customIrRate, workDaysPerWeek, workedDaysPerYear: profileWorkedDays, remunerationType, mixtePartSalaire, vacationDaysPerMonth } = useProfileStore();
+
+  // Compute user's TJM from their profile
+  const userTJM = useMemo(() => {
+    const annualCA = getAnnualCA(clients, vacationDaysPerMonth);
+    if (annualCA <= 0) return 500;
+    const daysPerYear = profileWorkedDays ?? (workDaysPerWeek / 5) * AVG_JOURS_OUVRES * 12;
+    return Math.round(annualCA / daysPerYear / 10) * 10; // round to nearest 10
+  }, [clients, workDaysPerWeek, profileWorkedDays, vacationDaysPerMonth]);
+
+  // Compute vacation weeks from profile
+  const profileVacationWeeks = useMemo(() => {
+    if (!vacationDaysPerMonth) return 5;
+    const totalDays = vacationDaysPerMonth.reduce((s, d) => s + d, 0);
+    return Math.round(totalDays / 5);
+  }, [vacationDaysPerMonth]);
 
   // CDI inputs
   const [salaireBrut, setSalaireBrut] = useState(45000);
@@ -227,12 +243,14 @@ export default function TransitionPage() {
   );
 
   // Freelance params
-  const [vacationWeeks, setVacationWeeks] = useState(5);
+  const [vacationWeeks, setVacationWeeks] = useState<number | null>(null);
+  const effectiveVacationWeeks = vacationWeeks ?? profileVacationWeeks;
   const [localRemType, setLocalRemType] = useState<RemunerationType>(remunerationType ?? "salaire");
   const [localMixte, setLocalMixte] = useState(mixtePartSalaire ?? 50);
 
   // TJM explorer
-  const [explorerTJM, setExplorerTJM] = useState(500);
+  const [explorerTJM, setExplorerTJM] = useState<number | null>(null);
+  const effectiveExplorerTJM = explorerTJM ?? userTJM;
 
   // ── Derived values ──
   const cdiNetAnnuel = salaireBrut * (1 - CHARGES_SALARIALES);
@@ -260,7 +278,7 @@ export default function TransitionPage() {
   // Freelance must net: CDI package + own costs
   const targetFreelanceNet = cdiPackageAnnuel + freelanceCostsAnnuel;
 
-  const workedDaysPerYear = (52 - vacationWeeks) * workDaysPerWeek;
+  const workedDaysPerYear = (52 - effectiveVacationWeeks) * workDaysPerWeek;
 
   // ── Required TJM per status ──
   const results = useMemo(() => {
@@ -301,7 +319,7 @@ export default function TransitionPage() {
 
   // ── TJM Explorer ──
   const explorerResults = useMemo(() => {
-    const annualCA = explorerTJM * workedDaysPerYear;
+    const annualCA = effectiveExplorerTJM * workedDaysPerYear;
     return STATUTS.map((s) => {
       const remType = (s === "eurl_is" || s === "sasu_is" || s === "sasu_ir") ? localRemType : "salaire";
       const freelanceNetAnnuel = forwardNet(annualCA, s, remType, localMixte, customIrRate);
@@ -320,7 +338,7 @@ export default function TransitionPage() {
       };
     });
   }, [
-    explorerTJM,
+    effectiveExplorerTJM,
     workedDaysPerYear,
     customIrRate,
     freelanceCostsAnnuel,
@@ -484,7 +502,7 @@ export default function TransitionPage() {
                 Vacances
               </span>
               <span className="text-sm font-bold text-foreground">
-                {vacationWeeks} sem. &middot; {workedDaysPerYear}j/an
+                {effectiveVacationWeeks} sem. &middot; {workedDaysPerYear}j/an
               </span>
             </div>
             <input
@@ -492,7 +510,7 @@ export default function TransitionPage() {
               min={0}
               max={12}
               step={1}
-              value={vacationWeeks}
+              value={effectiveVacationWeeks}
               onChange={(e) => setVacationWeeks(Number(e.target.value))}
               className="w-full accent-[#F4BE7E] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F4BE7E] [&::-webkit-slider-thumb]:shadow-lg"
             />
@@ -715,13 +733,13 @@ export default function TransitionPage() {
               Explorateur TJM
             </div>
             <div className="text-3xl font-bold fn-gradient-text">
-              {explorerTJM} &euro;/jour
+              {effectiveExplorerTJM} &euro;/jour
             </div>
           </div>
           <div className="text-right">
             <div className="text-xs text-muted-foreground/60">CA annuel</div>
             <div className="text-lg font-bold text-foreground">
-              {fmt(explorerTJM * workedDaysPerYear)} &euro;
+              {fmt(effectiveExplorerTJM * workedDaysPerYear)} &euro;
             </div>
           </div>
         </div>
@@ -730,7 +748,7 @@ export default function TransitionPage() {
           min={200}
           max={1500}
           step={10}
-          value={explorerTJM}
+          value={effectiveExplorerTJM}
           onChange={(e) => setExplorerTJM(Number(e.target.value))}
           className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
         />
