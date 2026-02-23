@@ -13,8 +13,11 @@ import {
   Shield,
   Banknote,
   HandCoins,
+  Download,
+  FileText,
 } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
+import { exportCSV, exportPDF } from "@/lib/export";
 
 /** Statuts à comparer */
 const STATUTS: BusinessStatus[] = ["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
@@ -207,13 +210,42 @@ export default function ComparateurPage() {
   const annualExpenses = monthlyExpenses * 12;
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
+    <div id="comparateur-content" className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-foreground mb-1">Comparateur de statuts</h1>
-          <p className="text-muted-foreground">
-            Quel statut juridique est le plus avantageux pour ton CA ?
-          </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground mb-1">Comparateur de statuts</h1>
+            <p className="text-muted-foreground">
+              Quel statut juridique est le plus avantageux pour ton CA ?
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => {
+                const rows = [
+                  ["Statut", "Net mensuel", "Net annuel", "Charges sociales/mois", "Impôts/mois", "Taux effectif"],
+                  ...results.map((r) => [
+                    r.label,
+                    `${fmt(r.netMonthly)}€`,
+                    `${fmt(r.netAnnual)}€`,
+                    `${fmt(r.chargesSociales / 12)}€`,
+                    `${fmt(r.impots / 12)}€`,
+                    `${Math.round(r.tauxEffectif * 100)}%`,
+                  ]),
+                ];
+                exportCSV(rows, "freelens-comparateur.csv");
+              }}
+              className="px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium text-foreground hover:bg-muted transition-colors hidden sm:flex items-center gap-1.5"
+            >
+              <Download className="size-3.5" /> CSV
+            </button>
+            <button
+              onClick={() => exportPDF("comparateur-content", "freelens-comparateur.pdf")}
+              className="px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium text-foreground hover:bg-muted transition-colors hidden sm:flex items-center gap-1.5"
+            >
+              <FileText className="size-3.5" /> PDF
+            </button>
+          </div>
         </div>
 
         <ProBlur label="Le Comparateur de statuts est réservé au plan Pro">

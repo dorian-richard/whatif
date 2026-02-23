@@ -54,6 +54,9 @@ import {
   Lock,
   Download,
   UserRound,
+  Monitor,
+  FileText,
+  CreditCard,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -165,4 +168,7 @@ export {
   Lock,
   Download,
   UserRound,
+  Monitor,
+  FileText,
+  CreditCard,
 };

@@ -24,7 +24,13 @@ import {
   PiggyBank,
   Lightbulb,
   HandCoins,
+  AlertTriangle,
+  Download,
+  FileText,
 } from "@/components/ui/icons";
+import { Tooltip } from "@/components/ui/tooltip";
+import { getUpcomingDeadlines, CATEGORY_CONFIG as DEADLINE_CATS } from "@/lib/fiscal-deadlines";
+import { exportCSV, exportPDF } from "@/lib/export";
 
 type Meteo = "soleil" | "beau" | "variable" | "orageux";
 
@@ -163,10 +169,50 @@ export default function DashboardPage() {
   // Monthly CA mini-chart data
   const maxMonthly = Math.max(...projection.before, 1);
 
+  // Fiscal deadlines coming up in 7 days
+  const upcomingDeadlines = useMemo(
+    () => getUpcomingDeadlines(profile.businessStatus, 7),
+    [profile.businessStatus]
+  );
+
   if (!isDbSynced) return <DashboardSkeleton />;
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">
+    <div id="dashboard-content" className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">
+      {/* Fiscal deadline alert */}
+      {upcomingDeadlines.length > 0 && (
+        <div className="bg-[#f87171]/10 border border-[#f87171]/20 rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <AlertTriangle className="size-4 text-[#f87171]" />
+            <span className="text-sm font-bold text-[#f87171]">
+              {upcomingDeadlines.length} échéance{upcomingDeadlines.length > 1 ? "s" : ""} dans les 7 prochains jours
+            </span>
+          </div>
+          <div className="space-y-1.5">
+            {upcomingDeadlines.map((d, i) => (
+              <div key={i} className="flex items-center gap-2 text-sm">
+                <div className="size-2 rounded-full shrink-0" style={{ backgroundColor: DEADLINE_CATS[d.category].color }} />
+                <span className="text-foreground font-medium">{d.label}</span>
+                <span className="text-muted-foreground/60 text-xs">
+                  {d.date.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
+                </span>
+                {d.estimateAmount && (
+                  <span className="ml-auto text-xs font-semibold" style={{ color: DEADLINE_CATS[d.category].color }}>
+                    ~{fmt(d.estimateAmount(annualCA, profile.businessStatus))} &euro;
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={() => router.push("/calendrier")}
+            className="mt-3 text-xs text-[#f87171] font-medium hover:underline"
+          >
+            Voir le calendrier fiscal &rarr;
+          </button>
+        </div>
+      )}
+
       {/* Meteo hero */}
       <div className={cn("bg-card rounded-2xl border border-border overflow-hidden", meteoConfig.glow)}>
         <div className="flex">
@@ -186,12 +232,49 @@ export default function DashboardPage() {
                   <p className="text-sm text-muted-foreground">Score santé : <strong className={meteoConfig.color}>{healthScore}/100</strong></p>
                 </div>
               </div>
-              <button
-                onClick={() => router.push("/simulator")}
-                className="px-5 py-2.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2"
-              >
-                <SlidersHorizontal className="size-4" /> Simuler un scénario
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    const rows = [
+                      ["Métrique", "Valeur"],
+                      ["CA mensuel", `${fmt(totalCA)}€`],
+                      ["CA annuel", `${fmt(annualCA)}€`],
+                      ["Clients actifs", String(profile.clients.length)],
+                      ["Runway", `${runway.toFixed(1)} mois`],
+                      ["Récurrent", `${recurringPct.toFixed(0)}%`],
+                      ["Top client", `${dependencyPct.toFixed(0)}%`],
+                      ["Utilisation", `${utilizationPct.toFixed(0)}%`],
+                      ["Charges totales", `${effectiveChargesRate.toFixed(0)}%`],
+                      ["Taux net effectif", `${annualCA > 0 ? ((netAfterAll / annualCA) * 100).toFixed(0) : 0}%`],
+                      ["Net mensuel", `${fmt(Math.round(netMonthly - expenses))}€`],
+                      ["Net annuel", `${fmt(Math.round(netAfterExpenses))}€`],
+                      [],
+                      ["Mois", "CA", "Résultat", "Net"],
+                      ...MONTHS_SHORT.map((m, i) => {
+                        const ca = projection.before[i];
+                        const netR = annualCA > 0 ? netAfterAll / annualCA : 0;
+                        return [m, `${fmt(ca)}€`, `${fmt(Math.round(ca - expenses))}€`, `${fmt(Math.round(ca * netR - expenses))}€`];
+                      }),
+                    ];
+                    exportCSV(rows, "freelens-dashboard.csv");
+                  }}
+                  className="px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium text-foreground hover:bg-muted transition-colors hidden sm:flex items-center gap-1.5"
+                >
+                  <Download className="size-3.5" /> CSV
+                </button>
+                <button
+                  onClick={() => exportPDF("dashboard-content", "freelens-dashboard.pdf")}
+                  className="px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium text-foreground hover:bg-muted transition-colors hidden sm:flex items-center gap-1.5"
+                >
+                  <FileText className="size-3.5" /> PDF
+                </button>
+                <button
+                  onClick={() => router.push("/simulator")}
+                  className="px-5 py-2.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2"
+                >
+                  <SlidersHorizontal className="size-4" /> Simuler un scénario
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -216,19 +299,21 @@ export default function DashboardPage() {
       {/* KPI grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { icon: <Wallet className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "CA mensuel", value: `${fmt(totalCA)}\u20AC`, sub: `${fmt(annualCA)}\u20AC/an` },
-          { icon: <Users className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "Clients actifs", value: String(profile.clients.length), sub: `${totalDaysPerWeek}j/sem facturés` },
-          { icon: <LifeBuoy className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Runway", value: `${runway.toFixed(1)} mois`, sub: `${fmt(profile.savings)}\u20AC de trésorerie` },
-          { icon: <RefreshCw className="size-4 text-[#a78bfa]" />, iconBg: "bg-[#a78bfa]/12", label: "Récurrent", value: `${recurringPct.toFixed(0)}%`, sub: recurringPct >= 60 ? "Stable" : "À renforcer" },
-          { icon: <Shield className="size-4 text-[#fbbf24]" />, iconBg: "bg-[#fbbf24]/12", label: "Top client", value: `${dependencyPct.toFixed(0)}%`, sub: dependencyPct > 50 ? "Risque concentration" : "Diversifié" },
-          { icon: <CalendarDays className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Utilisation", value: `${utilizationPct.toFixed(0)}%`, sub: `${totalDaysPerWeek}/${profile.workDaysPerWeek}j par sem` },
-          { icon: <BadgePercent className="size-4 text-[#F4BE7E]" />, iconBg: "bg-[#F4BE7E]/15", label: "Charges totales", value: `${effectiveChargesRate.toFixed(0)}%`, sub: `${fmt(Math.round(totalCharges))}\u20AC/an` },
-          { icon: <Banknote className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Taux net effectif", value: `${annualCA > 0 ? ((netAfterAll / annualCA) * 100).toFixed(0) : 0}%`, sub: `${fmt(Math.round(netAfterAll))}\u20AC net fiscal/an` },
+          { icon: <Wallet className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "CA mensuel", value: `${fmt(totalCA)}\u20AC`, sub: `${fmt(annualCA)}\u20AC/an`, tip: "Somme des revenus mensuels de tous tes clients actifs" },
+          { icon: <Users className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "Clients actifs", value: String(profile.clients.length), sub: `${totalDaysPerWeek}j/sem facturés`, tip: "Nombre de clients configurés dans ton profil" },
+          { icon: <LifeBuoy className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Runway", value: `${runway.toFixed(1)} mois`, sub: `${fmt(profile.savings)}\u20AC de trésorerie`, tip: "Mois de trésorerie restante si ton CA tombe à zéro" },
+          { icon: <RefreshCw className="size-4 text-[#a78bfa]" />, iconBg: "bg-[#a78bfa]/12", label: "Récurrent", value: `${recurringPct.toFixed(0)}%`, sub: recurringPct >= 60 ? "Stable" : "À renforcer", tip: "Part du CA en TJM ou forfait (revenu prévisible)" },
+          { icon: <Shield className="size-4 text-[#fbbf24]" />, iconBg: "bg-[#fbbf24]/12", label: "Top client", value: `${dependencyPct.toFixed(0)}%`, sub: dependencyPct > 50 ? "Risque concentration" : "Diversifié", tip: "Part du CA venant de ton plus gros client. Au-dessus de 50% = risque de dépendance" },
+          { icon: <CalendarDays className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Utilisation", value: `${utilizationPct.toFixed(0)}%`, sub: `${totalDaysPerWeek}/${profile.workDaysPerWeek}j par sem`, tip: "Jours facturés / jours disponibles par semaine" },
+          { icon: <BadgePercent className="size-4 text-[#F4BE7E]" />, iconBg: "bg-[#F4BE7E]/15", label: "Charges totales", value: `${effectiveChargesRate.toFixed(0)}%`, sub: `${fmt(Math.round(totalCharges))}\u20AC/an`, tip: "Cotisations sociales + IR en % du CA brut" },
+          { icon: <Banknote className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Taux net effectif", value: `${annualCA > 0 ? ((netAfterAll / annualCA) * 100).toFixed(0) : 0}%`, sub: `${fmt(Math.round(netAfterAll))}\u20AC net fiscal/an`, tip: "Ce qui te reste réellement après toutes les charges et impôts" },
         ].map((kpi) => (
           <div key={kpi.label} className="bg-card rounded-xl p-4 border border-border hover:bg-muted/50 transition-colors">
             <div className="flex items-center gap-2 mb-2">
               <div className={cn("size-7 rounded-lg flex items-center justify-center", kpi.iconBg)}>{kpi.icon}</div>
-              <span className="text-[11px] text-muted-foreground/60 font-medium uppercase tracking-wider">{kpi.label}</span>
+              <Tooltip content={kpi.tip}>
+                <span className="text-[11px] text-muted-foreground/60 font-medium uppercase tracking-wider cursor-help">{kpi.label}</span>
+              </Tooltip>
             </div>
             <div className="text-xl font-bold text-foreground">{kpi.value}</div>
             <div className="text-[11px] text-muted-foreground/60 mt-0.5">{kpi.sub}</div>

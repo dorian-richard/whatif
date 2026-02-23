@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useProfileStore, type SubscriptionStatus } from "@/stores/useProfileStore";
 import { Slider } from "@/components/ui/slider";
@@ -8,7 +8,8 @@ import { fmt, cn } from "@/lib/utils";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import type { BusinessStatus, RemunerationType } from "@/types";
-import { CalendarDays, ClipboardList, Receipt, Landmark, HandCoins, Target, Banknote, Users, Check, X, Info, Briefcase, Sun } from "@/components/ui/icons";
+import { CalendarDays, ClipboardList, Receipt, Landmark, HandCoins, Target, Banknote, Users, Check, X, Info, Briefcase, Sun, Moon, Monitor } from "@/components/ui/icons";
+import { useTheme } from "next-themes";
 import { MONTHS_SHORT } from "@/lib/constants";
 import { METIERS, METIER_CATEGORIES, CATEGORY_COLORS } from "@/lib/benchmark-data";
 
@@ -606,12 +607,54 @@ export default function SettingsPage() {
         )}
       </div>
 
+      {/* Apparence */}
+      <AppearanceSection />
+
       {/* Danger zone */}
       <div className="bg-card rounded-2xl border border-[#f87171]/20 p-6">
         <h2 className="text-sm font-bold text-[#f87171] mb-4">Zone danger</h2>
         <button className="px-4 py-2 text-sm text-[#f87171] border border-[#f87171]/20 rounded-xl hover:bg-[#f87171]/10 transition-colors">
           Supprimer mon compte
         </button>
+      </div>
+    </div>
+  );
+}
+
+function AppearanceSection() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+
+  const options = [
+    { value: "light", label: "Clair", icon: Sun },
+    { value: "dark", label: "Sombre", icon: Moon },
+    { value: "system", label: "Système", icon: Monitor },
+  ] as const;
+
+  return (
+    <div className="bg-card rounded-2xl border border-border p-6">
+      <h2 className="text-sm font-bold text-foreground mb-4">Apparence</h2>
+      <div className="grid grid-cols-3 gap-2">
+        {options.map((opt) => {
+          const Icon = opt.icon;
+          const isActive = mounted && theme === opt.value;
+          return (
+            <button
+              key={opt.value}
+              onClick={() => setTheme(opt.value)}
+              className={cn(
+                "p-3 rounded-xl border text-center transition-all duration-150",
+                isActive
+                  ? "bg-primary/15 border-primary/30"
+                  : "bg-muted/40 border-border hover:border-border"
+              )}
+            >
+              <Icon className={cn("size-5 mx-auto mb-1.5", isActive ? "text-primary" : "text-muted-foreground")} />
+              <div className={cn("text-xs font-semibold", isActive ? "text-primary" : "text-foreground")}>{opt.label}</div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

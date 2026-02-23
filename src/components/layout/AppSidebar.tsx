@@ -4,14 +4,16 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
+import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
 
 const NAV_MAIN = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
   { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+  { href: "/paiements", label: "Paiements", icon: CreditCard },
 ];
 
 const NAV_TOOLS = [
@@ -38,8 +40,12 @@ export function AppSidebar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const subscriptionStatus = useProfileStore((s) => s.subscriptionStatus);
+  const businessStatus = useProfileStore((s) => s.businessStatus);
   const isPro = subscriptionStatus === "ACTIVE";
   useEffect(() => setMounted(true), []);
+
+  const upcomingDeadlines = mounted ? getUpcomingDeadlines(businessStatus, 7) : [];
+  const hasUpcoming = upcomingDeadlines.length > 0;
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -92,6 +98,7 @@ export function AppSidebar() {
 
           {NAV_TOOLS.map((item) => {
             const isActive = pathname === item.href;
+            const showBadge = item.href === "/calendrier" && hasUpcoming;
             return (
               <button
                 key={item.href}
@@ -103,8 +110,16 @@ export function AppSidebar() {
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 )}
               >
-                <item.icon className="size-[18px]" />
+                <span className="relative">
+                  <item.icon className="size-[18px]" />
+                  {showBadge && (
+                    <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-[#f87171] ring-2 ring-sidebar" />
+                  )}
+                </span>
                 <span>{item.label}</span>
+                {showBadge && (
+                  <span className="ml-auto text-[10px] font-bold text-[#f87171]">{upcomingDeadlines.length}</span>
+                )}
               </button>
             );
           })}

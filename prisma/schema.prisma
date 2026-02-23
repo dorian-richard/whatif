@@ -52,6 +52,7 @@ model User {
   // Relations
   clients             Client[]
   scenarios           Scenario[]
+  payments            Payment[]
 
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
@@ -83,9 +84,39 @@ model Client {
   isActive       Boolean     @default(true)
   color          String?
 
+  payments       Payment[]
+
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
+  @@index([userId])
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  LATE
+  PARTIAL
+}
+
+model Payment {
+  id        String        @id @default(uuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId  String
+  client    Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  month     Int
+  year      Int
+  expected  Float
+  received  Float         @default(0)
+  status    PaymentStatus @default(PENDING)
+  paidAt    DateTime?
+
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@unique([clientId, month, year])
   @@index([userId])
 }
 
