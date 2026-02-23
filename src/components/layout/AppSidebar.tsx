@@ -29,7 +29,7 @@ const NAV_MOBILE = [
   { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
   { href: "/comparateur", label: "Comparateur", icon: Scale },
   { href: "/objectif", label: "Objectif", icon: Target },
-  { href: "/settings", label: "Paramètres", icon: Settings },
+  { href: "/settings", label: "Mon profil", icon: Settings },
 ];
 
 export function AppSidebar() {
@@ -120,7 +120,7 @@ export function AppSidebar() {
               )}
             >
               <Settings className="size-[18px]" />
-              <span>Paramètres</span>
+              <span>Mon profil</span>
             </button>
           </div>
         </nav>
