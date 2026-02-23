@@ -29,8 +29,8 @@ const TRIMESTRE_THRESHOLD = 1747;
 const PLAFOND_SS = 46368;
 /** Abattement micro BNC */
 const ABATTEMENT_MICRO = 0.34;
-/** Age taux plein automatique */
-const FULL_PENSION_AGE = 67;
+/** Age taux plein automatique (defaut) */
+const DEFAULT_RETIREMENT_AGE = 67;
 /** Taux pension de base (50% du salaire moyen plafonné) */
 const PENSION_RATE = 0.50;
 /** Bonus complementaire CDI (AGIRC-ARRCO) ~15% de plus */
@@ -84,6 +84,7 @@ function computeRetraite(
   annualCA: number,
   status: BusinessStatus,
   age: number,
+  targetRetirementAge: number,
 ): RetraiteResult {
   const cfg = BUSINESS_STATUS_CONFIG[status];
   const revenuCotise = getRevenuCotise(annualCA, status);
@@ -106,11 +107,11 @@ function computeRetraite(
     trimestresParAn: trimestres,
     cotisationRetraite: cotisation,
     pensionMensuelle,
-    yearsToRetirement: Math.max(0, FULL_PENSION_AGE - age),
+    yearsToRetirement: Math.max(0, targetRetirementAge - age),
   };
 }
 
-function computeRetraiteCDI(annualCA: number, age: number): RetraiteResult {
+function computeRetraiteCDI(annualCA: number, age: number, targetRetirementAge: number): RetraiteResult {
   // CDI: employer cost = brut * (1 + charges patronales)
   // Approximate brut from similar freelance CA: brut ~ CA * 0.55 (same as SASU)
   const brutAnnuel = annualCA * 0.55;
@@ -128,7 +129,7 @@ function computeRetraiteCDI(annualCA: number, age: number): RetraiteResult {
     trimestresParAn: trimestres,
     cotisationRetraite: cotisation,
     pensionMensuelle,
-    yearsToRetirement: Math.max(0, FULL_PENSION_AGE - age),
+    yearsToRetirement: Math.max(0, targetRetirementAge - age),
   };
 }
 
@@ -145,13 +146,14 @@ export default function RetraitePage() {
   const annualCA = caOverride ?? baseAnnualCA;
   const sliderMax = Math.max(300000, Math.ceil(baseAnnualCA / 50000) * 50000 + 50000);
   const [age, setAge] = useState(profileAge ?? 35);
+  const [retirementAge, setRetirementAge] = useState(DEFAULT_RETIREMENT_AGE);
   const [yearsContributed, setYearsContributed] = useState(Math.max(0, (profileAge ?? 35) - 22));
 
   const results = useMemo(() => {
-    const freelance = STATUTS.map((s) => computeRetraite(annualCA, s, age));
-    const cdi = computeRetraiteCDI(annualCA, age);
+    const freelance = STATUTS.map((s) => computeRetraite(annualCA, s, age, retirementAge));
+    const cdi = computeRetraiteCDI(annualCA, age, retirementAge);
     return [...freelance, cdi];
-  }, [annualCA, age]);
+  }, [annualCA, age, retirementAge]);
 
   const bestFreelance = useMemo(
     () => results.filter((r) => r.key !== "cdi").reduce((a, b) => (a.pensionMensuelle > b.pensionMensuelle ? a : b)),
@@ -168,7 +170,7 @@ export default function RetraitePage() {
     color: r.color,
   }));
 
-  const yearsLeft = Math.max(0, FULL_PENSION_AGE - age);
+  const yearsLeft = Math.max(0, retirementAge - age);
   const totalTrimestresNeeded = 172; // ~43 years * 4 for taux plein (generation 1973+)
   const currentTrimestres = yearsContributed * 4;
   const futureTrimestres = Math.min(yearsLeft * 4, totalTrimestresNeeded - currentTrimestres);
@@ -187,7 +189,7 @@ export default function RetraitePage() {
 
       <ProBlur label="La Projection Retraite est réservée au plan Pro">
       {/* Input sliders */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* Age */}
         <div className="bg-card rounded-2xl border border-border p-5">
           <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Ton &acirc;ge</div>
@@ -201,11 +203,29 @@ export default function RetraitePage() {
               const newAge = Number(e.target.value);
               setAge(newAge);
               setYearsContributed(Math.min(yearsContributed, newAge - 18));
+              if (newAge >= retirementAge) setRetirementAge(Math.min(70, newAge + 2));
             }}
             className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
           />
           <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
             <span>20</span><span>65</span>
+          </div>
+        </div>
+
+        {/* Retirement age */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">&Acirc;ge de d&eacute;part</div>
+          <div className="text-2xl font-bold text-[#F4BE7E] mb-3">{retirementAge} ans</div>
+          <input
+            type="range"
+            min={Math.max(62, age + 1)}
+            max={70}
+            value={retirementAge}
+            onChange={(e) => setRetirementAge(Number(e.target.value))}
+            className="w-full accent-[#F4BE7E] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F4BE7E] [&::-webkit-slider-thumb]:shadow-lg"
+          />
+          <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
+            <span>62</span><span>70</span>
           </div>
         </div>
 
@@ -270,7 +290,7 @@ export default function RetraitePage() {
         </div>
         <div className="flex items-center justify-between text-xs text-muted-foreground/60">
           <span>Taux plein estim&eacute; : {tauxPleinPct}%</span>
-          <span>Retraite &agrave; {FULL_PENSION_AGE} ans ({yearsLeft} ans restants)</span>
+          <span>Retraite &agrave; {retirementAge} ans ({yearsLeft} ans restants)</span>
         </div>
       </div>
 
@@ -411,13 +431,65 @@ export default function RetraitePage() {
 
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Retraite &agrave;</span>
-                  <span className="font-medium text-foreground">{FULL_PENSION_AGE} ans ({r.yearsToRetirement} ans)</span>
+                  <span className="font-medium text-foreground">{retirementAge} ans ({r.yearsToRetirement} ans)</span>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* Savings calculator to match CDI pension */}
+      {(() => {
+        const userStatus = STATUTS[0]; // default to first status
+        const bestResult = bestFreelance;
+        const gap = cdiResult.pensionMensuelle - bestResult.pensionMensuelle;
+        if (gap <= 0) return null;
+
+        const monthlyGap = gap;
+        const yearsInRetirement = 20; // average retirement duration
+        const totalGapNeeded = monthlyGap * 12 * yearsInRetirement;
+        const yearsLeft = Math.max(1, retirementAge - age);
+
+        // How much to save monthly with ~4% annual return
+        const monthlyRate = 0.04 / 12;
+        const nMonths = yearsLeft * 12;
+        // FV of annuity: FV = PMT * ((1+r)^n - 1) / r
+        // We need FV = totalGapNeeded, solve for PMT
+        const monthlyContribution = totalGapNeeded * monthlyRate / (Math.pow(1 + monthlyRate, nMonths) - 1);
+
+        return (
+          <div className="bg-card rounded-2xl border border-border p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="size-5 text-[#a78bfa]" />
+              <h2 className="text-sm font-bold text-foreground">Combler l&apos;&eacute;cart avec le CDI</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="p-4 bg-muted/30 rounded-xl border border-border">
+                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">&Eacute;cart de pension mensuel</div>
+                <div className="text-xl font-bold text-[#f87171]">{fmt(monthlyGap)} &euro;/mois</div>
+                <div className="text-[10px] text-muted-foreground/60 mt-1">CDI {fmt(cdiResult.pensionMensuelle)}&euro; vs {bestResult.label} {fmt(bestResult.pensionMensuelle)}&euro;</div>
+              </div>
+              <div className="p-4 bg-muted/30 rounded-xl border border-border">
+                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Capital n&eacute;cessaire</div>
+                <div className="text-xl font-bold text-[#F4BE7E]">{fmt(totalGapNeeded)} &euro;</div>
+                <div className="text-[10px] text-muted-foreground/60 mt-1">Pour {yearsInRetirement} ans de retraite</div>
+              </div>
+              <div className="p-4 bg-[#a78bfa]/10 rounded-xl border border-[#a78bfa]/20">
+                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">&Eacute;pargne mensuelle &agrave; placer</div>
+                <div className="text-xl font-bold text-[#a78bfa]">{fmt(monthlyContribution)} &euro;/mois</div>
+                <div className="text-[10px] text-muted-foreground/60 mt-1">PER/Assurance vie &agrave; 4%/an pendant {yearsLeft} ans</div>
+              </div>
+            </div>
+
+            <p className="text-[10px] text-muted-foreground/60">
+              En &eacute;pargnant {fmt(monthlyContribution)}&euro;/mois sur un PER ou une assurance vie avec un rendement moyen de 4%/an,
+              tu accumules {fmt(totalGapNeeded)}&euro; en {yearsLeft} ans pour combler l&apos;&eacute;cart de pension avec un CDI &eacute;quivalent.
+            </p>
+          </div>
+        );
+      })()}
 
       {/* Insight */}
       <div className="bg-card rounded-2xl border border-border p-6">

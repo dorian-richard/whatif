@@ -485,6 +485,14 @@ export default function SettingsPage() {
             <Slider value={[profile.monthlySalary ?? 0]} onValueChange={([v]) => profile.setProfile({ monthlySalary: v })} min={0} max={30000} step={100} />
             <p className="text-[10px] text-muted-foreground/70 mt-1">Combien vous vous versez en net chaque mois. 0 = non utilisé dans les calculs.</p>
           </div>
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-sm font-medium text-muted-foreground flex items-center gap-1.5"><CalendarDays className="size-4 text-[#F4BE7E]" /> &Acirc;ge</label>
+              <span className="text-sm font-bold text-[#F4BE7E]">{profile.age ?? 35} ans</span>
+            </div>
+            <Slider value={[profile.age ?? 35]} onValueChange={([v]) => profile.setProfile({ age: v })} min={18} max={70} step={1} />
+            <p className="text-[10px] text-muted-foreground/70 mt-1">Utilisé pour la projection retraite.</p>
+          </div>
         </div>
       </div>
 
