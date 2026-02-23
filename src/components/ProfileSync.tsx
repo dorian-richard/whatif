@@ -113,6 +113,7 @@ export function ProfileSync() {
         // Snapshot current clients so the subscriber doesn't re-POST hydrated data
         clientsSnapshot.current = useProfileStore.getState().clients;
         syncing.current = false;
+        useProfileStore.getState().setDbSynced(true);
       }
     }
 

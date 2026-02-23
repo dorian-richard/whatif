@@ -42,9 +42,70 @@ const METEO_CONFIG: Record<Meteo, { label: string; icon: typeof Sun; color: stri
   orageux: { label: "Orageux", icon: CloudLightning, color: "text-[#f87171]", accent: "#f87171", glow: "shadow-[0_0_24px_rgba(248,113,113,0.15)]" },
 };
 
+function Shimmer({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return <div className={cn("animate-pulse rounded-lg bg-muted/80", className)} style={style} />;
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">
+      {/* Meteo hero skeleton */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <div className="flex items-center gap-4">
+          <Shimmer className="size-16 rounded-2xl" />
+          <div className="space-y-2 flex-1">
+            <Shimmer className="h-3 w-24" />
+            <Shimmer className="h-7 w-40" />
+            <Shimmer className="h-4 w-32" />
+          </div>
+        </div>
+      </div>
+
+      {/* Finance cards skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="bg-card rounded-xl border border-border p-5 space-y-3">
+            <Shimmer className="h-3 w-28" />
+            <Shimmer className="h-8 w-24" />
+            <Shimmer className="h-3 w-40" />
+          </div>
+        ))}
+      </div>
+
+      {/* KPI grid skeleton */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {Array.from({ length: 8 }, (_, i) => (
+          <div key={i} className="bg-card rounded-xl p-4 border border-border space-y-2">
+            <div className="flex items-center gap-2">
+              <Shimmer className="size-7 rounded-lg" />
+              <Shimmer className="h-2.5 w-16" />
+            </div>
+            <Shimmer className="h-6 w-20" />
+            <Shimmer className="h-2.5 w-24" />
+          </div>
+        ))}
+      </div>
+
+      {/* Chart skeleton */}
+      <div className="bg-card rounded-2xl p-6 border border-border">
+        <Shimmer className="h-4 w-40 mb-4" />
+        <div className="flex items-end gap-1 h-36">
+          {Array.from({ length: 12 }, (_, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <Shimmer className="w-full rounded-t" style={{ height: `${30 + Math.random() * 60}%` }} />
+              <Shimmer className="h-2 w-5" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const profile = useProfileStore();
+  const isDbSynced = useProfileStore((s) => s.isDbSynced);
 
   const projection = useMemo(
     () => simulate(profile.clients, DEFAULT_SIM, profile),
@@ -101,6 +162,8 @@ export default function DashboardPage() {
 
   // Monthly CA mini-chart data
   const maxMonthly = Math.max(...projection.before, 1);
+
+  if (!isDbSynced) return <DashboardSkeleton />;
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">

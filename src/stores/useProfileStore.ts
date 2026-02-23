@@ -9,6 +9,7 @@ interface ProfileState extends FreelanceProfile {
   clients: ClientData[];
   onboardingCompleted: boolean;
   subscriptionStatus: SubscriptionStatus;
+  isDbSynced: boolean;
 
   setClients: (clients: ClientData[]) => void;
   addClient: (client: Omit<ClientData, "id" | "color">) => void;
@@ -17,6 +18,7 @@ interface ProfileState extends FreelanceProfile {
   setProfile: (profile: Partial<FreelanceProfile>) => void;
   setOnboardingCompleted: (completed: boolean) => void;
   setSubscriptionStatus: (status: SubscriptionStatus) => void;
+  setDbSynced: (synced: boolean) => void;
 }
 
 export const useProfileStore = create<ProfileState>()(
@@ -34,6 +36,7 @@ export const useProfileStore = create<ProfileState>()(
       age: 35,
       onboardingCompleted: false,
       subscriptionStatus: "FREE",
+      isDbSynced: false,
       clients: [],
 
       setClients: (clients) => set({ clients }),
@@ -69,6 +72,9 @@ export const useProfileStore = create<ProfileState>()(
 
       setSubscriptionStatus: (status) =>
         set({ subscriptionStatus: status }),
+
+      setDbSynced: (synced) =>
+        set({ isDbSynced: synced }),
     }),
     {
       name: "freelens-profile",
