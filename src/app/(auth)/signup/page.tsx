@@ -88,7 +88,7 @@ export default function SignupPage() {
                 {loading ? "Envoi..." : "S'inscrire avec un magic link"}
               </button>
               <p className="text-xs text-muted-foreground/60 text-center">
-                En t&apos;inscrivant, tu acceptes nos CGU.
+                En t&apos;inscrivant, tu acceptes nos <Link href="/cgu" className="text-primary hover:underline">CGU</Link>.
               </p>
             </form>
           )}

@@ -43,9 +43,9 @@ export function FinalCTA() {
             </span>
           </div>
           <div className="flex gap-6 text-sm text-muted-foreground/60">
-            <a href="#" className="hover:text-foreground transition-colors">CGU</a>
-            <a href="#" className="hover:text-foreground transition-colors">Confidentialité</a>
-            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+            <Link href="/cgu" className="hover:text-foreground transition-colors">CGU</Link>
+            <Link href="/confidentialite" className="hover:text-foreground transition-colors">Confidentialit&eacute;</Link>
+            <a href="mailto:contact@freelens.io" className="hover:text-foreground transition-colors">Contact</a>
           </div>
         </div>
       </footer>
