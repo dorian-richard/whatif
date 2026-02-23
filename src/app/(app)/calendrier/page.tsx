@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { getAnnualCA } from "@/lib/simulation-engine";
-import { BUSINESS_STATUS_CONFIG, MONTHS_SHORT } from "@/lib/constants";
+import { getAnnualCA, getClientMonthlyCA } from "@/lib/simulation-engine";
+import { BUSINESS_STATUS_CONFIG, MONTHS_SHORT, SEASONALITY } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus } from "@/types";
 import { CalendarDays, Banknote, Shield, Landmark, CircleAlert, Download } from "@/components/ui/icons";
@@ -203,6 +203,14 @@ export default function CalendrierPage() {
 
   const annualCA = useMemo(() => getAnnualCA(clients, vacationDaysPerMonth), [clients, vacationDaysPerMonth]);
 
+  const monthlyCA = useMemo(() => {
+    return Array.from({ length: 12 }, (_, month) => {
+      const season = SEASONALITY[month];
+      const vacDays = vacationDaysPerMonth?.[month] ?? 0;
+      return clients.reduce((sum, c) => sum + getClientMonthlyCA(c, month, season, vacDays), 0);
+    });
+  }, [clients, vacationDaysPerMonth]);
+
   const [selectedStatus, setSelectedStatus] = useState<BusinessStatus>(businessStatus);
 
   const currentMonth = new Date().getMonth();
@@ -296,6 +304,7 @@ export default function CalendrierPage() {
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <SummaryCard icon={Banknote} label="CA annuel HT" value={annualCA} color="#10b981" />
         <SummaryCard icon={Banknote} label="URSSAF / an" value={totals.urssaf} color="#5682F2" />
         {totals.tva > 0 && <SummaryCard icon={CircleAlert} label="TVA / an" value={totals.tva} color="#f97316" />}
         {totals.is > 0 && <SummaryCard icon={Shield} label="IS / an" value={totals.is} color="#a78bfa" />}
@@ -329,13 +338,20 @@ export default function CalendrierPage() {
                 )}
               />
 
-              {/* Month name */}
-              <div className={cn("text-sm font-bold mb-3", isCurrentMo ? "text-primary" : "text-foreground")}>
-                {MONTHS_FULL[i]}
-                {isCurrentMo && (
-                  <span className="ml-2 text-[10px] font-normal text-primary uppercase tracking-wider">
-                    Mois en cours
-                  </span>
+              {/* Month name + CA */}
+              <div className="mb-3">
+                <div className={cn("text-sm font-bold", isCurrentMo ? "text-primary" : "text-foreground")}>
+                  {MONTHS_FULL[i]}
+                  {isCurrentMo && (
+                    <span className="ml-2 text-[10px] font-normal text-primary uppercase tracking-wider">
+                      Mois en cours
+                    </span>
+                  )}
+                </div>
+                {monthlyCA[i] > 0 && (
+                  <div className="text-xs text-muted-foreground/60">
+                    CA estim&eacute; : {fmt(monthlyCA[i])} &euro; HT
+                  </div>
                 )}
               </div>
 

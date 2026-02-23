@@ -34,7 +34,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
           placeholder="Nom du client"
         />
         <span className="text-sm font-bold text-[#5682F2] bg-[#5682F2]/10 px-2.5 py-1 rounded-lg">
-          {fmt(ca)}&euro;/mois
+          {fmt(ca)}&euro; HT/mois
         </span>
         <button
           onClick={() => setExpanded(!expanded)}
@@ -56,14 +56,22 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
         <div className="space-y-4 pt-2">
           <BillingTypePicker
             value={client.billing}
-            onChange={(billing) => onUpdate({ billing })}
+            onChange={(billing) => {
+              const updates: Partial<ClientData> = { billing };
+              if (billing === "mission" && client.startMonth == null) {
+                const m = new Date().getMonth();
+                updates.startMonth = m;
+                updates.endMonth = m;
+              }
+              onUpdate(updates);
+            }}
           />
 
           {client.billing === "tjm" && (
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-muted-foreground/70 mb-1 block">TJM</label>
+                  <label className="text-xs text-muted-foreground/70 mb-1 block">TJM HT</label>
                   <div className="relative">
                     <input
                       type="number"
@@ -118,7 +126,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
 
           {client.billing === "forfait" && (
             <div>
-              <label className="text-xs text-muted-foreground/70 mb-1 block">Montant mensuel</label>
+              <label className="text-xs text-muted-foreground/70 mb-1 block">Montant mensuel HT</label>
               <div className="relative">
                 <input
                   type="number"
@@ -134,7 +142,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
           {client.billing === "mission" && (
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-muted-foreground/70 mb-1 block">Montant total</label>
+                <label className="text-xs text-muted-foreground/70 mb-1 block">Montant total HT</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -187,7 +195,7 @@ function getDisplayCA(client: ClientData): number {
     case "forfait":
       return client.monthlyAmount ?? 0;
     case "mission": {
-      const duration = Math.max(1, (client.endMonth ?? 0) - (client.startMonth ?? 0) + 1);
+      const duration = Math.max(1, (client.endMonth ?? 11) - (client.startMonth ?? 0) + 1);
       return (client.totalAmount ?? 0) / duration;
     }
     default:
