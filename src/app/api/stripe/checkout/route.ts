@@ -17,15 +17,21 @@ export async function POST(request: NextRequest) {
     const { plan = "monthly" } = await request.json();
     const priceId = plan === "annual" ? PLANS.annual.priceId : PLANS.monthly.priceId;
 
-    // Reuse existing Stripe customer if available (avoid duplicates)
-    const dbUser = await prisma.user.findUnique({
-      where: { id: user.id },
-      select: { stripeCustomerId: true },
-    });
+    // Reuse existing Stripe customer if available (non-blocking — checkout must not fail if DB is slow)
+    let stripeCustomerId: string | null = null;
+    try {
+      const dbUser = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { stripeCustomerId: true },
+      });
+      stripeCustomerId = dbUser?.stripeCustomerId ?? null;
+    } catch (err) {
+      console.error("DB lookup failed, falling back to email:", err);
+    }
 
     const session = await stripe.checkout.sessions.create({
-      ...(dbUser?.stripeCustomerId
-        ? { customer: dbUser.stripeCustomerId }
+      ...(stripeCustomerId
+        ? { customer: stripeCustomerId }
         : { customer_email: user.email }),
       line_items: [{ price: priceId, quantity: 1 }],
       mode: "subscription",
