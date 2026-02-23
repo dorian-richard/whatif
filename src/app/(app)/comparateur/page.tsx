@@ -14,6 +14,7 @@ import {
   Banknote,
   HandCoins,
 } from "@/components/ui/icons";
+import { ProBlur } from "@/components/ProBlur";
 
 /** Statuts à comparer */
 const STATUTS: BusinessStatus[] = ["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
@@ -215,6 +216,7 @@ export default function ComparateurPage() {
           </p>
         </div>
 
+        <ProBlur label="Le Comparateur de statuts est réservé au plan Pro">
         {/* CA Slider */}
         <div className="bg-card rounded-2xl border border-border p-6">
           <div className="flex items-center justify-between mb-4">
@@ -465,6 +467,7 @@ export default function ComparateurPage() {
         <div className="text-center text-xs text-muted-foreground/60 pb-8">
           Simulation indicative basée sur des taux moyens. Consulte un expert-comptable pour un conseil personnalisé.
         </div>
+        </ProBlur>
       </div>
   );
 }

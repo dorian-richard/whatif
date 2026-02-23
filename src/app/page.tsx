@@ -97,7 +97,7 @@ export default function Home() {
       <Features />
       <Demo />
       <Testimonials />
-      <Pricing />
+      <Pricing isLoggedIn={isLoggedIn} />
       <FinalCTA />
     </div>
   );

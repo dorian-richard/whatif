@@ -1,15 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { MailOpen } from "@/components/ui/icons";
 
 export default function SignupPage() {
+  const searchParams = useSearchParams();
+  const plan = searchParams.get("plan");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+
+  const nextUrl = plan ? `/checkout?plan=${plan}` : "/onboarding";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +24,7 @@ export default function SignupPage() {
     const supabase = createClient();
     const { error: authError } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding` },
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=${nextUrl}` },
       // NOTE: Supabase dashboard "Site URL" + "Redirect URLs" must include the production domain
     });
 

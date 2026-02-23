@@ -7,6 +7,7 @@ import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus } from "@/types";
 import { Landmark, CalendarDays, TrendingUp, Banknote, Gauge, CircleAlert } from "@/components/ui/icons";
+import { ProBlur } from "@/components/ProBlur";
 import {
   BarChart,
   Bar,
@@ -184,6 +185,7 @@ export default function RetraitePage() {
         </p>
       </div>
 
+      <ProBlur label="La Projection Retraite est réservée au plan Pro">
       {/* Input sliders */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Age */}
@@ -461,6 +463,7 @@ export default function RetraitePage() {
         La pension r&eacute;elle d&eacute;pend de l&apos;ensemble de ta carri&egrave;re, des r&eacute;gimes compl&eacute;mentaires et des r&eacute;formes futures.
         Consulte un conseiller retraite pour un bilan personnalis&eacute;.
       </div>
+      </ProBlur>
     </div>
   );
 }

@@ -33,12 +33,16 @@ const PRO_FEATURES = [
   "Support prioritaire",
 ];
 
-export function Pricing() {
+export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   const [annual, setAnnual] = useState(false);
 
   const proPrice = annual ? 79 : 9;
   const proPeriod = annual ? "/an" : "/mois";
   const savings = annual ? "2 mois offerts" : null;
+  const plan = annual ? "annual" : "monthly";
+  const proHref = isLoggedIn
+    ? `/checkout?plan=${plan}`
+    : `/signup?plan=${plan}`;
 
   return (
     <section id="pricing" className="snap-section relative flex items-center overflow-hidden">
@@ -147,7 +151,7 @@ export function Pricing() {
               ))}
             </ul>
             <Link
-              href="/signup"
+              href={proHref}
               className="block text-center py-3 rounded-full text-sm font-semibold transition-all bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white hover:opacity-90"
             >
               Démarrer l&apos;essai Pro

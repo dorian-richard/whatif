@@ -55,7 +55,7 @@ export async function updateSession(request: NextRequest) {
   const protectedPrefixes = [
     "/dashboard", "/simulator", "/onboarding", "/scenarios",
     "/comparateur", "/objectif", "/calendrier", "/benchmark",
-    "/transition", "/retraite", "/acre", "/settings",
+    "/transition", "/retraite", "/acre", "/settings", "/checkout",
   ];
   const isProtected = protectedPrefixes.some((p) =>
     request.nextUrl.pathname.startsWith(p)

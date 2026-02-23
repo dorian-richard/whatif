@@ -30,6 +30,8 @@ export function AppSidebar() {
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
+    localStorage.removeItem("freelens-profile");
+    localStorage.removeItem("freelens_scenarios");
     router.push("/login");
   };
 

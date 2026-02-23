@@ -7,6 +7,7 @@ import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
 import { Shield, TrendingUp, Banknote, CalendarDays } from "@/components/ui/icons";
+import { ProBlur } from "@/components/ProBlur";
 
 const STATUTS: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"];
 
@@ -165,6 +166,7 @@ export default function AcrePage() {
         </p>
       </div>
 
+      <ProBlur label="Le Simulateur ACRE est réservé au plan Pro">
       {/* CA Slider */}
       <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
@@ -356,6 +358,7 @@ export default function AcrePage() {
         Simulation indicative. L&apos;ACRE r&eacute;duit de 50% les cotisations sociales (URSSAF) pendant 4 trimestres.
         Pour la SASU, seule la part patronale est r&eacute;duite. Consulte un expert-comptable pour un conseil personnalis&eacute;.
       </div>
+      </ProBlur>
     </div>
   );
 }
