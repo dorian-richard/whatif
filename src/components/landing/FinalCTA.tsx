@@ -19,15 +19,17 @@ export function FinalCTA() {
           Rejoins les freelances qui prennent des décisions éclairées.
           Dashboard, scénarios et fiscalité en 2 minutes.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
           <Link
             href="/signup"
             className="px-10 py-4 bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white rounded-full text-lg font-bold hover:opacity-90 transition-opacity fn-glow-gold"
           >
-            Commencer gratuitement &rarr;
+            Essai gratuit 14 jours &rarr;
           </Link>
         </div>
-        <div />
+        <p className="text-sm text-muted-foreground/60">
+          Sans carte bancaire &middot; Toutes les fonctionnalités Pro
+        </p>
       </div>
 
       {/* Footer */}

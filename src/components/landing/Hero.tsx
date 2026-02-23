@@ -27,12 +27,12 @@ export function Hero() {
           Tous les outils pour piloter ton activité.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
           <Link
             href="/signup"
             className="px-8 py-3.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-lg font-semibold hover:opacity-90 transition-opacity fn-glow"
           >
-            Essayer gratuitement &rarr;
+            Essai gratuit 14 jours &rarr;
           </Link>
           <a
             href="#simulation"
@@ -41,7 +41,9 @@ export function Hero() {
             Voir la simulation
           </a>
         </div>
-        <div className="mb-12" />
+        <p className="text-sm text-muted-foreground/60 mb-12">
+          14 jours d&apos;essai Pro gratuit &middot; Sans carte bancaire &middot; Annulation libre
+        </p>
 
         {/* Dashboard mockup */}
         <div className="relative mx-auto max-w-3xl">
