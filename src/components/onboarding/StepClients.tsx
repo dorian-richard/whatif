@@ -1,13 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { ClientForm } from "@/components/clients/ClientForm";
 import { fmt } from "@/lib/utils";
 import { getClientBaseCA } from "@/lib/simulation-engine";
-import { CLIENT_COLORS } from "@/lib/constants";
+import { CLIENT_COLORS, PLAN_LIMITS } from "@/lib/constants";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { getEffectiveStatus } from "@/lib/subscription";
 
 export function StepClients() {
-  const { clients, addClient, updateClient, removeClient } = useProfileStore();
+  const { clients, addClient, updateClient, removeClient, subscriptionStatus, trialEndsAt } = useProfileStore();
+  const [showUpgrade, setShowUpgrade] = useState(false);
+  const effectiveStatus = getEffectiveStatus(subscriptionStatus, trialEndsAt);
 
   const totalCA = clients.reduce((sum, c) => sum + getClientBaseCA(c), 0);
   const tjmClients = clients.filter((c) => c.billing === "tjm");
@@ -33,18 +38,29 @@ export function StepClients() {
       </div>
 
       <button
-        onClick={() =>
+        onClick={() => {
+          const limit = PLAN_LIMITS[effectiveStatus === "ACTIVE" ? "ACTIVE" : "FREE"].maxClients;
+          if (clients.length >= limit) {
+            setShowUpgrade(true);
+            return;
+          }
           addClient({
             name: `Client ${String.fromCharCode(65 + clients.length)}`,
             billing: "tjm",
             dailyRate: 400,
             daysPerWeek: 5,
-          })
-        }
+          });
+        }}
         className="w-full mt-3 py-2.5 border-2 border-dashed border-border rounded-xl text-sm text-muted-foreground/70 hover:border-[#5682F2]/30 hover:text-[#5682F2] transition-all"
       >
         + Ajouter un client
       </button>
+
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        message={`Le plan Free est limité à ${PLAN_LIMITS.FREE.maxClients} clients. Passe Pro pour en ajouter plus.`}
+      />
 
       {clients.length > 0 && (
         <div className="mt-4 p-3 bg-[#5682F2]/10 border border-[#5682F2]/20 rounded-xl text-center space-y-1">

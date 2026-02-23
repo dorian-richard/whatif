@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { Lock } from "@/components/ui/icons";
 import { useProfileStore } from "@/stores/useProfileStore";
+import { getEffectiveStatus } from "@/lib/subscription";
 
 /**
  * Wraps content that is only available to Pro users.
  * Free users see a banner at the top + blurred content below.
- * Pro users (subscriptionStatus === "ACTIVE") see the content normally.
+ * Pro users (subscriptionStatus === "ACTIVE" or active trial) see the content normally.
  */
 export function ProBlur({
   children,
@@ -17,7 +18,8 @@ export function ProBlur({
   label?: string;
 }) {
   const subscriptionStatus = useProfileStore((s) => s.subscriptionStatus);
-  const isPro = subscriptionStatus === "ACTIVE";
+  const trialEndsAt = useProfileStore((s) => s.trialEndsAt);
+  const isPro = getEffectiveStatus(subscriptionStatus, trialEndsAt) === "ACTIVE";
 
   if (isPro) return <>{children}</>;
 

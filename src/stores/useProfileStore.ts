@@ -9,6 +9,7 @@ interface ProfileState extends FreelanceProfile {
   clients: ClientData[];
   onboardingCompleted: boolean;
   subscriptionStatus: SubscriptionStatus;
+  trialEndsAt: string | null;
   isDbSynced: boolean;
 
   setClients: (clients: ClientData[]) => void;
@@ -18,6 +19,7 @@ interface ProfileState extends FreelanceProfile {
   setProfile: (profile: Partial<FreelanceProfile>) => void;
   setOnboardingCompleted: (completed: boolean) => void;
   setSubscriptionStatus: (status: SubscriptionStatus) => void;
+  setTrialEndsAt: (trialEndsAt: string | null) => void;
   setDbSynced: (synced: boolean) => void;
 }
 
@@ -36,6 +38,7 @@ export const useProfileStore = create<ProfileState>()(
       age: 35,
       onboardingCompleted: false,
       subscriptionStatus: "FREE",
+      trialEndsAt: null,
       isDbSynced: false,
       clients: [],
 
@@ -72,6 +75,9 @@ export const useProfileStore = create<ProfileState>()(
 
       setSubscriptionStatus: (status) =>
         set({ subscriptionStatus: status }),
+
+      setTrialEndsAt: (trialEndsAt) =>
+        set({ trialEndsAt }),
 
       setDbSynced: (synced) =>
         set({ isDbSynced: synced }),

@@ -12,11 +12,14 @@ import { CalendarDays, ClipboardList, Receipt, Landmark, HandCoins, Target, Bank
 import { useTheme } from "next-themes";
 import { MONTHS_SHORT } from "@/lib/constants";
 import { METIERS, METIER_CATEGORIES, CATEGORY_COLORS } from "@/lib/benchmark-data";
+import { getEffectiveStatus, getTrialDaysRemaining } from "@/lib/subscription";
 
 export default function SettingsPage() {
   const router = useRouter();
   const profile = useProfileStore();
   const currentConfig = BUSINESS_STATUS_CONFIG[profile.businessStatus ?? "micro"];
+  const [deleteConfirm, setDeleteConfirm] = React.useState(false);
+  const [deleting, setDeleting] = React.useState(false);
 
   // Refresh subscription status when page gets focus (returning from Stripe portal)
   useEffect(() => {
@@ -587,26 +590,48 @@ export default function SettingsPage() {
             </div>
           </>
         ) : (
-          <>
-            <div className="flex items-center justify-between p-4 bg-muted/50 rounded-xl border border-border mb-4">
-              <div>
-                <span className="text-sm font-semibold text-foreground">Plan Free</span>
-                <p className="text-xs text-muted-foreground/70">3 clients, 1 scénario sauvegardé</p>
-              </div>
-              <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded-full">Gratuit</span>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <button onClick={() => handleUpgrade("monthly")} className="p-4 border-2 border-[#5682F2]/50 rounded-xl text-center bg-[#5682F2]/10 hover:bg-[#5682F2]/20 transition-colors">
-                <div className="text-lg font-bold text-[#5682F2]">9&euro;/mois</div>
-                <div className="text-xs text-muted-foreground">Mensuel</div>
-              </button>
-              <button onClick={() => handleUpgrade("annual")} className="p-4 border-2 border-[#5682F2]/50 rounded-xl text-center bg-[#5682F2]/10 hover:bg-[#5682F2]/20 transition-colors relative">
-                <span className="absolute -top-2 right-2 text-[10px] font-bold bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white px-2 py-0.5 rounded-full">-26%</span>
-                <div className="text-lg font-bold text-[#5682F2]">79&euro;/an</div>
-                <div className="text-xs text-muted-foreground">2 mois offerts</div>
-              </button>
-            </div>
-          </>
+          (() => {
+            const trialDays = getTrialDaysRemaining(profile.trialEndsAt);
+            const isTrial = trialDays > 0;
+            return (
+              <>
+                <div className={cn(
+                  "flex items-center justify-between p-4 rounded-xl border mb-4",
+                  isTrial ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-border"
+                )}>
+                  <div>
+                    <span className={cn("text-sm font-semibold", isTrial ? "text-primary" : "text-foreground")}>
+                      {isTrial ? "Essai Pro" : "Plan Free"}
+                    </span>
+                    <p className="text-xs text-muted-foreground/70">
+                      {isTrial
+                        ? `${trialDays} jour${trialDays > 1 ? "s" : ""} restant${trialDays > 1 ? "s" : ""} — toutes les fonctionnalités Pro`
+                        : "3 clients, 1 scénario sauvegardé"}
+                    </p>
+                  </div>
+                  <span className={cn(
+                    "text-xs font-medium px-2 py-1 rounded-full",
+                    isTrial
+                      ? "text-white bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] font-bold"
+                      : "text-muted-foreground bg-muted"
+                  )}>
+                    {isTrial ? "Essai" : "Gratuit"}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button onClick={() => handleUpgrade("monthly")} className="p-4 border-2 border-[#5682F2]/50 rounded-xl text-center bg-[#5682F2]/10 hover:bg-[#5682F2]/20 transition-colors">
+                    <div className="text-lg font-bold text-[#5682F2]">9&euro;/mois</div>
+                    <div className="text-xs text-muted-foreground">Mensuel</div>
+                  </button>
+                  <button onClick={() => handleUpgrade("annual")} className="p-4 border-2 border-[#5682F2]/50 rounded-xl text-center bg-[#5682F2]/10 hover:bg-[#5682F2]/20 transition-colors relative">
+                    <span className="absolute -top-2 right-2 text-[10px] font-bold bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white px-2 py-0.5 rounded-full">-26%</span>
+                    <div className="text-lg font-bold text-[#5682F2]">79&euro;/an</div>
+                    <div className="text-xs text-muted-foreground">2 mois offerts</div>
+                  </button>
+                </div>
+              </>
+            );
+          })()
         )}
       </div>
 
@@ -616,9 +641,52 @@ export default function SettingsPage() {
       {/* Danger zone */}
       <div className="bg-card rounded-2xl border border-[#f87171]/20 p-6">
         <h2 className="text-sm font-bold text-[#f87171] mb-4">Zone danger</h2>
-        <button className="px-4 py-2 text-sm text-[#f87171] border border-[#f87171]/20 rounded-xl hover:bg-[#f87171]/10 transition-colors">
-          Supprimer mon compte
-        </button>
+        {!deleteConfirm ? (
+          <button
+            onClick={() => setDeleteConfirm(true)}
+            className="px-4 py-2 text-sm text-[#f87171] border border-[#f87171]/20 rounded-xl hover:bg-[#f87171]/10 transition-colors"
+          >
+            Supprimer mon compte
+          </button>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Cette action est <strong className="text-[#f87171]">irr&eacute;versible</strong>. Toutes tes donn&eacute;es (clients, sc&eacute;narios, paiements) seront d&eacute;finitivement supprim&eacute;es.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={async () => {
+                  setDeleting(true);
+                  try {
+                    const res = await fetch("/api/profile/delete", { method: "POST" });
+                    const data = await res.json();
+                    if (data.deleted) {
+                      localStorage.removeItem("freelens-profile");
+                      localStorage.removeItem("freelens_scenarios");
+                      window.location.href = "/login";
+                    } else {
+                      alert("Erreur : " + (data.error || "suppression impossible"));
+                      setDeleting(false);
+                    }
+                  } catch {
+                    alert("Erreur de connexion.");
+                    setDeleting(false);
+                  }
+                }}
+                disabled={deleting}
+                className="px-4 py-2 text-sm font-semibold text-white bg-[#f87171] rounded-xl hover:bg-[#ef4444] transition-colors disabled:opacity-50"
+              >
+                {deleting ? "Suppression..." : "Confirmer la suppression"}
+              </button>
+              <button
+                onClick={() => setDeleteConfirm(false)}
+                className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

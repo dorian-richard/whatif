@@ -8,6 +8,7 @@ import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, C
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
+import { getEffectiveStatus, getTrialDaysRemaining } from "@/lib/subscription";
 
 const NAV_MAIN = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -51,8 +52,11 @@ export function AppSidebar() {
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const subscriptionStatus = useProfileStore((s) => s.subscriptionStatus);
+  const trialEndsAt = useProfileStore((s) => s.trialEndsAt);
   const businessStatus = useProfileStore((s) => s.businessStatus);
-  const isPro = subscriptionStatus === "ACTIVE";
+  const effectiveStatus = getEffectiveStatus(subscriptionStatus, trialEndsAt);
+  const isPro = effectiveStatus === "ACTIVE";
+  const trialDays = getTrialDaysRemaining(trialEndsAt);
   useEffect(() => setMounted(true), []);
 
   // Close drawer on route change
@@ -160,7 +164,11 @@ export function AppSidebar() {
         <div className="px-3 py-4 border-t border-border space-y-3">
           <div className={cn("px-3 py-2 rounded-xl border", isPro ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-border")}>
             <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">Plan</div>
-            <div className={cn("text-sm font-semibold", isPro ? "text-primary" : "text-foreground")}>{isPro ? "Pro" : "Free"}</div>
+            <div className={cn("text-sm font-semibold", isPro ? "text-primary" : "text-foreground")}>
+              {trialDays > 0 && subscriptionStatus === "FREE"
+                ? `Essai Pro — ${trialDays}j`
+                : isPro ? "Pro" : "Free"}
+            </div>
           </div>
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

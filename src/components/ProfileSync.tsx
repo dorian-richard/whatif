@@ -50,6 +50,9 @@ export function ProfileSync() {
         if (data.subscriptionStatus) {
           store.setSubscriptionStatus(data.subscriptionStatus as SubscriptionStatus);
         }
+        if (data.trialEndsAt !== undefined) {
+          store.setTrialEndsAt(data.trialEndsAt);
+        }
 
         // If the DB has clients, hydrate the store
         if (data.clients && data.clients.length > 0) {

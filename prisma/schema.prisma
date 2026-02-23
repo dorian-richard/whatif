@@ -48,6 +48,7 @@ model User {
   stripeCustomerId    String?            @unique
   subscriptionStatus  SubscriptionStatus @default(FREE)
   subscriptionId      String?
+  trialEndsAt         DateTime?
 
   // Relations
   clients             Client[]

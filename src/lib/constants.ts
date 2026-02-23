@@ -46,6 +46,11 @@ export const PRESET_SCENARIOS = [
   { id: "bounce", icon: "trending-up", title: "Rebond", cat: "risque" as ScenarioCategory, changes: { lostClientIndex: 0, rateChange: 15 } as Partial<SimulationParams> },
   { id: "crisis", icon: "shield", title: "Survie", cat: "risque" as ScenarioCategory, changes: { lostClientIndex: 0, rateChange: -10, vacationWeeks: 2 } as Partial<SimulationParams> },
   { id: "expenses_up", icon: "flame", title: "+500\u20AC charges", cat: "risque" as ScenarioCategory, changes: { expenseChange: 500 } as Partial<SimulationParams> },
+  { id: "conge_parental", icon: "life-buoy", title: "Congé parental", cat: "equilibre" as ScenarioCategory, changes: { vacationWeeks: 12 } as Partial<SimulationParams> },
+  { id: "retraite_prog", icon: "clock", title: "Retraite progressive", cat: "equilibre" as ScenarioCategory, changes: { workDaysPerWeek: 4, expenseChange: 300 } as Partial<SimulationParams> },
+  { id: "pivot_tarifs", icon: "target", title: "Pivot tarifs", cat: "croissance" as ScenarioCategory, changes: { rateChange: 30, lostClientIndex: 0 } as Partial<SimulationParams> },
+  { id: "sabbatique", icon: "palmtree", title: "Année sabbatique", cat: "risque" as ScenarioCategory, changes: { vacationWeeks: 26 } as Partial<SimulationParams> },
+  { id: "nouveau_depart", icon: "sparkles", title: "Nouveau départ", cat: "risque" as ScenarioCategory, changes: { lostClientIndex: 0, newClients: 1, rateChange: -10 } as Partial<SimulationParams> },
 ];
 
 import type { BusinessStatus } from "@/types";
@@ -228,6 +233,12 @@ export const BUSINESS_STATUS_CONFIG: Record<
     ],
   },
 };
+
+/** Client-safe plan limits (no server secrets) */
+export const PLAN_LIMITS = {
+  FREE: { maxClients: 3, maxScenarios: 1 },
+  ACTIVE: { maxClients: Infinity, maxScenarios: Infinity },
+} as const;
 
 export const CLIENT_COLORS = [
   "#6366f1", "#f59e0b", "#10b981", "#ef4444",

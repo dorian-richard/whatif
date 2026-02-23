@@ -19,9 +19,12 @@ import {
   PRESET_SCENARIOS,
   SCENARIO_CATEGORIES,
   DEFAULT_SIM,
+  PLAN_LIMITS,
   type ScenarioCategory,
 } from "@/lib/constants";
 import { Slider } from "@/components/ui/slider";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { getEffectiveStatus } from "@/lib/subscription";
 import type { SimulationParams } from "@/types";
 
 /* ─── Types ─── */
@@ -81,6 +84,7 @@ export default function ScenariosPage() {
   const router = useRouter();
   const sim = useSimulatorStore();
   const profile = useProfileStore();
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   /* ─── Saved scenarios from localStorage ─── */
   const [scenarios, setScenarios] = useState<SavedScenario[]>(() => {
@@ -131,6 +135,11 @@ export default function ScenariosPage() {
 
   /* ─── Save scenario ─── */
   function saveScenario(params: SimulationParams) {
+    const limit = PLAN_LIMITS[getEffectiveStatus(profile.subscriptionStatus, profile.trialEndsAt) === "ACTIVE" ? "ACTIVE" : "FREE"].maxScenarios;
+    if (!editId && scenarios.length >= limit) {
+      setShowUpgrade(true);
+      return;
+    }
     const impact = computeImpact(params);
     const scenario: SavedScenario = {
       id: editId ?? crypto.randomUUID(),
@@ -157,6 +166,11 @@ export default function ScenariosPage() {
 
   /* ─── Save preset as personal scenario ─── */
   function savePreset(presetId: string) {
+    const limit = PLAN_LIMITS[getEffectiveStatus(profile.subscriptionStatus, profile.trialEndsAt) === "ACTIVE" ? "ACTIVE" : "FREE"].maxScenarios;
+    if (scenarios.length >= limit) {
+      setShowUpgrade(true);
+      return;
+    }
     const preset = PRESET_SCENARIOS.find((p) => p.id === presetId);
     if (!preset) return;
     const params: SimulationParams = { ...DEFAULT_SIM, workDaysPerWeek: profile.workDaysPerWeek, ...preset.changes };
@@ -524,7 +538,7 @@ export default function ScenariosPage() {
               label="Semaines de vacances"
               value={createParams.vacationWeeks}
               onChange={(v) => setCreateParams((p) => ({ ...p, vacationWeeks: v }))}
-              min={0} max={12} step={1}
+              min={0} max={30} step={1}
               format={(v) => `${v} sem`}
             />
             <SliderRow
@@ -647,6 +661,12 @@ export default function ScenariosPage() {
           </div>
         </ModalWrapper>
       )}
+
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        message={`Le plan Free est limité à ${PLAN_LIMITS.FREE.maxScenarios} scénario sauvegardé. Passe Pro pour en sauvegarder plus.`}
+      />
     </div>
   );
 }

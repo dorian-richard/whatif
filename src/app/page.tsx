@@ -7,6 +7,7 @@ import { Demo } from "@/components/landing/Demo";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { Pricing } from "@/components/landing/Pricing";
 import { FinalCTA } from "@/components/landing/FinalCTA";
+import { FAQ } from "@/components/landing/FAQ";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -98,6 +99,7 @@ export default function Home() {
       <Demo />
       <Testimonials />
       <Pricing isLoggedIn={isLoggedIn} />
+      <FAQ />
       <FinalCTA />
     </div>
   );

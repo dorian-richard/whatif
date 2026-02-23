@@ -17,7 +17,11 @@ export async function GET(request: Request) {
         prisma.user.upsert({
           where: { id: user.id },
           update: {},
-          create: { id: user.id, email: user.email! },
+          create: {
+            id: user.id,
+            email: user.email!,
+            trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+          },
         }).catch((err) => console.error("Failed to upsert user:", err));
       }
       return NextResponse.redirect(`${origin}${next}`);
