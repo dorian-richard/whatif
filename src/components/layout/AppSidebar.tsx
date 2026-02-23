@@ -46,7 +46,7 @@ export function AppSidebar() {
     await supabase.auth.signOut();
     localStorage.removeItem("freelens-profile");
     localStorage.removeItem("freelens_scenarios");
-    router.push("/login");
+    window.location.href = "/login";
   };
 
   return (

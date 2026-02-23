@@ -70,6 +70,19 @@ export function ProfileSync() {
             })
           );
           store.setClients(dbClients);
+        } else if (store.clients.length > 0) {
+          // DB has no clients but localStorage does → push them to DB
+          for (const c of store.clients) {
+            try {
+              await fetch("/api/clients", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(c),
+              });
+            } catch {
+              // Silently fail per client
+            }
+          }
         }
 
         // Hydrate profile fields from DB (if set)

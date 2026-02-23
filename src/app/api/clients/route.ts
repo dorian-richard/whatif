@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
   const billing = (body.billing as string).toUpperCase();
   const client = await prisma.client.create({
     data: {
+      ...(body.id && { id: body.id }),
       userId: user.id,
       name: body.name,
       billing: billing as "TJM" | "FORFAIT" | "MISSION",
