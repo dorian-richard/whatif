@@ -29,16 +29,46 @@ export async function POST(request: NextRequest) {
       console.error("DB lookup failed, falling back to email:", err);
     }
 
-    const session = await stripe.checkout.sessions.create({
-      ...(stripeCustomerId
-        ? { customer: stripeCustomerId }
-        : { customer_email: user.email }),
+    const checkoutParams = {
       line_items: [{ price: priceId, quantity: 1 }],
-      mode: "subscription",
+      mode: "subscription" as const,
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/simulator?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?canceled=true`,
       metadata: { userId: user.id },
-    });
+    };
+
+    let session;
+    if (stripeCustomerId) {
+      try {
+        session = await stripe.checkout.sessions.create({
+          ...checkoutParams,
+          customer: stripeCustomerId,
+        });
+      } catch (err: unknown) {
+        // Stale customer ID (deleted or wrong env) → clear it and fall back to email
+        const stripeErr = err as { code?: string };
+        if (stripeErr.code === "resource_missing") {
+          console.warn(`Stale Stripe customer ${stripeCustomerId}, clearing and retrying with email`);
+          try {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { stripeCustomerId: null },
+            });
+          } catch { /* non-blocking */ }
+          session = await stripe.checkout.sessions.create({
+            ...checkoutParams,
+            customer_email: user.email,
+          });
+        } else {
+          throw err;
+        }
+      }
+    } else {
+      session = await stripe.checkout.sessions.create({
+        ...checkoutParams,
+        customer_email: user.email,
+      });
+    }
 
     return NextResponse.json({ url: session.url });
   } catch (error) {

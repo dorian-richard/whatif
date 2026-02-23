@@ -58,10 +58,36 @@ export async function POST() {
       }
     }
 
-    const session = await stripe.billingPortal.sessions.create({
-      customer: customerId,
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
-    });
+    let session;
+    try {
+      session = await stripe.billingPortal.sessions.create({
+        customer: customerId,
+        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
+      });
+    } catch (err: unknown) {
+      // Stale customer ID → create a fresh one
+      const stripeErr = err as { code?: string };
+      if (stripeErr.code === "resource_missing") {
+        console.warn(`Stale Stripe customer ${customerId}, creating new one`);
+        const newCustomer = await stripe.customers.create({
+          email: user.email!,
+          metadata: { userId: user.id },
+        });
+        customerId = newCustomer.id;
+        try {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { stripeCustomerId: customerId },
+          });
+        } catch { /* non-blocking */ }
+        session = await stripe.billingPortal.sessions.create({
+          customer: customerId,
+          return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
+        });
+      } else {
+        throw err;
+      }
+    }
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
