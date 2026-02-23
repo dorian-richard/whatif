@@ -39,20 +39,18 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
+        {/* Logo au-dessus */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-4">
+          <Link href="/" className="inline-flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="Freelens" className="h-11 w-auto opacity-80 hidden dark:block" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-light.png" alt="Freelens" className="h-11 w-auto opacity-80 block dark:hidden" />
             <span className="text-2xl font-bold text-foreground">Freelens</span>
           </Link>
-          <h1 className="text-xl font-bold text-foreground">Créer un compte</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Commence à simuler tes décisions en 30 secondes.
-          </p>
         </div>
 
+        {/* Card */}
         <div className="bg-card rounded-2xl p-6 border border-border">
           {sent ? (
             <div className="text-center py-4">
@@ -67,30 +65,38 @@ export default function SignupPage() {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-muted-foreground block mb-1">Email</label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="ton@email.com"
-                  className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50"
-                />
+            <>
+              <div className="text-center mb-5">
+                <h1 className="text-xl font-bold text-foreground">Créer un compte</h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Commence à simuler tes décisions en 30 secondes.
+                </p>
               </div>
-              {error && <p className="text-sm text-[#f87171]">{error}</p>}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-2.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-              >
-                {loading ? "Envoi..." : "S'inscrire avec un magic link"}
-              </button>
-              <p className="text-xs text-muted-foreground/60 text-center">
-                En t&apos;inscrivant, tu acceptes nos <Link href="/cgu" className="text-primary hover:underline">CGU</Link>.
-              </p>
-            </form>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground block mb-1">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="ton@email.com"
+                    className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50"
+                  />
+                </div>
+                {error && <p className="text-sm text-[#f87171]">{error}</p>}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-2.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {loading ? "Envoi..." : "S'inscrire avec un magic link"}
+                </button>
+                <p className="text-xs text-muted-foreground/60 text-center">
+                  En t&apos;inscrivant, tu acceptes nos <Link href="/cgu" className="text-primary hover:underline">CGU</Link>.
+                </p>
+              </form>
+            </>
           )}
         </div>
 
