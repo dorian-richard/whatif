@@ -42,10 +42,10 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Freelens" className="h-11 w-auto opacity-80 hidden dark:block" />
+            <img src="/logo.png" alt="Freelens" className="h-14 w-auto opacity-80 hidden dark:block" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-light.png" alt="Freelens" className="h-11 w-auto opacity-80 block dark:hidden" />
-            <span className="text-2xl font-bold text-foreground">Freelens</span>
+            <img src="/logo-light.png" alt="Freelens" className="h-14 w-auto opacity-80 block dark:hidden" />
+            <span className="text-3xl font-bold text-foreground">Freelens</span>
           </Link>
         </div>
 
