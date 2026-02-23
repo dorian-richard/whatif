@@ -48,7 +48,7 @@ export function FAQ() {
           <span className="text-sm font-medium text-[#a78bfa] uppercase tracking-widest mb-3 block">FAQ</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
             Questions{" "}
-            <span className="fn-gradient-text">fr\u00e9quentes</span>
+            <span className="fn-gradient-text">fréquentes</span>
           </h2>
         </div>
 
