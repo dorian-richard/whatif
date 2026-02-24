@@ -47,7 +47,7 @@ const jsonLd = [
     "@type": "Organization",
     name: "Freelens",
     url: "https://freelens.io",
-    logo: "https://freelens.io/logo.png",
+    logo: "https://freelens.io/logo.webp",
     description: "Le copilote financier des freelances. Simulateur de revenus, comparateur de statuts, pipeline commercial, suivi des paiements, calendrier fiscal et trésorerie prévisionnelle.",
     sameAs: [],
   },
@@ -194,9 +194,9 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Freelens" className="h-8 sm:h-9 w-auto opacity-80 hidden dark:block" />
+            <img src="/logo.webp" alt="Freelens" className="h-8 sm:h-9 w-auto opacity-80 hidden dark:block" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-light.png" alt="Freelens" className="h-8 sm:h-9 w-auto opacity-80 block dark:hidden" />
+            <img src="/logo-light.webp" alt="Freelens" className="h-8 sm:h-9 w-auto opacity-80 block dark:hidden" />
             <span className="font-bold text-foreground text-base sm:text-lg">Freelens</span>
           </div>
           <div className="flex items-center gap-3 sm:gap-6">

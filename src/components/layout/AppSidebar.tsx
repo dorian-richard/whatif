@@ -91,9 +91,9 @@ export function AppSidebar() {
           className="flex items-center gap-2.5 px-5 h-16 shrink-0"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Freelens" className="h-9 w-auto opacity-80 hidden dark:block" />
+          <img src="/logo.webp" alt="Freelens" className="h-9 w-auto opacity-80 hidden dark:block" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-light.png" alt="Freelens" className="h-9 w-auto opacity-80 block dark:hidden" />
+          <img src="/logo-light.webp" alt="Freelens" className="h-9 w-auto opacity-80 block dark:hidden" />
           <span className="text-lg font-bold text-foreground">Freelens</span>
         </button>
 

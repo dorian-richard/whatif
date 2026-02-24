@@ -37,9 +37,9 @@ export function FinalCTA() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Freelens" className="h-6 w-auto opacity-70 hidden dark:block" />
+            <img src="/logo.webp" alt="Freelens" className="h-6 w-auto opacity-70 hidden dark:block" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-light.png" alt="Freelens" className="h-6 w-auto opacity-70 block dark:hidden" />
+            <img src="/logo-light.webp" alt="Freelens" className="h-6 w-auto opacity-70 block dark:hidden" />
             <span className="text-sm text-muted-foreground/60">
               Freelens &mdash; Le copilote financier des freelances
             </span>

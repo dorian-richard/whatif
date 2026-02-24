@@ -25,9 +25,9 @@ export function AppNav() {
           className="flex items-center gap-2.5"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Freelens" className="h-9 w-auto opacity-80 hidden dark:block" />
+          <img src="/logo.webp" alt="Freelens" className="h-9 w-auto opacity-80 hidden dark:block" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-light.png" alt="Freelens" className="h-9 w-auto opacity-80 block dark:hidden" />
+          <img src="/logo-light.webp" alt="Freelens" className="h-9 w-auto opacity-80 block dark:hidden" />
           <span className="text-lg font-bold text-gray-900 dark:text-white hidden sm:block">Freelens</span>
         </button>
 
