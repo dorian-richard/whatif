@@ -41,7 +41,7 @@ export function EarningsCounter() {
   const [viewMode, setViewMode] = useState<ViewMode>("month");
 
   const earnings = useMemo(() => {
-    if (clients.length === 0) return { daily: 0, week: 0, month: 0, daysSoFar: 0, daysInMonth: 0 };
+    if (clients.length === 0) return { daily: 0, week: 0, month: 0, daysSoFar: 0, daysInMonth: 0, dailyCA: 0, weekCA: 0, monthCA: 0, dailyTax: 0, weekTax: 0, monthTax: 0 };
 
     const now = new Date();
     const month = now.getMonth();
@@ -75,6 +75,9 @@ export function EarningsCounter() {
 
     const adjustedDays = Math.max(1, businessDaysInMonth - vacDays);
     const daily = monthNet / adjustedDays;
+    const monthTax = monthCA - monthNet;
+    const dailyCA = monthCA / adjustedDays;
+    const dailyTax = monthTax / adjustedDays;
 
     // Week so far (Mon → today)
     const todayDow = now.getDay();
@@ -92,10 +95,18 @@ export function EarningsCounter() {
       month: Math.min(monthNet, daily * businessDaysSoFar),
       daysSoFar: Math.min(businessDaysSoFar, adjustedDays),
       daysInMonth: adjustedDays,
+      dailyCA,
+      weekCA: dailyCA * weekDays,
+      monthCA: Math.min(monthCA, dailyCA * businessDaysSoFar),
+      dailyTax,
+      weekTax: dailyTax * weekDays,
+      monthTax: Math.min(monthTax, dailyTax * businessDaysSoFar),
     };
   }, [clients, vacationDaysPerMonth, profile]);
 
   const targetValue = viewMode === "day" ? earnings.daily : viewMode === "week" ? earnings.week : earnings.month;
+  const targetCA = viewMode === "day" ? earnings.dailyCA : viewMode === "week" ? earnings.weekCA : earnings.monthCA;
+  const targetTax = viewMode === "day" ? earnings.dailyTax : viewMode === "week" ? earnings.weekTax : earnings.monthTax;
   const animatedValue = useAnimatedValue(targetValue);
 
   if (clients.length === 0) return null;
@@ -139,7 +150,12 @@ export function EarningsCounter() {
             {fmt(Math.round(animatedValue))}&euro;
             <span className="text-sm font-normal text-muted-foreground/60 ml-2">net</span>
           </div>
-          <div className="text-[11px] text-muted-foreground/60 mt-1">
+          <div className="flex items-center gap-3 text-[11px] text-muted-foreground/60 mt-1.5">
+            <span>{fmt(Math.round(targetCA))}&euro; CA HT</span>
+            <span>&middot;</span>
+            <span className="text-[#f87171]/70">{fmt(Math.round(targetTax))}&euro; charges &amp; impôts</span>
+          </div>
+          <div className="text-[11px] text-muted-foreground/60 mt-0.5">
             {earnings.daysSoFar}/{earnings.daysInMonth} jours ouvrés &middot; {fmt(Math.round(earnings.daily))}&euro;/jour net
           </div>
         </div>
