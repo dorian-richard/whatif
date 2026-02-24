@@ -57,6 +57,7 @@ import {
   Monitor,
   FileText,
   CreditCard,
+  Kanban,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -171,4 +172,5 @@ export {
   Monitor,
   FileText,
   CreditCard,
+  Kanban,
 };
