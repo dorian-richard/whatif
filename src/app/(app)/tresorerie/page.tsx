@@ -18,10 +18,13 @@ export default function TresoreriePage() {
     [clients, profile, savings, threshold]
   );
 
+  const [hoveredMonth, setHoveredMonth] = useState<number | null>(null);
+
   const minBalance = Math.min(...cashflow.map((m) => m.balance));
   const criticalMonth = cashflow.find((m) => m.belowThreshold);
   const safeMonths = cashflow.filter((m) => !m.belowThreshold).length;
   const maxValue = Math.max(...cashflow.map((m) => Math.max(m.income, m.totalOut, Math.abs(m.balance))), 1);
+  const hasIS = cashflow.some((m) => m.is > 0);
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
@@ -116,11 +119,14 @@ export default function TresoreriePage() {
             </div>
           </div>
           <div className="overflow-x-auto">
-            <div className="flex items-end gap-1 h-48 min-w-[520px] relative">
+            <div
+              className="flex items-end gap-1 h-48 min-w-[520px] relative"
+              onMouseLeave={() => setHoveredMonth(null)}
+            >
               {/* Threshold line */}
               {threshold > 0 && threshold < maxValue && (
                 <div
-                  className="absolute left-0 right-0 border-t border-dashed border-[#f87171]/40"
+                  className="absolute left-0 right-0 border-t border-dashed border-[#f87171]/40 pointer-events-none z-0"
                   style={{ bottom: `${(threshold / maxValue) * 100}%` }}
                 />
               )}
@@ -128,31 +134,62 @@ export default function TresoreriePage() {
                 const incPct = (m.income / maxValue) * 100;
                 const outPct = (m.totalOut / maxValue) * 100;
                 const balPct = Math.max(0, (m.balance / maxValue) * 100);
+                const isHovered = hoveredMonth === i;
                 return (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <div
+                    key={i}
+                    className="flex-1 flex flex-col items-center gap-1 relative"
+                    onMouseEnter={() => setHoveredMonth(i)}
+                  >
+                    {/* Tooltip */}
+                    {isHovered && (
+                      <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-20 bg-card border border-border rounded-lg shadow-lg p-2.5 min-w-[140px] pointer-events-none">
+                        <div className="text-xs font-bold text-foreground mb-1.5">{m.label}</div>
+                        <div className="space-y-0.5 text-[11px]">
+                          <div className="flex justify-between gap-3">
+                            <span className="text-muted-foreground">Entrées</span>
+                            <span className="font-medium text-[#4ade80]">{fmt(Math.round(m.income))}&euro;</span>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <span className="text-muted-foreground">Sorties</span>
+                            <span className="font-medium text-[#f87171]">{fmt(Math.round(m.totalOut))}&euro;</span>
+                          </div>
+                          <div className="flex justify-between gap-3 pt-1 border-t border-border">
+                            <span className="text-muted-foreground">Net</span>
+                            <span className={cn("font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
+                              {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;
+                            </span>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <span className="text-muted-foreground">Solde</span>
+                            <span className={cn("font-bold", m.belowThreshold ? "text-[#f87171]" : "text-foreground")}>
+                              {fmt(Math.round(m.balance))}&euro;
+                            </span>
+                          </div>
+                        </div>
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-border" />
+                      </div>
+                    )}
                     <div className="w-full flex items-end justify-center gap-px" style={{ height: "160px" }}>
                       <div
-                        className="w-1/3 max-w-[12px] rounded-t bg-[#4ade80]/60 hover:bg-[#4ade80] transition-colors"
+                        className={cn("w-1/3 max-w-[12px] rounded-t transition-colors", isHovered ? "bg-[#4ade80]" : "bg-[#4ade80]/60")}
                         style={{ height: `${Math.max(2, incPct)}%` }}
-                        title={`Entrées: ${fmt(Math.round(m.income))}€`}
                       />
                       <div
-                        className="w-1/3 max-w-[12px] rounded-t bg-[#f87171]/60 hover:bg-[#f87171] transition-colors"
+                        className={cn("w-1/3 max-w-[12px] rounded-t transition-colors", isHovered ? "bg-[#f87171]" : "bg-[#f87171]/60")}
                         style={{ height: `${Math.max(2, outPct)}%` }}
-                        title={`Sorties: ${fmt(Math.round(m.totalOut))}€`}
                       />
                       <div
                         className={cn(
                           "w-1/3 max-w-[12px] rounded-t transition-colors",
                           m.belowThreshold
-                            ? "bg-[#f87171]/30 hover:bg-[#f87171]/50"
-                            : "bg-[#5682F2]/60 hover:bg-[#5682F2]"
+                            ? isHovered ? "bg-[#f87171]/50" : "bg-[#f87171]/30"
+                            : isHovered ? "bg-[#5682F2]" : "bg-[#5682F2]/60"
                         )}
                         style={{ height: `${Math.max(2, balPct)}%` }}
-                        title={`Solde: ${fmt(Math.round(m.balance))}€`}
                       />
                     </div>
-                    <span className="text-[9px] text-muted-foreground/60">{m.label}</span>
+                    <span className={cn("text-[9px]", isHovered ? "text-foreground font-medium" : "text-muted-foreground/60")}>{m.label}</span>
                   </div>
                 );
               })}
@@ -170,6 +207,7 @@ export default function TresoreriePage() {
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Entrées</th>
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">URSSAF</th>
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">IR</th>
+                  {hasIS && <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">IS</th>}
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Charges</th>
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Net</th>
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Solde</th>
@@ -188,6 +226,7 @@ export default function TresoreriePage() {
                     <td className="px-4 py-3 text-right text-[#4ade80] font-medium">{fmt(Math.round(m.income))}&euro;</td>
                     <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.urssaf))}&euro;</td>
                     <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.ir))}&euro;</td>
+                    {hasIS && <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.is))}&euro;</td>}
                     <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.expenses))}&euro;</td>
                     <td className={cn("px-4 py-3 text-right font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
                       {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;

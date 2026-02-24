@@ -9,7 +9,6 @@ import {
   CircleAlert,
   Users,
 } from "@/components/ui/icons";
-import { ProBlur } from "@/components/ProBlur";
 import {
   METIERS,
   METIER_CATEGORIES as CATEGORIES,
@@ -177,7 +176,6 @@ export default function BenchmarkPage() {
         </p>
       </div>
 
-      <ProBlur label="Le Benchmark TJM est réservé au plan Pro">
       {/* User positioning */}
       {userTJM && userPctLabel && (
         <div className="bg-gradient-to-r from-[#5682F2]/10 to-[#F4BE7E]/10 rounded-2xl border border-border p-6">
@@ -602,7 +600,6 @@ export default function BenchmarkPage() {
           secteur, le type de mission et la n&eacute;gociation.
         </p>
       </div>
-      </ProBlur>
     </div>
   );
 }

@@ -15,7 +15,6 @@ import {
   Gauge,
   ArrowLeftRight,
 } from "@/components/ui/icons";
-import { ProBlur } from "@/components/ProBlur";
 
 const STATUTS: BusinessStatus[] = ["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
 
@@ -375,7 +374,6 @@ export default function TransitionPage() {
         </p>
       </div>
 
-      <ProBlur label="La Transition CDI → Freelance est réservée au plan Pro">
       {/* CDI Salary */}
       <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center gap-3 mb-4">
@@ -846,7 +844,6 @@ export default function TransitionPage() {
         estim&eacute;s. Consulte un expert-comptable pour un conseil
         personnalis&eacute;.
       </div>
-      </ProBlur>
     </div>
   );
 }

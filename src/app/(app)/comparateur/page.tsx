@@ -16,7 +16,6 @@ import {
   Download,
   FileText,
 } from "@/components/ui/icons";
-import { ProBlur } from "@/components/ProBlur";
 import { exportCSV, exportPDF } from "@/lib/export";
 
 /** Statuts à comparer */
@@ -248,7 +247,6 @@ export default function ComparateurPage() {
           </div>
         </div>
 
-        <ProBlur label="Le Comparateur de statuts est réservé au plan Pro">
         {/* CA Slider */}
         <div className="bg-card rounded-2xl border border-border p-6">
           <div className="flex items-center justify-between mb-4">
@@ -499,7 +497,6 @@ export default function ComparateurPage() {
         <div className="text-center text-xs text-muted-foreground/60 pb-8">
           Simulation indicative basée sur des taux moyens. Consulte un expert-comptable pour un conseil personnalisé.
         </div>
-        </ProBlur>
       </div>
   );
 }

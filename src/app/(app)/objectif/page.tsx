@@ -15,7 +15,6 @@ import {
   CalendarDays,
   Gauge,
 } from "@/components/ui/icons";
-import { ProBlur } from "@/components/ProBlur";
 
 const STATUTS: BusinessStatus[] = ["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
 
@@ -222,7 +221,6 @@ export default function ObjectifPage() {
         </p>
       </div>
 
-      <ProBlur label="L'Objectif Revenu est réservé au plan Pro">
       {/* Goal slider */}
       <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
@@ -451,7 +449,6 @@ export default function ObjectifPage() {
         Simulation indicative basée sur des taux moyens et {workedDaysPerYear} jours travaillés/an.
         Consulte un expert-comptable pour un conseil personnalisé.
       </div>
-      </ProBlur>
     </div>
   );
 }
