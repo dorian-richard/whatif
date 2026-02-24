@@ -19,6 +19,7 @@ const NAV_MAIN = [
 ];
 
 const NAV_TOOLS = [
+  { href: "/holding", label: "Holding", icon: Building2, pro: true },
   { href: "/comparateur", label: "Comparateur", icon: Scale },
   { href: "/objectif", label: "Objectif", icon: Target },
   { href: "/transition", label: "Transition", icon: Briefcase },
@@ -28,7 +29,6 @@ const NAV_TOOLS = [
   { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
   { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
   { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
-  { href: "/holding", label: "Holding", icon: Building2, pro: true },
 ];
 
 const NAV_MOBILE_TABS = [
@@ -38,6 +38,7 @@ const NAV_MOBILE_TABS = [
 ];
 
 const NAV_MOBILE_MORE = [
+  { href: "/holding", label: "Holding", icon: Building2, pro: true },
   { href: "/comparateur", label: "Comparateur", icon: Scale },
   { href: "/objectif", label: "Objectif", icon: Target },
   { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
@@ -49,7 +50,6 @@ const NAV_MOBILE_MORE = [
   { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
   { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
   { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
-  { href: "/holding", label: "Holding", icon: Building2, pro: true },
   { href: "/settings", label: "Mon profil", icon: UserRound },
 ];
 
