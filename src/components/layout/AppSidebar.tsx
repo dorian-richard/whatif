@@ -14,8 +14,8 @@ const NAV_MAIN = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
   { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
-  { href: "/paiements", label: "Paiements", icon: CreditCard },
-  { href: "/pipeline", label: "Pipeline", icon: Target },
+  { href: "/paiements", label: "Paiements", icon: CreditCard, pro: true },
+  { href: "/pipeline", label: "Pipeline", icon: Target, pro: true },
 ];
 
 const NAV_TOOLS = [
@@ -23,11 +23,11 @@ const NAV_TOOLS = [
   { href: "/objectif", label: "Objectif", icon: Target },
   { href: "/transition", label: "Transition", icon: Briefcase },
   { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
-  { href: "/retraite", label: "Retraite", icon: Landmark },
-  { href: "/acre", label: "ACRE", icon: BadgePercent },
-  { href: "/calendrier", label: "Calendrier", icon: CalendarDays },
-  { href: "/tresorerie", label: "Trésorerie", icon: Wallet },
-  { href: "/historique", label: "Historique", icon: TrendingUp },
+  { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
+  { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
+  { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
+  { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
+  { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
 ];
 
 const NAV_MOBILE_TABS = [
@@ -42,12 +42,12 @@ const NAV_MOBILE_MORE = [
   { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
   { href: "/transition", label: "Transition", icon: Briefcase },
   { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
-  { href: "/retraite", label: "Retraite", icon: Landmark },
-  { href: "/acre", label: "ACRE", icon: BadgePercent },
-  { href: "/calendrier", label: "Calendrier", icon: CalendarDays },
-  { href: "/tresorerie", label: "Trésorerie", icon: Wallet },
-  { href: "/historique", label: "Historique", icon: TrendingUp },
-  { href: "/pipeline", label: "Pipeline", icon: Target },
+  { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
+  { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
+  { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
+  { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
+  { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
+  { href: "/pipeline", label: "Pipeline", icon: Target, pro: true },
   { href: "/settings", label: "Mon profil", icon: UserRound },
 ];
 
@@ -114,6 +114,9 @@ export function AppSidebar() {
               >
                 <item.icon className="size-[18px]" />
                 <span>{item.label}</span>
+                {item.pro && !isPro && (
+                  <span className="ml-auto text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">Pro</span>
+                )}
               </button>
             );
           })}
@@ -143,9 +146,11 @@ export function AppSidebar() {
                   )}
                 </span>
                 <span>{item.label}</span>
-                {showBadge && (
+                {showBadge ? (
                   <span className="ml-auto text-[10px] font-bold text-[#f87171]">{upcomingDeadlines.length}</span>
-                )}
+                ) : item.pro && !isPro ? (
+                  <span className="ml-auto text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">Pro</span>
+                ) : null}
               </button>
             );
           })}
@@ -235,6 +240,9 @@ export function AppSidebar() {
                     <item.icon className="size-5" />
                     {showBadge && (
                       <span className="absolute -top-1 -right-1 size-2 rounded-full bg-[#f87171] ring-2 ring-sidebar" />
+                    )}
+                    {item.pro && !isPro && !showBadge && (
+                      <span className="absolute -top-1 -right-2.5 text-[7px] font-bold uppercase text-primary">Pro</span>
                     )}
                   </span>
                   <span className="text-[10px] font-medium">{item.label}</span>
