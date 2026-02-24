@@ -68,7 +68,7 @@ export default function LoginPage() {
               <div className="text-center mb-5">
                 <h1 className="text-xl font-bold text-foreground">Connexion</h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Un lien magique sera envoy&eacute; &agrave; ton email.
+                  Un lien magique sera envoy&eacute; par email.
                 </p>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">

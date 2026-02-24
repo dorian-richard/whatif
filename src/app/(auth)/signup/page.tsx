@@ -69,7 +69,7 @@ export default function SignupPage() {
               <div className="text-center mb-5">
                 <h1 className="text-xl font-bold text-foreground">Créer un compte</h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Commence à simuler tes décisions en 30 secondes.
+                  Simule tes d&eacute;cisions en 30 secondes.
                 </p>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { BackButton } from "@/components/BackButton";
 
 export const metadata = {
   title: "Politique de Confidentialité - Freelens",
@@ -10,9 +10,7 @@ export default function ConfidentialitePage() {
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-6 py-16 space-y-8">
         <div>
-          <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            &larr; Retour
-          </Link>
+          <BackButton />
         </div>
 
         <h1 className="text-3xl font-bold text-foreground">Politique de Confidentialit&eacute;</h1>

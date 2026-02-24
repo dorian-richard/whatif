@@ -60,21 +60,12 @@ export const metadata: Metadata = {
     title: "Freelens \u2014 Le copilote financier des freelances",
     description:
       "Simulateur de revenus, comparateur de statuts, benchmark TJM march\u00e9. Prends les bonnes d\u00e9cisions pour ton activit\u00e9 freelance.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Freelens \u2014 Le copilote financier des freelances",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Freelens \u2014 Le copilote financier des freelances",
     description:
       "Simulateur de revenus, comparateur de statuts, benchmark TJM. Gratuit et confidentiel.",
-    images: ["/og-image.png"],
   },
   robots: {
     index: true,
