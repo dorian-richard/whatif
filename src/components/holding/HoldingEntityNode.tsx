@@ -43,9 +43,9 @@ function HoldingEntityNodeInner({ id, data }: NodeProps) {
       className="bg-card border border-border rounded-xl p-4 min-w-[200px] max-w-[240px] shadow-lg cursor-pointer hover:border-primary/50 transition-colors"
       onDoubleClick={() => d.onEdit(id)}
     >
-      {/* Handles */}
-      <Handle type="target" position={Position.Top} className="!bg-border !w-3 !h-1.5 !rounded-full !border-0" />
-      <Handle type="source" position={Position.Bottom} className="!bg-border !w-3 !h-1.5 !rounded-full !border-0" />
+      {/* Handles — visible connectors for drag-to-connect */}
+      <Handle type="target" position={Position.Top} className="!bg-muted-foreground/40 hover:!bg-primary !w-4 !h-2 !rounded-full !border-0 !-top-1 transition-colors" />
+      <Handle type="source" position={Position.Bottom} className="!bg-muted-foreground/40 hover:!bg-primary !w-4 !h-2 !rounded-full !border-0 !-bottom-1 transition-colors" />
 
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">

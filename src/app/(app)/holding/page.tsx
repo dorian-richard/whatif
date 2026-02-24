@@ -14,37 +14,29 @@ import { HoldingFlowEditor } from "@/components/holding/HoldingFlowEditor";
 import { Plus, Building2 } from "@/components/ui/icons";
 import type { HoldingEntity, HoldingEntityType, EntityTaxResult, FreelanceProfile } from "@/types";
 
-const DEFAULT_ENTITIES: Omit<HoldingEntity, "id">[] = [
-  {
-    name: "Ma Société",
-    type: "operating",
-    businessStatus: "sasu_is",
-    annualCA: 120000,
-    annualSalary: 0,
-    managementFees: 0,
-    positionX: 250,
-    positionY: 0,
-  },
-  {
-    name: "Ma Holding",
-    type: "holding",
-    businessStatus: "sasu_is",
-    annualCA: 0,
-    annualSalary: 0,
-    managementFees: 0,
-    positionX: 250,
-    positionY: 200,
-  },
-  {
-    name: "Moi",
-    type: "person",
-    annualCA: 0,
-    annualSalary: 0,
-    managementFees: 0,
-    positionX: 250,
-    positionY: 400,
-  },
-];
+function getDefaultEntities(businessStatus: string): Omit<HoldingEntity, "id">[] {
+  return [
+    {
+      name: "Ma Société",
+      type: "operating",
+      businessStatus: businessStatus || "sasu_is",
+      annualCA: 0,
+      annualSalary: 0,
+      managementFees: 0,
+      positionX: 250,
+      positionY: 0,
+    },
+    {
+      name: "Moi",
+      type: "person",
+      annualCA: 0,
+      annualSalary: 0,
+      managementFees: 0,
+      positionX: 250,
+      positionY: 250,
+    },
+  ];
+}
 
 export default function HoldingPage() {
   const entities = useHoldingStore((s) => s.entities);
@@ -54,8 +46,6 @@ export default function HoldingPage() {
   const setStructure = useHoldingStore((s) => s.setStructure);
   const addEntity = useHoldingStore((s) => s.addEntity);
   const setLoaded = useHoldingStore((s) => s.setLoaded);
-  const addFlow = useHoldingStore((s) => s.addFlow);
-
   const profile = useProfileStore((s) => s);
   const [saving, setSaving] = useState(false);
 
@@ -105,25 +95,11 @@ export default function HoldingPage() {
   }, [loaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const initDefaultStructure = useCallback(() => {
-    for (const entity of DEFAULT_ENTITIES) {
+    const defaults = getDefaultEntities(profile.businessStatus ?? "sasu_is");
+    for (const entity of defaults) {
       addEntity(entity);
     }
-    // Flows will be added after entities are created (need IDs from the store)
-    // We'll set them up in a subsequent effect
-  }, [addEntity]);
-
-  // Once default entities are in the store but no flows exist, set up default flows
-  useEffect(() => {
-    if (entities.length === 3 && flows.length === 0 && loaded) {
-      const operating = entities.find((e) => e.type === "operating");
-      const holding = entities.find((e) => e.type === "holding");
-      const person = entities.find((e) => e.type === "person");
-      if (operating && holding && person) {
-        addFlow({ fromEntityId: operating.id, toEntityId: holding.id, type: "dividend", annualAmount: 0 });
-        addFlow({ fromEntityId: holding.id, toEntityId: person.id, type: "salary", annualAmount: 0 });
-      }
-    }
-  }, [entities, flows.length, loaded, addFlow]);
+  }, [addEntity, profile.businessStatus]);
 
   // Build profile for engine
   const freelanceProfile: FreelanceProfile = useMemo(

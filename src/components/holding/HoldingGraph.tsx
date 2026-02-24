@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -9,14 +9,15 @@ import {
   type Node,
   type Edge,
   type NodeChange,
-  type EdgeChange,
-  applyNodeChanges,
-  applyEdgeChanges,
+  type EdgeMouseHandler,
+  type Connection,
   MarkerType,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useHoldingStore } from "@/stores/useHoldingStore";
 import { HoldingEntityNode, type HoldingNodeData } from "./HoldingEntityNode";
+import { NewFlowPopup } from "./NewFlowPopup";
+import { EditFlowPopup } from "./EditFlowPopup";
 import { fmt } from "@/lib/utils";
 import type { HoldingEntityType, HoldingFlowType, EntityTaxResult } from "@/types";
 
@@ -47,6 +48,11 @@ export function HoldingGraph({ entityResults }: HoldingGraphProps) {
   const setSelectedEntityId = useHoldingStore((s) => s.setSelectedEntityId);
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // New flow popup state
+  const [pendingConnection, setPendingConnection] = useState<{ source: string; target: string } | null>(null);
+  // Edit existing flow popup state
+  const [editingFlowId, setEditingFlowId] = useState<string | null>(null);
 
   const onEditEntity = useCallback(
     (id: string) => {
@@ -108,14 +114,12 @@ export function HoldingGraph({ entityResults }: HoldingGraphProps) {
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      // Apply position changes to store
       for (const change of changes) {
         if (change.type === "position" && change.position && change.id) {
           updateEntityPosition(change.id, change.position.x, change.position.y);
         }
       }
 
-      // Debounced API save for positions
       if (changes.some((c) => c.type === "position" && "dragging" in c && !c.dragging)) {
         if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
         saveTimerRef.current = setTimeout(() => {
@@ -135,20 +139,26 @@ export function HoldingGraph({ entityResults }: HoldingGraphProps) {
     [entities, updateEntityPosition]
   );
 
-  // We handle node changes via our store, not xyflow's internal state
-  const onNodesChangeInternal = useCallback(
-    (changes: NodeChange[]) => {
-      onNodesChange(changes);
-    },
-    [onNodesChange]
-  );
+  // Drag from handle to handle → open popup to configure the new flow
+  const onConnect = useCallback((connection: Connection) => {
+    if (connection.source && connection.target && connection.source !== connection.target) {
+      setPendingConnection({ source: connection.source, target: connection.target });
+    }
+  }, []);
+
+  // Click on edge → open edit popup
+  const onEdgeClick: EdgeMouseHandler = useCallback((_event, edge) => {
+    setEditingFlowId(edge.id);
+  }, []);
 
   return (
-    <div className="h-[500px] bg-card rounded-2xl border border-border overflow-hidden">
+    <div className="h-[500px] bg-card rounded-2xl border border-border overflow-hidden relative">
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChangeInternal}
+        onNodesChange={onNodesChange}
+        onConnect={onConnect}
+        onEdgeClick={onEdgeClick}
         nodeTypes={nodeTypes}
         fitView
         proOptions={{ hideAttribution: true }}
@@ -168,6 +178,23 @@ export function HoldingGraph({ entityResults }: HoldingGraphProps) {
           }}
         />
       </ReactFlow>
+
+      {/* New flow popup after drag-connect */}
+      {pendingConnection && (
+        <NewFlowPopup
+          sourceId={pendingConnection.source}
+          targetId={pendingConnection.target}
+          onClose={() => setPendingConnection(null)}
+        />
+      )}
+
+      {/* Edit flow popup on edge click */}
+      {editingFlowId && (
+        <EditFlowPopup
+          flowId={editingFlowId}
+          onClose={() => setEditingFlowId(null)}
+        />
+      )}
     </div>
   );
 }
