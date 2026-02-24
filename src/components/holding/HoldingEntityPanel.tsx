@@ -14,7 +14,14 @@ const ENTITY_TYPES: { value: HoldingEntityType; label: string }[] = [
 const BUSINESS_STATUSES = [
   { value: "", label: "— Aucun —" },
   { value: "sasu_is", label: "SASU IS" },
+  { value: "sasu_ir", label: "SASU IR" },
   { value: "eurl_is", label: "EURL IS" },
+  { value: "eurl_ir", label: "EURL IR" },
+  { value: "sci_is", label: "SCI IS" },
+  { value: "sci_ir", label: "SCI IR" },
+  { value: "sarl_is", label: "SARL IS" },
+  { value: "sas_is", label: "SAS IS" },
+  { value: "sa_is", label: "SA IS" },
 ];
 
 export function HoldingEntityPanel() {

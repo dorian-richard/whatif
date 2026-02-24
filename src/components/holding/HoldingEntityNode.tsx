@@ -27,9 +27,14 @@ const TYPE_CONFIG: Record<HoldingEntityType, { icon: typeof Building2; badge: st
 
 const STATUS_LABELS: Record<string, string> = {
   sasu_is: "SASU IS",
-  eurl_is: "EURL IS",
   sasu_ir: "SASU IR",
+  eurl_is: "EURL IS",
   eurl_ir: "EURL IR",
+  sci_is: "SCI IS",
+  sci_ir: "SCI IR",
+  sarl_is: "SARL IS",
+  sas_is: "SAS IS",
+  sa_is: "SA IS",
 };
 
 function HoldingEntityNodeInner({ id, data }: NodeProps) {

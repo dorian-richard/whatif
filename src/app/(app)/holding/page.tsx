@@ -52,10 +52,18 @@ export default function HoldingPage() {
   // Load from API on mount
   useEffect(() => {
     if (loaded) return;
+
+    // If entities already exist in localStorage (Zustand persist), skip API + defaults
+    const storeEntities = useHoldingStore.getState().entities;
+    if (storeEntities.length > 0) {
+      setLoaded(true);
+      return;
+    }
+
     fetch("/api/holding")
       .then((r) => r.json())
       .then((data) => {
-        if (data && data.entities) {
+        if (data && data.entities?.length) {
           setStructure({
             id: data.id,
             name: data.name,
@@ -79,22 +87,21 @@ export default function HoldingPage() {
               annualAmount: f.annualAmount,
             })),
           });
-        } else if (!data || !data.id) {
-          // No structure exists — create default template
+        } else {
+          // No structure in DB — create default template
           initDefaultStructure();
         }
         setLoaded(true);
       })
       .catch(() => {
-        // Fallback: create default locally
-        if (entities.length === 0) {
-          initDefaultStructure();
-        }
+        initDefaultStructure();
         setLoaded(true);
       });
   }, [loaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const initDefaultStructure = useCallback(() => {
+    // Double-check store hasn't been populated in the meantime
+    if (useHoldingStore.getState().entities.length > 0) return;
     const defaults = getDefaultEntities(profile.businessStatus ?? "sasu_is");
     for (const entity of defaults) {
       addEntity(entity);
