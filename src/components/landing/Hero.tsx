@@ -12,14 +12,14 @@ export function Hero() {
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center pt-20">
         <div className="mb-8" />
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] mb-6 tracking-tight">
-          <span className="text-foreground">Anticipe</span>
+          <span className="text-foreground">Décide avec les chiffres,</span>
           <br />
-          <span className="text-foreground">avant de </span>
-          <span className="fn-gradient-text">décider.</span>
+          <span className="text-foreground">pas au </span>
+          <span className="fn-gradient-text">feeling.</span>
         </h1>
 
         <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-          Simulateur, comparateur de statuts (micro, EURL, SASU, portage), benchmark TJM, transition CDI&nbsp;&rarr;&nbsp;Freelance et objectif revenu.
+          Simulateur, comparateur de statuts (micro, EURL, SASU, portage), benchmark TJM, suivi des paiements, prospects et objectif revenu.
           Tous les outils pour piloter ton activité.
         </p>
 
