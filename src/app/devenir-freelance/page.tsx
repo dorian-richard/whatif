@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BackButton } from "@/components/BackButton";
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Devenir freelance en 2025 : guide complet pour se lancer — Freelens",
@@ -13,9 +13,6 @@ export default function DevenirFreelancePage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-6 py-16 space-y-10">
-        <div>
-          <BackButton />
-        </div>
 
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-5xl font-bold text-foreground leading-tight">
@@ -189,6 +186,7 @@ export default function DevenirFreelancePage() {
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

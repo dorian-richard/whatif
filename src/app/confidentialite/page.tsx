@@ -1,4 +1,4 @@
-import { BackButton } from "@/components/BackButton";
+import { Footer } from "@/components/Footer";
 
 export const metadata = {
   title: "Politique de Confidentialité - Freelens",
@@ -9,9 +9,6 @@ export default function ConfidentialitePage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-6 py-16 space-y-8">
-        <div>
-          <BackButton />
-        </div>
 
         <h1 className="text-3xl font-bold text-foreground">Politique de Confidentialit&eacute;</h1>
         <p className="text-sm text-muted-foreground">Derni&egrave;re mise &agrave; jour : 23 f&eacute;vrier 2026</p>
@@ -116,6 +113,7 @@ export default function ConfidentialitePage() {
           </section>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
