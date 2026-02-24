@@ -61,3 +61,58 @@ export interface ProjectionResult {
 }
 
 export type SubscriptionStatus = "FREE" | "ACTIVE" | "CANCELED" | "PAST_DUE";
+
+// --- Holding ---
+
+export type HoldingEntityType = "holding" | "operating" | "person";
+export type HoldingFlowType = "dividend" | "management_fee" | "salary";
+
+export interface HoldingEntity {
+  id: string;
+  name: string;
+  type: HoldingEntityType;
+  businessStatus?: string;
+  annualCA: number;
+  annualSalary: number;
+  managementFees: number;
+  positionX: number;
+  positionY: number;
+  color?: string;
+}
+
+export interface HoldingFlow {
+  id: string;
+  fromEntityId: string;
+  toEntityId: string;
+  type: HoldingFlowType;
+  annualAmount: number;
+}
+
+export interface HoldingStructureData {
+  id?: string;
+  name: string;
+  entities: HoldingEntity[];
+  flows: HoldingFlow[];
+}
+
+export interface HoldingTaxResult {
+  entityResults: EntityTaxResult[];
+  totalCA: number;
+  totalNetWithHolding: number;
+  totalNetWithoutHolding: number;
+  taxSavings: number;
+  effectiveTaxRate: number;
+}
+
+export interface EntityTaxResult {
+  entityId: string;
+  entityName: string;
+  entityType: HoldingEntityType;
+  ca: number;
+  managementFeesPaid: number;
+  managementFeesReceived: number;
+  salaryPaid: number;
+  isAmount: number;
+  dividendsPaid: number;
+  netCash: number;
+}

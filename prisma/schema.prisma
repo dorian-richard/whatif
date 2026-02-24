@@ -56,6 +56,7 @@ model User {
   payments            Payment[]
   snapshots           MonthlySnapshot[]
   prospects           Prospect[]
+  holdingStructure    HoldingStructure?
 
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
@@ -164,6 +165,18 @@ model MonthlySnapshot {
   @@index([userId])
 }
 
+enum HoldingEntityType {
+  HOLDING
+  OPERATING
+  PERSON
+}
+
+enum HoldingFlowType {
+  DIVIDEND
+  MANAGEMENT_FEE
+  SALARY
+}
+
 enum ProspectStage {
   LEAD
   DEVIS_ENVOYE
@@ -188,4 +201,54 @@ model Prospect {
   updatedAt     DateTime      @updatedAt
 
   @@index([userId])
+}
+
+model HoldingStructure {
+  id        String          @id @default(uuid())
+  userId    String          @unique
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String          @default("Ma structure holding")
+  entities  HoldingEntity[]
+  flows     HoldingFlow[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([userId])
+}
+
+model HoldingEntity {
+  id              String            @id @default(uuid())
+  structureId     String
+  structure       HoldingStructure  @relation(fields: [structureId], references: [id], onDelete: Cascade)
+  name            String
+  type            HoldingEntityType
+  businessStatus  String?
+  annualCA        Float             @default(0)
+  annualSalary    Float             @default(0)
+  managementFees  Float             @default(0)
+  positionX       Float             @default(0)
+  positionY       Float             @default(0)
+  color           String?
+  flowsFrom       HoldingFlow[]     @relation("FlowFrom")
+  flowsTo         HoldingFlow[]     @relation("FlowTo")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([structureId])
+}
+
+model HoldingFlow {
+  id            String            @id @default(uuid())
+  structureId   String
+  structure     HoldingStructure  @relation(fields: [structureId], references: [id], onDelete: Cascade)
+  fromEntityId  String
+  fromEntity    HoldingEntity     @relation("FlowFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
+  toEntityId    String
+  toEntity      HoldingEntity     @relation("FlowTo", fields: [toEntityId], references: [id], onDelete: Cascade)
+  type          HoldingFlowType
+  annualAmount  Float             @default(0)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([structureId])
 }

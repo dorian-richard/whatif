@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban, Building2 } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
@@ -28,6 +28,7 @@ const NAV_TOOLS = [
   { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
   { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
   { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
+  { href: "/holding", label: "Holding", icon: Building2, pro: true },
 ];
 
 const NAV_MOBILE_TABS = [
@@ -48,6 +49,7 @@ const NAV_MOBILE_MORE = [
   { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
   { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
   { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
+  { href: "/holding", label: "Holding", icon: Building2, pro: true },
   { href: "/settings", label: "Mon profil", icon: UserRound },
 ];
 

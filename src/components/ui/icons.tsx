@@ -58,6 +58,7 @@ import {
   FileText,
   CreditCard,
   Kanban,
+  Building2,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -173,4 +174,5 @@ export {
   FileText,
   CreditCard,
   Kanban,
+  Building2,
 };
