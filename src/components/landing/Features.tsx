@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock, Wallet, TrendingUp, CreditCard } from "@/components/ui/icons";
+import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const FREE_FEATURES = [
   {
@@ -114,21 +115,25 @@ export function Features() {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
-        <div className="text-center mb-16">
-          <span className="text-sm font-medium text-primary uppercase tracking-widest mb-3 block">Fonctionnalités</span>
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Tout ce qu&apos;il faut pour{" "}
-            <span className="fn-gradient-text">décider sereinement</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            Simulateur, comparateur, benchmark et outils de décision — tout en un.
-          </p>
-        </div>
+        <AnimateOnScroll>
+          <div className="text-center mb-16">
+            <span className="text-sm font-medium text-primary uppercase tracking-widest mb-3 block">Fonctionnalités</span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+              Tout ce qu&apos;il faut pour{" "}
+              <span className="fn-gradient-text">décider sereinement</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+              Simulateur, comparateur, benchmark et outils de décision — tout en un.
+            </p>
+          </div>
+        </AnimateOnScroll>
 
         {/* Free features */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-          {FREE_FEATURES.map((f) => (
-            <FeatureCard key={f.title} f={f} />
+          {FREE_FEATURES.map((f, i) => (
+            <AnimateOnScroll key={f.title} delay={0.05 * i}>
+              <FeatureCard f={f} />
+            </AnimateOnScroll>
           ))}
         </div>
 
@@ -152,13 +157,15 @@ export function Features() {
 
         {/* Pro features */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {PRO_FEATURES.map((f) => (
-            <div key={f.title} className="relative">
-              <FeatureCard f={f} />
-              <span className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white px-2 py-0.5 rounded-full">
-                Pro
-              </span>
-            </div>
+          {PRO_FEATURES.map((f, i) => (
+            <AnimateOnScroll key={f.title} delay={0.05 * i}>
+              <div className="relative">
+                <FeatureCard f={f} />
+                <span className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white px-2 py-0.5 rounded-full">
+                  Pro
+                </span>
+              </div>
+            </AnimateOnScroll>
           ))}
         </div>
       </div>

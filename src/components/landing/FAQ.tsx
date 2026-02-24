@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const QUESTIONS = [
   {
@@ -72,14 +73,17 @@ export function FAQ() {
       </div>
 
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
-        <div className="text-center mb-12">
-          <span className="text-sm font-medium text-[#a78bfa] uppercase tracking-widest mb-3 block">FAQ</span>
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Questions{" "}
-            <span className="fn-gradient-text">fr&#233;quentes</span>
-          </h2>
-        </div>
+        <AnimateOnScroll>
+          <div className="text-center mb-12">
+            <span className="text-sm font-medium text-[#a78bfa] uppercase tracking-widest mb-3 block">FAQ</span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+              Questions{" "}
+              <span className="fn-gradient-text">fr&#233;quentes</span>
+            </h2>
+          </div>
+        </AnimateOnScroll>
 
+        <AnimateOnScroll delay={0.1}>
         <div className="space-y-2">
           {QUESTIONS.map((item, i) => {
             const isOpen = open === i;
@@ -121,6 +125,7 @@ export function FAQ() {
             );
           })}
         </div>
+        </AnimateOnScroll>
       </div>
     </section>
   );

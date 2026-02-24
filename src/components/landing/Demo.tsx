@@ -6,6 +6,7 @@ import { DEFAULT_SIM, MONTHS_SHORT } from "@/lib/constants";
 import { fmt } from "@/lib/utils";
 import { Icon } from "@/components/ui/icons";
 import type { ClientData, FreelanceProfile } from "@/types";
+import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const DEMO_CLIENTS: ClientData[] = [
   { id: "1", name: "Startup Tech", billing: "tjm", dailyRate: 550, daysPerWeek: 3, color: "#5682F2" },
@@ -50,15 +51,17 @@ export function Demo() {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
-        <div className="text-center mb-12">
-          <span className="text-sm font-medium text-[#F4BE7E] uppercase tracking-widest mb-3 block">Simulation</span>
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Teste un scénario en 1 clic
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            Vacances, hausse de tarifs, perte de client — vois l&apos;impact sur ton CA instantanément.
-          </p>
-        </div>
+        <AnimateOnScroll>
+          <div className="text-center mb-12">
+            <span className="text-sm font-medium text-[#F4BE7E] uppercase tracking-widest mb-3 block">Simulation</span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+              Teste un scénario en 1 clic
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Vacances, hausse de tarifs, perte de client — vois l&apos;impact sur ton CA instantanément.
+            </p>
+          </div>
+        </AnimateOnScroll>
 
         {/* Scenario buttons */}
         <div className="flex gap-3 mb-8 overflow-x-auto pb-1 justify-start sm:justify-center sm:flex-wrap">
@@ -78,6 +81,7 @@ export function Demo() {
         </div>
 
         {/* Chart card */}
+        <AnimateOnScroll delay={0.15}>
         <div className="bg-card rounded-2xl p-6 border border-border max-w-3xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <div className="flex gap-4 text-xs text-foreground font-medium">
@@ -146,6 +150,7 @@ export function Demo() {
             </div>
           </div>
         </div>
+        </AnimateOnScroll>
       </div>
     </section>
   );

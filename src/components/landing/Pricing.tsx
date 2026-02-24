@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const FREE_FEATURES = [
   "Simulateur temps réel",
@@ -58,6 +59,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
       </div>
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
+        <AnimateOnScroll>
         <div className="text-center mb-10">
           <span className="text-sm font-medium text-[#a78bfa] uppercase tracking-widest mb-3 block">Tarifs</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
@@ -95,7 +97,9 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
             </button>
           </div>
         </div>
+        </AnimateOnScroll>
 
+        <AnimateOnScroll delay={0.15}>
         <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
           {/* Free */}
           <div className="relative rounded-2xl p-6 border bg-muted/40 border-border hover:bg-muted/50 transition-all duration-300">
@@ -168,6 +172,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
             </p>
           </div>
         </div>
+        </AnimateOnScroll>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AnimateOnScroll } from "./AnimateOnScroll";
 
 export function Hero() {
   return (
@@ -11,44 +12,52 @@ export function Hero() {
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center pt-20">
         <div className="mb-8" />
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
-          <span className="text-foreground">Décide avec les chiffres,</span>
-          <br />
-          <span className="text-foreground">pas au </span>
-          <span className="fn-gradient-text">feeling.</span>
-        </h1>
+        <AnimateOnScroll>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
+            <span className="text-foreground">Décide avec les chiffres,</span>
+            <br />
+            <span className="text-foreground">pas au </span>
+            <span className="fn-gradient-text">feeling.</span>
+          </h1>
+        </AnimateOnScroll>
 
-        <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-          Simulateur, comparateur de statuts (micro, EURL, SASU, portage), benchmark TJM, suivi des paiements, prospects et objectif revenu.
-          Tous les outils pour piloter ton activité.
-        </p>
+        <AnimateOnScroll delay={0.1}>
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+            Simulateur, comparateur de statuts (micro, EURL, SASU, portage), benchmark TJM, suivi des paiements, prospects et objectif revenu.
+            Tous les outils pour piloter ton activité.
+          </p>
+        </AnimateOnScroll>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
-          <Link
-            href="/signup"
-            className="px-6 py-3 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-base font-semibold hover:opacity-90 transition-opacity fn-glow"
-          >
-            Essai gratuit 14 jours &rarr;
-          </Link>
-          <a
-            href="#simulation"
-            className="px-6 py-3 bg-muted/30 text-foreground rounded-full text-base font-semibold hover:bg-muted transition-colors border border-border backdrop-blur-sm"
-          >
-            Voir la simulation
-          </a>
-        </div>
-        <p className="text-sm text-muted-foreground/60 mb-12">
-          14 jours d&apos;essai Pro gratuit &middot; Sans carte bancaire &middot; Annulation libre
-        </p>
+        <AnimateOnScroll delay={0.2}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
+            <Link
+              href="/signup"
+              className="px-6 py-3 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-base font-semibold hover:opacity-90 transition-opacity fn-glow"
+            >
+              Essai gratuit 14 jours &rarr;
+            </Link>
+            <a
+              href="#simulation"
+              className="px-6 py-3 bg-muted/30 text-foreground rounded-full text-base font-semibold hover:bg-muted transition-colors border border-border backdrop-blur-sm"
+            >
+              Voir la simulation
+            </a>
+          </div>
+          <p className="text-sm text-muted-foreground/60 mb-12">
+            14 jours d&apos;essai Pro gratuit &middot; Sans carte bancaire &middot; Annulation libre
+          </p>
+        </AnimateOnScroll>
 
         {/* Dashboard mockup */}
-        <div className="relative mx-auto max-w-3xl">
-          <div className="fn-glow rounded-2xl">
-            <DashboardMockup />
+        <AnimateOnScroll delay={0.3}>
+          <div className="relative mx-auto max-w-3xl">
+            <div className="fn-glow rounded-2xl">
+              <DashboardMockup />
+            </div>
+            {/* Fade bottom */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
           </div>
-          {/* Fade bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
-        </div>
+        </AnimateOnScroll>
       </div>
     </section>
   );

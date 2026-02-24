@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
-import { AVG_JOURS_OUVRES, getAnnualCA } from "@/lib/simulation-engine";
+import { AVG_JOURS_OUVRES, getAnnualCA, reverseCA } from "@/lib/simulation-engine";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
 import {
@@ -27,7 +27,6 @@ const STATUT_COLORS: Record<string, string> = {
   portage: "#06b6d4",
 };
 
-const PFU_RATE = 0.30;
 const MICRO_PLAFOND = 77700;
 
 // TJM market benchmarks for difficulty badges
@@ -48,77 +47,6 @@ interface GoalResult {
   ineligible: boolean;
   ineligibleReason?: string;
   difficulty: "accessible" | "moyen" | "ambitieux" | "difficile";
-}
-
-/**
- * Reverse calculation: given a desired annual net, find the required CA.
- */
-function reverseCA(
-  targetNet: number,
-  status: BusinessStatus,
-  remType: RemunerationType,
-  mixtePartSalaire: number,
-  customIrRate?: number
-): number {
-  const cfg = BUSINESS_STATUS_CONFIG[status];
-  const urssaf = cfg.urssaf;
-  const ir = customIrRate ?? cfg.ir;
-  const is = cfg.is;
-
-  if (status === "micro") {
-    // net = CA * (1 - urssaf - ir)
-    return targetNet / (1 - urssaf - ir);
-  }
-
-  if (is === 0) {
-    if (status === "sasu_ir" && remType === "dividendes") {
-      // SASU IR sans salaire : pas de charges sociales, juste IR
-      return targetNet / (1 - ir);
-    }
-    if (status === "sasu_ir" && remType === "mixte") {
-      // SASU IR mixte
-      const salPart = mixtePartSalaire / 100;
-      const divPart = 1 - salPart;
-      const multiplier = salPart * (1 - urssaf) * (1 - ir) + divPart * (1 - ir);
-      return targetNet / multiplier;
-    }
-    // IR structures with salary: URSSAF then IR
-    return targetNet / ((1 - urssaf) * (1 - ir));
-  }
-
-  // IS structures
-  const isSASU = status === "sasu_is";
-
-  if (remType === "salaire") {
-    return targetNet / ((1 - urssaf) * (1 - ir));
-  }
-
-  if (remType === "dividendes") {
-    if (isSASU) {
-      // net = CA * (1 - is) * (1 - PFU)
-      return targetNet / ((1 - is) * (1 - PFU_RATE));
-    }
-    // EURL: net = CA * (1 - is) * (1 - urssaf) * (1 - ir)
-    return targetNet / ((1 - is) * (1 - urssaf) * (1 - ir));
-  }
-
-  // Mixte: split
-  const salPart = mixtePartSalaire / 100;
-  const divPart = 1 - salPart;
-
-  // salaryNet = CA * salPart * (1-urssaf) * (1-ir)
-  // divNet: remaining = CA * divPart, afterIS = remaining * (1-is)
-  //   SASU: divNet = afterIS * (1-PFU)
-  //   EURL: divNet = afterIS * (1-urssaf) * (1-ir)
-  const salaryMultiplier = salPart * (1 - urssaf) * (1 - ir);
-  const divMultiplier = isSASU
-    ? divPart * (1 - is) * (1 - PFU_RATE)
-    : divPart * (1 - is) * (1 - urssaf) * (1 - ir);
-
-  const totalMultiplier = salaryMultiplier + divMultiplier;
-  if (totalMultiplier <= 0) return Infinity;
-
-  return targetNet / totalMultiplier;
 }
 
 function getDifficulty(tjm: number): GoalResult["difficulty"] {

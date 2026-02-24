@@ -1,4 +1,4 @@
-import type { ClientData, SimulationParams, ProjectionResult, FreelanceProfile, BusinessStatus } from "@/types";
+import type { ClientData, SimulationParams, ProjectionResult, FreelanceProfile, BusinessStatus, RemunerationType } from "@/types";
 import { SEASONALITY, BUSINESS_STATUS_CONFIG } from "./constants";
 
 /**
@@ -103,6 +103,64 @@ export function getAnnualCA(clients: ClientData[], vacationDaysPerMonth?: number
 
 /** Taux du Prelevement Forfaitaire Unique (flat tax dividendes) */
 const PFU_RATE = 0.30; // 12.8% IR + 17.2% CSG/CRDS
+
+/**
+ * Reverse calculation: given a desired annual net, find the required CA.
+ */
+export function reverseCA(
+  targetNet: number,
+  status: BusinessStatus,
+  remType: RemunerationType,
+  mixtePartSalaire: number,
+  customIrRate?: number
+): number {
+  const cfg = BUSINESS_STATUS_CONFIG[status];
+  const urssaf = cfg.urssaf;
+  const ir = customIrRate ?? cfg.ir;
+  const is = cfg.is;
+
+  if (status === "micro") {
+    return targetNet / (1 - urssaf - ir);
+  }
+
+  if (is === 0) {
+    if (status === "sasu_ir" && remType === "dividendes") {
+      return targetNet / (1 - ir);
+    }
+    if (status === "sasu_ir" && remType === "mixte") {
+      const salPart = mixtePartSalaire / 100;
+      const divPart = 1 - salPart;
+      const multiplier = salPart * (1 - urssaf) * (1 - ir) + divPart * (1 - ir);
+      return targetNet / multiplier;
+    }
+    return targetNet / ((1 - urssaf) * (1 - ir));
+  }
+
+  const isSASU = status === "sasu_is";
+
+  if (remType === "salaire") {
+    return targetNet / ((1 - urssaf) * (1 - ir));
+  }
+
+  if (remType === "dividendes") {
+    if (isSASU) {
+      return targetNet / ((1 - is) * (1 - PFU_RATE));
+    }
+    return targetNet / ((1 - is) * (1 - urssaf) * (1 - ir));
+  }
+
+  const salPart = mixtePartSalaire / 100;
+  const divPart = 1 - salPart;
+  const salaryMultiplier = salPart * (1 - urssaf) * (1 - ir);
+  const divMultiplier = isSASU
+    ? divPart * (1 - is) * (1 - PFU_RATE)
+    : divPart * (1 - is) * (1 - urssaf) * (1 - ir);
+
+  const totalMultiplier = salaryMultiplier + divMultiplier;
+  if (totalMultiplier <= 0) return Infinity;
+
+  return targetNet / totalMultiplier;
+}
 
 /**
  * Calcule le revenu net apres toutes charges et impots.

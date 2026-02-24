@@ -1,3 +1,5 @@
+import { AnimateOnScroll } from "./AnimateOnScroll";
+
 const TESTIMONIALS = [
   {
     name: "Marie L.",
@@ -37,23 +39,27 @@ export function Testimonials() {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
-        <div className="text-center mb-16">
-          <span className="text-sm font-medium text-[#4ade80] uppercase tracking-widest mb-3 block">Témoignages</span>
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Ils ont simulé avant de{" "}
-            <span className="fn-gradient-text">décider</span>
-          </h2>
-        </div>
+        <AnimateOnScroll>
+          <div className="text-center mb-16">
+            <span className="text-sm font-medium text-[#4ade80] uppercase tracking-widest mb-3 block">Témoignages</span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+              Ils ont simulé avant de{" "}
+              <span className="fn-gradient-text">décider</span>
+            </h2>
+          </div>
+        </AnimateOnScroll>
 
         {/* Stats bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          {STATS.map((s) => (
-            <div key={s.label} className="text-center py-4 bg-muted/40 border border-border rounded-2xl">
-              <div className="text-2xl font-bold text-foreground mb-1">{s.value}</div>
-              <div className="text-xs text-muted-foreground/60">{s.label}</div>
-            </div>
-          ))}
-        </div>
+        <AnimateOnScroll delay={0.1}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            {STATS.map((s) => (
+              <div key={s.label} className="text-center py-4 bg-muted/40 border border-border rounded-2xl">
+                <div className="text-2xl font-bold text-foreground mb-1">{s.value}</div>
+                <div className="text-xs text-muted-foreground/60">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </AnimateOnScroll>
 
         {/* Trust badges */}
         <div className="flex flex-wrap gap-6 justify-center mb-12 opacity-60">
@@ -76,6 +82,7 @@ export function Testimonials() {
         </div>
 
         {/* Testimonial cards */}
+        <AnimateOnScroll delay={0.2}>
         <div className="grid gap-4 sm:gap-5 md:grid-cols-3">
           {TESTIMONIALS.map((t) => (
             <div
@@ -107,6 +114,7 @@ export function Testimonials() {
             </div>
           ))}
         </div>
+        </AnimateOnScroll>
       </div>
     </section>
   );
