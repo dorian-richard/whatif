@@ -76,7 +76,7 @@ const jsonLd = [
         name: "Mes données sont-elles en sécurité ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Oui. Tes données sont stockées dans une base PostgreSQL hébergée sur Supabase (serveurs européens). Les connexions sont chiffrées de bout en bout (TLS). Nous ne revendons aucune donnée et tu peux supprimer ton compte à tout moment.",
+          text: "Oui. Tes données sont stockées sur des serveurs européens avec chiffrement de bout en bout. Nous ne revendons aucune donnée et tu peux supprimer ton compte à tout moment.",
         },
       },
       {

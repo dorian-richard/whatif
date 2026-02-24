@@ -14,7 +14,7 @@ const QUESTIONS = [
   },
   {
     q: "Mes donn\u00e9es sont-elles en s\u00e9curit\u00e9 ?",
-    a: "Oui. Tes donn\u00e9es sont stock\u00e9es dans une base PostgreSQL h\u00e9berg\u00e9e sur Supabase (serveurs europ\u00e9ens). Les connexions sont chiffr\u00e9es de bout en bout (TLS). Nous ne revendons aucune donn\u00e9e et tu peux supprimer ton compte \u00e0 tout moment.",
+    a: "Oui. Tes donn\u00e9es sont stock\u00e9es sur des serveurs europ\u00e9ens avec chiffrement de bout en bout. Nous ne revendons aucune donn\u00e9e et tu peux supprimer ton compte \u00e0 tout moment.",
   },
   {
     q: "Quelle diff\u00e9rence entre Free et Pro ?",
