@@ -89,8 +89,8 @@ export function EarningsCounter() {
     return {
       daily,
       week: daily * weekDays,
-      month: daily * businessDaysSoFar,
-      daysSoFar: businessDaysSoFar,
+      month: Math.min(monthNet, daily * businessDaysSoFar),
+      daysSoFar: Math.min(businessDaysSoFar, adjustedDays),
       daysInMonth: adjustedDays,
     };
   }, [clients, vacationDaysPerMonth, profile]);

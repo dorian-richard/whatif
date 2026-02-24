@@ -75,26 +75,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
   const afterAnnual = projection.after.reduce((a, b) => a + b, 0);
   const beforeAnnual = projection.before.reduce((a, b) => a + b, 0);
 
-  const freedomDaysBefore = (5 - profile.workDaysPerWeek) * 52;
-  const freedomDaysAfter = (5 - sim.workDaysPerWeek) * 52 + sim.vacationWeeks * 5;
-
   const expenses = profile.monthlyExpenses + sim.expenseChange;
-  const savingsEndBefore = profile.savings + beforeAnnual - profile.monthlyExpenses * 12;
-  const savingsEndAfter = profile.savings + afterAnnual - expenses * 12;
-
-  const runwayBefore =
-    profile.monthlyExpenses > 0 ? profile.savings / profile.monthlyExpenses : 99;
-  const runwayAfter = expenses > 0 ? profile.savings / expenses : 99;
-
-  const recurringCA = clients
-    .filter((c) => c.billing === "tjm" || c.billing === "forfait")
-    .reduce((s, c) => s + getClientBaseCA(c), 0);
-  const totalBaseCA = clients.reduce((s, c) => s + getClientBaseCA(c), 0);
-  const recurringPct = totalBaseCA > 0 ? (recurringCA / totalBaseCA) * 100 : 0;
-
-  const clientCAs = clients.map((c) => getClientBaseCA(c));
-  const maxClientCA = Math.max(...clientCAs, 0);
-  const dependencyPct = totalBaseCA > 0 ? (maxClientCA / totalBaseCA) * 100 : 0;
 
   const statusConfig = BUSINESS_STATUS_CONFIG[profile.businessStatus ?? "micro"];
   const urssafRate = profile.customUrssafRate ?? statusConfig.urssaf;
@@ -107,10 +88,42 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
   const netMonthlyBefore = netBefore / 12 - profile.monthlyExpenses;
   const netMonthlyAfter = netAfter / 12 - expenses;
 
+  // Trésorerie fin d'année = épargne + revenu NET (pas brut) - charges fixes
+  const savingsEndBefore = profile.savings + netBefore - profile.monthlyExpenses * 12;
+  const savingsEndAfter = profile.savings + netAfter - expenses * 12;
+
+  const runwayBefore =
+    profile.monthlyExpenses > 0 ? profile.savings / profile.monthlyExpenses : 99;
+  const runwayAfter = expenses > 0 ? profile.savings / expenses : 99;
+
+  // Recurring & dependency — filter out lost client from simulation
+  const simClients = sim.lostClientIndex != null
+    ? clients.filter((_, i) => i !== sim.lostClientIndex)
+    : clients;
+  const recurringCA = simClients
+    .filter((c) => c.billing === "tjm" || c.billing === "forfait")
+    .reduce((s, c) => s + getClientBaseCA(c), 0);
+  const totalBaseCA = clients.reduce((s, c) => s + getClientBaseCA(c), 0);
+  const totalBaseCAAfter = simClients.reduce((s, c) => s + getClientBaseCA(c), 0);
+  const recurringPctBefore = totalBaseCA > 0 ? (clients.filter((c) => c.billing === "tjm" || c.billing === "forfait").reduce((s, c) => s + getClientBaseCA(c), 0) / totalBaseCA) * 100 : 0;
+  const recurringPctAfter = totalBaseCAAfter > 0 ? (recurringCA / totalBaseCAAfter) * 100 : 0;
+
+  const clientCAs = clients.map((c) => getClientBaseCA(c));
+  const maxClientCA = Math.max(...clientCAs, 0);
+  const dependencyPctBefore = totalBaseCA > 0 ? (maxClientCA / totalBaseCA) * 100 : 0;
+  const simClientCAs = simClients.map((c) => getClientBaseCA(c));
+  const maxSimClientCA = Math.max(...simClientCAs, 0);
+  const dependencyPctAfter = totalBaseCAAfter > 0 ? (maxSimClientCA / totalBaseCAAfter) * 100 : 0;
+
   const monthlySalary = profile.monthlySalary ?? 0;
 
-  const workingDaysBefore = profile.workDaysPerWeek * 52;
+  // Jours — inclure les vacances configurées dans le profil pour "avant"
+  const profileVacDays = (profile.vacationDaysPerMonth ?? []).reduce((s, d) => s + d, 0);
+  const workingDaysBefore = Math.max(0, profile.workDaysPerWeek * 52 - profileVacDays);
   const workingDaysAfter = sim.workDaysPerWeek * (52 - sim.vacationWeeks);
+
+  const freedomDaysBefore = (5 - profile.workDaysPerWeek) * 52 + profileVacDays;
+  const freedomDaysAfter = (5 - sim.workDaysPerWeek) * 52 + sim.vacationWeeks * 5;
 
   const utilizationBefore = workingDaysBefore > 0 ? Math.min(100, (workingDaysBefore / (5 * 52)) * 100) : 0;
   const utilizationAfter = workingDaysAfter > 0 ? Math.min(100, (workingDaysAfter / (5 * 52)) * 100) : 0;
@@ -176,24 +189,24 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       icon: <RefreshCw className="size-5 text-[#5682F2]" />,
       label: "Revenu prévisible",
       explanation: "Part du CA qui revient chaque mois (TJM réguliers + forfaits). Plus c'est haut, plus vos revenus sont stables",
-      before: Math.round(recurringPct),
-      after: Math.round(recurringPct),
+      before: Math.round(recurringPctBefore),
+      after: Math.round(recurringPctAfter),
       unit: "%",
       reverse: false,
       maxValue: 100,
-      verdict: recurringPct >= 70 ? "bon" : recurringPct >= 40 ? "ok" : "attention",
+      verdict: recurringPctAfter >= 70 ? "bon" : recurringPctAfter >= 40 ? "ok" : "attention",
       group: "securite",
     },
     {
       icon: <Users className="size-5 text-[#fbbf24]" />,
       label: "Dépendance client",
       explanation: "Part de votre CA que représente votre plus gros client. Au-dessus de 50%, la perte de ce client serait critique",
-      before: Math.round(dependencyPct),
-      after: Math.round(dependencyPct),
+      before: Math.round(dependencyPctBefore),
+      after: Math.round(dependencyPctAfter),
       unit: "%",
       reverse: true,
       maxValue: 100,
-      verdict: dependencyPct <= 30 ? "bon" : dependencyPct <= 50 ? "ok" : dependencyPct <= 70 ? "attention" : "risque",
+      verdict: dependencyPctAfter <= 30 ? "bon" : dependencyPctAfter <= 50 ? "ok" : dependencyPctAfter <= 70 ? "attention" : "risque",
       group: "securite",
     },
     {
