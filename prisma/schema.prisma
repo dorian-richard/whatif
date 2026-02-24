@@ -54,6 +54,8 @@ model User {
   clients             Client[]
   scenarios           Scenario[]
   payments            Payment[]
+  snapshots           MonthlySnapshot[]
+  prospects           Prospect[]
 
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
@@ -137,6 +139,53 @@ model Scenario {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model MonthlySnapshot {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  month       Int
+  year        Int
+  ca          Float
+  net         Float
+  clientCount Int
+  avgTJM      Float
+  paymentRate Float
+  expenses    Float
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, month, year])
+  @@index([userId])
+}
+
+enum ProspectStage {
+  LEAD
+  DEVIS_ENVOYE
+  SIGNE
+  ACTIF
+}
+
+model Prospect {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name          String
+  estimatedCA   Float
+  probability   Int           @default(50)
+  stage         ProspectStage @default(LEAD)
+  notes         String?
+  expectedClose DateTime?
+  contactEmail  String?
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   @@index([userId])
 }

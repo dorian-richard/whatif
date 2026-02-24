@@ -6,6 +6,7 @@ import { useProfileStore } from "@/stores/useProfileStore";
 import { simulate, getClientBaseCA, computeNetFromCA, JOURS_OUVRES, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
 import { DEFAULT_SIM, MONTHS_SHORT, BUSINESS_STATUS_CONFIG, SEASONALITY } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
+import { EarningsCounter } from "@/components/dashboard/EarningsCounter";
 import {
   CloudSun,
   CloudRain,
@@ -27,9 +28,11 @@ import {
   AlertTriangle,
   Download,
   FileText,
+  Target,
 } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/tooltip";
 import { getUpcomingDeadlines, CATEGORY_CONFIG as DEADLINE_CATS } from "@/lib/fiscal-deadlines";
+import { usePipelineStore } from "@/stores/usePipelineStore";
 import { exportCSV, exportPDF } from "@/lib/export";
 
 type Meteo = "soleil" | "beau" | "variable" | "orageux";
@@ -175,6 +178,9 @@ export default function DashboardPage() {
     [profile.businessStatus]
   );
 
+  const prospects = usePipelineStore((s) => s.prospects);
+  const weightedPipeline = prospects.reduce((s, p) => s + p.estimatedCA * (p.probability / 100), 0);
+
   if (!isDbSynced) return <DashboardSkeleton />;
 
   return (
@@ -280,6 +286,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Earnings counter */}
+      <EarningsCounter />
+
       {/* Net revenue highlight */}
       <DashboardFinanceCards
         netMonthly={netMonthly}
@@ -307,6 +316,7 @@ export default function DashboardPage() {
           { icon: <CalendarDays className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Utilisation", value: `${utilizationPct.toFixed(0)}%`, sub: `${totalDaysPerWeek}/${profile.workDaysPerWeek}j par sem`, tip: "Jours facturés / jours disponibles par semaine" },
           { icon: <BadgePercent className="size-4 text-[#F4BE7E]" />, iconBg: "bg-[#F4BE7E]/15", label: "Charges totales", value: `${effectiveChargesRate.toFixed(0)}%`, sub: `${fmt(Math.round(totalCharges))}\u20AC/an`, tip: "Cotisations sociales + IR en % du CA brut" },
           { icon: <Banknote className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Taux net effectif", value: `${annualCA > 0 ? ((netAfterAll / annualCA) * 100).toFixed(0) : 0}%`, sub: `${fmt(Math.round(netAfterAll))}\u20AC net fiscal/an`, tip: "Ce qui te reste réellement après toutes les charges et impôts" },
+          ...(prospects.length > 0 ? [{ icon: <Target className="size-4 text-[#a78bfa]" />, iconBg: "bg-[#a78bfa]/12", label: "Pipeline", value: `${fmt(Math.round(weightedPipeline))}\u20AC`, sub: `${prospects.length} prospect${prospects.length > 1 ? "s" : ""} en cours`, tip: "CA pondéré par probabilité de conversion de tes prospects" }] : []),
         ].map((kpi) => (
           <div key={kpi.label} className="min-w-[150px] snap-center shrink-0 md:min-w-0 md:shrink bg-card rounded-xl p-4 border border-border hover:bg-muted/50 transition-colors">
             <div className="flex items-center gap-2 mb-2">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock } from "@/components/ui/icons";
+import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock, Wallet, TrendingUp, CreditCard } from "@/components/ui/icons";
 
 const FREE_FEATURES = [
   {
@@ -64,6 +64,30 @@ const PRO_FEATURES = [
     title: "Simulation ACRE",
     desc: "Calcule tes économies URSSAF avec l'ACRE sur 1 an, statut par statut. Micro, EURL et SASU comparés.",
     color: "#06b6d4",
+  },
+  {
+    icon: CreditCard,
+    title: "Suivi des paiements",
+    desc: "Suis tes factures en temps réel : envoyées, payées, en retard. Visualise ton taux d'encaissement et les montants en attente.",
+    color: "#ec4899",
+  },
+  {
+    icon: Wallet,
+    title: "Simulateur de trésorerie",
+    desc: "Projette ta trésorerie sur 12 mois : entrées, sorties, solde prévisionnel et alerte si tu passes sous ton seuil de sécurité.",
+    color: "#f97316",
+  },
+  {
+    icon: Target,
+    title: "Pipeline commercial",
+    desc: "Gère tes prospects en kanban : lead, devis envoyé, signé, actif. Pipeline pondéré par probabilité de conversion.",
+    color: "#a78bfa",
+  },
+  {
+    icon: TrendingUp,
+    title: "Historique & tendances",
+    desc: "Compare ton CA, TJM et taux d'encaissement d'une année sur l'autre. Identifie tes tendances et ta progression.",
+    color: "#10b981",
   },
 ];
 

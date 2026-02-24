@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
@@ -15,6 +15,7 @@ const NAV_MAIN = [
   { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
   { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
   { href: "/paiements", label: "Paiements", icon: CreditCard },
+  { href: "/pipeline", label: "Pipeline", icon: Target },
 ];
 
 const NAV_TOOLS = [
@@ -25,6 +26,8 @@ const NAV_TOOLS = [
   { href: "/retraite", label: "Retraite", icon: Landmark },
   { href: "/acre", label: "ACRE", icon: BadgePercent },
   { href: "/calendrier", label: "Calendrier", icon: CalendarDays },
+  { href: "/tresorerie", label: "Trésorerie", icon: Wallet },
+  { href: "/historique", label: "Historique", icon: TrendingUp },
 ];
 
 const NAV_MOBILE_TABS = [
@@ -42,6 +45,9 @@ const NAV_MOBILE_MORE = [
   { href: "/retraite", label: "Retraite", icon: Landmark },
   { href: "/acre", label: "ACRE", icon: BadgePercent },
   { href: "/calendrier", label: "Calendrier", icon: CalendarDays },
+  { href: "/tresorerie", label: "Trésorerie", icon: Wallet },
+  { href: "/historique", label: "Historique", icon: TrendingUp },
+  { href: "/pipeline", label: "Pipeline", icon: Target },
   { href: "/settings", label: "Mon profil", icon: UserRound },
 ];
 
