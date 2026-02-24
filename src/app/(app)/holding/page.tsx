@@ -239,7 +239,6 @@ export default function HoldingPage() {
           </ReactFlowProvider>
           <div className="space-y-4">
             <HoldingFlowEditor />
-            {selectedEntityId && <HoldingEntityPanel />}
           </div>
         </div>
 
@@ -273,12 +272,14 @@ export default function HoldingPage() {
             );
           })}
           <HoldingFlowEditor />
-          {selectedEntityId && <HoldingEntityPanel />}
         </div>
 
         {/* Tax comparison */}
         <HoldingTaxComparison result={taxResult} />
       </ProBlur>
+
+      {/* Entity edit popup (global overlay) */}
+      {selectedEntityId && <HoldingEntityPanel />}
     </div>
   );
 }
