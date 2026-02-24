@@ -9,14 +9,19 @@ const FREE_FEATURES = [
   "3 clients max",
   "1 scénario sauvegardé",
   "Graphique 12 mois",
-  "Paramètres de base",
+  "Comparateur de statuts",
+  "Objectif Revenu",
+  "Transition CDI → Freelance",
+  "Benchmark TJM marché",
 ];
 
 const FREE_LIMITATIONS = [
-  "Benchmark TJM marché",
-  "Objectif Revenu inversé",
-  "Calendrier Fiscal",
-  "Métriques émotionnelles",
+  "Suivi des paiements",
+  "Pipeline commercial",
+  "Calendrier fiscal",
+  "Simulateur de trésorerie",
+  "Historique & tendances",
+  "Retraite & ACRE",
   "Export PDF",
 ];
 
@@ -24,12 +29,14 @@ const PRO_FEATURES = [
   "Tout du plan Free",
   "Clients illimités",
   "Scénarios illimités",
-  "Benchmark TJM marché",
-  "Objectif Revenu inversé",
-  "Calendrier Fiscal",
-  "Tableau mensuel détaillé",
+  "Suivi des paiements",
+  "Pipeline commercial",
+  "Calendrier fiscal",
+  "Simulateur de trésorerie",
+  "Historique & tendances",
+  "Retraite & ACRE",
   "Métriques émotionnelles",
-  "Export PDF",
+  "Export PDF & CSV",
   "Support prioritaire",
 ];
 
