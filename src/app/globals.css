@@ -238,7 +238,7 @@
   box-shadow: 0 0 30px rgba(244, 190, 126, 0.2), 0 0 60px rgba(244, 190, 126, 0.06);
 }
 
-/* Snap scroll — desktop only, disabled on mobile to avoid content cutoff */
+/* Snap scroll — proximity so tall sections (Features, FAQ) scroll naturally */
 .snap-container {
   overflow-y: auto;
   height: 100vh;
@@ -250,7 +250,7 @@
 
 @media (min-width: 768px) {
   .snap-container {
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: y proximity;
   }
   .snap-section {
     scroll-snap-align: start;

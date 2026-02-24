@@ -11,7 +11,7 @@ export function Hero() {
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center pt-20">
         <div className="mb-8" />
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] mb-6 tracking-tight">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
           <span className="text-foreground">Décide avec les chiffres,</span>
           <br />
           <span className="text-foreground">pas au </span>
@@ -26,13 +26,13 @@ export function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
           <Link
             href="/signup"
-            className="px-8 py-3.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-lg font-semibold hover:opacity-90 transition-opacity fn-glow"
+            className="px-6 py-3 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-base font-semibold hover:opacity-90 transition-opacity fn-glow"
           >
             Essai gratuit 14 jours &rarr;
           </Link>
           <a
             href="#simulation"
-            className="px-8 py-3.5 bg-muted/30 text-foreground rounded-full text-lg font-semibold hover:bg-muted transition-colors border border-border backdrop-blur-sm"
+            className="px-6 py-3 bg-muted/30 text-foreground rounded-full text-base font-semibold hover:bg-muted transition-colors border border-border backdrop-blur-sm"
           >
             Voir la simulation
           </a>
