@@ -123,6 +123,37 @@ export default function TresoreriePage() {
               className="flex items-end gap-1 h-48 min-w-[520px] relative"
               onMouseLeave={() => setHoveredMonth(null)}
             >
+              {/* Floating tooltip on the left */}
+              {hoveredMonth !== null && (() => {
+                const m = cashflow[hoveredMonth];
+                return (
+                  <div className="absolute left-0 top-0 z-20 bg-card border border-border rounded-lg shadow-lg p-2.5 min-w-[150px] pointer-events-none">
+                    <div className="text-xs font-bold text-foreground mb-1.5">{m.label}</div>
+                    <div className="space-y-0.5 text-[11px]">
+                      <div className="flex justify-between gap-3">
+                        <span className="text-muted-foreground">Entrées</span>
+                        <span className="font-medium text-[#4ade80]">{fmt(Math.round(m.income))}&euro;</span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-muted-foreground">Sorties</span>
+                        <span className="font-medium text-[#f87171]">{fmt(Math.round(m.totalOut))}&euro;</span>
+                      </div>
+                      <div className="flex justify-between gap-3 pt-1 border-t border-border">
+                        <span className="text-muted-foreground">Net</span>
+                        <span className={cn("font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
+                          {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;
+                        </span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-muted-foreground">Solde</span>
+                        <span className={cn("font-bold", m.belowThreshold ? "text-[#f87171]" : "text-foreground")}>
+                          {fmt(Math.round(m.balance))}&euro;
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
               {/* Threshold line */}
               {threshold > 0 && threshold < maxValue && (
                 <div
@@ -141,35 +172,7 @@ export default function TresoreriePage() {
                     className="flex-1 flex flex-col items-center gap-1 relative"
                     onMouseEnter={() => setHoveredMonth(i)}
                   >
-                    {/* Tooltip */}
-                    {isHovered && (
-                      <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-20 bg-card border border-border rounded-lg shadow-lg p-2.5 min-w-[140px] pointer-events-none">
-                        <div className="text-xs font-bold text-foreground mb-1.5">{m.label}</div>
-                        <div className="space-y-0.5 text-[11px]">
-                          <div className="flex justify-between gap-3">
-                            <span className="text-muted-foreground">Entrées</span>
-                            <span className="font-medium text-[#4ade80]">{fmt(Math.round(m.income))}&euro;</span>
-                          </div>
-                          <div className="flex justify-between gap-3">
-                            <span className="text-muted-foreground">Sorties</span>
-                            <span className="font-medium text-[#f87171]">{fmt(Math.round(m.totalOut))}&euro;</span>
-                          </div>
-                          <div className="flex justify-between gap-3 pt-1 border-t border-border">
-                            <span className="text-muted-foreground">Net</span>
-                            <span className={cn("font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
-                              {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;
-                            </span>
-                          </div>
-                          <div className="flex justify-between gap-3">
-                            <span className="text-muted-foreground">Solde</span>
-                            <span className={cn("font-bold", m.belowThreshold ? "text-[#f87171]" : "text-foreground")}>
-                              {fmt(Math.round(m.balance))}&euro;
-                            </span>
-                          </div>
-                        </div>
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-border" />
-                      </div>
-                    )}
+                    {/* Tooltip — shown as floating panel on the left of the chart */}
                     <div className="w-full flex items-end justify-center gap-px" style={{ height: "160px" }}>
                       <div
                         className={cn("w-1/3 max-w-[12px] rounded-t transition-colors", isHovered ? "bg-[#4ade80]" : "bg-[#4ade80]/60")}
