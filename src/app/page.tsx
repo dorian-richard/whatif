@@ -20,7 +20,7 @@ const jsonLd = [
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     description:
-      "Simulateur de revenus, comparateur de statuts juridiques, benchmark TJM et outils de décision pour freelances en France.",
+      "Le copilote financier des freelances en France : simulateur de revenus, comparateur de statuts, pipeline commercial, suivi des paiements, calendrier fiscal, trésorerie prévisionnelle et benchmark TJM.",
     url: "https://freelens.io",
     offers: [
       {
@@ -48,7 +48,7 @@ const jsonLd = [
     name: "Freelens",
     url: "https://freelens.io",
     logo: "https://freelens.io/logo.png",
-    description: "Le copilote financier des freelances. Simulateur de revenus, comparateur de statuts et outils de décision.",
+    description: "Le copilote financier des freelances. Simulateur de revenus, comparateur de statuts, pipeline commercial, suivi des paiements, calendrier fiscal et trésorerie prévisionnelle.",
     sameAs: [],
   },
   {
@@ -60,7 +60,15 @@ const jsonLd = [
         name: "Freelens, c\u2019est quoi exactement ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Freelens est un simulateur de revenus conçu pour les freelances en France. Il te permet de visualiser l\u2019impact de tes décisions (vacances, hausse de TJM, perte de client\u2026) sur ton CA et ton net annuel, mois par mois.",
+          text: "Freelens est le copilote financier des freelances en France. Bien plus qu\u2019un simulateur : c\u2019est une plateforme complète qui combine simulateur de revenus, comparateur de statuts juridiques, pipeline commercial, suivi des paiements, calendrier fiscal, simulateur de trésorerie, historique avec tendances YoY, et benchmark TJM marché.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Qu\u2019est-ce que je peux faire avec Freelens ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Simuler tes revenus nets mois par mois selon ton statut, comparer les statuts juridiques (micro, EI, EURL, SASU, portage), gérer ton pipeline de prospects, suivre tes paiements clients, anticiper ta trésorerie sur 12 mois, consulter le calendrier de tes échéances fiscales, analyser tes tendances année après année, et calculer le TJM idéal pour atteindre ton objectif de revenu.",
         },
       },
       {
@@ -76,7 +84,7 @@ const jsonLd = [
         name: "Quelle différence entre Free et Pro ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Le plan Free te donne accès au simulateur avec 3 clients max et 1 scénario sauvegardé. Le plan Pro débloque tout : clients illimités, scénarios illimités, export PDF, tableau mensuel détaillé et métriques émotionnelles.",
+          text: "Le plan Free te donne accès au simulateur, au comparateur de statuts, à l\u2019objectif revenu, à la transition CDI → freelance et au benchmark TJM (3 clients max, 1 scénario). Le plan Pro débloque tout : clients et scénarios illimités, suivi des paiements, pipeline commercial, calendrier fiscal, simulateur de trésorerie, historique & tendances, simulation retraite & ACRE, et export PDF & CSV.",
         },
       },
       {
@@ -84,15 +92,7 @@ const jsonLd = [
         name: "Les calculs sont-ils fiables ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Le moteur de simulation utilise les taux officiels URSSAF 2024/2025 et les barèmes d\u2019IR en vigueur. Les cotisations sont calculées selon ton statut juridique réel (micro, EI, EURL, SASU, portage). Tu peux aussi ajuster manuellement les taux.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Puis-je exporter mes résultats ?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Oui, avec le plan Pro tu peux exporter tes projections en PDF pour les partager avec ton comptable, ta banque ou pour tes archives personnelles.",
+          text: "Le moteur de simulation utilise les taux officiels URSSAF 2025 et les barèmes d\u2019IR en vigueur. Les cotisations sont calculées selon ton statut juridique réel (micro, EI, EURL IR/IS, SASU IR/IS, portage). Le simulateur de trésorerie intègre URSSAF, IR et IS pour une projection fidèle.",
         },
       },
       {
@@ -100,7 +100,7 @@ const jsonLd = [
         name: "Combien facturer en freelance ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Freelens inclut un benchmark TJM basé sur 27 métiers et un outil Objectif Revenu qui calcule le TJM nécessaire pour atteindre ton revenu net cible, en tenant compte de ton statut juridique, tes charges et tes vacances.",
+          text: "Freelens inclut un benchmark TJM basé sur 27 métiers tech et un outil Objectif Revenu qui calcule le TJM nécessaire pour atteindre ton revenu net cible, en tenant compte de ton statut juridique, tes charges et tes vacances. Tu peux aussi comparer les statuts pour voir lequel te laisse le plus de net.",
         },
       },
       {
@@ -108,7 +108,15 @@ const jsonLd = [
         name: "Quels moyens de paiement acceptez-vous ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Nous acceptons les cartes bancaires (Visa, Mastercard, Amex) via Stripe. Le paiement est sécurisé et conforme PCI-DSS. Tu peux choisir un abonnement mensuel ou annuel.",
+          text: "Nous acceptons les cartes bancaires (Visa, Mastercard, Amex) via Stripe. Le paiement est sécurisé et conforme PCI-DSS. Tu peux choisir un abonnement mensuel (9€/mois) ou annuel (79€/an, soit 2 mois offerts).",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Puis-je être remboursé ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Tu bénéficies d\u2019un essai gratuit de 14 jours sans carte bancaire. Ensuite, tu peux annuler ton abonnement à tout moment depuis tes paramètres. L\u2019annulation prend effet à la fin de la période en cours.",
         },
       },
     ],

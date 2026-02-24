@@ -6,7 +6,11 @@ import { cn } from "@/lib/utils";
 const QUESTIONS = [
   {
     q: "Freelens, c\u2019est quoi exactement ?",
-    a: "Freelens est un simulateur de revenus con\u00e7u pour les freelances en France. Il te permet de visualiser l\u2019impact de tes d\u00e9cisions (vacances, hausse de TJM, perte de client\u2026) sur ton CA et ton net annuel, mois par mois.",
+    a: "Freelens est le copilote financier des freelances en France. Bien plus qu\u2019un simulateur : c\u2019est une plateforme compl\u00e8te qui combine simulateur de revenus, comparateur de statuts juridiques, pipeline commercial, suivi des paiements, calendrier fiscal, simulateur de tr\u00e9sorerie, historique avec tendances YoY, et benchmark TJM march\u00e9. Tout ce qu\u2019il te faut pour piloter ton activit\u00e9.",
+  },
+  {
+    q: "Qu\u2019est-ce que je peux faire avec Freelens ?",
+    a: "Simuler tes revenus nets mois par mois selon ton statut, comparer les statuts juridiques (micro, EI, EURL, SASU, portage), g\u00e9rer ton pipeline de prospects, suivre tes paiements clients, anticiper ta tr\u00e9sorerie sur 12 mois, consulter le calendrier de tes \u00e9ch\u00e9ances fiscales, analyser tes tendances ann\u00e9e apr\u00e8s ann\u00e9e, et calculer le TJM id\u00e9al pour atteindre ton objectif de revenu.",
   },
   {
     q: "Mes donn\u00e9es sont-elles en s\u00e9curit\u00e9 ?",
@@ -14,23 +18,23 @@ const QUESTIONS = [
   },
   {
     q: "Quelle diff\u00e9rence entre Free et Pro ?",
-    a: "Le plan Free te donne acc\u00e8s au simulateur avec 3 clients max et 1 sc\u00e9nario sauvegard\u00e9. Le plan Pro d\u00e9bloque tout : clients illimit\u00e9s, sc\u00e9narios illimit\u00e9s, export PDF, tableau mensuel d\u00e9taill\u00e9 et m\u00e9triques \u00e9motionnelles.",
+    a: "Le plan Free te donne acc\u00e8s au simulateur, au comparateur de statuts, \u00e0 l\u2019objectif revenu, \u00e0 la transition CDI \u2192 freelance et au benchmark TJM (3 clients max, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients et sc\u00e9narios illimit\u00e9s, suivi des paiements, pipeline commercial, calendrier fiscal, simulateur de tr\u00e9sorerie, historique & tendances, simulation retraite & ACRE, et export PDF & CSV.",
   },
   {
     q: "Les calculs sont-ils fiables ?",
-    a: "Le moteur de simulation utilise les taux officiels URSSAF 2024/2025 et les barèmes d\u2019IR en vigueur. Les cotisations sont calcul\u00e9es selon ton statut juridique r\u00e9el (micro, EI, EURL, SASU, portage). Tu peux aussi ajuster manuellement les taux.",
+    a: "Le moteur de simulation utilise les taux officiels URSSAF 2025 et les bar\u00e8mes d\u2019IR en vigueur. Les cotisations sont calcul\u00e9es selon ton statut juridique r\u00e9el (micro, EI, EURL IR/IS, SASU IR/IS, portage). Le simulateur de tr\u00e9sorerie int\u00e8gre URSSAF, IR et IS pour une projection fid\u00e8le.",
   },
   {
-    q: "Puis-je exporter mes r\u00e9sultats ?",
-    a: "Oui, avec le plan Pro tu peux exporter tes projections en PDF pour les partager avec ton comptable, ta banque ou pour tes archives personnelles.",
+    q: "Combien facturer en freelance ?",
+    a: "Freelens inclut un benchmark TJM bas\u00e9 sur 27 m\u00e9tiers tech et un outil Objectif Revenu qui calcule le TJM n\u00e9cessaire pour atteindre ton revenu net cible, en tenant compte de ton statut juridique, tes charges et tes vacances. Tu peux aussi comparer les statuts pour voir lequel te laisse le plus de net.",
   },
   {
     q: "Quels moyens de paiement acceptez-vous ?",
-    a: "Nous acceptons les cartes bancaires (Visa, Mastercard, Amex) via Stripe. Le paiement est s\u00e9curis\u00e9 et conforme PCI-DSS. Tu peux choisir un abonnement mensuel ou annuel.",
+    a: "Nous acceptons les cartes bancaires (Visa, Mastercard, Amex) via Stripe. Le paiement est s\u00e9curis\u00e9 et conforme PCI-DSS. Tu peux choisir un abonnement mensuel (9\u20ac/mois) ou annuel (79\u20ac/an, soit 2 mois offerts).",
   },
   {
     q: "Puis-je \u00eatre rembours\u00e9 ?",
-    a: "Tu peux annuler ton abonnement \u00e0 tout moment depuis tes param\u00e8tres. L\u2019annulation prend effet \u00e0 la fin de la p\u00e9riode en cours. Nous ne proposons pas de remboursement partiel, mais l\u2019essai gratuit de 14 jours te permet de tester sans engagement.",
+    a: "Tu b\u00e9n\u00e9ficies d\u2019un essai gratuit de 14 jours sans carte bancaire. Ensuite, tu peux annuler ton abonnement \u00e0 tout moment depuis tes param\u00e8tres. L\u2019annulation prend effet \u00e0 la fin de la p\u00e9riode en cours.",
   },
 ];
 
@@ -48,7 +52,7 @@ export function FAQ() {
           <span className="text-sm font-medium text-[#a78bfa] uppercase tracking-widest mb-3 block">FAQ</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
             Questions{" "}
-            <span className="fn-gradient-text">fréquentes</span>
+            <span className="fn-gradient-text">fr&#233;quentes</span>
           </h2>
         </div>
 
