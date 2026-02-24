@@ -83,6 +83,9 @@ export default function OGImage() {
         {/* Tagline */}
         <div
           style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             fontSize: 48,
             fontWeight: 700,
             color: "white",
@@ -92,8 +95,7 @@ export default function OGImage() {
             marginBottom: 20,
           }}
         >
-          Le copilote financier
-          <br />
+          <span>Le copilote financier</span>
           <span
             style={{
               background: "linear-gradient(90deg, #5682F2, #7C5BF2, #a78bfa)",
