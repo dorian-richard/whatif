@@ -95,18 +95,20 @@ export default function PaiementsPage() {
 
   // Summary
   const monthPayments = useMemo(() => {
-    return clients.map((c) => {
-      const expected = monthlyExpected[c.id]?.[selectedMonth] ?? 0;
-      const payment = payments.find(
-        (p) => p.clientId === c.id && p.month === selectedMonth && p.year === year
-      );
-      return {
-        client: c,
-        expected,
-        received: payment?.received ?? 0,
-        status: (payment?.status ?? "pending") as PaymentStatus,
-      };
-    });
+    return clients
+      .map((c) => {
+        const expected = monthlyExpected[c.id]?.[selectedMonth] ?? 0;
+        const payment = payments.find(
+          (p) => p.clientId === c.id && p.month === selectedMonth && p.year === year
+        );
+        return {
+          client: c,
+          expected,
+          received: payment?.received ?? 0,
+          status: (payment?.status ?? "pending") as PaymentStatus,
+        };
+      })
+      .filter((p) => p.expected > 0);
   }, [clients, monthlyExpected, payments, selectedMonth, year]);
 
   const totalExpected = monthPayments.reduce((s, p) => s + p.expected, 0);
@@ -180,7 +182,7 @@ export default function PaiementsPage() {
             <Users className="size-4 text-[#a78bfa]" />
             <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Payés</span>
           </div>
-          <div className="text-xl font-bold text-foreground">{paidCount}/{clients.length}</div>
+          <div className="text-xl font-bold text-foreground">{paidCount}/{monthPayments.length}</div>
         </div>
         <div className="bg-card rounded-xl p-4 border border-border">
           <div className="flex items-center gap-2 mb-1">
