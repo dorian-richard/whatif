@@ -232,11 +232,15 @@ export default function HoldingPage() {
         {/* KPI Cards */}
         <HoldingSummaryCards result={taxResult} />
 
-        {/* Graph (desktop) + Mobile list */}
-        <div className="hidden md:block">
+        {/* Graph + side panels (desktop) */}
+        <div className="hidden md:grid md:grid-cols-[1fr_300px] gap-4">
           <ReactFlowProvider>
             <HoldingGraph entityResults={entityResultsMap} />
           </ReactFlowProvider>
+          <div className="space-y-4">
+            <HoldingFlowEditor />
+            {selectedEntityId && <HoldingEntityPanel />}
+          </div>
         </div>
 
         {/* Mobile entity list */}
@@ -268,16 +272,12 @@ export default function HoldingPage() {
               </button>
             );
           })}
+          <HoldingFlowEditor />
+          {selectedEntityId && <HoldingEntityPanel />}
         </div>
 
         {/* Tax comparison */}
         <HoldingTaxComparison result={taxResult} />
-
-        {/* Side panels */}
-        <div className="grid md:grid-cols-2 gap-4">
-          {selectedEntityId && <HoldingEntityPanel />}
-          <HoldingFlowEditor />
-        </div>
       </ProBlur>
     </div>
   );
