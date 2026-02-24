@@ -6,6 +6,7 @@ import { Features } from "@/components/landing/Features";
 import { Demo } from "@/components/landing/Demo";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { Pricing } from "@/components/landing/Pricing";
+import { Founder } from "@/components/landing/Founder";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import { FAQ } from "@/components/landing/FAQ";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -238,6 +239,7 @@ export default function Home() {
       <Features />
       <Demo />
       <Testimonials />
+      <Founder />
       <Pricing isLoggedIn={isLoggedIn} />
       <FAQ />
       <FinalCTA />
