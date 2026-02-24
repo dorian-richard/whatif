@@ -97,10 +97,58 @@ const jsonLd = [
       },
       {
         "@type": "Question",
+        name: "Comment fonctionne le simulateur de revenus ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Tu renseignes tes clients (TJM, forfait ou mission), ton statut juridique, tes jours travaillés et tes vacances. Le simulateur calcule ton CA et ton revenu net mois par mois sur 12 mois, en intégrant la saisonnalité, les cotisations URSSAF et l\u2019impôt sur le revenu. Tu peux créer plusieurs scénarios pour comparer différentes stratégies.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "À quoi sert le comparateur de statuts ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Il compare côte à côte les statuts juridiques (micro-entreprise, EI, EURL IR/IS, SASU IR/IS, portage salarial) sur la base de ton CA réel. Tu vois immédiatement le net après charges et impôts pour chaque statut, ce qui t\u2019aide à choisir le plus avantageux pour ta situation.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Que fait le pipeline commercial ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "C\u2019est un mini-CRM intégré pour suivre tes prospects. Tu organises tes opportunités en colonnes (Lead, Devis envoyé, Signé, Actif) avec drag & drop, tu estimes le CA potentiel et la probabilité de closing. Le pipeline pondéré te donne une vision réaliste de ton CA à venir.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Comment fonctionne le simulateur de trésorerie ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Il projette ton solde bancaire sur 12 mois en intégrant tes entrées (CA clients) et tes sorties (URSSAF, IR, IS, charges fixes). Tu définis un seuil d\u2019alerte et le simulateur t\u2019avertit si ta trésorerie risque de passer en dessous. Idéal pour anticiper les mois creux.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Que montre l\u2019historique & tendances ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Il enregistre tes données mois après mois (CA, net, TJM moyen, nombre de clients) et les compare année après année. Tu visualises ta progression avec des graphiques Year over Year et tu identifies les tendances de ton activité.",
+        },
+      },
+      {
+        "@type": "Question",
         name: "Combien facturer en freelance ?",
         acceptedAnswer: {
           "@type": "Answer",
           text: "Freelens inclut un benchmark TJM basé sur 27 métiers tech et un outil Objectif Revenu qui calcule le TJM nécessaire pour atteindre ton revenu net cible, en tenant compte de ton statut juridique, tes charges et tes vacances. Tu peux aussi comparer les statuts pour voir lequel te laisse le plus de net.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "À quoi servent le calendrier fiscal et le suivi des paiements ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Le calendrier fiscal affiche toutes tes échéances URSSAF, TVA et impôts selon ton statut, pour ne plus jamais rater une date. Le suivi des paiements te permet de tracker les factures envoyées, reçues et en retard pour chaque client.",
         },
       },
       {

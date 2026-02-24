@@ -25,8 +25,32 @@ const QUESTIONS = [
     a: "Le moteur de simulation utilise les taux officiels URSSAF 2025 et les bar\u00e8mes d\u2019IR en vigueur. Les cotisations sont calcul\u00e9es selon ton statut juridique r\u00e9el (micro, EI, EURL IR/IS, SASU IR/IS, portage). Le simulateur de tr\u00e9sorerie int\u00e8gre URSSAF, IR et IS pour une projection fid\u00e8le.",
   },
   {
+    q: "Comment fonctionne le simulateur de revenus ?",
+    a: "Tu renseignes tes clients (TJM, forfait ou mission), ton statut juridique, tes jours travaill\u00e9s et tes vacances. Le simulateur calcule ton CA et ton revenu net mois par mois sur 12 mois, en int\u00e9grant la saisonnalit\u00e9, les cotisations URSSAF et l\u2019imp\u00f4t sur le revenu. Tu peux cr\u00e9er plusieurs sc\u00e9narios pour comparer diff\u00e9rentes strat\u00e9gies.",
+  },
+  {
+    q: "\u00c0 quoi sert le comparateur de statuts ?",
+    a: "Il compare c\u00f4te \u00e0 c\u00f4te les statuts juridiques (micro-entreprise, EI, EURL IR/IS, SASU IR/IS, portage salarial) sur la base de ton CA r\u00e9el. Tu vois imm\u00e9diatement le net apr\u00e8s charges et imp\u00f4ts pour chaque statut, ce qui t\u2019aide \u00e0 choisir le plus avantageux pour ta situation.",
+  },
+  {
+    q: "Que fait le pipeline commercial ?",
+    a: "C\u2019est un mini-CRM int\u00e9gr\u00e9 pour suivre tes prospects. Tu organises tes opportunit\u00e9s en colonnes (Lead, Devis envoy\u00e9, Sign\u00e9, Actif) avec drag & drop, tu estimes le CA potentiel et la probabilit\u00e9 de closing. Le pipeline pondr\u00e9 te donne une vision r\u00e9aliste de ton CA \u00e0 venir.",
+  },
+  {
+    q: "Comment fonctionne le simulateur de tr\u00e9sorerie ?",
+    a: "Il projette ton solde bancaire sur 12 mois en int\u00e9grant tes entr\u00e9es (CA clients) et tes sorties (URSSAF, IR, IS, charges fixes). Tu d\u00e9finis un seuil d\u2019alerte et le simulateur t\u2019avertit si ta tr\u00e9sorerie risque de passer en dessous. Id\u00e9al pour anticiper les mois creux.",
+  },
+  {
+    q: "Que montre l\u2019historique & tendances ?",
+    a: "Il enregistre tes donn\u00e9es mois apr\u00e8s mois (CA, net, TJM moyen, nombre de clients) et les compare ann\u00e9e apr\u00e8s ann\u00e9e. Tu visualises ta progression avec des graphiques Year over Year et tu identifies les tendances de ton activit\u00e9.",
+  },
+  {
     q: "Combien facturer en freelance ?",
     a: "Freelens inclut un benchmark TJM bas\u00e9 sur 27 m\u00e9tiers tech et un outil Objectif Revenu qui calcule le TJM n\u00e9cessaire pour atteindre ton revenu net cible, en tenant compte de ton statut juridique, tes charges et tes vacances. Tu peux aussi comparer les statuts pour voir lequel te laisse le plus de net.",
+  },
+  {
+    q: "\u00c0 quoi servent le calendrier fiscal et le suivi des paiements ?",
+    a: "Le calendrier fiscal affiche toutes tes \u00e9ch\u00e9ances URSSAF, TVA et imp\u00f4ts selon ton statut, pour ne plus jamais rater une date. Le suivi des paiements te permet de tracker les factures envoy\u00e9es, re\u00e7ues et en retard pour chaque client.",
   },
   {
     q: "Quels moyens de paiement acceptez-vous ?",
