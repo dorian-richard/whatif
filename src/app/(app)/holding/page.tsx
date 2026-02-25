@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ReactFlowProvider } from "@xyflow/react";
 import { useHoldingStore } from "@/stores/useHoldingStore";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { computeHoldingStructure } from "@/lib/holding-engine";
+import { createClient } from "@/lib/supabase/client";
 import { ProBlur } from "@/components/ProBlur";
 import { HoldingGraph } from "@/components/holding/HoldingGraph";
 import { HoldingSummaryCards } from "@/components/holding/HoldingSummaryCards";
@@ -38,7 +40,11 @@ function getDefaultEntities(businessStatus: string): Omit<HoldingEntity, "id">[]
   ];
 }
 
+const ALLOWED_EMAILS = ["dorich@icloud.com"];
+
 export default function HoldingPage() {
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState<boolean | null>(null);
   const entities = useHoldingStore((s) => s.entities);
   const flows = useHoldingStore((s) => s.flows);
   const loaded = useHoldingStore((s) => s.loaded);
@@ -48,6 +54,23 @@ export default function HoldingPage() {
   const setLoaded = useHoldingStore((s) => s.setLoaded);
   const profile = useProfileStore((s) => s);
   const [saving, setSaving] = useState(false);
+
+  // Access control — only allowed emails can use this page
+  useEffect(() => {
+    createClient().auth.getUser().then(({ data }) => {
+      const email = data.user?.email;
+      if (email && ALLOWED_EMAILS.includes(email)) {
+        setAuthorized(true);
+      } else {
+        setAuthorized(false);
+        router.replace("/dashboard");
+      }
+    });
+  }, [router]);
+
+  if (authorized !== true) {
+    return null;
+  }
 
   // Load from API on mount
   useEffect(() => {

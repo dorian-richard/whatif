@@ -65,12 +65,18 @@ export function AppSidebar() {
   const effectiveStatus = getEffectiveStatus(subscriptionStatus, trialEndsAt);
   const isPro = effectiveStatus === "ACTIVE";
   const trialDays = getTrialDaysRemaining(trialEndsAt);
-  useEffect(() => setMounted(true), []);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  useEffect(() => {
+    setMounted(true);
+    createClient().auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? null));
+  }, []);
 
   // Close drawer on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
+
+  const holdingEnabled = userEmail === "dorich@icloud.com";
 
   const upcomingDeadlines = mounted ? getUpcomingDeadlines(businessStatus, 7) : [];
   const hasUpcoming = upcomingDeadlines.length > 0;
@@ -127,7 +133,7 @@ export function AppSidebar() {
             <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Outils</span>
           </div>
 
-          {NAV_TOOLS.map((item) => {
+          {NAV_TOOLS.filter((item) => item.href !== "/holding" || holdingEnabled).map((item) => {
             const isActive = pathname === item.href;
             const showBadge = item.href === "/calendrier" && hasUpcoming;
             return (
@@ -223,7 +229,7 @@ export function AppSidebar() {
         <div className="px-4 pt-4 pb-3">
           <div className="w-10 h-1 bg-muted-foreground/20 rounded-full mx-auto mb-4" />
           <div className="grid grid-cols-4 gap-3">
-            {NAV_MOBILE_MORE.map((item) => {
+            {NAV_MOBILE_MORE.filter((item) => item.href !== "/holding" || holdingEnabled).map((item) => {
               const isActive = pathname === item.href;
               const showBadge = item.href === "/calendrier" && hasUpcoming;
               return (
