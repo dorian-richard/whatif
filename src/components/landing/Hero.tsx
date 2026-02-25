@@ -11,7 +11,7 @@ export function Hero() {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center pt-20">
-        <div className="mb-8" />
+        <div className="mb-12" />
         <AnimateOnScroll>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
             <span className="text-foreground">Décide avec les chiffres,</span>
