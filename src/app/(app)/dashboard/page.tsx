@@ -123,13 +123,16 @@ export default function DashboardPage() {
 
   const totalCA = profile.clients.reduce((s, c) => s + getClientBaseCA(c), 0);
   const annualCA = projection.before.reduce((a, b) => a + b, 0);
+  const currentMonth = new Date().getMonth();
+  const currentMonthCA = projection.before[currentMonth];
   const expenses = profile.monthlyExpenses;
 
   const statusConfig = BUSINESS_STATUS_CONFIG[profile.businessStatus ?? "micro"];
   const urssafRate = profile.customUrssafRate ?? statusConfig.urssaf;
   const irRate = profile.customIrRate ?? statusConfig.ir;
   const netAfterAll = computeNetFromCA(annualCA, profile);
-  const netMonthly = netAfterAll / 12;
+  const netRate = annualCA > 0 ? netAfterAll / annualCA : 0;
+  const netMonthly = currentMonthCA * netRate;
   const netAfterExpenses = netAfterAll - expenses * 12;
   const monthlySalary = profile.monthlySalary ?? 0;
   const annualSalary = monthlySalary * 12;
@@ -293,7 +296,7 @@ export default function DashboardPage() {
       <DashboardFinanceCards
         netMonthly={netMonthly}
         expenses={expenses}
-        totalCA={totalCA}
+        totalCA={currentMonthCA}
         statusConfig={statusConfig}
         urssafRate={urssafRate}
         irRate={irRate}
@@ -332,7 +335,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Monthly CA chart */}
-      <DashboardChart projection={projection} expenses={expenses} netRate={annualCA > 0 ? netAfterAll / annualCA : 0} />
+      <DashboardChart projection={projection} expenses={expenses} netRate={netRate} />
 
       {/* Client breakdown */}
       {profile.clients.length > 0 && (
