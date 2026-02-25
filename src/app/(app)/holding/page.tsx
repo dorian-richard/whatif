@@ -68,10 +68,6 @@ export default function HoldingPage() {
     });
   }, [router]);
 
-  if (authorized !== true) {
-    return null;
-  }
-
   // Load from API on mount
   useEffect(() => {
     if (loaded) return;
@@ -162,7 +158,7 @@ export default function HoldingPage() {
     return m;
   }, [taxResult]);
 
-  // Save to API (debounced)
+  // Save to API (debounced — skip if not authorized yet)
   useEffect(() => {
     if (!loaded || entities.length === 0) return;
     const timer = setTimeout(() => {
@@ -195,6 +191,11 @@ export default function HoldingPage() {
     }, 2000);
     return () => clearTimeout(timer);
   }, [entities, flows, loaded]);
+
+  // Guard — render nothing until authorized
+  if (authorized !== true) {
+    return null;
+  }
 
   const handleAddEntity = () => {
     addEntity({
