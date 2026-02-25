@@ -23,6 +23,12 @@ export function computeIS(profit: number): number {
  * 1. Chaque entité opérationnelle : CA - salaires versés - frais de gestion payés = bénéfice → IS → dividendes
  * 2. Holding : reçoit frais de gestion + 5% des dividendes reçus (régime mère-fille) → IS → dividendes au fondateur
  * 3. Fondateur : salaires reçus + dividendes après PFU
+ *
+ * Sources de données :
+ * - Salaire / frais de gestion : si des flux existent, on utilise les montants des flux.
+ *   Sinon, on utilise les champs de l'entité (annualSalary / managementFees).
+ * - CA : toujours depuis l'entité.
+ * - Dividendes : toujours calculés (profit - IS).
  */
 export function computeHoldingStructure(
   entities: HoldingEntity[],
@@ -32,38 +38,54 @@ export function computeHoldingStructure(
   const entityMap = new Map(entities.map((e) => [e.id, e]));
   const results = new Map<string, EntityTaxResult>();
 
+  // Pre-compute flow totals per entity
+  const salaryFlowsFrom = new Map<string, number>();
+  const mgmtFeeFlowsFrom = new Map<string, number>();
+  const mgmtFeeFlowsTo = new Map<string, number>();
+
+  for (const flow of flows) {
+    if (flow.type === "salary") {
+      salaryFlowsFrom.set(flow.fromEntityId, (salaryFlowsFrom.get(flow.fromEntityId) ?? 0) + flow.annualAmount);
+    } else if (flow.type === "management_fee") {
+      mgmtFeeFlowsFrom.set(flow.fromEntityId, (mgmtFeeFlowsFrom.get(flow.fromEntityId) ?? 0) + flow.annualAmount);
+      mgmtFeeFlowsTo.set(flow.toEntityId, (mgmtFeeFlowsTo.get(flow.toEntityId) ?? 0) + flow.annualAmount);
+    }
+  }
+
   // Initialize results for all entities
+  // Use flow amounts when flows exist, otherwise fall back to entity fields
   for (const entity of entities) {
+    const hasSalaryFlows = salaryFlowsFrom.has(entity.id);
+    const hasMgmtFeeFlows = mgmtFeeFlowsFrom.has(entity.id);
+
+    const salaryPaid = hasSalaryFlows
+      ? salaryFlowsFrom.get(entity.id)!
+      : entity.annualSalary;
+
+    const managementFeesPaid = hasMgmtFeeFlows
+      ? mgmtFeeFlowsFrom.get(entity.id)!
+      : entity.managementFees;
+
+    // For management fees received: use flows if they exist, else 0
+    const managementFeesReceived = mgmtFeeFlowsTo.get(entity.id) ?? 0;
+
     results.set(entity.id, {
       entityId: entity.id,
       entityName: entity.name,
       entityType: entity.type,
       ca: entity.annualCA,
-      managementFeesPaid: 0,
-      managementFeesReceived: 0,
-      salaryPaid: 0,
+      managementFeesPaid,
+      managementFeesReceived,
+      salaryPaid,
       isAmount: 0,
       dividendsPaid: 0,
       netCash: 0,
     });
   }
 
-  // Process flows: aggregate management fees and salaries
-  for (const flow of flows) {
-    const fromResult = results.get(flow.fromEntityId);
-    const toResult = results.get(flow.toEntityId);
-    if (!fromResult || !toResult) continue;
-
-    if (flow.type === "management_fee") {
-      fromResult.managementFeesPaid += flow.annualAmount;
-      toResult.managementFeesReceived += flow.annualAmount;
-    } else if (flow.type === "salary") {
-      fromResult.salaryPaid += flow.annualAmount;
-    }
-  }
-
   // Step 1: Compute operating entities (profit → IS → dividends available)
   const dividendsToHolding = new Map<string, number>();
+  const dividendsToPerson = new Map<string, number>();
 
   for (const entity of entities) {
     if (entity.type !== "operating") continue;
@@ -75,13 +97,34 @@ export function computeHoldingStructure(
     r.dividendsPaid = Math.max(0, profit - is);
     r.netCash = r.ca - r.salaryPaid - r.managementFeesPaid - is;
 
-    // Find dividend flows from this entity to a holding
+    // Track where dividends go based on flows
+    let dividendsRouted = false;
     for (const flow of flows) {
       if (flow.fromEntityId === entity.id && flow.type === "dividend") {
         const target = entityMap.get(flow.toEntityId);
         if (target?.type === "holding") {
           const prev = dividendsToHolding.get(target.id) ?? 0;
           dividendsToHolding.set(target.id, prev + r.dividendsPaid);
+          dividendsRouted = true;
+        } else if (target?.type === "person") {
+          const prev = dividendsToPerson.get(target.id) ?? 0;
+          dividendsToPerson.set(target.id, prev + r.dividendsPaid);
+          dividendsRouted = true;
+        }
+      }
+    }
+
+    // If no dividend flows exist, auto-route: to first holding, or first person
+    if (!dividendsRouted && r.dividendsPaid > 0) {
+      const holding = entities.find((e) => e.type === "holding");
+      if (holding) {
+        const prev = dividendsToHolding.get(holding.id) ?? 0;
+        dividendsToHolding.set(holding.id, prev + r.dividendsPaid);
+      } else {
+        const person = entities.find((e) => e.type === "person");
+        if (person) {
+          const prev = dividendsToPerson.get(person.id) ?? 0;
+          dividendsToPerson.set(person.id, prev + r.dividendsPaid);
         }
       }
     }
@@ -114,13 +157,26 @@ export function computeHoldingStructure(
     totalPersonSalaries += r.salaryPaid;
   }
 
-  // Step 3: Compute dividends from holding → person after PFU
-  for (const flow of flows) {
-    if (flow.type === "salary") {
-      const from = entityMap.get(flow.fromEntityId);
-      if (from?.type === "operating") {
-        totalPersonSalaries += flow.annualAmount;
+  // Salaries from operating entities to person
+  for (const entity of entities) {
+    if (entity.type !== "operating") continue;
+    const r = results.get(entity.id)!;
+
+    // Check if salary flows exist from this entity
+    const hasSalaryFlows = flows.some((f) => f.fromEntityId === entity.id && f.type === "salary");
+    if (hasSalaryFlows) {
+      // Use flow amounts (already aggregated in r.salaryPaid)
+      for (const flow of flows) {
+        if (flow.fromEntityId === entity.id && flow.type === "salary") {
+          const to = entityMap.get(flow.toEntityId);
+          if (to?.type === "person") {
+            totalPersonSalaries += flow.annualAmount;
+          }
+        }
       }
+    } else if (r.salaryPaid > 0) {
+      // No salary flows: assume salary goes to person
+      totalPersonSalaries += r.salaryPaid;
     }
   }
 
@@ -131,16 +187,9 @@ export function computeHoldingStructure(
     totalPersonDividends += r.dividendsPaid;
   }
 
-  // Also handle direct operating → person dividend flows (no holding in between)
-  for (const flow of flows) {
-    if (flow.type === "dividend") {
-      const from = entityMap.get(flow.fromEntityId);
-      const to = entityMap.get(flow.toEntityId);
-      if (from?.type === "operating" && to?.type === "person") {
-        const fromResult = results.get(from.id)!;
-        totalPersonDividends += fromResult.dividendsPaid;
-      }
-    }
+  // Direct operating → person dividends
+  for (const [personId, amount] of dividendsToPerson) {
+    totalPersonDividends += amount;
   }
 
   // Person node result

@@ -31,11 +31,15 @@ const FLOW_LABELS: Record<HoldingFlowType, string> = Object.fromEntries(
 
 interface HoldingGraphProps {
   entityResults: Map<string, EntityTaxResult>;
+  displayEntities?: import("@/types").HoldingEntity[];
+  displayFlows?: import("@/types").HoldingFlow[];
 }
 
-export function HoldingGraph({ entityResults }: HoldingGraphProps) {
-  const entities = useHoldingStore((s) => s.entities);
-  const flows = useHoldingStore((s) => s.flows);
+export function HoldingGraph({ entityResults, displayEntities, displayFlows }: HoldingGraphProps) {
+  const storeEntities = useHoldingStore((s) => s.entities);
+  const storeFlows = useHoldingStore((s) => s.flows);
+  const entities = displayEntities ?? storeEntities;
+  const flows = displayFlows ?? storeFlows;
   const updateEntityPosition = useHoldingStore((s) => s.updateEntityPosition);
   const setSelectedEntityId = useHoldingStore((s) => s.setSelectedEntityId);
 
@@ -70,6 +74,8 @@ export function HoldingGraph({ entityResults }: HoldingGraphProps) {
             managementFees: entity.managementFees,
             color: entity.color,
             netCash: result?.netCash ?? 0,
+            isAmount: result?.isAmount ?? 0,
+            dividendsPaid: result?.dividendsPaid ?? 0,
             onEdit: onEditEntity,
           } satisfies HoldingNodeData,
         };
@@ -115,7 +121,9 @@ export function HoldingGraph({ entityResults }: HoldingGraphProps) {
       if (changes.some((c) => c.type === "position" && "dragging" in c && !c.dragging)) {
         if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
         saveTimerRef.current = setTimeout(() => {
-          const positions = entities.map((e) => ({
+          // Always use store entities for position saving (not display/simulated ones)
+          const currentEntities = useHoldingStore.getState().entities;
+          const positions = currentEntities.map((e) => ({
             id: e.id,
             positionX: e.positionX,
             positionY: e.positionY,
@@ -128,7 +136,7 @@ export function HoldingGraph({ entityResults }: HoldingGraphProps) {
         }, 1000);
       }
     },
-    [entities, updateEntityPosition]
+    [updateEntityPosition]
   );
 
   // Drag from handle to handle → open popup to configure the new flow

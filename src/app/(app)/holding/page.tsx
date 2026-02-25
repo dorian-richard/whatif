@@ -12,8 +12,9 @@ import { HoldingTaxComparison } from "@/components/holding/HoldingTaxComparison"
 import { HoldingEntityPanel } from "@/components/holding/HoldingEntityPanel";
 import { HoldingFlowEditor } from "@/components/holding/HoldingFlowEditor";
 import { HoldingGuide } from "@/components/holding/HoldingGuide";
+import { HoldingScenarios, applyScenario, type HoldingScenarioId } from "@/components/holding/HoldingScenarios";
 import { getClientBaseCA } from "@/lib/simulation-engine";
-import { Plus, Building2 } from "@/components/ui/icons";
+import { Plus, Building2, Info } from "@/components/ui/icons";
 import type { HoldingEntity, HoldingFlow, HoldingEntityType, EntityTaxResult, FreelanceProfile, ClientData } from "@/types";
 
 interface DefaultTemplate {
@@ -78,6 +79,7 @@ export default function HoldingPage() {
   const setLoaded = useHoldingStore((s) => s.setLoaded);
   const profile = useProfileStore((s) => s);
   const [saving, setSaving] = useState(false);
+  const [activeScenario, setActiveScenario] = useState<HoldingScenarioId>("current");
 
   // Load from API on mount
   useEffect(() => {
@@ -177,10 +179,24 @@ export default function HoldingPage() {
     [profile]
   );
 
-  // Compute tax results
+  // Apply scenario simulation (read-only overlay — does NOT modify the store)
+  const { entities: simEntities, flows: simFlows } = useMemo(
+    () => applyScenario(activeScenario, entities, flows),
+    [activeScenario, entities, flows]
+  );
+
+  // Compute tax results using simulated data
   const taxResult = useMemo(
-    () => computeHoldingStructure(entities, flows, freelanceProfile),
-    [entities, flows, freelanceProfile]
+    () => computeHoldingStructure(simEntities, simFlows, freelanceProfile),
+    [simEntities, simFlows, freelanceProfile]
+  );
+
+  // Also compute "current" result when a scenario is active, for comparison
+  const currentTaxResult = useMemo(
+    () => activeScenario === "current"
+      ? taxResult
+      : computeHoldingStructure(entities, flows, freelanceProfile),
+    [activeScenario, entities, flows, freelanceProfile, taxResult]
   );
 
   const entityResultsMap = useMemo(() => {
@@ -267,13 +283,42 @@ export default function HoldingPage() {
       <HoldingGuide />
 
       <ProBlur label="La simulation holding est réservée au plan Pro">
+        {/* Scenario selector */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sc&eacute;narios</span>
+          </div>
+          <HoldingScenarios activeScenario={activeScenario} onChange={setActiveScenario} />
+          {activeScenario !== "current" && (
+            <div className="flex items-start gap-2 bg-[#5682F2]/5 border border-[#5682F2]/20 rounded-xl px-4 py-3">
+              <Info className="size-4 text-[#5682F2] mt-0.5 shrink-0" />
+              <div className="text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">Mode simulation</span> &mdash; les chiffres ci-dessous sont calcul&eacute;s avec le sc&eacute;nario s&eacute;lectionn&eacute;. Ta structure r&eacute;elle n&rsquo;est pas modifi&eacute;e.
+                {currentTaxResult.totalNetWithHolding !== taxResult.totalNetWithHolding && (
+                  <span className="ml-1">
+                    Delta vs ta structure :{" "}
+                    <span className={taxResult.totalNetWithHolding > currentTaxResult.totalNetWithHolding ? "text-[#4ade80] font-semibold" : "text-[#f87171] font-semibold"}>
+                      {taxResult.totalNetWithHolding > currentTaxResult.totalNetWithHolding ? "+" : ""}
+                      {new Intl.NumberFormat("fr-FR").format(Math.round(taxResult.totalNetWithHolding - currentTaxResult.totalNetWithHolding))}&euro;/an
+                    </span>
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* KPI Cards */}
         <HoldingSummaryCards result={taxResult} />
 
         {/* Graph + side panels (desktop) */}
         <div className="hidden md:grid md:grid-cols-[1fr_300px] gap-4">
           <ReactFlowProvider>
-            <HoldingGraph entityResults={entityResultsMap} />
+            <HoldingGraph
+              entityResults={entityResultsMap}
+              displayEntities={activeScenario !== "current" ? simEntities : undefined}
+              displayFlows={activeScenario !== "current" ? simFlows : undefined}
+            />
           </ReactFlowProvider>
           <div className="space-y-4">
             <HoldingFlowEditor />

@@ -16,6 +16,8 @@ export interface HoldingNodeData {
   managementFees: number;
   color?: string;
   netCash?: number;
+  isAmount?: number;
+  dividendsPaid?: number;
   onEdit: (id: string) => void;
   [key: string]: unknown;
 }
@@ -97,6 +99,18 @@ function HoldingEntityNodeInner({ id, data }: NodeProps) {
             <div className="flex justify-between text-xs">
               <span className="text-muted-foreground">Frais gestion</span>
               <span className="font-medium text-foreground">{fmt(Math.round(d.managementFees))}&euro;</span>
+            </div>
+          )}
+          {(d.isAmount ?? 0) > 0 && (
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">IS</span>
+              <span className="font-medium text-[#f87171]">-{fmt(Math.round(d.isAmount!))}&euro;</span>
+            </div>
+          )}
+          {(d.dividendsPaid ?? 0) > 0 && (
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">Dividendes</span>
+              <span className="font-medium text-[#4ade80]">{fmt(Math.round(d.dividendsPaid!))}&euro;</span>
             </div>
           )}
         </div>
