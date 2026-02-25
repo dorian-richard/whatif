@@ -23,6 +23,7 @@ const FREE_LIMITATIONS = [
   "Simulateur de trésorerie",
   "Historique & tendances",
   "Retraite & ACRE",
+  "Simulateur holding",
   "Export PDF",
 ];
 
@@ -36,6 +37,7 @@ const PRO_FEATURES = [
   "Simulateur de trésorerie",
   "Historique & tendances",
   "Retraite & ACRE",
+  "Simulateur holding",
   "Métriques émotionnelles",
   "Export PDF & CSV",
   "Support prioritaire",

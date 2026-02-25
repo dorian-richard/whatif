@@ -23,7 +23,7 @@ export function Hero() {
 
         <AnimateOnScroll delay={0.1}>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Simulateur, comparateur de statuts (micro, EURL, SASU, portage), benchmark TJM, suivi des paiements, prospects et objectif revenu.
+            Simulateur, comparateur de statuts (micro, EURL, SASU, portage), benchmark TJM, suivi des paiements, prospects, objectif revenu et simulation holding.
             Tous les outils pour piloter ton activité.
           </p>
         </AnimateOnScroll>

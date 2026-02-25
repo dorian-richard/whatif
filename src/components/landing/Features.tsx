@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock, Wallet, TrendingUp, CreditCard } from "@/components/ui/icons";
+import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock, Wallet, TrendingUp, CreditCard, Building2 } from "@/components/ui/icons";
 import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const FREE_FEATURES = [
@@ -89,6 +89,12 @@ const PRO_FEATURES = [
     title: "Historique & tendances",
     desc: "Compare ton CA, TJM et taux d'encaissement d'une année sur l'autre. Identifie tes tendances et ta progression.",
     color: "#10b981",
+  },
+  {
+    icon: Building2,
+    title: "Simulateur Holding",
+    desc: "Visualise ta structure holding avec un graphe interactif. Simule l'IS, le régime mère-fille et compare ton net avec et sans holding.",
+    color: "#a78bfa",
   },
 ];
 
