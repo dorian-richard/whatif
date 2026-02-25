@@ -19,16 +19,16 @@ export function TJMCalculator() {
   const [remType, setRemType] = useState<RemunerationType>("salaire");
   const [mixte, setMixte] = useState(50);
 
-  const isIS = BUSINESS_STATUS_CONFIG[status]?.is > 0;
+  const showRemOptions = BUSINESS_STATUS_CONFIG[status]?.is > 0 || status === "sasu_ir";
 
   const result = useMemo(() => {
     const annualNet = targetNet * 12;
-    const effectiveRemType = isIS ? remType : "salaire";
+    const effectiveRemType = showRemOptions ? remType : "salaire";
     const requiredCA = reverseCA(annualNet, status, effectiveRemType, mixte);
     const tjm = requiredCA / 12 / daysPerMonth;
     const tauxCharges = 1 - annualNet / requiredCA;
     return { requiredCA, tjm, tauxCharges };
-  }, [targetNet, status, daysPerMonth, remType, mixte, isIS]);
+  }, [targetNet, status, daysPerMonth, remType, mixte, showRemOptions]);
 
   return (
     <section id="calculateur" className="snap-section relative flex items-center overflow-hidden">
@@ -88,14 +88,14 @@ export function TJMCalculator() {
                 </select>
               </div>
 
-              {/* Remuneration type (IS only) */}
-              {isIS && (
+              {/* Remuneration type (IS + SASU IR) */}
+              {showRemOptions && (
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">Type de r&eacute;mun&eacute;ration</label>
                   <div className="flex gap-2">
                     {([
                       { value: "salaire" as const, label: "Salaire" },
-                      { value: "dividendes" as const, label: "Dividendes" },
+                      { value: "dividendes" as const, label: status === "sasu_ir" ? "Résultat" : "Dividendes" },
                       { value: "mixte" as const, label: "Mixte" },
                     ]).map((opt) => (
                       <button
