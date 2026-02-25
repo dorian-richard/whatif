@@ -49,13 +49,13 @@ export function EarningsCounter() {
     const season = SEASONALITY[month];
     const vacDays = vacationDaysPerMonth?.[month] ?? 0;
 
-    // Monthly CA
+    // Monthly CA with seasonality + vacation
     let monthCA = 0;
     for (const c of clients) {
       monthCA += getClientMonthlyCA(c, month, season, vacDays);
     }
 
-    // Net rate
+    // Net rate from annual (with seasonality)
     const annualCA = getAnnualCA(clients, vacationDaysPerMonth);
     const netAnnual = computeNetFromCA(annualCA, profile);
     const netRate = annualCA > 0 ? netAnnual / annualCA : 0;
