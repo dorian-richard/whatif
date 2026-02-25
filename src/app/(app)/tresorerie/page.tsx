@@ -4,12 +4,17 @@ import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { computeCashflow } from "@/lib/cashflow-engine";
 import { fmt, cn } from "@/lib/utils";
+import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { PiggyBank, AlertTriangle, TrendingUp, Shield, CalendarDays } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 
 export default function TresoreriePage() {
   const profile = useProfileStore();
   const { clients, monthlyExpenses, savings } = profile;
+
+  const statusConfig = BUSINESS_STATUS_CONFIG[profile.businessStatus ?? "micro"];
+  const hasISStatus = statusConfig.is > 0;
+  const remLabel = profile.remunerationType === "salaire" ? "Salaire" : profile.remunerationType === "dividendes" ? "Dividendes" : profile.remunerationType === "mixte" ? "Mixte" : null;
 
   const [threshold, setThreshold] = useState(Math.round(monthlyExpenses * 3));
 
@@ -31,7 +36,10 @@ export default function TresoreriePage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground mb-1">Simulateur de trésorerie</h1>
         <p className="text-muted-foreground">
-          Projette ta trésorerie sur 12 mois : entrées, sorties et solde prévisionnel.
+          Projette ta tr&eacute;sorerie sur 12 mois : entr&eacute;es, sorties et solde pr&eacute;visionnel.
+          {hasISStatus && remLabel && (
+            <span className="text-xs text-muted-foreground/60 ml-1">&middot; R&eacute;mun&eacute;ration : {remLabel}{profile.remunerationType === "mixte" && profile.mixtePartSalaire ? ` (${profile.mixtePartSalaire}% salaire)` : ""}</span>
+          )}
         </p>
       </div>
 
