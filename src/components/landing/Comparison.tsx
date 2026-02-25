@@ -59,7 +59,7 @@ export function Comparison() {
               <span className="fn-gradient-text">Freelens</span> ?
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Con&ccedil;u pour les freelances, pas adapt&eacute; d&apos;un outil g&eacute;n&eacute;raliste.
+              Pens&eacute; pour les freelances, pas d&eacute;riv&eacute; d&apos;un outil g&eacute;n&eacute;raliste.
               <br />
               <span className="text-sm text-muted-foreground/60">Bar&egrave;mes et taux &agrave; jour du Projet de Loi de Finances 2026.</span>
             </p>
