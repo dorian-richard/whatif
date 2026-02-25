@@ -209,6 +209,9 @@ export default function Home() {
             <a href="#simulation" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
               Simulation
             </a>
+            <a href="#calculateur" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
+              Objectif TJM
+            </a>
             <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
               Tarifs
             </a>
