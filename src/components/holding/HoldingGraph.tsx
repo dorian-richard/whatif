@@ -17,6 +17,7 @@ import { useHoldingStore } from "@/stores/useHoldingStore";
 import { HoldingEntityNode, type HoldingNodeData } from "./HoldingEntityNode";
 import { NewFlowPopup } from "./NewFlowPopup";
 import { EditFlowPopup } from "./EditFlowPopup";
+import { HOLDING_FLOW_TYPES, HOLDING_FLOW_STYLES } from "@/lib/constants";
 import { fmt } from "@/lib/utils";
 import type { HoldingEntityType, HoldingFlowType, EntityTaxResult } from "@/types";
 
@@ -24,17 +25,9 @@ const nodeTypes = {
   holdingNode: HoldingEntityNode,
 };
 
-const FLOW_STYLES: Record<HoldingFlowType, { stroke: string; strokeDasharray?: string; strokeWidth: number }> = {
-  dividend: { stroke: "#4ade80", strokeWidth: 2 },
-  management_fee: { stroke: "#a78bfa", strokeDasharray: "5 5", strokeWidth: 2 },
-  salary: { stroke: "#5682F2", strokeWidth: 2 },
-};
-
-const FLOW_LABELS: Record<HoldingFlowType, string> = {
-  dividend: "Dividendes",
-  management_fee: "Frais gestion",
-  salary: "Salaire",
-};
+const FLOW_LABELS: Record<HoldingFlowType, string> = Object.fromEntries(
+  HOLDING_FLOW_TYPES.map((t) => [t.value, t.label])
+) as Record<HoldingFlowType, string>;
 
 interface HoldingGraphProps {
   entityResults: Map<string, EntityTaxResult>;
@@ -87,7 +80,7 @@ export function HoldingGraph({ entityResults }: HoldingGraphProps) {
   const edges: Edge[] = useMemo(
     () =>
       flows.map((flow) => {
-        const style = FLOW_STYLES[flow.type] ?? FLOW_STYLES.dividend;
+        const style = HOLDING_FLOW_STYLES[flow.type] ?? HOLDING_FLOW_STYLES.dividend;
         return {
           id: flow.id,
           source: flow.fromEntityId,

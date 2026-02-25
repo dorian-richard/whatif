@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { Building2, Briefcase, UserRound } from "@/components/ui/icons";
+import { HOLDING_BUSINESS_STATUSES } from "@/lib/constants";
 import { fmt } from "@/lib/utils";
 import type { HoldingEntityType } from "@/types";
 
@@ -25,17 +26,9 @@ const TYPE_CONFIG: Record<HoldingEntityType, { icon: typeof Building2; badge: st
   person: { icon: UserRound, badge: "Fondateur", defaultColor: "#4ade80" },
 };
 
-const STATUS_LABELS: Record<string, string> = {
-  sasu_is: "SASU IS",
-  sasu_ir: "SASU IR",
-  eurl_is: "EURL IS",
-  eurl_ir: "EURL IR",
-  sci_is: "SCI IS",
-  sci_ir: "SCI IR",
-  sarl_is: "SARL IS",
-  sas_is: "SAS IS",
-  sa_is: "SA IS",
-};
+const STATUS_LABELS: Record<string, string> = Object.fromEntries(
+  HOLDING_BUSINESS_STATUSES.filter((s) => s.value).map((s) => [s.value, s.label])
+);
 
 function HoldingEntityNodeInner({ id, data }: NodeProps) {
   const d = data as unknown as HoldingNodeData;

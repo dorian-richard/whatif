@@ -244,3 +244,38 @@ export const CLIENT_COLORS = [
   "#6366f1", "#f59e0b", "#10b981", "#ef4444",
   "#8b5cf6", "#06b6d4", "#f97316", "#ec4899",
 ];
+
+/* ── Holding ── */
+
+import type { HoldingFlowType, HoldingEntityType } from "@/types";
+
+export const HOLDING_FLOW_TYPES: { value: HoldingFlowType; label: string; color: string; desc: string }[] = [
+  { value: "dividend", label: "Dividendes", color: "#4ade80", desc: "Distribution de bénéfices" },
+  { value: "management_fee", label: "Frais de gestion", color: "#a78bfa", desc: "Convention de prestation" },
+  { value: "salary", label: "Salaire", color: "#5682F2", desc: "Rémunération dirigeant" },
+];
+
+export const HOLDING_FLOW_STYLES: Record<HoldingFlowType, { stroke: string; strokeDasharray?: string; strokeWidth: number }> = {
+  dividend: { stroke: "#4ade80", strokeWidth: 2 },
+  management_fee: { stroke: "#a78bfa", strokeDasharray: "5 5", strokeWidth: 2 },
+  salary: { stroke: "#5682F2", strokeWidth: 2 },
+};
+
+export const HOLDING_ENTITY_TYPES: { value: HoldingEntityType; label: string }[] = [
+  { value: "holding", label: "Holding" },
+  { value: "operating", label: "Société opérationnelle" },
+  { value: "person", label: "Personne physique" },
+];
+
+export const HOLDING_BUSINESS_STATUSES = [
+  { value: "", label: "— Aucun —" },
+  { value: "sasu_is", label: "SASU IS" },
+  { value: "sasu_ir", label: "SASU IR" },
+  { value: "eurl_is", label: "EURL IS" },
+  { value: "eurl_ir", label: "EURL IR" },
+  { value: "sci_is", label: "SCI IS" },
+  { value: "sci_ir", label: "SCI IR" },
+  { value: "sarl_is", label: "SARL IS" },
+  { value: "sas_is", label: "SAS IS" },
+  { value: "sa_is", label: "SA IS" },
+];

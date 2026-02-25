@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 import { useHoldingStore } from "@/stores/useHoldingStore";
+import { HOLDING_FLOW_TYPES } from "@/lib/constants";
 import { X } from "@/components/ui/icons";
 import type { HoldingFlowType } from "@/types";
-
-const FLOW_TYPES: { value: HoldingFlowType; label: string; color: string; desc: string }[] = [
-  { value: "dividend", label: "Dividendes", color: "#4ade80", desc: "Distribution de bénéfices" },
-  { value: "management_fee", label: "Frais de gestion", color: "#a78bfa", desc: "Convention de prestation" },
-  { value: "salary", label: "Salaire", color: "#5682F2", desc: "Rémunération dirigeant" },
-];
 
 interface NewFlowPopupProps {
   sourceId: string;
@@ -72,7 +67,7 @@ export function NewFlowPopup({ sourceId, targetId, onClose }: NewFlowPopupProps)
             Type de flux
           </label>
           <div className="space-y-1.5">
-            {FLOW_TYPES.map((ft) => (
+            {HOLDING_FLOW_TYPES.map((ft) => (
               <button
                 key={ft.value}
                 onClick={() => setType(ft.value)}

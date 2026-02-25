@@ -1,38 +1,27 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHoldingStore } from "@/stores/useHoldingStore";
+import { HOLDING_ENTITY_TYPES, HOLDING_BUSINESS_STATUSES } from "@/lib/constants";
 import { X } from "@/components/ui/icons";
 import type { HoldingEntityType } from "@/types";
-
-const ENTITY_TYPES: { value: HoldingEntityType; label: string }[] = [
-  { value: "holding", label: "Holding" },
-  { value: "operating", label: "Société opérationnelle" },
-  { value: "person", label: "Personne physique" },
-];
-
-const BUSINESS_STATUSES = [
-  { value: "", label: "— Aucun —" },
-  { value: "sasu_is", label: "SASU IS" },
-  { value: "sasu_ir", label: "SASU IR" },
-  { value: "eurl_is", label: "EURL IS" },
-  { value: "eurl_ir", label: "EURL IR" },
-  { value: "sci_is", label: "SCI IS" },
-  { value: "sci_ir", label: "SCI IR" },
-  { value: "sarl_is", label: "SARL IS" },
-  { value: "sas_is", label: "SAS IS" },
-  { value: "sa_is", label: "SA IS" },
-];
 
 export function HoldingEntityPanel() {
   const selectedEntityId = useHoldingStore((s) => s.selectedEntityId);
   const entities = useHoldingStore((s) => s.entities);
+  const flows = useHoldingStore((s) => s.flows);
   const updateEntity = useHoldingStore((s) => s.updateEntity);
   const removeEntity = useHoldingStore((s) => s.removeEntity);
   const setSelectedEntityId = useHoldingStore((s) => s.setSelectedEntityId);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const entity = entities.find((e) => e.id === selectedEntityId);
+
+  // Reset confirm state when entity changes
+  useEffect(() => {
+    setConfirmDelete(false);
+  }, [selectedEntityId]);
 
   // Close on Escape
   useEffect(() => {
@@ -46,6 +35,10 @@ export function HoldingEntityPanel() {
 
   if (!entity) return null;
 
+  const linkedFlows = flows.filter(
+    (f) => f.fromEntityId === entity.id || f.toEntityId === entity.id
+  );
+
   return (
     <div
       ref={overlayRef}
@@ -57,7 +50,7 @@ export function HoldingEntityPanel() {
       <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-semibold text-foreground">
-            Modifier l&apos;entité
+            Modifier l&apos;entit&eacute;
           </h3>
           <button
             onClick={() => setSelectedEntityId(null)}
@@ -94,7 +87,7 @@ export function HoldingEntityPanel() {
             }
             className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
-            {ENTITY_TYPES.map((t) => (
+            {HOLDING_ENTITY_TYPES.map((t) => (
               <option key={t.value} value={t.value}>
                 {t.label}
               </option>
@@ -117,7 +110,7 @@ export function HoldingEntityPanel() {
               }
               className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
             >
-              {BUSINESS_STATUSES.map((s) => (
+              {HOLDING_BUSINESS_STATUSES.map((s) => (
                 <option key={s.value} value={s.value}>
                   {s.label}
                 </option>
@@ -142,6 +135,7 @@ export function HoldingEntityPanel() {
               }
               className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               placeholder="120000"
+              min={0}
             />
           </div>
         )}
@@ -150,7 +144,7 @@ export function HoldingEntityPanel() {
         {entity.type !== "person" && (
           <div>
             <label className="text-xs font-medium text-muted-foreground mb-1 block">
-              Salaire annuel versé (&euro;)
+              Salaire annuel vers&eacute; au dirigeant (&euro;)
             </label>
             <input
               type="number"
@@ -162,6 +156,7 @@ export function HoldingEntityPanel() {
               }
               className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               placeholder="0"
+              min={0}
             />
           </div>
         )}
@@ -182,6 +177,7 @@ export function HoldingEntityPanel() {
               }
               className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               placeholder="0"
+              min={0}
             />
           </div>
         )}
@@ -192,17 +188,34 @@ export function HoldingEntityPanel() {
             onClick={() => setSelectedEntityId(null)}
             className="flex-1 py-2.5 rounded-xl text-sm font-medium bg-primary text-white hover:bg-primary/90 transition-colors"
           >
-            Fermer
+            OK
           </button>
-          <button
-            onClick={() => {
-              removeEntity(entity.id);
-              setSelectedEntityId(null);
-            }}
-            className="py-2.5 px-4 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
-          >
-            Supprimer
-          </button>
+          {confirmDelete ? (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  removeEntity(entity.id);
+                  setSelectedEntityId(null);
+                }}
+                className="py-2.5 px-4 rounded-xl text-sm font-medium bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+              >
+                Confirmer
+              </button>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="py-2.5 px-3 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
+              >
+                Non
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="py-2.5 px-4 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+            >
+              Supprimer{linkedFlows.length > 0 ? ` (${linkedFlows.length} flux)` : ""}
+            </button>
+          )}
         </div>
       </div>
     </div>

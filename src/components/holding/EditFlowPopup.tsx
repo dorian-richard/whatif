@@ -1,14 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useHoldingStore } from "@/stores/useHoldingStore";
+import { HOLDING_FLOW_TYPES } from "@/lib/constants";
 import { X } from "@/components/ui/icons";
-import type { HoldingFlowType } from "@/types";
-
-const FLOW_TYPES: { value: HoldingFlowType; label: string; color: string; desc: string }[] = [
-  { value: "dividend", label: "Dividendes", color: "#4ade80", desc: "Distribution de bénéfices" },
-  { value: "management_fee", label: "Frais de gestion", color: "#a78bfa", desc: "Convention de prestation" },
-  { value: "salary", label: "Salaire", color: "#5682F2", desc: "Rémunération dirigeant" },
-];
 
 interface EditFlowPopupProps {
   flowId: string;
@@ -20,6 +15,7 @@ export function EditFlowPopup({ flowId, onClose }: EditFlowPopupProps) {
   const flows = useHoldingStore((s) => s.flows);
   const updateFlow = useHoldingStore((s) => s.updateFlow);
   const removeFlow = useHoldingStore((s) => s.removeFlow);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const flow = flows.find((f) => f.id === flowId);
   if (!flow) return null;
@@ -62,7 +58,7 @@ export function EditFlowPopup({ flowId, onClose }: EditFlowPopupProps) {
             Type de flux
           </label>
           <div className="space-y-1.5">
-            {FLOW_TYPES.map((ft) => (
+            {HOLDING_FLOW_TYPES.map((ft) => (
               <button
                 key={ft.value}
                 onClick={() => updateFlow(flow.id, { type: ft.value })}
@@ -107,17 +103,26 @@ export function EditFlowPopup({ flowId, onClose }: EditFlowPopupProps) {
             onClick={onClose}
             className="flex-1 py-2.5 rounded-xl text-sm font-medium bg-primary text-white hover:bg-primary/90 transition-colors"
           >
-            Fermer
+            OK
           </button>
-          <button
-            onClick={() => {
-              removeFlow(flow.id);
-              onClose();
-            }}
-            className="py-2.5 px-4 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
-          >
-            Supprimer
-          </button>
+          {confirmDelete ? (
+            <button
+              onClick={() => {
+                removeFlow(flow.id);
+                onClose();
+              }}
+              className="py-2.5 px-4 rounded-xl text-sm font-medium bg-red-500/15 text-red-400 hover:bg-red-500/25 transition-colors"
+            >
+              Confirmer
+            </button>
+          ) : (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="py-2.5 px-4 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+            >
+              Supprimer
+            </button>
+          )}
         </div>
       </div>
     </div>

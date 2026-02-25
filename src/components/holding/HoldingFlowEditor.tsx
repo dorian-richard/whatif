@@ -2,15 +2,10 @@
 
 import { useState } from "react";
 import { useHoldingStore } from "@/stores/useHoldingStore";
+import { HOLDING_FLOW_TYPES } from "@/lib/constants";
 import { Plus, X } from "@/components/ui/icons";
 import { fmt } from "@/lib/utils";
 import type { HoldingFlowType } from "@/types";
-
-const FLOW_TYPES: { value: HoldingFlowType; label: string; color: string }[] = [
-  { value: "dividend", label: "Dividendes", color: "#4ade80" },
-  { value: "management_fee", label: "Frais de gestion", color: "#a78bfa" },
-  { value: "salary", label: "Salaire", color: "#5682F2" },
-];
 
 export function HoldingFlowEditor() {
   const entities = useHoldingStore((s) => s.entities);
@@ -66,7 +61,7 @@ export function HoldingFlowEditor() {
         {flows.map((flow) => {
           const from = entities.find((e) => e.id === flow.fromEntityId);
           const to = entities.find((e) => e.id === flow.toEntityId);
-          const typeConfig = FLOW_TYPES.find((t) => t.value === flow.type);
+          const typeConfig = HOLDING_FLOW_TYPES.find((t) => t.value === flow.type);
 
           return (
             <div
@@ -156,7 +151,7 @@ export function HoldingFlowEditor() {
                 onChange={(e) => setNewType(e.target.value as HoldingFlowType)}
                 className="w-full bg-muted/50 border border-border rounded-lg px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
               >
-                {FLOW_TYPES.map((t) => (
+                {HOLDING_FLOW_TYPES.map((t) => (
                   <option key={t.value} value={t.value}>
                     {t.label}
                   </option>

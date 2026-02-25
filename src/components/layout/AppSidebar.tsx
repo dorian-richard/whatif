@@ -19,16 +19,19 @@ const NAV_MAIN = [
 ];
 
 const NAV_TOOLS = [
-  { href: "/holding", label: "Holding", icon: Building2, pro: true },
+  // Décisions & optimisation
   { href: "/comparateur", label: "Comparateur", icon: Scale },
   { href: "/objectif", label: "Objectif", icon: Target },
-  { href: "/transition", label: "Transition", icon: Briefcase },
   { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
-  { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
-  { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
-  { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
+  // Suivi & pilotage
   { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
+  { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
   { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
+  // Projections spécifiques
+  { href: "/transition", label: "Transition", icon: Briefcase },
+  { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
+  { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
+  { href: "/holding", label: "Holding", icon: Building2, pro: true },
 ];
 
 const NAV_MOBILE_TABS = [
@@ -38,18 +41,23 @@ const NAV_MOBILE_TABS = [
 ];
 
 const NAV_MOBILE_MORE = [
-  { href: "/holding", label: "Holding", icon: Building2, pro: true },
+  // Main (not in bottom tabs)
+  { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+  { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
+  // Décisions & optimisation
   { href: "/comparateur", label: "Comparateur", icon: Scale },
   { href: "/objectif", label: "Objectif", icon: Target },
-  { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
-  { href: "/transition", label: "Transition", icon: Briefcase },
   { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
-  { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
-  { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
-  { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
+  // Suivi & pilotage
   { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
+  { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
   { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
-  { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
+  // Projections spécifiques
+  { href: "/transition", label: "Transition", icon: Briefcase },
+  { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
+  { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
+  { href: "/holding", label: "Holding", icon: Building2, pro: true },
+  // Profil
   { href: "/settings", label: "Mon profil", icon: UserRound },
 ];
 
@@ -65,18 +73,14 @@ export function AppSidebar() {
   const effectiveStatus = getEffectiveStatus(subscriptionStatus, trialEndsAt);
   const isPro = effectiveStatus === "ACTIVE";
   const trialDays = getTrialDaysRemaining(trialEndsAt);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
   useEffect(() => {
     setMounted(true);
-    createClient().auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? null));
   }, []);
 
   // Close drawer on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
-
-  const holdingEnabled = userEmail === "dorich@icloud.com";
 
   const upcomingDeadlines = mounted ? getUpcomingDeadlines(businessStatus, 7) : [];
   const hasUpcoming = upcomingDeadlines.length > 0;
@@ -133,7 +137,7 @@ export function AppSidebar() {
             <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Outils</span>
           </div>
 
-          {NAV_TOOLS.filter((item) => item.href !== "/holding" || holdingEnabled).map((item) => {
+          {NAV_TOOLS.map((item) => {
             const isActive = pathname === item.href;
             const showBadge = item.href === "/calendrier" && hasUpcoming;
             return (
@@ -229,7 +233,7 @@ export function AppSidebar() {
         <div className="px-4 pt-4 pb-3">
           <div className="w-10 h-1 bg-muted-foreground/20 rounded-full mx-auto mb-4" />
           <div className="grid grid-cols-4 gap-3">
-            {NAV_MOBILE_MORE.filter((item) => item.href !== "/holding" || holdingEnabled).map((item) => {
+            {NAV_MOBILE_MORE.map((item) => {
               const isActive = pathname === item.href;
               const showBadge = item.href === "/calendrier" && hasUpcoming;
               return (

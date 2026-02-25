@@ -1,58 +1,74 @@
 "use client";
 
 import { useEffect, useMemo, useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ReactFlowProvider } from "@xyflow/react";
 import { useHoldingStore } from "@/stores/useHoldingStore";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { computeHoldingStructure } from "@/lib/holding-engine";
-import { createClient } from "@/lib/supabase/client";
 import { ProBlur } from "@/components/ProBlur";
 import { HoldingGraph } from "@/components/holding/HoldingGraph";
 import { HoldingSummaryCards } from "@/components/holding/HoldingSummaryCards";
 import { HoldingTaxComparison } from "@/components/holding/HoldingTaxComparison";
 import { HoldingEntityPanel } from "@/components/holding/HoldingEntityPanel";
 import { HoldingFlowEditor } from "@/components/holding/HoldingFlowEditor";
+import { HoldingGuide } from "@/components/holding/HoldingGuide";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import { Plus, Building2 } from "@/components/ui/icons";
-import type { HoldingEntity, HoldingEntityType, EntityTaxResult, FreelanceProfile, ClientData } from "@/types";
+import type { HoldingEntity, HoldingFlow, HoldingEntityType, EntityTaxResult, FreelanceProfile, ClientData } from "@/types";
 
-function getDefaultEntities(
+interface DefaultTemplate {
+  entities: Omit<HoldingEntity, "id">[];
+  flows: { fromIndex: number; toIndex: number; type: HoldingFlow["type"]; annualAmount: number }[];
+}
+
+function getDefaultTemplate(
   businessStatus: string,
   clients: ClientData[],
   monthlySalary?: number,
-): Omit<HoldingEntity, "id">[] {
+): DefaultTemplate {
   const annualCA = clients.reduce((sum, c) => sum + getClientBaseCA(c) * 12, 0);
   const annualSalary = (monthlySalary ?? 0) * 12;
 
-  return [
-    {
-      name: "Ma Société",
-      type: "operating",
-      businessStatus: businessStatus || "sasu_is",
-      annualCA: Math.round(annualCA),
-      annualSalary: Math.round(annualSalary),
-      managementFees: 0,
-      positionX: 250,
-      positionY: 0,
-    },
-    {
-      name: "Moi",
-      type: "person",
-      annualCA: 0,
-      annualSalary: 0,
-      managementFees: 0,
-      positionX: 250,
-      positionY: 250,
-    },
-  ];
+  return {
+    entities: [
+      {
+        name: "Ma Société",
+        type: "operating",
+        businessStatus: businessStatus || "sasu_is",
+        annualCA: Math.round(annualCA),
+        annualSalary: 0,
+        managementFees: 0,
+        positionX: 250,
+        positionY: 0,
+      },
+      {
+        name: "Ma Holding",
+        type: "holding",
+        businessStatus: "sasu_is",
+        annualCA: 0,
+        annualSalary: Math.round(annualSalary),
+        managementFees: 0,
+        positionX: 250,
+        positionY: 200,
+      },
+      {
+        name: "Moi",
+        type: "person",
+        annualCA: 0,
+        annualSalary: 0,
+        managementFees: 0,
+        positionX: 250,
+        positionY: 400,
+      },
+    ],
+    flows: [
+      { fromIndex: 0, toIndex: 1, type: "dividend", annualAmount: 0 },
+      { fromIndex: 1, toIndex: 2, type: "salary", annualAmount: Math.round(annualSalary) },
+    ],
+  };
 }
 
-const ALLOWED_EMAILS = ["dorich@icloud.com"];
-
 export default function HoldingPage() {
-  const router = useRouter();
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
   const entities = useHoldingStore((s) => s.entities);
   const flows = useHoldingStore((s) => s.flows);
   const loaded = useHoldingStore((s) => s.loaded);
@@ -62,19 +78,6 @@ export default function HoldingPage() {
   const setLoaded = useHoldingStore((s) => s.setLoaded);
   const profile = useProfileStore((s) => s);
   const [saving, setSaving] = useState(false);
-
-  // Access control — only allowed emails can use this page
-  useEffect(() => {
-    createClient().auth.getUser().then(({ data }) => {
-      const email = data.user?.email;
-      if (email && ALLOWED_EMAILS.includes(email)) {
-        setAuthorized(true);
-      } else {
-        setAuthorized(false);
-        router.replace("/dashboard");
-      }
-    });
-  }, [router]);
 
   // Load from API on mount
   useEffect(() => {
@@ -126,18 +129,36 @@ export default function HoldingPage() {
       });
   }, [loaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const addFlow = useHoldingStore((s) => s.addFlow);
+
   const initDefaultStructure = useCallback(() => {
     // Double-check store hasn't been populated in the meantime
     if (useHoldingStore.getState().entities.length > 0) return;
-    const defaults = getDefaultEntities(
+    const template = getDefaultTemplate(
       profile.businessStatus ?? "sasu_is",
       profile.clients,
       profile.monthlySalary,
     );
-    for (const entity of defaults) {
+    // Add entities first, collect their generated IDs
+    const entityIds: string[] = [];
+    for (const entity of template.entities) {
       addEntity(entity);
     }
-  }, [addEntity, profile.businessStatus, profile.clients, profile.monthlySalary]);
+    // Get the IDs assigned by the store
+    const currentEntities = useHoldingStore.getState().entities;
+    for (let i = 0; i < template.entities.length; i++) {
+      entityIds.push(currentEntities[currentEntities.length - template.entities.length + i].id);
+    }
+    // Add default flows using entity IDs
+    for (const flow of template.flows) {
+      addFlow({
+        fromEntityId: entityIds[flow.fromIndex],
+        toEntityId: entityIds[flow.toIndex],
+        type: flow.type,
+        annualAmount: flow.annualAmount,
+      });
+    }
+  }, [addEntity, addFlow, profile.businessStatus, profile.clients, profile.monthlySalary]);
 
   // Build profile for engine
   const freelanceProfile: FreelanceProfile = useMemo(
@@ -170,7 +191,7 @@ export default function HoldingPage() {
     return m;
   }, [taxResult]);
 
-  // Save to API (debounced — skip if not authorized yet)
+  // Save to API (debounced)
   useEffect(() => {
     if (!loaded || entities.length === 0) return;
     const timer = setTimeout(() => {
@@ -203,11 +224,6 @@ export default function HoldingPage() {
     }, 2000);
     return () => clearTimeout(timer);
   }, [entities, flows, loaded]);
-
-  // Guard — render nothing until authorized
-  if (authorized !== true) {
-    return null;
-  }
 
   const handleAddEntity = () => {
     addEntity({
@@ -246,6 +262,9 @@ export default function HoldingPage() {
           <span className="hidden sm:inline">Ajouter une entité</span>
         </button>
       </div>
+
+      {/* Guide */}
+      <HoldingGuide />
 
       <ProBlur label="La simulation holding est réservée au plan Pro">
         {/* KPI Cards */}
