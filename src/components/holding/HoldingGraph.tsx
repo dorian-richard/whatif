@@ -5,7 +5,6 @@ import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   type Node,
   type Edge,
   type NodeChange,
@@ -168,14 +167,6 @@ export function HoldingGraph({ entityResults }: HoldingGraphProps) {
         <Controls
           showInteractive={false}
           className="!bg-card !border-border !rounded-xl !shadow-lg [&>button]:!bg-card [&>button]:!border-border [&>button]:!text-foreground"
-        />
-        <MiniMap
-          className="!bg-card !border-border !rounded-xl"
-          maskColor="rgba(0,0,0,0.1)"
-          nodeColor={(n) => {
-            const d = n.data as HoldingNodeData;
-            return d.color ?? "#5682F2";
-          }}
         />
       </ReactFlow>
 
