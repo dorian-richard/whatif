@@ -7,6 +7,7 @@ const FEATURES = [
   "Suivi des paiements",
   "Calendrier fiscal",
   "Benchmark TJM",
+  "À jour PLF 2026",
   "Gratuit",
   "Dédié freelance",
 ];
@@ -14,10 +15,10 @@ const FEATURES = [
 type Support = "yes" | "partial" | "no";
 
 const TOOLS: { name: string; values: Support[] }[] = [
-  { name: "Freelens", values: ["yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes"] },
-  { name: "Excel", values: ["partial", "no", "partial", "partial", "no", "no", "yes", "no"] },
-  { name: "Indy", values: ["no", "no", "no", "yes", "yes", "no", "partial", "partial"] },
-  { name: "Pennylane", values: ["no", "no", "no", "yes", "yes", "no", "partial", "partial"] },
+  { name: "Freelens", values: ["yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes"] },
+  { name: "Excel", values: ["partial", "no", "partial", "partial", "no", "no", "no", "yes", "no"] },
+  { name: "Indy", values: ["no", "no", "no", "yes", "yes", "no", "no", "partial", "partial"] },
+  { name: "Pennylane", values: ["no", "no", "no", "yes", "yes", "no", "no", "partial", "partial"] },
 ];
 
 function StatusIcon({ status }: { status: Support }) {
@@ -59,6 +60,8 @@ export function Comparison() {
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
               Con&ccedil;u pour les freelances, pas adapt&eacute; d&apos;un outil g&eacute;n&eacute;raliste.
+              <br />
+              <span className="text-sm text-muted-foreground/60">Bar&egrave;mes et taux &agrave; jour du Projet de Loi de Finances 2026.</span>
             </p>
           </div>
         </AnimateOnScroll>

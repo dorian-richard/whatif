@@ -5,7 +5,7 @@ import Link from "next/link";
 import { reverseCA } from "@/lib/simulation-engine";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { fmt } from "@/lib/utils";
-import type { BusinessStatus } from "@/types";
+import type { BusinessStatus, RemunerationType } from "@/types";
 import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const STATUTS: { value: BusinessStatus; label: string }[] = Object.entries(BUSINESS_STATUS_CONFIG).map(
@@ -16,14 +16,19 @@ export function TJMCalculator() {
   const [targetNet, setTargetNet] = useState(4000);
   const [status, setStatus] = useState<BusinessStatus>("micro");
   const [daysPerMonth, setDaysPerMonth] = useState(20);
+  const [remType, setRemType] = useState<RemunerationType>("salaire");
+  const [mixte, setMixte] = useState(50);
+
+  const isIS = BUSINESS_STATUS_CONFIG[status]?.is > 0;
 
   const result = useMemo(() => {
     const annualNet = targetNet * 12;
-    const requiredCA = reverseCA(annualNet, status, "salaire", 50);
+    const effectiveRemType = isIS ? remType : "salaire";
+    const requiredCA = reverseCA(annualNet, status, effectiveRemType, mixte);
     const tjm = requiredCA / 12 / daysPerMonth;
     const tauxCharges = 1 - annualNet / requiredCA;
     return { requiredCA, tjm, tauxCharges };
-  }, [targetNet, status, daysPerMonth]);
+  }, [targetNet, status, daysPerMonth, remType, mixte, isIS]);
 
   return (
     <section id="calculateur" className="snap-section relative flex items-center overflow-hidden">
@@ -82,6 +87,53 @@ export function TJMCalculator() {
                   ))}
                 </select>
               </div>
+
+              {/* Remuneration type (IS only) */}
+              {isIS && (
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Type de r&eacute;mun&eacute;ration</label>
+                  <div className="flex gap-2">
+                    {([
+                      { value: "salaire" as const, label: "Salaire" },
+                      { value: "dividendes" as const, label: "Dividendes" },
+                      { value: "mixte" as const, label: "Mixte" },
+                    ]).map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => setRemType(opt.value)}
+                        className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all border ${
+                          remType === opt.value
+                            ? "bg-[#5682F2]/15 text-[#5682F2] border-[#5682F2]/30"
+                            : "bg-muted/30 text-muted-foreground border-border hover:bg-muted/50"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  {remType === "mixte" && (
+                    <div className="mt-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs text-muted-foreground">Part salaire</span>
+                        <span className="text-xs font-bold text-foreground">{mixte}%</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={10}
+                        max={90}
+                        step={10}
+                        value={mixte}
+                        onChange={(e) => setMixte(Number(e.target.value))}
+                        className="w-full accent-[#5682F2]"
+                      />
+                      <div className="flex justify-between text-[10px] text-muted-foreground/50 mt-0.5">
+                        <span>10% salaire</span>
+                        <span>90% salaire</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Days per month slider */}
               <div>
