@@ -221,7 +221,7 @@ export default function HoldingPage() {
           <div>
             <h1 className="text-2xl font-bold text-foreground">Structure Holding</h1>
             <p className="text-sm text-muted-foreground">
-              Visualise ta structure et optimise ta fiscalité
+              Visualise ta structure et optimise ta fiscalit&eacute; &middot; <span className="text-muted-foreground/60">Soci&eacute;t&eacute;s fran&ccedil;aises uniquement pour le moment</span>
               {saving && <span className="ml-2 text-primary animate-pulse">Sauvegarde...</span>}
             </p>
           </div>
