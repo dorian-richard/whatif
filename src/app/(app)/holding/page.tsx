@@ -13,17 +13,25 @@ import { HoldingSummaryCards } from "@/components/holding/HoldingSummaryCards";
 import { HoldingTaxComparison } from "@/components/holding/HoldingTaxComparison";
 import { HoldingEntityPanel } from "@/components/holding/HoldingEntityPanel";
 import { HoldingFlowEditor } from "@/components/holding/HoldingFlowEditor";
+import { getClientBaseCA } from "@/lib/simulation-engine";
 import { Plus, Building2 } from "@/components/ui/icons";
-import type { HoldingEntity, HoldingEntityType, EntityTaxResult, FreelanceProfile } from "@/types";
+import type { HoldingEntity, HoldingEntityType, EntityTaxResult, FreelanceProfile, ClientData } from "@/types";
 
-function getDefaultEntities(businessStatus: string): Omit<HoldingEntity, "id">[] {
+function getDefaultEntities(
+  businessStatus: string,
+  clients: ClientData[],
+  monthlySalary?: number,
+): Omit<HoldingEntity, "id">[] {
+  const annualCA = clients.reduce((sum, c) => sum + getClientBaseCA(c) * 12, 0);
+  const annualSalary = (monthlySalary ?? 0) * 12;
+
   return [
     {
       name: "Ma Société",
       type: "operating",
       businessStatus: businessStatus || "sasu_is",
-      annualCA: 0,
-      annualSalary: 0,
+      annualCA: Math.round(annualCA),
+      annualSalary: Math.round(annualSalary),
       managementFees: 0,
       positionX: 250,
       positionY: 0,
@@ -121,11 +129,15 @@ export default function HoldingPage() {
   const initDefaultStructure = useCallback(() => {
     // Double-check store hasn't been populated in the meantime
     if (useHoldingStore.getState().entities.length > 0) return;
-    const defaults = getDefaultEntities(profile.businessStatus ?? "sasu_is");
+    const defaults = getDefaultEntities(
+      profile.businessStatus ?? "sasu_is",
+      profile.clients,
+      profile.monthlySalary,
+    );
     for (const entity of defaults) {
       addEntity(entity);
     }
-  }, [addEntity, profile.businessStatus]);
+  }, [addEntity, profile.businessStatus, profile.clients, profile.monthlySalary]);
 
   // Build profile for engine
   const freelanceProfile: FreelanceProfile = useMemo(
