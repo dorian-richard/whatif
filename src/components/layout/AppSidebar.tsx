@@ -10,29 +10,46 @@ import { useProfileStore } from "@/stores/useProfileStore";
 import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
 import { getEffectiveStatus, getTrialDaysRemaining } from "@/lib/subscription";
 
-const NAV_MAIN = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
-  { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
-  { href: "/paiements", label: "Paiements", icon: CreditCard, pro: true },
-  { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
-];
+type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }>; pro?: boolean };
+type NavSection = { label: string | null; items: NavItem[] };
 
-const NAV_TOOLS = [
-  // Décisions & optimisation
-  { href: "/comparateur", label: "Comparateur", icon: Scale },
-  { href: "/objectif", label: "Objectif", icon: Target },
-  { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
-  // Suivi & pilotage
-  { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
-  { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
-  { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
-  { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
-  // Projections spécifiques
-  { href: "/transition", label: "Transition", icon: Briefcase },
-  { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
-  { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
-  { href: "/holding", label: "Holding", icon: Building2, pro: true },
+const NAV_SECTIONS: NavSection[] = [
+  {
+    label: null,
+    items: [
+      { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
+      { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+    ],
+  },
+  {
+    label: "Pilotage",
+    items: [
+      { href: "/paiements", label: "Paiements", icon: CreditCard, pro: true },
+      { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
+      { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
+      { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
+      { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
+    ],
+  },
+  {
+    label: "Analyse",
+    items: [
+      { href: "/comparateur", label: "Comparateur", icon: Scale },
+      { href: "/objectif", label: "Objectif", icon: Target },
+      { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
+      { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
+    ],
+  },
+  {
+    label: "Projections",
+    items: [
+      { href: "/transition", label: "Transition", icon: Briefcase },
+      { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
+      { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
+      { href: "/holding", label: "Holding", icon: Building2, pro: true },
+    ],
+  },
 ];
 
 const NAV_MOBILE_TABS = [
@@ -41,26 +58,46 @@ const NAV_MOBILE_TABS = [
   { href: "/paiements", label: "Paiements", icon: CreditCard },
 ];
 
-const NAV_MOBILE_MORE = [
-  // Main (not in bottom tabs)
-  { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
-  { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
-  // Décisions & optimisation
-  { href: "/comparateur", label: "Comparateur", icon: Scale },
-  { href: "/objectif", label: "Objectif", icon: Target },
-  { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
-  // Suivi & pilotage
-  { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
-  { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
-  { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
-  { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
-  // Projections spécifiques
-  { href: "/transition", label: "Transition", icon: Briefcase },
-  { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
-  { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
-  { href: "/holding", label: "Holding", icon: Building2, pro: true },
-  // Profil
-  { href: "/settings", label: "Mon profil", icon: UserRound },
+const NAV_MOBILE_SECTIONS: NavSection[] = [
+  {
+    label: null,
+    items: [
+      { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+    ],
+  },
+  {
+    label: "Pilotage",
+    items: [
+      { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
+      { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
+      { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
+      { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
+    ],
+  },
+  {
+    label: "Analyse",
+    items: [
+      { href: "/comparateur", label: "Comparateur", icon: Scale },
+      { href: "/objectif", label: "Objectif", icon: Target },
+      { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
+      { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
+    ],
+  },
+  {
+    label: "Projections",
+    items: [
+      { href: "/transition", label: "Transition", icon: Briefcase },
+      { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
+      { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
+      { href: "/holding", label: "Holding", icon: Building2, pro: true },
+    ],
+  },
+  {
+    label: null,
+    items: [
+      { href: "/settings", label: "Mon profil", icon: UserRound },
+    ],
+  },
 ];
 
 export function AppSidebar() {
@@ -112,68 +149,53 @@ export function AppSidebar() {
         </button>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
-          {NAV_MAIN.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <button
-                key={item.href}
-                onClick={() => router.push(item.href)}
-                className={cn(
-                  "flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
-                  isActive
-                    ? "bg-primary/15 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                )}
-              >
-                <item.icon className="size-[18px]" />
-                <span>{item.label}</span>
-                {item.pro && !isPro && (
-                  <span className="ml-auto text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">Pro</span>
-                )}
-              </button>
-            );
-          })}
+        <nav className="flex-1 px-3 py-2 overflow-y-auto">
+          {NAV_SECTIONS.map((section, si) => (
+            <div key={si} className={si > 0 ? "mt-1" : ""}>
+              {section.label && (
+                <div className="pt-3 pb-1 px-3">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">{section.label}</span>
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {section.items.map((item) => {
+                  const isActive = pathname === item.href;
+                  const showBadge = item.href === "/calendrier" && hasUpcoming;
+                  return (
+                    <button
+                      key={item.href}
+                      onClick={() => router.push(item.href)}
+                      className={cn(
+                        "flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150",
+                        isActive
+                          ? "bg-primary/15 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      )}
+                    >
+                      <span className="relative">
+                        <item.icon className="size-[18px]" />
+                        {showBadge && (
+                          <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-[#f87171] ring-2 ring-sidebar" />
+                        )}
+                      </span>
+                      <span>{item.label}</span>
+                      {showBadge ? (
+                        <span className="ml-auto text-[10px] font-bold text-[#f87171]">{upcomingDeadlines.length}</span>
+                      ) : item.pro && !isPro ? (
+                        <span className="ml-auto text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">Pro</span>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
 
-          <div className="pt-3 pb-1 px-3">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">Outils</span>
-          </div>
-
-          {NAV_TOOLS.map((item) => {
-            const isActive = pathname === item.href;
-            const showBadge = item.href === "/calendrier" && hasUpcoming;
-            return (
-              <button
-                key={item.href}
-                onClick={() => router.push(item.href)}
-                className={cn(
-                  "flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
-                  isActive
-                    ? "bg-primary/15 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                )}
-              >
-                <span className="relative">
-                  <item.icon className="size-[18px]" />
-                  {showBadge && (
-                    <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-[#f87171] ring-2 ring-sidebar" />
-                  )}
-                </span>
-                <span>{item.label}</span>
-                {showBadge ? (
-                  <span className="ml-auto text-[10px] font-bold text-[#f87171]">{upcomingDeadlines.length}</span>
-                ) : item.pro && !isPro ? (
-                  <span className="ml-auto text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">Pro</span>
-                ) : null}
-              </button>
-            );
-          })}
-
-          <div className="pt-2">
+          <div className="mt-1">
             <button
               onClick={() => router.push("/settings")}
               className={cn(
-                "flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
+                "flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150",
                 pathname === "/settings"
                   ? "bg-primary/15 text-primary"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -232,38 +254,47 @@ export function AppSidebar() {
           mobileMenuOpen ? "translate-y-0" : "translate-y-full"
         )}
       >
-        <div className="px-4 pt-4 pb-3">
+        <div className="px-4 pt-4 pb-3 max-h-[60vh] overflow-y-auto">
           <div className="w-10 h-1 bg-muted-foreground/20 rounded-full mx-auto mb-4" />
-          <div className="grid grid-cols-4 gap-3">
-            {NAV_MOBILE_MORE.map((item) => {
-              const isActive = pathname === item.href;
-              const showBadge = item.href === "/calendrier" && hasUpcoming;
-              return (
-                <button
-                  key={item.href}
-                  onClick={() => {
-                    router.push(item.href);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={cn(
-                    "flex flex-col items-center gap-1 py-3 rounded-xl transition-colors",
-                    isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"
-                  )}
-                >
-                  <span className="relative">
-                    <item.icon className="size-5" />
-                    {showBadge && (
-                      <span className="absolute -top-1 -right-1 size-2 rounded-full bg-[#f87171] ring-2 ring-sidebar" />
-                    )}
-                    {item.pro && !isPro && !showBadge && (
-                      <span className="absolute -top-1 -right-2.5 text-[7px] font-bold uppercase text-primary">Pro</span>
-                    )}
-                  </span>
-                  <span className="text-[10px] font-medium">{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
+          {NAV_MOBILE_SECTIONS.map((section, si) => (
+            <div key={si} className={si > 0 ? "mt-2" : ""}>
+              {section.label && (
+                <div className="px-1 pb-1.5 pt-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">{section.label}</span>
+                </div>
+              )}
+              <div className="grid grid-cols-4 gap-2">
+                {section.items.map((item) => {
+                  const isActive = pathname === item.href;
+                  const showBadge = item.href === "/calendrier" && hasUpcoming;
+                  return (
+                    <button
+                      key={item.href}
+                      onClick={() => {
+                        router.push(item.href);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={cn(
+                        "flex flex-col items-center gap-1 py-3 rounded-xl transition-colors",
+                        isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"
+                      )}
+                    >
+                      <span className="relative">
+                        <item.icon className="size-5" />
+                        {showBadge && (
+                          <span className="absolute -top-1 -right-1 size-2 rounded-full bg-[#f87171] ring-2 ring-sidebar" />
+                        )}
+                        {item.pro && !isPro && !showBadge && (
+                          <span className="absolute -top-1 -right-2.5 text-[7px] font-bold uppercase text-primary">Pro</span>
+                        )}
+                      </span>
+                      <span className="text-[10px] font-medium">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Theme + logout */}
