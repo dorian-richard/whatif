@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
-import { getAnnualCA, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
+import { getAnnualCA, AVG_JOURS_OUVRES, reverseCA, computeIS } from "@/lib/simulation-engine";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
 import {
@@ -95,57 +95,7 @@ const COUTS_FREELANCE: CoutFreelance[] = [
 
 /* ── Calculs ── */
 
-/** Reverse: target net → required CA */
-function reverseCA(
-  targetNet: number,
-  status: BusinessStatus,
-  remType: RemunerationType,
-  mixtePartSalaire: number,
-  customIrRate?: number
-): number {
-  const cfg = BUSINESS_STATUS_CONFIG[status];
-  const urssaf = cfg.urssaf;
-  const ir = customIrRate ?? cfg.ir;
-  const is = cfg.is;
-
-  if (status === "micro") return targetNet / (1 - urssaf - ir);
-
-  if (is === 0) {
-    // IR structures
-    if (status === "sasu_ir" && remType === "dividendes") {
-      return targetNet / (1 - ir);
-    }
-    if (status === "sasu_ir" && remType === "mixte") {
-      const salPart = mixtePartSalaire / 100;
-      const divPart = 1 - salPart;
-      return targetNet / (salPart * (1 - urssaf) * (1 - ir) + divPart * (1 - ir));
-    }
-    return targetNet / ((1 - urssaf) * (1 - ir));
-  }
-
-  // IS structures
-  const isSASU = status === "sasu_is";
-
-  if (remType === "salaire") {
-    return targetNet / ((1 - urssaf) * (1 - ir));
-  }
-  if (remType === "dividendes") {
-    if (isSASU) return targetNet / ((1 - is) * (1 - PFU_RATE));
-    return targetNet / ((1 - is) * (1 - urssaf) * (1 - ir));
-  }
-  // Mixte
-  const salPart = mixtePartSalaire / 100;
-  const divPart = 1 - salPart;
-  const salMult = salPart * (1 - urssaf) * (1 - ir);
-  const divMult = isSASU
-    ? divPart * (1 - is) * (1 - PFU_RATE)
-    : divPart * (1 - is) * (1 - urssaf) * (1 - ir);
-  const total = salMult + divMult;
-  if (total <= 0) return Infinity;
-  return targetNet / total;
-}
-
-/** Forward: CA → net */
+/** Forward: CA → net (avec IS progressif) */
 function forwardNet(
   annualCA: number,
   status: BusinessStatus,
@@ -156,11 +106,11 @@ function forwardNet(
   const cfg = BUSINESS_STATUS_CONFIG[status];
   const urssaf = cfg.urssaf;
   const ir = customIrRate ?? cfg.ir;
-  const is = cfg.is;
+  const isRate = cfg.is;
 
   if (status === "micro") return annualCA * (1 - urssaf - ir);
 
-  if (is === 0) {
+  if (isRate === 0) {
     if (status === "sasu_ir" && remType === "dividendes") {
       return annualCA * (1 - ir);
     }
@@ -173,22 +123,24 @@ function forwardNet(
     return annualCA * (1 - urssaf) * (1 - ir);
   }
 
-  // IS
+  // IS structures: progressive brackets
   const isSASU = status === "sasu_is";
 
   if (remType === "salaire") {
     return annualCA * (1 - urssaf) * (1 - ir);
   }
   if (remType === "dividendes") {
-    const afterIS = annualCA * (1 - is);
+    const isAmount = computeIS(annualCA);
+    const afterIS = annualCA - isAmount;
     if (isSASU) return afterIS * (1 - PFU_RATE);
     return afterIS * (1 - urssaf) * (1 - ir);
   }
   // Mixte
   const salCost = annualCA * (mixtePartSalaire / 100);
   const salNet = salCost * (1 - urssaf) * (1 - ir);
-  const remaining = annualCA - salCost;
-  const afterIS = remaining * (1 - is);
+  const remaining = Math.max(0, annualCA - salCost);
+  const isAmount = computeIS(remaining);
+  const afterIS = remaining - isAmount;
   const divNet = isSASU
     ? afterIS * (1 - PFU_RATE)
     : afterIS * (1 - urssaf) * (1 - ir);

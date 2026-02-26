@@ -1,20 +1,8 @@
 import type { HoldingEntity, HoldingFlow, HoldingTaxResult, EntityTaxResult, FreelanceProfile } from "@/types";
-import { computeNetFromCA } from "./simulation-engine";
+import { computeNetFromCA, computeIS } from "./simulation-engine";
 
 /** PFU (flat tax) on dividends: 12.8% IR + 17.2% CSG/CRDS */
 const PFU_RATE = 0.30;
-
-/**
- * IS progressif France :
- * - 15% sur les premiers 42 500€ de bénéfice
- * - 25% au-delà
- */
-export function computeIS(profit: number): number {
-  if (profit <= 0) return 0;
-  const tranche1 = Math.min(profit, 42500);
-  const tranche2 = Math.max(0, profit - 42500);
-  return tranche1 * 0.15 + tranche2 * 0.25;
-}
 
 /**
  * Calcule la fiscalité complète d'une structure holding.

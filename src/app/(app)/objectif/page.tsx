@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
-import { AVG_JOURS_OUVRES, getAnnualCA, reverseCA } from "@/lib/simulation-engine";
+import { AVG_JOURS_OUVRES, getAnnualCA, reverseCA, computeNetFromCA } from "@/lib/simulation-engine";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
 import {
@@ -67,16 +67,15 @@ export default function ObjectifPage() {
   const { clients, businessStatus, workDaysPerWeek, monthlyExpenses, remunerationType, mixtePartSalaire, customIrRate, vacationDaysPerMonth } =
     useProfileStore();
 
+  const profile = useProfileStore();
+
   // Compute user's actual monthly net from their profile data
   const userMonthlyNet = useMemo(() => {
     const annualCA = getAnnualCA(clients, vacationDaysPerMonth);
     if (annualCA <= 0) return 4000; // fallback
-    const cfg = BUSINESS_STATUS_CONFIG[businessStatus];
-    const urssaf = cfg.urssaf;
-    const ir = customIrRate ?? cfg.ir;
-    const netAnnual = annualCA * (1 - urssaf) * (1 - ir);
+    const netAnnual = computeNetFromCA(annualCA, profile);
     return Math.round(netAnnual / 12 / 100) * 100; // round to nearest 100
-  }, [clients, businessStatus, customIrRate, vacationDaysPerMonth]);
+  }, [clients, vacationDaysPerMonth, profile]);
 
   const [targetNet, setTargetNet] = useState<number | null>(null);
   const effectiveTargetNet = targetNet ?? userMonthlyNet;

@@ -8,7 +8,7 @@ import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus } from "@/types";
 import { CalendarDays, Banknote, Shield, Landmark, CircleAlert, Download } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
-import { DEADLINES, CATEGORY_CONFIG, type DeadlineCategory, type FiscalDeadline } from "@/lib/fiscal-deadlines";
+import { DEADLINES, CATEGORY_CONFIG, type DeadlineCategory, type FiscalDeadline, type FiscalEstimateContext } from "@/lib/fiscal-deadlines";
 
 const MONTHS_FULL = [
   "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
@@ -27,6 +27,7 @@ function generateICS(
   deadlines: FiscalDeadline[][],
   status: BusinessStatus,
   annualCA: number,
+  ctx: FiscalEstimateContext,
 ): string {
   const year = new Date().getFullYear();
   const lines: string[] = [
@@ -45,7 +46,7 @@ function generateICS(
       const maxDay = new Date(year, month + 1, 0).getDate();
       const day = Math.min(d.day, maxDay);
       const dateStr = `${year}${pad2(month + 1)}${pad2(day)}`;
-      const amount = d.estimateAmount?.(annualCA, status);
+      const amount = d.estimateAmount?.(annualCA, status, ctx);
       const catLabel = CATEGORY_CONFIG[d.category].label;
 
       let description = catLabel;
@@ -88,9 +89,14 @@ function downloadICS(content: string) {
    ════════════════════════════════════════════════ */
 
 export default function CalendrierPage() {
-  const { clients, businessStatus, subscriptionStatus, vacationDaysPerMonth } = useProfileStore();
+  const { clients, businessStatus, subscriptionStatus, vacationDaysPerMonth, remunerationType, mixtePartSalaire } = useProfileStore();
 
   const annualCA = useMemo(() => getAnnualCA(clients, vacationDaysPerMonth), [clients, vacationDaysPerMonth]);
+
+  const fiscalCtx = useMemo<FiscalEstimateContext>(() => ({
+    remunerationType: remunerationType ?? "salaire",
+    mixtePartSalaire: mixtePartSalaire ?? 50,
+  }), [remunerationType, mixtePartSalaire]);
 
   const monthlyCA = useMemo(() => {
     return Array.from({ length: 12 }, (_, month) => {
@@ -125,12 +131,12 @@ export default function CalendrierPage() {
     for (const month of filteredByMonth) {
       for (const d of month) {
         if (d.estimateAmount) {
-          sums[d.category] += d.estimateAmount(annualCA, selectedStatus);
+          sums[d.category] += d.estimateAmount(annualCA, selectedStatus, fiscalCtx);
         }
       }
     }
     return sums;
-  }, [filteredByMonth, annualCA, selectedStatus]);
+  }, [filteredByMonth, annualCA, selectedStatus, fiscalCtx]);
 
   const totalProvision = totals.urssaf + totals.is + totals.ir + totals.admin;
 
@@ -149,7 +155,7 @@ export default function CalendrierPage() {
         {subscriptionStatus === "ACTIVE" && (
           <button
             onClick={() => {
-              const ics = generateICS(filteredByMonth, selectedStatus, annualCA);
+              const ics = generateICS(filteredByMonth, selectedStatus, annualCA, fiscalCtx);
               downloadICS(ics);
             }}
             className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors"
@@ -251,7 +257,7 @@ export default function CalendrierPage() {
                 <div className="space-y-2">
                   {deadlines.map((d, j) => {
                     const catCfg = CATEGORY_CONFIG[d.category];
-                    const amount = d.estimateAmount?.(annualCA, selectedStatus);
+                    const amount = d.estimateAmount?.(annualCA, selectedStatus, fiscalCtx);
 
                     return (
                       <div
@@ -282,7 +288,7 @@ export default function CalendrierPage() {
                   {/* Monthly subtotal */}
                   {(() => {
                     const monthTotal = deadlines.reduce((sum, d) => {
-                      const amt = d.estimateAmount?.(annualCA, selectedStatus);
+                      const amt = d.estimateAmount?.(annualCA, selectedStatus, fiscalCtx);
                       return sum + (amt != null && amt > 0 ? amt : 0);
                     }, 0);
                     return monthTotal > 0 ? (

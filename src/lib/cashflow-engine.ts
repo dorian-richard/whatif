@@ -1,5 +1,5 @@
 import type { ClientData, FreelanceProfile } from "@/types";
-import { getClientMonthlyCA } from "./simulation-engine";
+import { getClientMonthlyCA, computeIS } from "./simulation-engine";
 import { SEASONALITY, MONTHS_SHORT, BUSINESS_STATUS_CONFIG } from "./constants";
 
 const PFU_RATE = 0.30; // 12.8% IR + 17.2% CSG/CRDS
@@ -64,9 +64,10 @@ function computeMonthlyCharges(
     return { urssaf, ir, is: 0 };
   }
 
-  // 100% Dividendes: IS sur bénéfice, puis taxation dividendes
+  // 100% Dividendes: IS progressif sur bénéfice, puis taxation dividendes
   if (remunerationType === "dividendes") {
-    const isAmount = income * isRate;
+    // Annualize profit for progressive IS brackets, then take monthly portion
+    const isAmount = computeIS(income * 12) / 12;
     const afterIS = income - isAmount;
     if (isSASU) {
       // PFU 30% flat (inclut IR + prélèvements sociaux)
@@ -86,9 +87,9 @@ function computeMonthlyCharges(
   const salaryUrssaf = salaryCost * urssafRate;
   const salaryIR = (salaryCost - salaryUrssaf) * irRate;
 
-  // Partie dividendes: bénéfice restant → IS → taxation
+  // Partie dividendes: bénéfice restant → IS progressif → taxation
   const remainingCA = Math.max(0, income - salaryCost);
-  const isAmount = remainingCA * isRate;
+  const isAmount = computeIS(remainingCA * 12) / 12;
   const afterIS = remainingCA - isAmount;
 
   let divUrssaf: number;

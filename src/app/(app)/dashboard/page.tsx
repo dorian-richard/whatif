@@ -571,7 +571,7 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
           const resultatVal = Math.max(0, resultat);
           const resultatPct = (resultatVal / maxMonthly) * 100;
           const netRevenue = ca * netRate - expenses;
-          const netVal = Math.max(0, ca * netRate);
+          const netVal = Math.max(0, netRevenue);
           const netPct = (netVal / maxMonthly) * 100;
           const isHovered = hoveredMonth === i;
           return (

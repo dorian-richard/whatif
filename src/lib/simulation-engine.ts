@@ -105,6 +105,18 @@ export function getAnnualCA(clients: ClientData[], vacationDaysPerMonth?: number
 const PFU_RATE = 0.30; // 12.8% IR + 17.2% CSG/CRDS
 
 /**
+ * IS progressif France :
+ * - 15% sur les premiers 42 500€ de benefice
+ * - 25% au-dela
+ */
+export function computeIS(profit: number): number {
+  if (profit <= 0) return 0;
+  const tranche1 = Math.min(profit, 42500);
+  const tranche2 = Math.max(0, profit - 42500);
+  return tranche1 * 0.15 + tranche2 * 0.25;
+}
+
+/**
  * Reverse calculation: given a desired annual net, find the required CA.
  */
 export function reverseCA(
@@ -142,24 +154,35 @@ export function reverseCA(
     return targetNet / ((1 - urssaf) * (1 - ir));
   }
 
-  if (remType === "dividendes") {
-    if (isSASU) {
-      return targetNet / ((1 - is) * (1 - PFU_RATE));
+  // IS structures with dividends or mixte: use iterative approach
+  // because progressive IS brackets make the formula non-linear
+  const computeNetForCA = (ca: number): number => {
+    if (remType === "dividendes") {
+      const isAmount = computeIS(ca);
+      const afterIS = ca - isAmount;
+      if (isSASU) return afterIS * (1 - PFU_RATE);
+      return afterIS * (1 - urssaf) * (1 - ir);
     }
-    return targetNet / ((1 - is) * (1 - urssaf) * (1 - ir));
+    // mixte
+    const salPart = mixtePartSalaire / 100;
+    const sCost = Math.min(ca * salPart, ca);
+    const sNet = sCost * (1 - urssaf) * (1 - ir);
+    const remaining = Math.max(0, ca - sCost);
+    const isAmount = computeIS(remaining);
+    const afterIS = remaining - isAmount;
+    const dNet = isSASU ? afterIS * (1 - PFU_RATE) : afterIS * (1 - urssaf) * (1 - ir);
+    return sNet + dNet;
+  };
+
+  // Newton-style iteration: converges in ~5 iterations
+  let ca = targetNet * 2;
+  for (let i = 0; i < 20; i++) {
+    const net = computeNetForCA(ca);
+    if (Math.abs(net - targetNet) < 1) break;
+    if (net <= 0) { ca *= 2; continue; }
+    ca = ca * (targetNet / net);
   }
-
-  const salPart = mixtePartSalaire / 100;
-  const divPart = 1 - salPart;
-  const salaryMultiplier = salPart * (1 - urssaf) * (1 - ir);
-  const divMultiplier = isSASU
-    ? divPart * (1 - is) * (1 - PFU_RATE)
-    : divPart * (1 - is) * (1 - urssaf) * (1 - ir);
-
-  const totalMultiplier = salaryMultiplier + divMultiplier;
-  if (totalMultiplier <= 0) return Infinity;
-
-  return targetNet / totalMultiplier;
+  return ca;
 }
 
 /**
@@ -208,9 +231,10 @@ export function computeNetFromCA(
     return annualCA * (1 - urssafRate) * (1 - irRate);
   }
 
-  // 100% Dividendes : IS sur tout le benefice, puis taxation dividendes
+  // 100% Dividendes : IS progressif sur tout le benefice, puis taxation dividendes
   if (remunerationType === "dividendes") {
-    const afterIS = annualCA * (1 - isRate);
+    const isAmount = computeIS(annualCA);
+    const afterIS = annualCA - isAmount;
     return netFromDividends(afterIS);
   }
 
@@ -225,7 +249,8 @@ export function computeNetFromCA(
   } else {
     const annualSalary = (profile.monthlySalary ?? 0) * 12;
     if (annualSalary <= 0) {
-      const afterIS = annualCA * (1 - isRate);
+      const isAmount = computeIS(annualCA);
+      const afterIS = annualCA - isAmount;
       return netFromDividends(afterIS);
     }
     salaryCost = Math.min(annualSalary / (1 - urssafRate), annualCA);
@@ -233,9 +258,10 @@ export function computeNetFromCA(
 
   const actualSalaryNet = salaryCost * (1 - urssafRate);
 
-  // Benefice restant → IS → dividendes
+  // Benefice restant → IS progressif → dividendes
   const remainingCA = Math.max(0, annualCA - salaryCost);
-  const afterIS = remainingCA * (1 - isRate);
+  const isAmount = computeIS(remainingCA);
+  const afterIS = remainingCA - isAmount;
 
   const netSalary = actualSalaryNet * (1 - irRate);
   const netDividends = netFromDividends(afterIS);
