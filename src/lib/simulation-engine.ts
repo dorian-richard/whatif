@@ -73,15 +73,25 @@ export function getClientMonthlyCA(
  */
 export function getClientBaseCA(client: ClientData): number {
   if (client.isActive === false) return 0;
-  if (client.billing === "tjm") {
-    if (client.daysPerYear) {
-      return (client.dailyRate ?? 0) * client.daysPerYear / 12;
+  switch (client.billing) {
+    case "tjm": {
+      if (client.daysPerYear) {
+        return (client.dailyRate ?? 0) * client.daysPerYear / 12;
+      }
+      if (client.daysPerWeek != null) {
+        return (client.dailyRate ?? 0) * (client.daysPerWeek / 5) * AVG_JOURS_OUVRES;
+      }
+      return (client.dailyRate ?? 0) * (client.daysPerMonth ?? 0);
     }
-    if (client.daysPerWeek != null) {
-      return (client.dailyRate ?? 0) * (client.daysPerWeek / 5) * AVG_JOURS_OUVRES;
+    case "forfait":
+      return client.monthlyAmount ?? 0;
+    case "mission": {
+      const duration = Math.max(1, (client.endMonth ?? 11) - (client.startMonth ?? 0) + 1);
+      return (client.totalAmount ?? 0) / duration;
     }
+    default:
+      return 0;
   }
-  return getClientMonthlyCA(client, 0, 1);
 }
 
 /**
