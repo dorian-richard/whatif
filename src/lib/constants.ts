@@ -168,13 +168,13 @@ export const BUSINESS_STATUS_CONFIG: Record<
   },
   sasu_ir: {
     label: "SASU à l'IR",
-    urssaf: 0.65,
+    urssaf: 0.45,
     ir: 0.30,
     is: 0,
-    desc: "Assimilé salarié ~65% charges · IR progressif · Option 5 ans",
+    desc: "Assimilé salarié ~45% charges sur CA · IR progressif · Option 5 ans",
     regime: "Assimilé salarié",
     details:
-      "Président assimilé salarié : charges patronales (~45%) + salariales (~22%) = ~65% du net. IR au barème progressif. Protection sociale quasi-identique à un salarié (maladie, retraite, prévoyance) sauf chômage. Option IR temporaire, limitée à 5 exercices max.",
+      "Président assimilé salarié : charges patronales (~42% du brut) + salariales (~22% du brut), soit ~45% du coût total employeur. IR au barème progressif. Protection sociale quasi-identique à un salarié (maladie, retraite, prévoyance) sauf chômage. Option IR temporaire, limitée à 5 exercices max.",
     avantages: [
       "Protection sociale proche d'un salarié",
       "Fiches de paie (crédibilité prêts, location)",
@@ -182,7 +182,7 @@ export const BUSINESS_STATUS_CONFIG: Record<
       "Possibilité de repasser à l'IS",
     ],
     inconvenients: [
-      "Charges les plus élevées (~65% du net)",
+      "Charges élevées (~45% du CA en salaire)",
       "Option IR limitée à 5 exercices",
       "Pas de droit au chômage",
       "Bulletins de paie obligatoires",
@@ -190,13 +190,13 @@ export const BUSINESS_STATUS_CONFIG: Record<
   },
   sasu_is: {
     label: "SASU à l'IS",
-    urssaf: 0.65,
+    urssaf: 0.45,
     ir: 0.125,
     is: 0.15,
-    desc: "IS 15/25% · Salarié ~65% charges · Dividendes PFU 30%",
+    desc: "IS 15/25% · Salarié ~45% charges sur CA · Dividendes PFU 30%",
     regime: "Assimilé salarié",
     details:
-      "IS 15% jusqu'à 42 500\u20AC, 25% au-delà. Président assimilé salarié, charges ~65% sur salaire net. Dividendes au PFU 30% flat (12.8% IR + 17.2% prélèvements sociaux) sans cotisations TNS. Statut le plus protecteur socialement. Idéal pour optimisation via dividendes (pas de cotisations sociales contrairement à l'EURL).",
+      "IS 15% jusqu'à 42 500\u20AC, 25% au-delà. Président assimilé salarié, charges ~45% du CA alloué en salaire (patronales ~42% + salariales ~22% du brut). Dividendes au PFU 30% flat (12.8% IR + 17.2% prélèvements sociaux) sans cotisations TNS. Statut le plus protecteur socialement. Idéal pour optimisation via dividendes.",
     avantages: [
       "Dividendes PFU 30% flat, sans cotisations TNS",
       "IS taux réduit 15% jusqu'à 42 500\u20AC",
@@ -204,7 +204,7 @@ export const BUSINESS_STATUS_CONFIG: Record<
       "Crédibilité : fiches de paie, structure sociétaire",
     ],
     inconvenients: [
-      "Charges salariales les plus élevées (~65%)",
+      "Charges salariales élevées (~45% du CA)",
       "Pas de droit au chômage",
       "Bulletins de paie obligatoires",
       "Gestion plus lourde (AG, comptes annuels)",

@@ -138,7 +138,7 @@ export default function CalendrierPage() {
     return sums;
   }, [filteredByMonth, annualCA, selectedStatus, fiscalCtx]);
 
-  const totalProvision = totals.urssaf + totals.is + totals.ir + totals.admin;
+  const totalProvision = totals.urssaf + totals.tva + totals.is + totals.ir + totals.admin;
 
   const allStatuts: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
 
