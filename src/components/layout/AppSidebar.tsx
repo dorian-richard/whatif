@@ -191,24 +191,22 @@ export function AppSidebar() {
             </div>
           ))}
 
-          <div className="mt-1">
-            <button
-              onClick={() => router.push("/settings")}
-              className={cn(
-                "flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150",
-                pathname === "/settings"
-                  ? "bg-primary/15 text-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              )}
-            >
-              <UserRound className="size-[18px]" />
-              <span>Mon profil</span>
-            </button>
-          </div>
         </nav>
 
         {/* Bottom */}
-        <div className="px-3 py-4 border-t border-border space-y-3">
+        <div className="px-3 py-4 border-t border-border space-y-2">
+          <button
+            onClick={() => router.push("/settings")}
+            className={cn(
+              "flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150",
+              pathname === "/settings"
+                ? "bg-primary/15 text-primary"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            )}
+          >
+            <UserRound className="size-[18px]" />
+            <span>Mon profil</span>
+          </button>
           <div className={cn("px-3 py-2 rounded-xl border", isPro ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-border")}>
             <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">Plan</div>
             <div className={cn("text-sm font-semibold", isPro ? "text-primary" : "text-foreground")}>
