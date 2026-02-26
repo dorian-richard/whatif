@@ -195,6 +195,14 @@ export function AppSidebar() {
 
         {/* Bottom */}
         <div className="px-3 py-4 border-t border-border space-y-2">
+          <div className={cn("px-3 py-2 rounded-xl border", isPro ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-border")}>
+            <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">Plan</div>
+            <div className={cn("text-sm font-semibold", isPro ? "text-primary" : "text-foreground")}>
+              {trialDays > 0 && subscriptionStatus === "FREE"
+                ? `Essai Pro — ${trialDays}j`
+                : isPro ? "Pro" : "Free"}
+            </div>
+          </div>
           <button
             onClick={() => router.push("/settings")}
             className={cn(
@@ -207,14 +215,6 @@ export function AppSidebar() {
             <UserRound className="size-[18px]" />
             <span>Mon profil</span>
           </button>
-          <div className={cn("px-3 py-2 rounded-xl border", isPro ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-border")}>
-            <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">Plan</div>
-            <div className={cn("text-sm font-semibold", isPro ? "text-primary" : "text-foreground")}>
-              {trialDays > 0 && subscriptionStatus === "FREE"
-                ? `Essai Pro — ${trialDays}j`
-                : isPro ? "Pro" : "Free"}
-            </div>
-          </div>
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-150"
