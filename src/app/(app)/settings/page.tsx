@@ -515,6 +515,38 @@ export default function SettingsPage() {
         </button>
       </div>
 
+      {/* Invoice settings */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h2 className="text-sm font-bold text-foreground mb-1">Informations de facturation</h2>
+        <p className="text-[11px] text-muted-foreground/60 mb-5">Apparaissent sur tes devis et factures g&eacute;n&eacute;r&eacute;s en PDF.</p>
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <InvoiceField label="Nom de l'entreprise" value={profile.companyName ?? ""} onChange={(v) => profile.setProfile({ companyName: v || undefined })} />
+            <InvoiceField label="SIRET" value={profile.siret ?? ""} onChange={(v) => profile.setProfile({ siret: v || undefined })} placeholder="123 456 789 00012" />
+          </div>
+          <InvoiceField label="N° TVA intracommunautaire" value={profile.tvaNumber ?? ""} onChange={(v) => profile.setProfile({ tvaNumber: v || undefined })} placeholder="FR12345678901" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <InvoiceField label="Adresse" value={profile.invoiceAddress ?? ""} onChange={(v) => profile.setProfile({ invoiceAddress: v || undefined })} className="sm:col-span-1" />
+            <InvoiceField label="Code postal" value={profile.invoiceZip ?? ""} onChange={(v) => profile.setProfile({ invoiceZip: v || undefined })} />
+            <InvoiceField label="Ville" value={profile.invoiceCity ?? ""} onChange={(v) => profile.setProfile({ invoiceCity: v || undefined })} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <InvoiceField label="IBAN" value={profile.iban ?? ""} onChange={(v) => profile.setProfile({ iban: v || undefined })} placeholder="FR76 ..." />
+            <InvoiceField label="BIC" value={profile.bic ?? ""} onChange={(v) => profile.setProfile({ bic: v || undefined })} />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground/70 mb-1 block">Mentions l&eacute;gales par d&eacute;faut</label>
+            <textarea
+              value={profile.invoiceNotes ?? ""}
+              onChange={(e) => profile.setProfile({ invoiceNotes: e.target.value || undefined })}
+              rows={2}
+              placeholder={profile.businessStatus === "micro" ? "TVA non applicable, art. 293 B du CGI" : "Paiement à 30 jours par virement bancaire."}
+              className="w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Subscription */}
       <div className="bg-card rounded-2xl border border-border p-6">
         <h2 className="text-sm font-bold text-foreground mb-4">Abonnement</h2>
@@ -688,6 +720,23 @@ export default function SettingsPage() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function InvoiceField({ label, value, onChange, placeholder, className }: {
+  label: string; value: string; onChange: (v: string) => void; placeholder?: string; className?: string;
+}) {
+  return (
+    <div className={className}>
+      <label className="text-xs text-muted-foreground/70 mb-1 block">{label}</label>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
+      />
     </div>
   );
 }

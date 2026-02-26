@@ -14,6 +14,13 @@ export interface ClientData {
   endMonth?: number;
   color?: string;
   isActive?: boolean;
+  // Contact / facturation
+  email?: string;
+  companyName?: string;
+  siret?: string;
+  clientAddress?: string;
+  clientCity?: string;
+  clientZip?: string;
 }
 
 export type BusinessStatus =
@@ -115,4 +122,73 @@ export interface EntityTaxResult {
   isAmount: number;
   dividendsPaid: number;
   netCash: number;
+}
+
+// --- Facturation ---
+
+export type DocumentType = "devis" | "facture";
+export type DocumentStatus = "draft" | "sent" | "accepted" | "refused" | "paid" | "late" | "partial" | "canceled";
+
+export interface DocumentItem {
+  id: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  totalHT: number;
+  sortOrder: number;
+}
+
+export interface ClientSnapshot {
+  name: string;
+  companyName?: string;
+  siret?: string;
+  address?: string;
+  city?: string;
+  zip?: string;
+  email?: string;
+}
+
+export interface IssuerSnapshot {
+  companyName?: string;
+  siret?: string;
+  tvaNumber?: string;
+  address?: string;
+  city?: string;
+  zip?: string;
+  iban?: string;
+  bic?: string;
+}
+
+export interface InvoiceDocument {
+  id: string;
+  clientId: string;
+  type: DocumentType;
+  number: string;
+  status: DocumentStatus;
+  issueDate: string;
+  dueDate?: string;
+  validUntil?: string;
+  sentAt?: string;
+  paidAt?: string;
+  totalHT: number;
+  totalTVA: number;
+  totalTTC: number;
+  tvaRate: number;
+  clientSnapshot?: ClientSnapshot;
+  issuerSnapshot?: IssuerSnapshot;
+  notes?: string;
+  sourceDevisId?: string;
+  items: DocumentItem[];
+}
+
+export interface InvoiceSettings {
+  companyName?: string;
+  siret?: string;
+  tvaNumber?: string;
+  invoiceAddress?: string;
+  invoiceCity?: string;
+  invoiceZip?: string;
+  iban?: string;
+  bic?: string;
+  invoiceNotes?: string;
 }

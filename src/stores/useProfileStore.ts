@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { ClientData, FreelanceProfile } from "@/types";
+import type { ClientData, FreelanceProfile, InvoiceSettings } from "@/types";
 import { CLIENT_COLORS } from "@/lib/constants";
 
 export type SubscriptionStatus = "FREE" | "ACTIVE" | "CANCELED" | "PAST_DUE";
 
-interface ProfileState extends FreelanceProfile {
+interface ProfileState extends FreelanceProfile, InvoiceSettings {
   clients: ClientData[];
   onboardingCompleted: boolean;
   subscriptionStatus: SubscriptionStatus;
@@ -16,7 +16,7 @@ interface ProfileState extends FreelanceProfile {
   addClient: (client: Omit<ClientData, "id" | "color">) => void;
   updateClient: (id: string, updates: Partial<ClientData>) => void;
   removeClient: (id: string) => void;
-  setProfile: (profile: Partial<FreelanceProfile>) => void;
+  setProfile: (profile: Partial<FreelanceProfile & InvoiceSettings>) => void;
   setOnboardingCompleted: (completed: boolean) => void;
   setSubscriptionStatus: (status: SubscriptionStatus) => void;
   setTrialEndsAt: (trialEndsAt: string | null) => void;

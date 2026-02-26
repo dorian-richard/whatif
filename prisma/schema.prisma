@@ -44,6 +44,17 @@ model User {
   vacationDaysPerMonth Json?
   onboardingCompleted Boolean            @default(false)
 
+  // Facturation
+  companyName         String?
+  siret               String?
+  tvaNumber           String?
+  invoiceAddress      String?
+  invoiceCity         String?
+  invoiceZip          String?
+  iban                String?
+  bic                 String?
+  invoiceNotes        String?
+
   // Stripe
   stripeCustomerId    String?            @unique
   subscriptionStatus  SubscriptionStatus @default(FREE)
@@ -57,6 +68,7 @@ model User {
   snapshots           MonthlySnapshot[]
   prospects           Prospect[]
   holdingStructure    HoldingStructure?
+  documents           Document[]
 
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
@@ -84,11 +96,20 @@ model Client {
   startMonth     Int?
   endMonth       Int?
 
+  // Contact / facturation
+  email          String?
+  companyName    String?
+  siret          String?
+  clientAddress  String?
+  clientCity     String?
+  clientZip      String?
+
   // Meta
   isActive       Boolean     @default(true)
   color          String?
 
   payments       Payment[]
+  documents      Document[]
 
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
@@ -251,4 +272,77 @@ model HoldingFlow {
   updatedAt     DateTime          @updatedAt
 
   @@index([structureId])
+}
+
+enum DocumentType {
+  DEVIS
+  FACTURE
+}
+
+enum DocumentStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REFUSED
+  PAID
+  LATE
+  PARTIAL
+  CANCELED
+}
+
+model Document {
+  id              String          @id @default(uuid())
+  userId          String
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId        String
+  client          Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  type            DocumentType
+  number          String
+  status          DocumentStatus  @default(DRAFT)
+
+  issueDate       DateTime        @default(now())
+  dueDate         DateTime?
+  validUntil      DateTime?
+  sentAt          DateTime?
+  paidAt          DateTime?
+
+  totalHT         Float           @default(0)
+  totalTVA        Float           @default(0)
+  totalTTC        Float           @default(0)
+  tvaRate         Float           @default(20)
+
+  clientSnapshot  Json?
+  issuerSnapshot  Json?
+
+  notes           String?
+  sourceDevisId   String?
+
+  items           DocumentItem[]
+
+  isActive        Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([userId, number])
+  @@index([userId])
+  @@index([clientId])
+  @@index([status])
+}
+
+model DocumentItem {
+  id          String    @id @default(uuid())
+  documentId  String
+  document    Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  description String
+  quantity    Float     @default(1)
+  unitPrice   Float     @default(0)
+  totalHT     Float     @default(0)
+  sortOrder   Int       @default(0)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([documentId])
 }

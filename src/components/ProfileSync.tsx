@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useProfileStore, type SubscriptionStatus } from "@/stores/useProfileStore";
 import { createClient } from "@/lib/supabase/client";
-import type { ClientData, FreelanceProfile } from "@/types";
+import type { ClientData, FreelanceProfile, InvoiceSettings } from "@/types";
 import { CLIENT_COLORS } from "@/lib/constants";
 
 /**
@@ -70,6 +70,12 @@ export function ProfileSync() {
               startMonth: (c.startMonth as number) ?? undefined,
               endMonth: (c.endMonth as number) ?? undefined,
               color: (c.color as string) ?? CLIENT_COLORS[i % CLIENT_COLORS.length],
+              email: (c.email as string) ?? undefined,
+              companyName: (c.companyName as string) ?? undefined,
+              siret: (c.siret as string) ?? undefined,
+              clientAddress: (c.clientAddress as string) ?? undefined,
+              clientCity: (c.clientCity as string) ?? undefined,
+              clientZip: (c.clientZip as string) ?? undefined,
             })
           );
           store.setClients(dbClients);
@@ -89,7 +95,7 @@ export function ProfileSync() {
         }
 
         // Hydrate profile fields from DB (if set)
-        const profileUpdates: Partial<FreelanceProfile> = {};
+        const profileUpdates: Partial<FreelanceProfile & InvoiceSettings> = {};
         if (data.monthlyExpenses != null) profileUpdates.monthlyExpenses = data.monthlyExpenses;
         if (data.savings != null) profileUpdates.savings = data.savings;
         if (data.adminHoursPerWeek != null) profileUpdates.adminHoursPerWeek = data.adminHoursPerWeek;
@@ -106,6 +112,16 @@ export function ProfileSync() {
         if (data.age != null) profileUpdates.age = data.age;
         if (data.vacationDaysPerMonth != null) profileUpdates.vacationDaysPerMonth = data.vacationDaysPerMonth;
         if (data.onboardingCompleted != null) store.setOnboardingCompleted(data.onboardingCompleted);
+        // Invoice settings
+        if (data.companyName != null) profileUpdates.companyName = data.companyName;
+        if (data.siret != null) profileUpdates.siret = data.siret;
+        if (data.tvaNumber != null) profileUpdates.tvaNumber = data.tvaNumber;
+        if (data.invoiceAddress != null) profileUpdates.invoiceAddress = data.invoiceAddress;
+        if (data.invoiceCity != null) profileUpdates.invoiceCity = data.invoiceCity;
+        if (data.invoiceZip != null) profileUpdates.invoiceZip = data.invoiceZip;
+        if (data.iban != null) profileUpdates.iban = data.iban;
+        if (data.bic != null) profileUpdates.bic = data.bic;
+        if (data.invoiceNotes != null) profileUpdates.invoiceNotes = data.invoiceNotes;
 
         if (Object.keys(profileUpdates).length > 0) {
           store.setProfile(profileUpdates);
@@ -146,6 +162,15 @@ export function ProfileSync() {
         "age",
         "vacationDaysPerMonth",
         "onboardingCompleted",
+        "companyName",
+        "siret",
+        "tvaNumber",
+        "invoiceAddress",
+        "invoiceCity",
+        "invoiceZip",
+        "iban",
+        "bic",
+        "invoiceNotes",
       ] as const;
 
       const changed = profileFields.some(
@@ -177,6 +202,15 @@ export function ProfileSync() {
               age: state.age,
               vacationDaysPerMonth: state.vacationDaysPerMonth,
               onboardingCompleted: state.onboardingCompleted,
+              companyName: state.companyName,
+              siret: state.siret,
+              tvaNumber: state.tvaNumber,
+              invoiceAddress: state.invoiceAddress,
+              invoiceCity: state.invoiceCity,
+              invoiceZip: state.invoiceZip,
+              iban: state.iban,
+              bic: state.bic,
+              invoiceNotes: state.invoiceNotes,
             }),
           });
         } catch {

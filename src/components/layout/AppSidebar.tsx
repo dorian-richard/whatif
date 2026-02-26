@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban, Building2 } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban, Building2, Receipt } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
@@ -26,6 +26,7 @@ const NAV_TOOLS = [
   // Suivi & pilotage
   { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
   { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
+  { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
   { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
   // Projections spécifiques
   { href: "/transition", label: "Transition", icon: Briefcase },
@@ -51,6 +52,7 @@ const NAV_MOBILE_MORE = [
   // Suivi & pilotage
   { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
   { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
+  { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
   { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
   // Projections spécifiques
   { href: "/transition", label: "Transition", icon: Briefcase },
