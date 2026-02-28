@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban, Building2, Receipt } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban, Building2, Receipt, HandCoins } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
@@ -48,6 +48,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
       { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
       { href: "/holding", label: "Holding", icon: Building2, pro: true },
+      { href: "/patrimoine", label: "Patrimoine", icon: HandCoins, pro: true },
     ],
   },
 ];
@@ -90,6 +91,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
       { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
       { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
       { href: "/holding", label: "Holding", icon: Building2, pro: true },
+      { href: "/patrimoine", label: "Patrimoine", icon: HandCoins, pro: true },
     ],
   },
   {

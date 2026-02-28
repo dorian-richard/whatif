@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock, Wallet, TrendingUp, CreditCard, Building2, Receipt } from "@/components/ui/icons";
+import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock, Wallet, TrendingUp, CreditCard, Building2, Receipt, HandCoins } from "@/components/ui/icons";
 import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const FREE_FEATURES = [
@@ -101,6 +101,12 @@ const PRO_FEATURES = [
     title: "Facturation & Devis",
     desc: "Crée tes devis et factures en quelques clics. Numérotation auto, calcul TVA, export PDF professionnel et suivi des statuts.",
     color: "#06b6d4",
+  },
+  {
+    icon: HandCoins,
+    title: "Simulateur Patrimoine",
+    desc: "Projette ta capacité d\u2019épargne sur 5 à 30 ans selon ton statut. Compare les véhicules d\u2019investissement et visualise ton chemin vers l\u2019indépendance financière.",
+    color: "#10b981",
   },
 ];
 
