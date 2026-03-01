@@ -133,7 +133,8 @@ export default function PatrimoinePage() {
   );
 
   const currentStatusWealth = statusComparison.find((s) => s.status === profile.businessStatus);
-  const bestStatus = statusComparison[0];
+  const eligibleStatuses = statusComparison.filter((s) => !s.ineligible);
+  const bestStatus = eligibleStatuses[0] ?? statusComparison[0];
 
   // Milestones
   const milestones = useMemo(
@@ -376,7 +377,7 @@ export default function PatrimoinePage() {
         </div>
 
         {/* ── Key insight ── */}
-        {bestStatus && currentStatusWealth && bestStatus.status !== profile.businessStatus && (
+        {bestStatus && currentStatusWealth && bestStatus.status !== profile.businessStatus && !bestStatus.ineligible && (
           <div className="flex items-center gap-4 bg-card rounded-2xl border border-border p-5">
             <div className="size-12 rounded-xl flex items-center justify-center bg-[#10b981]/15 shrink-0">
               <HandCoins className="size-6 text-[#10b981]" />
@@ -412,22 +413,26 @@ export default function PatrimoinePage() {
               </tr>
             </thead>
             <tbody>
-              {statusComparison.map((s, i) => {
+              {statusComparison.map((s) => {
                 const isCurrent = s.status === profile.businessStatus;
-                const isBest = i === 0;
+                const isBest = s.status === bestStatus.status && !s.ineligible;
                 return (
                   <tr
                     key={s.status}
                     className={cn(
                       "border-b border-border last:border-0 transition-colors",
-                      isCurrent && "bg-primary/5",
+                      s.ineligible && "opacity-50",
+                      isCurrent && !s.ineligible && "bg-primary/5",
                     )}
                   >
                     <td className="px-5 py-3">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <div className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
                         <span className="font-medium text-foreground">{s.label}</span>
-                        {isCurrent && (
+                        {s.ineligible && (
+                          <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#f87171]/15 text-[#f87171]">Non &eacute;ligible</span>
+                        )}
+                        {isCurrent && !s.ineligible && (
                           <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">Actuel</span>
                         )}
                         {isBest && (
@@ -436,6 +441,9 @@ export default function PatrimoinePage() {
                           </span>
                         )}
                       </div>
+                      {s.ineligible && s.ineligibleReason && (
+                        <div className="text-[10px] text-[#f87171] mt-0.5 ml-[18px]">{s.ineligibleReason}</div>
+                      )}
                     </td>
                     <td className="text-right px-5 py-3 font-medium text-foreground">{fmt(s.annualNet)}&nbsp;&euro;</td>
                     <td className={cn("text-right px-5 py-3 font-medium", s.monthlySurplus >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
@@ -453,21 +461,28 @@ export default function PatrimoinePage() {
         {/* ── Status comparison cards (mobile) ── */}
         <div className="md:hidden space-y-3">
           <h2 className="text-sm font-semibold text-foreground">Comparaison par statut</h2>
-          {statusComparison.map((s, i) => {
+          {statusComparison.map((s) => {
             const isCurrent = s.status === profile.businessStatus;
-            const isBest = i === 0;
+            const isBest = s.status === bestStatus.status && !s.ineligible;
             return (
               <div
                 key={s.status}
                 className={cn(
                   "bg-card rounded-2xl border p-4",
-                  isCurrent ? "border-primary/30" : "border-border",
+                  s.ineligible
+                    ? "border-[#f87171]/20 opacity-50"
+                    : isCurrent
+                      ? "border-primary/30"
+                      : "border-border",
                 )}
               >
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
                   <div className="size-2.5 rounded-full" style={{ backgroundColor: s.color }} />
                   <span className="font-medium text-foreground text-sm">{s.label}</span>
-                  {isCurrent && (
+                  {s.ineligible && (
+                    <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#f87171]/15 text-[#f87171]">Non &eacute;ligible</span>
+                  )}
+                  {isCurrent && !s.ineligible && (
                     <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">Actuel</span>
                   )}
                   {isBest && (
@@ -476,6 +491,9 @@ export default function PatrimoinePage() {
                     </span>
                   )}
                 </div>
+                {s.ineligible && s.ineligibleReason && (
+                  <div className="text-[10px] text-[#f87171] mb-2">{s.ineligibleReason}</div>
+                )}
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Surplus/mois</div>

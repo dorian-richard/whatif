@@ -23,6 +23,8 @@ export interface StatusWealth {
   monthlySurplus: number;
   wealth10y: number;
   wealth20y: number;
+  ineligible?: boolean;
+  ineligibleReason?: string;
 }
 
 export interface Milestone {
@@ -41,6 +43,9 @@ export const RISK_PROFILES: Record<RiskProfile, { label: string; rate: number; c
 };
 
 const STATUTS: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
+
+/** Plafond CA micro-entreprise BNC */
+const MICRO_PLAFOND = 77700;
 
 const STATUT_COLORS: Record<BusinessStatus, string> = {
   micro: "#F4BE7E",
@@ -106,7 +111,7 @@ export function projectWealth(
   years: number,
 ): PatrimoineYear[] {
   const monthlyRate = annualReturn / 12;
-  const monthlyInvestment = monthlySurplus * investmentRate;
+  const monthlyInvestment = Math.max(0, monthlySurplus * investmentRate);
   const result: PatrimoineYear[] = [];
 
   let capital = startingCapital;
@@ -160,6 +165,8 @@ export function computeAllStatusWealth(
     const wealth10y = computeFutureValue(startingCapital, monthlyInvestment, monthlyRate, 120);
     const wealth20y = computeFutureValue(startingCapital, monthlyInvestment, monthlyRate, 240);
 
+    const ineligible = status === "micro" && annualCA > MICRO_PLAFOND;
+
     return {
       status,
       label: BUSINESS_STATUS_CONFIG[status].label,
@@ -169,6 +176,8 @@ export function computeAllStatusWealth(
       monthlySurplus,
       wealth10y: Math.round(wealth10y),
       wealth20y: Math.round(wealth20y),
+      ineligible,
+      ineligibleReason: ineligible ? `Plafond micro d\u00E9pass\u00E9 (${MICRO_PLAFOND.toLocaleString("fr-FR")}\u20AC)` : undefined,
     };
   }).sort((a, b) => b.wealth20y - a.wealth20y);
 }
