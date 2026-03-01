@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban, Building2, Receipt, HandCoins } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban, Building2, Receipt, HandCoins, Users } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
@@ -20,6 +20,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
       { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
       { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+      { href: "/clients", label: "Mes clients", icon: Users },
     ],
   },
   {
@@ -64,6 +65,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
     label: null,
     items: [
       { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+      { href: "/clients", label: "Mes clients", icon: Users },
     ],
   },
   {
