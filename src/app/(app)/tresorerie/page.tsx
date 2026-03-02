@@ -5,7 +5,7 @@ import { useProfileStore } from "@/stores/useProfileStore";
 import { computeCashflow } from "@/lib/cashflow-engine";
 import { fmt, cn } from "@/lib/utils";
 import { BUSINESS_STATUS_CONFIG, MONTHS_SHORT } from "@/lib/constants";
-import { PiggyBank, AlertTriangle, TrendingUp, Shield, CalendarDays, RefreshCw, SlidersHorizontal } from "@/components/ui/icons";
+import { PiggyBank, AlertTriangle, TrendingUp, Shield, CalendarDays, RefreshCw } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 
 export default function TresoreriePage() {
@@ -90,78 +90,6 @@ export default function TresoreriePage() {
             <span>0&euro;</span>
             <span>{fmt(Math.max(30000, monthlyExpenses * 6))}&euro;</span>
           </div>
-        </div>
-
-        {/* ── Expense overrides grid ── */}
-        <div className="bg-card rounded-2xl border border-border p-4 md:p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="size-4 text-[#F4BE7E]" />
-              <h3 className="text-sm font-bold text-foreground">Ajustements mensuels</h3>
-            </div>
-            {hasOverrides && (
-              <button
-                onClick={() => setExpenseOverrides({})}
-                className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <RefreshCw className="size-3" />
-                R&eacute;initialiser
-              </button>
-            )}
-          </div>
-          <p className="text-xs text-muted-foreground/60 mb-4">
-            Clique sur un mois pour ajouter une d&eacute;pense (+) ou &eacute;conomie (-) ponctuelle.
-          </p>
-          <div className="grid grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-2">
-            {cashflow.map((m) => {
-              const override = expenseOverrides[m.month] ?? 0;
-              const isEditing = editingMonth === m.month;
-
-              return (
-                <div key={m.month} className="flex flex-col items-center gap-1">
-                  <span className="text-[9px] text-muted-foreground/60 uppercase">{MONTHS_SHORT[m.month]}</span>
-                  {isEditing ? (
-                    <input
-                      ref={inputRef}
-                      type="number"
-                      defaultValue={override || ""}
-                      placeholder="0"
-                      onBlur={(e) => handleOverrideSubmit(m.month, e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") handleOverrideSubmit(m.month, (e.target as HTMLInputElement).value);
-                        if (e.key === "Escape") setEditingMonth(null);
-                      }}
-                      className="w-full h-8 text-center text-xs font-medium bg-muted border border-[#5682F2]/40 rounded-lg outline-none focus:border-[#5682F2] text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                  ) : (
-                    <button
-                      onClick={() => setEditingMonth(m.month)}
-                      className={cn(
-                        "w-full h-8 rounded-lg text-xs font-medium transition-all border",
-                        override > 0
-                          ? "bg-[#f97316]/10 border-[#f97316]/20 text-[#f97316]"
-                          : override < 0
-                            ? "bg-[#4ade80]/10 border-[#4ade80]/20 text-[#4ade80]"
-                            : "bg-muted/50 border-border text-muted-foreground/40 hover:border-[#5682F2]/30 hover:text-muted-foreground",
-                      )}
-                    >
-                      {override !== 0
-                        ? `${override > 0 ? "+" : ""}${override >= 1000 || override <= -1000 ? `${Math.round(override / 1000)}k` : override}`
-                        : "\u2014"}
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          {hasOverrides && (
-            <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Total ajustements</span>
-              <span className={cn("text-sm font-bold", totalOverrides > 0 ? "text-[#f97316]" : totalOverrides < 0 ? "text-[#4ade80]" : "text-foreground")}>
-                {totalOverrides > 0 ? "+" : ""}{fmt(totalOverrides)}&euro;
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Summary cards */}
@@ -326,7 +254,20 @@ export default function TresoreriePage() {
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">URSSAF</th>
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">IR</th>
                   {hasIS && <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">IS</th>}
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Charges</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">
+                    <div className="flex items-center justify-end gap-1.5">
+                      Charges
+                      {hasOverrides && (
+                        <button
+                          onClick={() => setExpenseOverrides({})}
+                          className="text-muted-foreground/40 hover:text-foreground transition-colors"
+                          title="Réinitialiser les ajustements"
+                        >
+                          <RefreshCw className="size-3" />
+                        </button>
+                      )}
+                    </div>
+                  </th>
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Net</th>
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Solde</th>
                 </tr>
@@ -334,6 +275,7 @@ export default function TresoreriePage() {
               <tbody>
                 {cashflow.map((m, i) => {
                   const override = expenseOverrides[m.month] ?? 0;
+                  const isEditing = editingMonth === m.month;
                   return (
                     <tr
                       key={i}
@@ -347,12 +289,35 @@ export default function TresoreriePage() {
                       <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.urssaf))}&euro;</td>
                       <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.ir))}&euro;</td>
                       {hasIS && <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.is))}&euro;</td>}
-                      <td className="px-4 py-3 text-right text-muted-foreground">
-                        {fmt(Math.round(m.expenses))}&euro;
-                        {override !== 0 && (
-                          <span className={cn("ml-1 text-[10px]", override > 0 ? "text-[#f97316]" : "text-[#4ade80]")}>
-                            ({override > 0 ? "+" : ""}{fmt(override)})
-                          </span>
+                      <td
+                        className={cn(
+                          "px-4 py-1.5 text-right cursor-pointer select-none",
+                          isEditing ? "" : "hover:bg-muted/50 rounded"
+                        )}
+                        onDoubleClick={() => !isEditing && setEditingMonth(m.month)}
+                      >
+                        {isEditing ? (
+                          <input
+                            ref={inputRef}
+                            type="number"
+                            defaultValue={override || ""}
+                            placeholder={String(Math.round(monthlyExpenses))}
+                            onBlur={(e) => handleOverrideSubmit(m.month, e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleOverrideSubmit(m.month, (e.target as HTMLInputElement).value);
+                              if (e.key === "Escape") setEditingMonth(null);
+                            }}
+                            className="w-24 ml-auto h-7 text-right text-sm font-medium bg-muted border border-[#5682F2]/40 rounded-lg outline-none focus:border-[#5682F2] text-foreground px-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          />
+                        ) : (
+                          <div>
+                            <span className="text-muted-foreground">{fmt(Math.round(m.expenses))}&euro;</span>
+                            {override !== 0 && (
+                              <span className={cn("ml-1 text-[10px]", override > 0 ? "text-[#f97316]" : "text-[#4ade80]")}>
+                                ({override > 0 ? "+" : ""}{fmt(override)})
+                              </span>
+                            )}
+                          </div>
                         )}
                       </td>
                       <td className={cn("px-4 py-3 text-right font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
@@ -371,8 +336,18 @@ export default function TresoreriePage() {
 
         {/* Mobile cards */}
         <div className="md:hidden space-y-3">
+          {hasOverrides && (
+            <button
+              onClick={() => setExpenseOverrides({})}
+              className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors ml-auto"
+            >
+              <RefreshCw className="size-3" />
+              R&eacute;initialiser les ajustements
+            </button>
+          )}
           {cashflow.map((m, i) => {
             const override = expenseOverrides[m.month] ?? 0;
+            const isEditing = editingMonth === m.month;
             return (
               <div
                 key={i}
@@ -392,9 +367,34 @@ export default function TresoreriePage() {
                     <span className="text-muted-foreground/60">Entr&eacute;es</span>
                     <span className="ml-1 font-medium text-[#4ade80]">{fmt(Math.round(m.income))}&euro;</span>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground/60">Sorties</span>
-                    <span className="ml-1 font-medium text-[#f87171]">{fmt(Math.round(m.totalOut))}&euro;</span>
+                  <div
+                    className="cursor-pointer"
+                    onDoubleClick={() => !isEditing && setEditingMonth(m.month)}
+                  >
+                    <span className="text-muted-foreground/60">Charges</span>
+                    {isEditing ? (
+                      <input
+                        ref={inputRef}
+                        type="number"
+                        defaultValue={override || ""}
+                        placeholder={String(Math.round(monthlyExpenses))}
+                        onBlur={(e) => handleOverrideSubmit(m.month, e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleOverrideSubmit(m.month, (e.target as HTMLInputElement).value);
+                          if (e.key === "Escape") setEditingMonth(null);
+                        }}
+                        className="w-20 ml-1 h-6 text-right text-xs font-medium bg-muted border border-[#5682F2]/40 rounded-md outline-none focus:border-[#5682F2] text-foreground px-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                    ) : (
+                      <>
+                        <span className="ml-1 font-medium text-muted-foreground">{fmt(Math.round(m.expenses))}&euro;</span>
+                        {override !== 0 && (
+                          <span className={cn("ml-1 text-[10px]", override > 0 ? "text-[#f97316]" : "text-[#4ade80]")}>
+                            ({override > 0 ? "+" : ""}{fmt(override)})
+                          </span>
+                        )}
+                      </>
+                    )}
                   </div>
                   <div>
                     <span className="text-muted-foreground/60">Net</span>
@@ -402,14 +402,10 @@ export default function TresoreriePage() {
                       {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;
                     </span>
                   </div>
-                  {override !== 0 && (
-                    <div>
-                      <span className="text-muted-foreground/60">Ajust.</span>
-                      <span className={cn("ml-1 font-medium", override > 0 ? "text-[#f97316]" : "text-[#4ade80]")}>
-                        {override > 0 ? "+" : ""}{fmt(override)}&euro;
-                      </span>
-                    </div>
-                  )}
+                  <div>
+                    <span className="text-muted-foreground/60">Sorties</span>
+                    <span className="ml-1 font-medium text-[#f87171]">{fmt(Math.round(m.totalOut))}&euro;</span>
+                  </div>
                 </div>
               </div>
             );
