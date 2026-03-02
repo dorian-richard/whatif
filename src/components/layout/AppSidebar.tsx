@@ -18,6 +18,7 @@ const NAV_SECTIONS: NavSection[] = [
     label: null,
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/radar", label: "Radar", icon: Gauge, pro: true },
       { href: "/clients", label: "Mes clients", icon: Users },
     ],
   },
@@ -38,7 +39,6 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/objectif", label: "Objectif", icon: Target },
       { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
       { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
-      { href: "/radar", label: "Radar", icon: Gauge, pro: true },
     ],
   },
   {
@@ -65,6 +65,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: null,
     items: [
+      { href: "/radar", label: "Radar", icon: Gauge, pro: true },
       { href: "/clients", label: "Mes clients", icon: Users },
     ],
   },
@@ -84,7 +85,6 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
       { href: "/objectif", label: "Objectif", icon: Target },
       { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
       { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
-      { href: "/radar", label: "Radar", icon: Gauge, pro: true },
     ],
   },
   {

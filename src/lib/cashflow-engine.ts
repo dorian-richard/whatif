@@ -114,7 +114,8 @@ export function computeCashflow(
   profile: FreelanceProfile,
   startingBalance: number,
   threshold: number,
-  months = 12
+  months = 12,
+  expenseOverrides?: Record<number, number>,
 ): CashflowMonth[] {
   let balance = startingBalance;
   const result: CashflowMonth[] = [];
@@ -132,7 +133,7 @@ export function computeCashflow(
 
     const { urssaf, ir, is } = computeMonthlyCharges(income, profile);
 
-    const expenses = profile.monthlyExpenses;
+    const expenses = profile.monthlyExpenses + (expenseOverrides?.[monthIndex] ?? 0);
     const totalOut = urssaf + ir + is + expenses;
     const netFlow = income - totalOut;
     balance += netFlow;

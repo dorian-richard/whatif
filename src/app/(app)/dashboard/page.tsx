@@ -34,6 +34,7 @@ import { Tooltip } from "@/components/ui/tooltip";
 import { getUpcomingDeadlines, CATEGORY_CONFIG as DEADLINE_CATS } from "@/lib/fiscal-deadlines";
 import { usePipelineStore } from "@/stores/usePipelineStore";
 import { exportCSV, exportPDF } from "@/lib/export";
+import { MonthlyBreakdown } from "@/components/simulator/MonthlyBreakdown";
 
 type Meteo = "soleil" | "beau" | "variable" | "orageux";
 
@@ -336,6 +337,9 @@ export default function DashboardPage() {
 
       {/* Monthly CA chart */}
       <DashboardChart projection={projection} expenses={expenses} netRate={netRate} />
+
+      {/* Monthly breakdown table */}
+      <MonthlyBreakdown projection={projection} clients={profile.clients} profile={profile} sim={DEFAULT_SIM} />
 
       {/* Client breakdown */}
       {profile.clients.length > 0 && (

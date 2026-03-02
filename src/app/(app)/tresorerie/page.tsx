@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { computeCashflow } from "@/lib/cashflow-engine";
 import { fmt, cn } from "@/lib/utils";
-import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
-import { PiggyBank, AlertTriangle, TrendingUp, Shield, CalendarDays } from "@/components/ui/icons";
+import { BUSINESS_STATUS_CONFIG, MONTHS_SHORT } from "@/lib/constants";
+import { PiggyBank, AlertTriangle, TrendingUp, Shield, CalendarDays, RefreshCw, SlidersHorizontal } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 
 export default function TresoreriePage() {
@@ -17,10 +17,20 @@ export default function TresoreriePage() {
   const remLabel = profile.remunerationType === "salaire" ? "Salaire" : profile.remunerationType === "dividendes" ? "Dividendes" : profile.remunerationType === "mixte" ? "Mixte" : null;
 
   const [threshold, setThreshold] = useState(Math.round(monthlyExpenses * 3));
+  const [expenseOverrides, setExpenseOverrides] = useState<Record<number, number>>({});
+  const [editingMonth, setEditingMonth] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editingMonth !== null && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editingMonth]);
 
   const cashflow = useMemo(
-    () => computeCashflow(clients, profile, savings, threshold, 12),
-    [clients, profile, savings, threshold]
+    () => computeCashflow(clients, profile, savings, threshold, 12, expenseOverrides),
+    [clients, profile, savings, threshold, expenseOverrides],
   );
 
   const [hoveredMonth, setHoveredMonth] = useState<number | null>(null);
@@ -31,10 +41,27 @@ export default function TresoreriePage() {
   const maxValue = Math.max(...cashflow.map((m) => Math.max(m.income, m.totalOut, Math.abs(m.balance))), 1);
   const hasIS = cashflow.some((m) => m.is > 0);
 
+  const hasOverrides = Object.keys(expenseOverrides).length > 0;
+  const totalOverrides = Object.values(expenseOverrides).reduce((s, v) => s + v, 0);
+
+  const currentMonth = new Date().getMonth();
+
+  function handleOverrideSubmit(monthIndex: number, value: string) {
+    const num = parseInt(value, 10);
+    if (isNaN(num) || num === 0) {
+      const next = { ...expenseOverrides };
+      delete next[monthIndex];
+      setExpenseOverrides(next);
+    } else {
+      setExpenseOverrides({ ...expenseOverrides, [monthIndex]: num });
+    }
+    setEditingMonth(null);
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground mb-1">Simulateur de trésorerie</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-1">Simulateur de tr&eacute;sorerie</h1>
         <p className="text-muted-foreground">
           Projette ta tr&eacute;sorerie sur 12 mois : entr&eacute;es, sorties et solde pr&eacute;visionnel.
           {hasISStatus && remLabel && (
@@ -63,6 +90,78 @@ export default function TresoreriePage() {
             <span>0&euro;</span>
             <span>{fmt(Math.max(30000, monthlyExpenses * 6))}&euro;</span>
           </div>
+        </div>
+
+        {/* ── Expense overrides grid ── */}
+        <div className="bg-card rounded-2xl border border-border p-4 md:p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal className="size-4 text-[#F4BE7E]" />
+              <h3 className="text-sm font-bold text-foreground">Ajustements mensuels</h3>
+            </div>
+            {hasOverrides && (
+              <button
+                onClick={() => setExpenseOverrides({})}
+                className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <RefreshCw className="size-3" />
+                R&eacute;initialiser
+              </button>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground/60 mb-4">
+            Clique sur un mois pour ajouter une d&eacute;pense (+) ou &eacute;conomie (-) ponctuelle.
+          </p>
+          <div className="grid grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-2">
+            {cashflow.map((m) => {
+              const override = expenseOverrides[m.month] ?? 0;
+              const isEditing = editingMonth === m.month;
+
+              return (
+                <div key={m.month} className="flex flex-col items-center gap-1">
+                  <span className="text-[9px] text-muted-foreground/60 uppercase">{MONTHS_SHORT[m.month]}</span>
+                  {isEditing ? (
+                    <input
+                      ref={inputRef}
+                      type="number"
+                      defaultValue={override || ""}
+                      placeholder="0"
+                      onBlur={(e) => handleOverrideSubmit(m.month, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleOverrideSubmit(m.month, (e.target as HTMLInputElement).value);
+                        if (e.key === "Escape") setEditingMonth(null);
+                      }}
+                      className="w-full h-8 text-center text-xs font-medium bg-muted border border-[#5682F2]/40 rounded-lg outline-none focus:border-[#5682F2] text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                  ) : (
+                    <button
+                      onClick={() => setEditingMonth(m.month)}
+                      className={cn(
+                        "w-full h-8 rounded-lg text-xs font-medium transition-all border",
+                        override > 0
+                          ? "bg-[#f97316]/10 border-[#f97316]/20 text-[#f97316]"
+                          : override < 0
+                            ? "bg-[#4ade80]/10 border-[#4ade80]/20 text-[#4ade80]"
+                            : "bg-muted/50 border-border text-muted-foreground/40 hover:border-[#5682F2]/30 hover:text-muted-foreground",
+                      )}
+                    >
+                      {override !== 0
+                        ? `${override > 0 ? "+" : ""}${override >= 1000 || override <= -1000 ? `${Math.round(override / 1000)}k` : override}`
+                        : "\u2014"}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {hasOverrides && (
+            <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+              <span className="text-xs text-muted-foreground">Total ajustements</span>
+              <span className={cn("text-sm font-bold", totalOverrides > 0 ? "text-[#f97316]" : totalOverrides < 0 ? "text-[#4ade80]" : "text-foreground")}>
+                {totalOverrides > 0 ? "+" : ""}{fmt(totalOverrides)}&euro;
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Summary cards */}
@@ -106,7 +205,7 @@ export default function TresoreriePage() {
           <div className="bg-[#f87171]/10 border border-[#f87171]/20 rounded-2xl p-4">
             <div className="flex items-center gap-2 mb-1">
               <AlertTriangle className="size-4 text-[#f87171]" />
-              <span className="text-sm font-bold text-[#f87171]">Alerte trésorerie</span>
+              <span className="text-sm font-bold text-[#f87171]">Alerte tr&eacute;sorerie</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Ton solde passe sous {fmt(threshold)}&euro; en <strong>{criticalMonth.label}</strong> ({fmt(Math.round(criticalMonth.balance))}&euro;).
@@ -120,7 +219,7 @@ export default function TresoreriePage() {
           <div className="flex flex-wrap items-center gap-4 mb-4">
             <h3 className="text-sm font-bold text-foreground">Projection 12 mois</h3>
             <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
-              <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#4ade80]" /> Entrées</span>
+              <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#4ade80]" /> Entr&eacute;es</span>
               <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#f87171]" /> Sorties</span>
               <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-1 rounded-sm bg-[#5682F2]" /> Solde</span>
               <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-0.5 rounded-sm bg-[#f87171]/50" style={{ borderTop: "1px dashed #f87171" }} /> Seuil</span>
@@ -131,8 +230,6 @@ export default function TresoreriePage() {
               className="flex items-end gap-1 h-48 min-w-[520px] relative"
               onMouseLeave={() => setHoveredMonth(null)}
             >
-              {/* Tooltip rendered inside each bar column below */}
-              {/* Threshold line */}
               {threshold > 0 && threshold < maxValue && (
                 <div
                   className="absolute left-0 right-0 border-t border-dashed border-[#f87171]/40 pointer-events-none z-0"
@@ -144,13 +241,13 @@ export default function TresoreriePage() {
                 const outPct = (m.totalOut / maxValue) * 100;
                 const balPct = Math.max(0, (m.balance / maxValue) * 100);
                 const isHovered = hoveredMonth === i;
+                const override = expenseOverrides[m.month] ?? 0;
                 return (
                   <div
                     key={i}
                     className="flex-1 flex flex-col items-center gap-1 relative"
                     onMouseEnter={() => setHoveredMonth(i)}
                   >
-                    {/* Tooltip anchored to hovered bar */}
                     {isHovered && (
                       <div
                         className={cn(
@@ -161,13 +258,21 @@ export default function TresoreriePage() {
                         <div className="text-xs font-bold text-foreground mb-1.5">{m.label}</div>
                         <div className="space-y-0.5 text-[11px]">
                           <div className="flex justify-between gap-3">
-                            <span className="text-muted-foreground">Entrées</span>
+                            <span className="text-muted-foreground">Entr&eacute;es</span>
                             <span className="font-medium text-[#4ade80]">{fmt(Math.round(m.income))}&euro;</span>
                           </div>
                           <div className="flex justify-between gap-3">
                             <span className="text-muted-foreground">Sorties</span>
                             <span className="font-medium text-[#f87171]">{fmt(Math.round(m.totalOut))}&euro;</span>
                           </div>
+                          {override !== 0 && (
+                            <div className="flex justify-between gap-3">
+                              <span className="text-muted-foreground">Ajust.</span>
+                              <span className={cn("font-medium", override > 0 ? "text-[#f97316]" : "text-[#4ade80]")}>
+                                {override > 0 ? "+" : ""}{fmt(override)}&euro;
+                              </span>
+                            </div>
+                          )}
                           <div className="flex justify-between gap-3 pt-1 border-t border-border">
                             <span className="text-muted-foreground">Net</span>
                             <span className={cn("font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
@@ -217,7 +322,7 @@ export default function TresoreriePage() {
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Mois</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Entrées</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Entr&eacute;es</th>
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">URSSAF</th>
                   <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">IR</th>
                   {hasIS && <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">IS</th>}
@@ -227,28 +332,38 @@ export default function TresoreriePage() {
                 </tr>
               </thead>
               <tbody>
-                {cashflow.map((m, i) => (
-                  <tr
-                    key={i}
-                    className={cn(
-                      "border-b border-border last:border-0 transition-colors",
-                      m.belowThreshold ? "bg-[#f87171]/5" : "hover:bg-muted/30"
-                    )}
-                  >
-                    <td className="px-4 py-3 font-medium text-foreground">{m.label}</td>
-                    <td className="px-4 py-3 text-right text-[#4ade80] font-medium">{fmt(Math.round(m.income))}&euro;</td>
-                    <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.urssaf))}&euro;</td>
-                    <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.ir))}&euro;</td>
-                    {hasIS && <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.is))}&euro;</td>}
-                    <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.expenses))}&euro;</td>
-                    <td className={cn("px-4 py-3 text-right font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
-                      {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;
-                    </td>
-                    <td className={cn("px-4 py-3 text-right font-bold", m.belowThreshold ? "text-[#f87171]" : "text-foreground")}>
-                      {fmt(Math.round(m.balance))}&euro;
-                    </td>
-                  </tr>
-                ))}
+                {cashflow.map((m, i) => {
+                  const override = expenseOverrides[m.month] ?? 0;
+                  return (
+                    <tr
+                      key={i}
+                      className={cn(
+                        "border-b border-border last:border-0 transition-colors",
+                        m.belowThreshold ? "bg-[#f87171]/5" : "hover:bg-muted/30"
+                      )}
+                    >
+                      <td className="px-4 py-3 font-medium text-foreground">{m.label}</td>
+                      <td className="px-4 py-3 text-right text-[#4ade80] font-medium">{fmt(Math.round(m.income))}&euro;</td>
+                      <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.urssaf))}&euro;</td>
+                      <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.ir))}&euro;</td>
+                      {hasIS && <td className="px-4 py-3 text-right text-muted-foreground">{fmt(Math.round(m.is))}&euro;</td>}
+                      <td className="px-4 py-3 text-right text-muted-foreground">
+                        {fmt(Math.round(m.expenses))}&euro;
+                        {override !== 0 && (
+                          <span className={cn("ml-1 text-[10px]", override > 0 ? "text-[#f97316]" : "text-[#4ade80]")}>
+                            ({override > 0 ? "+" : ""}{fmt(override)})
+                          </span>
+                        )}
+                      </td>
+                      <td className={cn("px-4 py-3 text-right font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
+                        {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;
+                      </td>
+                      <td className={cn("px-4 py-3 text-right font-bold", m.belowThreshold ? "text-[#f87171]" : "text-foreground")}>
+                        {fmt(Math.round(m.balance))}&euro;
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -256,38 +371,49 @@ export default function TresoreriePage() {
 
         {/* Mobile cards */}
         <div className="md:hidden space-y-3">
-          {cashflow.map((m, i) => (
-            <div
-              key={i}
-              className={cn(
-                "bg-card rounded-xl border p-4",
-                m.belowThreshold ? "border-[#f87171]/30 bg-[#f87171]/5" : "border-border"
-              )}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-bold text-foreground">{m.label}</span>
-                <span className={cn("text-sm font-bold", m.belowThreshold ? "text-[#f87171]" : "text-foreground")}>
-                  {fmt(Math.round(m.balance))}&euro;
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <span className="text-muted-foreground/60">Entrées</span>
-                  <span className="ml-1 font-medium text-[#4ade80]">{fmt(Math.round(m.income))}&euro;</span>
-                </div>
-                <div>
-                  <span className="text-muted-foreground/60">Sorties</span>
-                  <span className="ml-1 font-medium text-[#f87171]">{fmt(Math.round(m.totalOut))}&euro;</span>
-                </div>
-                <div>
-                  <span className="text-muted-foreground/60">Net</span>
-                  <span className={cn("ml-1 font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
-                    {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;
+          {cashflow.map((m, i) => {
+            const override = expenseOverrides[m.month] ?? 0;
+            return (
+              <div
+                key={i}
+                className={cn(
+                  "bg-card rounded-xl border p-4",
+                  m.belowThreshold ? "border-[#f87171]/30 bg-[#f87171]/5" : "border-border"
+                )}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-bold text-foreground">{m.label}</span>
+                  <span className={cn("text-sm font-bold", m.belowThreshold ? "text-[#f87171]" : "text-foreground")}>
+                    {fmt(Math.round(m.balance))}&euro;
                   </span>
                 </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-muted-foreground/60">Entr&eacute;es</span>
+                    <span className="ml-1 font-medium text-[#4ade80]">{fmt(Math.round(m.income))}&euro;</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground/60">Sorties</span>
+                    <span className="ml-1 font-medium text-[#f87171]">{fmt(Math.round(m.totalOut))}&euro;</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground/60">Net</span>
+                    <span className={cn("ml-1 font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
+                      {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;
+                    </span>
+                  </div>
+                  {override !== 0 && (
+                    <div>
+                      <span className="text-muted-foreground/60">Ajust.</span>
+                      <span className={cn("ml-1 font-medium", override > 0 ? "text-[#f97316]" : "text-[#4ade80]")}>
+                        {override > 0 ? "+" : ""}{fmt(override)}&euro;
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </ProBlur>
     </div>
