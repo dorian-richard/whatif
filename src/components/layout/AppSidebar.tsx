@@ -18,8 +18,6 @@ const NAV_SECTIONS: NavSection[] = [
     label: null,
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
-      { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
       { href: "/clients", label: "Mes clients", icon: Users },
     ],
   },
@@ -46,7 +44,9 @@ const NAV_SECTIONS: NavSection[] = [
   {
     label: "Projections",
     items: [
-      { href: "/transition", label: "Transition", icon: Briefcase },
+      { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
+      { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+      // { href: "/transition", label: "Transition", icon: Briefcase },
       // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
       // { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
       { href: "/holding", label: "Holding", icon: Building2, pro: true },
@@ -65,7 +65,6 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: null,
     items: [
-      { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
       { href: "/clients", label: "Mes clients", icon: Users },
     ],
   },
@@ -91,7 +90,9 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: "Projections",
     items: [
-      { href: "/transition", label: "Transition", icon: Briefcase },
+      { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
+      { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
+      // { href: "/transition", label: "Transition", icon: Briefcase },
       // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
       // { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
       { href: "/holding", label: "Holding", icon: Building2, pro: true },
