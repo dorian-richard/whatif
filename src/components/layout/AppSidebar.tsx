@@ -27,7 +27,7 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Pilotage",
     items: [
       { href: "/paiements", label: "Paiements", icon: CreditCard, pro: true },
-      { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
+      // { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
       { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
       { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
       { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
@@ -47,8 +47,8 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Projections",
     items: [
       { href: "/transition", label: "Transition", icon: Briefcase },
-      { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
-      { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
+      // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
+      // { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
       { href: "/holding", label: "Holding", icon: Building2, pro: true },
       { href: "/patrimoine", label: "Patrimoine", icon: HandCoins, pro: true },
     ],
@@ -72,7 +72,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: "Pilotage",
     items: [
-      { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
+      // { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
       { href: "/pipeline", label: "Pipeline", icon: Kanban, pro: true },
       { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
       { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
@@ -92,8 +92,8 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
     label: "Projections",
     items: [
       { href: "/transition", label: "Transition", icon: Briefcase },
-      { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
-      { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
+      // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
+      // { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
       { href: "/holding", label: "Holding", icon: Building2, pro: true },
       { href: "/patrimoine", label: "Patrimoine", icon: HandCoins, pro: true },
     ],
