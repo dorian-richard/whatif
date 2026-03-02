@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock, Wallet, TrendingUp, CreditCard, Building2, Receipt, HandCoins } from "@/components/ui/icons";
+import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock, Wallet, TrendingUp, CreditCard, Building2, Receipt, HandCoins, Gauge } from "@/components/ui/icons";
 import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const FREE_FEATURES = [
@@ -107,6 +107,12 @@ const PRO_FEATURES = [
     title: "Simulateur Patrimoine",
     desc: "Projette ta capacité d\u2019épargne sur 5 à 30 ans selon ton statut. Compare les véhicules d\u2019investissement et visualise ton chemin vers l\u2019indépendance financière.",
     color: "#10b981",
+  },
+  {
+    icon: Gauge,
+    title: "Radar Freelance",
+    desc: "Score de santé financière sur 6 axes : revenus, fiscalité, trésorerie, patrimoine, retraite et risque. Recommandations personnalisées.",
+    color: "#5682F2",
   },
 ];
 
