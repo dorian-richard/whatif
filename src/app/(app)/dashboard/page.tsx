@@ -392,17 +392,39 @@ function DashboardFinanceCards({
   const remConfort = Math.max(0, Math.round(available * 0.7));
   const remPrudent = Math.max(0, Math.round(available * 0.5));
 
+  const isIS = statusConfig.is > 0;
+  const isDividendes = remunerationType === "dividendes";
+  const isMixte = remunerationType === "mixte";
+
+  // Labels adaptés selon le statut
+  const monthlyLabel = isIS && (isDividendes || isMixte)
+    ? "Résultat net mensuel"
+    : "Revenu net mensuel";
+  const annualLabel = isIS && (isDividendes || isMixte)
+    ? "Résultat net annuel"
+    : "Net annuel";
+  const monthlySubtext = isIS && isDividendes
+    ? "Si le résultat est distribué intégralement en dividendes"
+    : isIS && isMixte
+      ? "Part salaire + dividendes si résultat intégralement distribué"
+      : undefined;
+  const annualSubtext = isIS && isDividendes
+    ? `Après IS + PFU/taxation dividendes sur ${fmt(Math.round(netAfterAll + expenses * 12))}\u20AC de CA`
+    : isIS && isMixte
+      ? `Après IS + charges salaire + taxation dividendes`
+      : undefined;
+
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {/* Revenu net mensuel */}
+        {/* Revenu / Résultat net mensuel */}
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="flex h-full">
             <div className="w-1 shrink-0 bg-[#4ade80]" />
             <div className="flex-1 p-5">
               <div className="flex items-center gap-2 mb-1">
                 <Banknote className="size-5 text-[#4ade80]" />
-                <span className="text-xs font-semibold text-[#4ade80] uppercase tracking-wider">Revenu net mensuel</span>
+                <span className="text-xs font-semibold text-[#4ade80] uppercase tracking-wider">{monthlyLabel}</span>
               </div>
               <div className={cn("text-2xl font-bold", netMonthly - expenses > 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
                 {fmt(Math.round(netMonthly - expenses))}&euro;
@@ -410,19 +432,22 @@ function DashboardFinanceCards({
               <div className="text-[11px] text-muted-foreground/60 mt-1">
                 CA {fmt(totalCA)}&euro; &rarr; net {fmt(Math.round(netMonthly))}&euro; &minus; charges {fmt(expenses)}&euro;
               </div>
-              <div className="text-[10px] text-muted-foreground/60 mt-0.5">{statusConfig.label} &middot; URSSAF {(urssafRate * 100).toFixed(0)}% + IR {(irRate * 100).toFixed(0)}%{statusConfig.is > 0 ? ` + IS ${(statusConfig.is * 100).toFixed(0)}%` : ""}{statusConfig.is > 0 && remunerationType ? ` \u00B7 ${remunerationType === "salaire" ? "Salaire" : remunerationType === "dividendes" ? "Dividendes" : "Mixte"}` : ""}</div>
+              <div className="text-[10px] text-muted-foreground/60 mt-0.5">{statusConfig.label} &middot; URSSAF {(urssafRate * 100).toFixed(0)}% + IR {(irRate * 100).toFixed(0)}%{isIS ? ` + IS ${(statusConfig.is * 100).toFixed(0)}%` : ""}{isIS && remunerationType ? ` \u00B7 ${isDividendes ? "Dividendes" : isMixte ? "Mixte" : "Salaire"}` : ""}</div>
+              {monthlySubtext && (
+                <div className="text-[10px] text-[#fbbf24]/70 mt-1 italic">{monthlySubtext}</div>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Net annuel */}
+        {/* Net / Résultat net annuel */}
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="flex h-full">
             <div className="w-1 shrink-0 bg-[#5682F2]" />
             <div className="flex-1 p-5">
               <div className="flex items-center gap-2 mb-1">
                 <TrendingUp className="size-5 text-[#5682F2]" />
-                <span className="text-xs font-semibold text-[#5682F2] uppercase tracking-wider">Net annuel</span>
+                <span className="text-xs font-semibold text-[#5682F2] uppercase tracking-wider">{annualLabel}</span>
               </div>
               <div className={cn("text-2xl font-bold", netAfterExpenses > 0 ? "text-[#5682F2]" : "text-[#f87171]")}>
                 {fmt(Math.round(netAfterExpenses))}&euro;
@@ -430,6 +455,9 @@ function DashboardFinanceCards({
               <div className="text-[11px] text-muted-foreground/60 mt-1">
                 {fmt(Math.round(netAfterAll))}&euro; net fiscal &minus; {fmt(expenses * 12)}&euro; charges
               </div>
+              {annualSubtext && (
+                <div className="text-[10px] text-[#fbbf24]/70 mt-1 italic">{annualSubtext}</div>
+              )}
             </div>
           </div>
         </div>
