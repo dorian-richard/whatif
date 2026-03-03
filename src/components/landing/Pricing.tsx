@@ -96,7 +96,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
             >
               Annuel
               <span className="text-[10px] font-bold bg-[#F4BE7E] text-[#07070e] px-2 py-0.5 rounded-full">
-                -27%
+                &Eacute;conomise 29&euro;
               </span>
             </button>
           </div>

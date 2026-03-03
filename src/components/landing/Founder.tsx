@@ -37,7 +37,7 @@ export function Founder() {
             <div className="text-center sm:text-left space-y-5">
               <h3 className="text-xl font-bold text-foreground">Dorian Richard</h3>
               <p className="text-base text-muted-foreground leading-relaxed">
-                Freelance depuis 5 ans, j&apos;ai pass&eacute; des heures sur des tableurs Excel pour anticiper mes revenus,
+                Ing&eacute;nieur cloud ex-AWS, freelance depuis 5 ans. J&apos;ai pass&eacute; des heures sur des tableurs Excel pour anticiper mes revenus,
                 comparer les statuts et pr&eacute;voir ma tr&eacute;sorerie.
                 J&apos;ai cr&eacute;&eacute; <strong className="text-foreground">Freelens</strong> pour que
                 chaque freelance puisse prendre ses d&eacute;cisions financi&egrave;res avec clart&eacute;,
