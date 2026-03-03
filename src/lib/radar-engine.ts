@@ -240,7 +240,7 @@ function scorePatrimoine(
   const { savings } = profile;
 
   // Sub-scores
-  const surplusScore = monthlySurplus > 0 ? clamp(Math.min(monthlySurplus / 1000, 1) * 100) : 0; // 1000€/mois surplus = max
+  const surplusScore = monthlySurplus > 0 ? clamp(Math.min(monthlySurplus / 3000, 1) * 100) : 0; // 3000€/mois surplus = max
   const savingsScore = clamp((savings / 100_000) * 100); // 100k€ = max
   const hasCapital = savings > 0 ? 30 : 0;
 

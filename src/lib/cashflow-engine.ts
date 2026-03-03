@@ -133,7 +133,7 @@ export function computeCashflow(
 
     const { urssaf, ir, is } = computeMonthlyCharges(income, profile);
 
-    const expenses = profile.monthlyExpenses + (expenseOverrides?.[monthIndex] ?? 0);
+    const expenses = Math.max(0, profile.monthlyExpenses + (expenseOverrides?.[monthIndex] ?? 0));
     const totalOut = urssaf + ir + is + expenses;
     const netFlow = income - totalOut;
     balance += netFlow;

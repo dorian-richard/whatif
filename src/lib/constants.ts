@@ -11,8 +11,8 @@ export const MONTHS_SHORT = [
  * pics Q1/Q4 (Sep-Nov).
  */
 export const SEASONALITY = [
-  0.88, 0.92, 1.05, 1.08, 1.06, 0.98,
-  0.78, 0.58, 1.12, 1.18, 1.08, 0.82,
+  0.92, 0.96, 1.09, 1.12, 1.10, 1.02,
+  0.81, 0.60, 1.17, 1.23, 1.12, 0.86,
 ];
 
 export const DEFAULT_SIM: SimulationParams = {
