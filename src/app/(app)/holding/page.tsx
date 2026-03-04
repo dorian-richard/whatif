@@ -76,10 +76,21 @@ export default function HoldingPage() {
   const selectedEntityId = useHoldingStore((s) => s.selectedEntityId);
   const setStructure = useHoldingStore((s) => s.setStructure);
   const addEntity = useHoldingStore((s) => s.addEntity);
+  const updateEntity = useHoldingStore((s) => s.updateEntity);
   const setLoaded = useHoldingStore((s) => s.setLoaded);
   const profile = useProfileStore((s) => s);
   const [saving, setSaving] = useState(false);
   const [activeScenario, setActiveScenario] = useState<HoldingScenarioId>("current");
+
+  // Sync operating entity CA from profile clients
+  useEffect(() => {
+    if (!loaded || entities.length === 0) return;
+    const annualCA = Math.round(profile.clients.reduce((sum, c) => sum + getClientBaseCA(c) * 12, 0));
+    const operating = entities.find((e) => e.type === "operating");
+    if (operating && operating.annualCA !== annualCA) {
+      updateEntity(operating.id, { annualCA });
+    }
+  }, [loaded, profile.clients, entities, updateEntity]);
 
   // Load from API on mount
   useEffect(() => {
