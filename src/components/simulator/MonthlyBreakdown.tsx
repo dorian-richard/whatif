@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentType } from "react";
+import { useState, type ComponentType } from "react";
 import type { LucideProps } from "lucide-react";
 import type { ProjectionResult, ClientData, FreelanceProfile, SimulationParams } from "@/types";
 import { MONTHS_SHORT, SEASONALITY } from "@/lib/constants";
@@ -22,6 +22,7 @@ interface MonthlyBreakdownProps {
 }
 
 export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyBreakdownProps) {
+  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const expenses = profile.monthlyExpenses + sim.expenseChange;
   const totalBefore = projection.before.reduce((a, b) => a + b, 0);
   const totalAfter = projection.after.reduce((a, b) => a + b, 0);
@@ -68,11 +69,41 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
               if (ca > 0) activeBillings.add(c.billing);
             });
 
+            const isHovered = hoveredRow === i;
+            const clientCAs = isHovered ? clients
+              .filter((_, ci) => sim.lostClientIndex !== ci)
+              .map((c) => ({
+                name: c.name,
+                ca: getClientMonthlyCA(c, i, SEASONALITY[i], profile.vacationDaysPerMonth?.[i] ?? 0),
+                color: c.color ?? "#5682F2",
+              }))
+              .filter((c) => c.ca > 0) : [];
+
             return (
-              <tr key={i} className="border-b border-border hover:bg-muted/30 transition-colors group">
+              <tr
+                key={i}
+                className="border-b border-border hover:bg-muted/30 transition-colors group"
+                onMouseEnter={() => setHoveredRow(i)}
+                onMouseLeave={() => setHoveredRow(null)}
+              >
                 <td className="py-2.5 pr-4 font-semibold text-muted-foreground text-xs">{m}</td>
                 <td className="text-center py-2.5 px-2 text-muted-foreground/60 tabular-nums text-xs">{JOURS_OUVRES[i]}j</td>
-                <td className="text-right py-2.5 px-3 text-muted-foreground/60 tabular-nums">{fmt(projection.before[i])}&euro;</td>
+                <td className="text-right py-2.5 px-3 text-muted-foreground/60 tabular-nums relative">
+                  {fmt(projection.before[i])}&euro;
+                  {/* Client breakdown tooltip */}
+                  {isHovered && clientCAs.length > 1 && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-3 py-2 rounded-lg bg-foreground text-background text-[11px] whitespace-nowrap z-50 space-y-1">
+                      {clientCAs.map((c, ci) => (
+                        <div key={ci} className="flex items-center gap-2">
+                          <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
+                          <span>{c.name}</span>
+                          <span className="font-bold ml-auto">{fmt(Math.round(c.ca))}&euro;</span>
+                          <span className="opacity-60">{projection.before[i] > 0 ? ((c.ca / projection.before[i]) * 100).toFixed(0) : 0}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </td>
                 <td className="text-right py-2.5 px-3 font-semibold text-foreground tabular-nums">
                   {fmt(projection.after[i])}&euro;
                 </td>

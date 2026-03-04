@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { simulate, getClientBaseCA, computeNetFromCA, JOURS_OUVRES, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
+import { simulate, getClientBaseCA, getClientMonthlyCA, computeNetFromCA, JOURS_OUVRES, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
 import { DEFAULT_SIM, MONTHS_SHORT, BUSINESS_STATUS_CONFIG, SEASONALITY } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import { EarningsCounter } from "@/components/dashboard/EarningsCounter";
@@ -336,7 +336,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Monthly CA chart */}
-      <DashboardChart projection={projection} expenses={expenses} netRate={netRate} />
+      <DashboardChart projection={projection} expenses={expenses} netRate={netRate} clients={profile.clients} profile={profile} />
 
       {/* Monthly breakdown table */}
       <MonthlyBreakdown projection={projection} clients={profile.clients} profile={profile} sim={DEFAULT_SIM} />
@@ -554,9 +554,14 @@ function DashboardFinanceCards({
   );
 }
 
-function DashboardChart({ projection, expenses, netRate }: { projection: { before: number[] }; expenses: number; netRate: number }) {
+function DashboardChart({ projection, expenses, netRate, clients, profile }: { projection: { before: number[] }; expenses: number; netRate: number; clients: import("@/types").ClientData[]; profile: import("@/types").FreelanceProfile }) {
   const [hoveredMonth, setHoveredMonth] = useState<number | null>(null);
   const maxMonthly = Math.max(...projection.before, 1);
+
+  const hoveredClientBreakdown = hoveredMonth !== null ? clients.map((c) => {
+    const ca = getClientMonthlyCA(c, hoveredMonth, SEASONALITY[hoveredMonth], profile.vacationDaysPerMonth?.[hoveredMonth] ?? 0);
+    return { name: c.name, ca, color: c.color ?? "#5682F2" };
+  }).filter((c) => c.ca > 0) : [];
 
   return (
     <div className="bg-card rounded-2xl p-4 md:p-6 border border-border">
@@ -574,7 +579,7 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
           const resultat = ca - expenses;
           const netRevenue = ca * netRate - expenses;
           return (
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex flex-wrap items-center gap-2 text-sm">
               <span className="font-bold text-foreground">{MONTHS_SHORT[hoveredMonth]}</span>
               <span className="text-xs text-[#5682F2] font-semibold">CA {fmt(ca)}&euro;</span>
               <span className={cn(
@@ -590,6 +595,16 @@ function DashboardChart({ projection, expenses, netRate }: { projection: { befor
                 Net {fmt(Math.round(netRevenue))}&euro;
               </span>
               <span className="text-[10px] text-muted-foreground/60">{JOURS_OUVRES[hoveredMonth]}j</span>
+              {hoveredClientBreakdown.length > 1 && (
+                <div className="flex items-center gap-2 ml-1">
+                  {hoveredClientBreakdown.map((c, i) => (
+                    <span key={i} className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                      <span className="size-1.5 rounded-full inline-block" style={{ backgroundColor: c.color }} />
+                      {c.name} <strong className="text-foreground/80">{fmt(Math.round(c.ca))}&euro;</strong>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           );
         })()}
