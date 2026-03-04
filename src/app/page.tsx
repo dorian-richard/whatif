@@ -52,7 +52,10 @@ const jsonLd = [
     url: "https://freelens.io",
     logo: "https://freelens.io/logo.webp",
     description: "Le copilote financier des freelances. Simulateur de revenus, comparateur de statuts, pipeline commercial, suivi des paiements, calendrier fiscal et trésorerie prévisionnelle.",
-    sameAs: [],
+    sameAs: [
+      "https://www.linkedin.com/in/dorianri/",
+      "https://x.com/dorian__richard",
+    ],
   },
   {
     "@context": "https://schema.org",
@@ -215,6 +218,9 @@ export default function Home() {
             <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
               Tarifs
             </a>
+            <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
+              Blog
+            </Link>
             <ThemeToggle />
             {isLoggedIn ? (
               <Link

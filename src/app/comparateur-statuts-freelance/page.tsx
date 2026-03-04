@@ -9,9 +9,21 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://freelens.io/comparateur-statuts-freelance" },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Comparateur de statuts freelance — Freelens",
+  url: "https://freelens.io/comparateur-statuts-freelance",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description: "Compare micro-entreprise, EI, EURL IR/IS, SASU IR/IS et portage salarial côte à côte. Net après charges et impôts selon ton CA réel.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+};
+
 export default function ComparateurStatutsPage() {
   return (
     <div className="min-h-screen bg-background">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-3xl mx-auto px-6 py-16 space-y-10">
 
         <div className="space-y-6">

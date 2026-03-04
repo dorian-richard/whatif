@@ -52,9 +52,11 @@ export function getClientMonthlyCA(
       }
       if (client.daysPerWeek != null) {
         const businessDays = Math.max(0, JOURS_OUVRES[monthIndex] - vacationDaysThisMonth);
-        return (client.dailyRate ?? 0) * (client.daysPerWeek / 5) * businessDays * season;
+        // No seasonality: JOURS_OUVRES already captures month-to-month variation
+        return (client.dailyRate ?? 0) * (client.daysPerWeek / 5) * businessDays;
       }
-      return (client.dailyRate ?? 0) * (client.daysPerMonth ?? 0) * season;
+      // daysPerMonth is an explicit fixed value — no seasonality
+      return (client.dailyRate ?? 0) * (client.daysPerMonth ?? 0);
     }
     case "forfait":
       return client.monthlyAmount ?? 0;

@@ -62,9 +62,9 @@ describe("Jours ouvres", () => {
 // ─── getClientMonthlyCA ───
 
 describe("getClientMonthlyCA", () => {
-  test("TJM : CA = dailyRate * (daysPerWeek/5) * joursOuvres * season", () => {
+  test("TJM : CA = dailyRate * (daysPerWeek/5) * joursOuvres (no seasonality)", () => {
     const ca = getClientMonthlyCA(tjmClient, 0, SEASONALITY[0]);
-    const expected = 500 * (5 / 5) * JOURS_OUVRES[0] * SEASONALITY[0];
+    const expected = 500 * (5 / 5) * JOURS_OUVRES[0];
     expect(ca).toBeCloseTo(expected, 1);
   });
 
@@ -205,10 +205,10 @@ describe("Moteur de simulation", () => {
     );
   });
 
-  test("Saisonnalite : TJM affecte, Forfait non", () => {
+  test("Saisonnalite : TJM (daysPerWeek) not affected by season, Forfait non", () => {
     const result = simulate([tjmClient, forfaitClient], defaultParams, defaultProfile);
     const julCA = result.before[6];
-    const tjmJul = 500 * (5 / 5) * JOURS_OUVRES[6] * SEASONALITY[6];
+    const tjmJul = 500 * (5 / 5) * JOURS_OUVRES[6];
     expect(julCA).toBeCloseTo(tjmJul + 3000, 1);
   });
 

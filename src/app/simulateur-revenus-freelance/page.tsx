@@ -9,9 +9,21 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://freelens.io/simulateur-revenus-freelance" },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Simulateur de revenus freelance — Freelens",
+  url: "https://freelens.io/simulateur-revenus-freelance",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description: "Calcule ton revenu net freelance mois par mois : TJM, charges URSSAF, impôts, vacances. Micro-entreprise, EURL, SASU, portage.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+};
+
 export default function SimulateurRevenusPage() {
   return (
     <div className="min-h-screen bg-background">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-3xl mx-auto px-6 py-16 space-y-10">
 
         <div className="space-y-6">

@@ -9,9 +9,21 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://freelens.io/tjm-freelance" },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Benchmark TJM freelance 2025 — Freelens",
+  url: "https://freelens.io/tjm-freelance",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description: "TJM du marché freelance français par métier. Calcule ton TJM idéal selon ton objectif de revenu net.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+};
+
 export default function TJMFreelancePage() {
   return (
     <div className="min-h-screen bg-background">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-3xl mx-auto px-6 py-16 space-y-10">
 
         <div className="space-y-6">

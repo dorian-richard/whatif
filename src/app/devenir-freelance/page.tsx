@@ -9,9 +9,22 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://freelens.io/devenir-freelance" },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "Devenir freelance en 2025 : guide complet pour se lancer",
+  url: "https://freelens.io/devenir-freelance",
+  author: { "@type": "Organization", name: "Freelens", url: "https://freelens.io" },
+  publisher: { "@type": "Organization", name: "Freelens", logo: { "@type": "ImageObject", url: "https://freelens.io/logo.webp" } },
+  description: "Tout ce qu'il faut savoir pour devenir freelance : choisir son statut, fixer son TJM, trouver des clients, gérer ses finances.",
+  datePublished: "2025-01-15",
+  dateModified: "2025-03-01",
+};
+
 export default function DevenirFreelancePage() {
   return (
     <div className="min-h-screen bg-background">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-3xl mx-auto px-6 py-16 space-y-10">
 
         <div className="space-y-6">
