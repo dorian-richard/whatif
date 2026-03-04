@@ -502,19 +502,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Clients */}
-      <div className="bg-card rounded-2xl border border-border p-6">
-        <h2 className="text-sm font-bold text-foreground mb-2">Mes clients</h2>
-        <p className="text-[11px] text-muted-foreground/70 mb-4">Ajoute, modifie ou supprime tes clients et leurs modes de facturation.</p>
-        <button
-          onClick={() => router.push("/clients")}
-          className="w-full py-3 bg-gradient-to-r from-[#5682F2]/10 to-[#7C5BF2]/10 border border-[#5682F2]/20 rounded-xl text-sm font-semibold text-[#5682F2] hover:border-[#5682F2]/40 hover:from-[#5682F2]/15 hover:to-[#7C5BF2]/15 transition-all flex items-center justify-center gap-2"
-        >
-          <Users className="size-4" />
-          Gérer mes clients &rarr;
-        </button>
-      </div>
-
       {/* Invoice settings */}
       <div className="bg-card rounded-2xl border border-border p-6">
         <h2 className="text-sm font-bold text-foreground mb-1">Informations de facturation</h2>

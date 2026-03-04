@@ -247,7 +247,7 @@ export default function DashboardPage() {
                   onClick={() => {
                     const rows = [
                       ["Métrique", "Valeur"],
-                      ["CA mensuel", `${fmt(totalCA)}€`],
+                      ["CA mensuel", `${fmt(currentMonthCA)}€`],
                       ["CA annuel", `${fmt(annualCA)}€`],
                       ["Clients actifs", String(profile.clients.length)],
                       ["Runway", `${runway.toFixed(1)} mois`],
@@ -312,7 +312,7 @@ export default function DashboardPage() {
       {/* KPI grid — horizontal scroll on mobile */}
       <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-1 md:grid md:grid-cols-4 md:overflow-visible md:pb-0">
         {[
-          { icon: <Wallet className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "CA mensuel", value: `${fmt(totalCA)}\u20AC`, sub: `${fmt(annualCA)}\u20AC/an`, tip: "Somme des revenus mensuels de tous tes clients actifs" },
+          { icon: <Wallet className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "CA mensuel", value: `${fmt(currentMonthCA)}\u20AC`, sub: `${fmt(annualCA)}\u20AC/an`, tip: "CA du mois en cours basé sur les jours ouvrés réels" },
           { icon: <Users className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "Clients actifs", value: String(profile.clients.length), sub: `${totalDaysPerWeek}j/sem facturés`, tip: "Nombre de clients configurés dans ton profil" },
           { icon: <LifeBuoy className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Runway", value: `${runway.toFixed(1)} mois`, sub: `${fmt(profile.savings)}\u20AC de trésorerie`, tip: "Mois de trésorerie restante si ton CA tombe à zéro" },
           { icon: <RefreshCw className="size-4 text-[#a78bfa]" />, iconBg: "bg-[#a78bfa]/12", label: "Récurrent", value: `${recurringPct.toFixed(0)}%`, sub: recurringPct >= 60 ? "Stable" : "À renforcer", tip: "Part du CA en TJM ou forfait (revenu prévisible)" },
