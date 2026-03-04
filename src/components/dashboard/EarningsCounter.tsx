@@ -41,7 +41,7 @@ export function EarningsCounter() {
   const [viewMode, setViewMode] = useState<ViewMode>("month");
 
   const earnings = useMemo(() => {
-    if (clients.length === 0) return { daily: 0, week: 0, month: 0, daysSoFar: 0, daysInMonth: 0, dailyCA: 0, weekCA: 0, monthCA: 0, dailyTax: 0, weekTax: 0, monthTax: 0 };
+    if (clients.length === 0) return { daily: 0, week: 0, month: 0, daysSoFar: 0, daysInMonth: 0, dailyCA: 0, weekCA: 0, monthCA: 0, dailyTax: 0, weekTax: 0, monthTax: 0, monthCATarget: 0, monthNetTarget: 0, progressPct: 0, monthLabel: "", clientBreakdown: [] as { name: string; ca: number; pct: number; color: string }[] };
 
     const now = new Date();
     const month = now.getMonth();
@@ -51,8 +51,11 @@ export function EarningsCounter() {
 
     // Monthly CA with seasonality + vacation
     let monthCA = 0;
+    const clientCAs: { name: string; ca: number; color: string }[] = [];
     for (const c of clients) {
-      monthCA += getClientMonthlyCA(c, month, season, vacDays);
+      const ca = getClientMonthlyCA(c, month, season, vacDays);
+      monthCA += ca;
+      clientCAs.push({ name: c.name, ca, color: c.color ?? "#5682F2" });
     }
 
     // Net rate from annual (with seasonality)
@@ -89,6 +92,15 @@ export function EarningsCounter() {
       if (dow !== 0 && dow !== 6) weekDays++;
     }
 
+    const progressPct = adjustedDays > 0 ? Math.min(1, businessDaysSoFar / adjustedDays) : 0;
+
+    const clientBreakdown = clientCAs.map((c) => ({
+      name: c.name,
+      ca: c.ca,
+      pct: monthCA > 0 ? (c.ca / monthCA) * 100 : 0,
+      color: c.color,
+    }));
+
     return {
       daily,
       week: daily * weekDays,
@@ -98,9 +110,14 @@ export function EarningsCounter() {
       dailyCA,
       weekCA: dailyCA * weekDays,
       monthCA: Math.min(monthCA, dailyCA * businessDaysSoFar),
+      monthCATarget: monthCA,
+      monthNetTarget: monthNet,
       dailyTax,
       weekTax: dailyTax * weekDays,
       monthTax: Math.min(monthTax, dailyTax * businessDaysSoFar),
+      progressPct,
+      monthLabel: now.toLocaleDateString("fr-FR", { month: "long" }),
+      clientBreakdown,
     };
   }, [clients, vacationDaysPerMonth, profile]);
 
@@ -158,6 +175,65 @@ export function EarningsCounter() {
           <div className="text-[11px] text-muted-foreground/60 mt-0.5">
             {earnings.daysSoFar}/{earnings.daysInMonth} jours ouvrés &middot; {fmt(Math.round(earnings.daily))}&euro;/jour net
           </div>
+
+          {/* Month progress bar */}
+          {earnings.monthCATarget > 0 && (
+            <div className="mt-4 pt-3 border-t border-border">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] font-semibold text-muted-foreground/80 capitalize">
+                  Progression {earnings.monthLabel}
+                </span>
+                <span className="text-[11px] text-muted-foreground/60 tabular-nums">
+                  {fmt(Math.round(earnings.monthCA))}&euro; / {fmt(Math.round(earnings.monthCATarget))}&euro; CA
+                  <span className="ml-1.5 font-semibold text-foreground">{Math.round(earnings.progressPct * 100)}%</span>
+                </span>
+              </div>
+              {/* Segmented bar by client */}
+              <div className="relative w-full h-3 bg-muted rounded-full overflow-hidden">
+                {/* Filled portion = progressPct, segmented by client */}
+                <div
+                  className="absolute inset-y-0 left-0 flex rounded-full overflow-hidden transition-all duration-700 ease-out"
+                  style={{ width: `${Math.max(1, earnings.progressPct * 100)}%` }}
+                >
+                  {earnings.clientBreakdown.map((c, i) => (
+                    <div
+                      key={i}
+                      className="relative h-full group/seg"
+                      style={{ width: `${c.pct}%`, backgroundColor: c.color }}
+                    >
+                      {/* Tooltip */}
+                      <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg bg-foreground text-background text-[11px] whitespace-nowrap opacity-0 group-hover/seg:opacity-100 transition-opacity duration-150 z-50">
+                        <div className="flex items-center gap-1.5">
+                          <div className="size-2 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
+                          <span className="font-semibold">{c.name}</span>
+                        </div>
+                        <div className="mt-0.5 text-[10px] opacity-80">
+                          {fmt(Math.round(c.ca))}&euro;/mois &middot; {c.pct.toFixed(0)}% du CA
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {/* Day marker */}
+                <div
+                  className="absolute top-0 bottom-0 w-px bg-foreground/30"
+                  style={{ left: `${earnings.progressPct * 100}%` }}
+                />
+              </div>
+              {/* Client legend */}
+              {earnings.clientBreakdown.length > 1 && (
+                <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
+                  {earnings.clientBreakdown.map((c, i) => (
+                    <div key={i} className="flex items-center gap-1 text-[10px] text-muted-foreground/60">
+                      <div className="size-1.5 rounded-full" style={{ backgroundColor: c.color }} />
+                      <span>{c.name}</span>
+                      <span className="font-semibold text-foreground/80">{c.pct.toFixed(0)}%</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
