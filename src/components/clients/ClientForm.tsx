@@ -6,7 +6,7 @@ import { BillingTypePicker } from "./BillingTypePicker";
 import { Button } from "@/components/ui/button";
 import { fmt } from "@/lib/utils";
 import { MONTHS_SHORT } from "@/lib/constants";
-import { AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
+import { JOURS_OUVRES } from "@/lib/simulation-engine";
 
 interface ClientFormProps {
   client: ClientData;
@@ -119,7 +119,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
               <div className="text-[11px] text-muted-foreground bg-muted/50 border border-border px-3 py-1.5 rounded-lg">
                 {client.daysPerYear
                   ? `${client.daysPerYear}j/an \u2192 ~${Math.round(client.daysPerYear / 12)}j/mois \u2192 ${fmt((client.dailyRate ?? 0) * client.daysPerYear / 12)}\u20AC/mois`
-                  : `~${Math.round((client.daysPerWeek ?? 0) / 5 * AVG_JOURS_OUVRES)} jours ouvres/mois (auto depuis j/sem)`}
+                  : `${JOURS_OUVRES[new Date().getMonth()]} jours ouvrés ce mois (${(client.daysPerWeek ?? 0)}j/sem)`}
               </div>
             </div>
           )}
@@ -191,7 +191,7 @@ function getDisplayCA(client: ClientData): number {
   switch (client.billing) {
     case "tjm":
       if (client.daysPerYear) return (client.dailyRate ?? 0) * client.daysPerYear / 12;
-      return (client.dailyRate ?? 0) * (client.daysPerWeek ?? 0) / 5 * AVG_JOURS_OUVRES;
+      return (client.dailyRate ?? 0) * (client.daysPerWeek ?? 0) / 5 * JOURS_OUVRES[new Date().getMonth()];
     case "forfait":
       return client.monthlyAmount ?? 0;
     case "mission": {
