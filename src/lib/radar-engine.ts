@@ -1,5 +1,5 @@
 import type { FreelanceProfile, ClientData, BusinessStatus } from "@/types";
-import { getAnnualCA, getClientBaseCA, computeNetFromCA } from "./simulation-engine";
+import { getAnnualCA, getClientBaseCA, getClientMonthlyCA, computeNetFromCA } from "./simulation-engine";
 import { BUSINESS_STATUS_CONFIG, SEASONALITY } from "./constants";
 import { computeSurplus, computeFutureValue } from "./patrimoine-engine";
 
@@ -102,7 +102,7 @@ function scoreRevenus(
   for (let m = 0; m < 12; m++) {
     let mCA = 0;
     for (const c of clients) {
-      mCA += getClientBaseCA(c) * SEASONALITY[m];
+      mCA += getClientMonthlyCA(c, m, SEASONALITY[m], 0);
     }
     monthlyRevs.push(mCA);
   }
