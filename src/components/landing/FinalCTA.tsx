@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 export function FinalCTA() {
@@ -49,6 +51,7 @@ export function FinalCTA() {
             <Link href="/cgv" className="hover:text-foreground transition-colors">CGV</Link>
             <Link href="/mentions-legales" className="hover:text-foreground transition-colors">Mentions l&eacute;gales</Link>
             <Link href="/confidentialite" className="hover:text-foreground transition-colors">Confidentialit&eacute;</Link>
+            <button onClick={() => window.dispatchEvent(new Event("freelens-open-cookie-settings"))} className="hover:text-foreground transition-colors">G&eacute;rer les cookies</button>
             <a href="mailto:contact@freelens.io" className="hover:text-foreground transition-colors">Contact</a>
           </div>
         </div>
