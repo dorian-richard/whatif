@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 interface CookieConsentState {
@@ -11,7 +11,7 @@ interface CookieConsentState {
 
 const STORAGE_KEY = "freelens-cookie-consent";
 
-function getSnapshot(): CookieConsentState | null {
+function readConsent(): CookieConsentState | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
@@ -20,13 +20,17 @@ function getSnapshot(): CookieConsentState | null {
   }
 }
 
-function subscribe(cb: () => void) {
-  window.addEventListener("freelens-consent-updated", cb);
-  return () => window.removeEventListener("freelens-consent-updated", cb);
-}
-
 export function useCookieConsent(): CookieConsentState | null {
-  return useSyncExternalStore(subscribe, getSnapshot, () => null);
+  const [consent, setConsent] = useState<CookieConsentState | null>(null);
+
+  useEffect(() => {
+    setConsent(readConsent());
+    const handler = () => setConsent(readConsent());
+    window.addEventListener("freelens-consent-updated", handler);
+    return () => window.removeEventListener("freelens-consent-updated", handler);
+  }, []);
+
+  return consent;
 }
 
 function saveConsent(analytics: boolean) {
@@ -51,7 +55,7 @@ export function CookieConsent() {
     }
 
     const openHandler = () => {
-      const current = getSnapshot();
+      const current = readConsent();
       setAnalyticsToggle(current?.analytics ?? false);
       setDetails(true);
       setShow(true);
@@ -114,7 +118,7 @@ export function CookieConsent() {
               </button>
               <button
                 onClick={() => {
-                  const current = getSnapshot();
+                  const current = readConsent();
                   setAnalyticsToggle(current?.analytics ?? false);
                   setDetails(true);
                 }}
