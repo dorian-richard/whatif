@@ -3,9 +3,9 @@ import { AnimateOnScroll } from "./AnimateOnScroll";
 const FEATURES = [
   "Simulateur de revenus",
   "Comparateur de statuts",
-  "Pipeline commercial",
+  "Gestion des leads",
   "Suivi des paiements",
-  "Calendrier fiscal",
+  "Calendrier des échéances fiscales",
   "Benchmark TJM",
   "À jour PLF 2026",
   "Gratuit",

@@ -185,7 +185,7 @@ export default function FacturationPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-foreground mb-1">Facturation &amp; Devis</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-1">Devis et factures</h1>
           <p className="text-muted-foreground">
             Cr&eacute;e tes devis et factures, exporte en PDF et suis les paiements.
           </p>

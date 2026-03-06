@@ -119,7 +119,7 @@ export default function PaiementsPage() {
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground mb-1">Suivi des paiements</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-1">Suivi des paiements clients</h1>
         <p className="text-muted-foreground">
           Suis les paiements de tes clients mois par mois.
         </p>

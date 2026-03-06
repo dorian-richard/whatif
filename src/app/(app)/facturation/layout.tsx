@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Facturation & Devis",
+  title: "Devis et factures",
   description: "Créez vos devis et factures, suivez les paiements et exportez en PDF.",
   alternates: { canonical: "https://freelens.io/facturation" },
 };

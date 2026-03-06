@@ -147,7 +147,7 @@ export default function CalendrierPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground mb-1">Calendrier Fiscal</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-1">Calendrier des &eacute;ch&eacute;ances fiscales</h1>
           <p className="text-muted-foreground">
             Toutes tes &eacute;ch&eacute;ances fiscales sur 12 mois avec les montants &agrave; provisionner.
           </p>

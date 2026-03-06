@@ -61,7 +61,7 @@ export default function TresoreriePage() {
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground mb-1">Simulateur de tr&eacute;sorerie</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-1">Pr&eacute;visions de tr&eacute;sorerie</h1>
         <p className="text-muted-foreground">
           Projette ta tr&eacute;sorerie sur 12 mois : entr&eacute;es, sorties et solde pr&eacute;visionnel.
           {hasISStatus && remLabel && (

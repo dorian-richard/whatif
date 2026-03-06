@@ -7,7 +7,7 @@ const PRO_BENEFITS = [
   "Scénarios illimités",
   "Export PDF",
   "Tableau mensuel détaillé",
-  "Métriques émotionnelles",
+  "Diagnostic santé de l'activité",
 ];
 
 export function UpgradeModal({
