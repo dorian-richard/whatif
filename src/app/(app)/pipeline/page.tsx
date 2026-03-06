@@ -154,7 +154,7 @@ export default function PipelinePage() {
         </button>
       </div>
 
-      <ProBlur label="Le pipeline commercial est réservé au plan Pro">
+      <ProBlur label="La gestion des leads est réservée au plan Pro">
         {/* Add form */}
         {showForm && (
           <div className="bg-card rounded-2xl border border-border p-5">

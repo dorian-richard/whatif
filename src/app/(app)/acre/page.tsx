@@ -166,7 +166,7 @@ export default function AcrePage() {
         </p>
       </div>
 
-      <ProBlur label="Le Simulateur ACRE est réservé au plan Pro">
+      <ProBlur label="La simulation des aides (ACRE) est réservée au plan Pro">
       {/* CA Slider */}
       <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">

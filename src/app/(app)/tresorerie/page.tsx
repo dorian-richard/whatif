@@ -70,7 +70,7 @@ export default function TresoreriePage() {
         </p>
       </div>
 
-      <ProBlur label="Le simulateur de trésorerie est réservé au plan Pro">
+      <ProBlur label="Les prévisions de trésorerie sont réservées au plan Pro">
         {/* Threshold slider */}
         <div className="bg-card rounded-xl border border-border p-4">
           <div className="flex items-center justify-between mb-2">

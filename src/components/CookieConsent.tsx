@@ -20,19 +20,6 @@ function readConsent(): CookieConsentState | null {
   }
 }
 
-export function useCookieConsent(): CookieConsentState | null {
-  const [consent, setConsent] = useState<CookieConsentState | null>(null);
-
-  useEffect(() => {
-    setConsent(readConsent());
-    const handler = () => setConsent(readConsent());
-    window.addEventListener("freelens-consent-updated", handler);
-    return () => window.removeEventListener("freelens-consent-updated", handler);
-  }, []);
-
-  return consent;
-}
-
 function saveConsent(analytics: boolean) {
   const consent: CookieConsentState = {
     necessary: true,
@@ -40,7 +27,6 @@ function saveConsent(analytics: boolean) {
     timestamp: new Date().toISOString(),
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(consent));
-  window.dispatchEvent(new Event("freelens-consent-updated"));
 }
 
 export function CookieConsent() {

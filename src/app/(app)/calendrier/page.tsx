@@ -166,7 +166,7 @@ export default function CalendrierPage() {
         )}
       </div>
 
-      <ProBlur label="Le Calendrier Fiscal est réservé au plan Pro">
+      <ProBlur label="Le calendrier des échéances fiscales est réservé au plan Pro">
       {/* Status selector */}
       <div className="flex gap-2 overflow-x-auto pb-1">
         {allStatuts.map((s) => (

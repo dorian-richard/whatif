@@ -293,7 +293,7 @@ export default function HoldingPage() {
       {/* Guide */}
       <HoldingGuide />
 
-      <ProBlur label="La simulation holding est réservée au plan Pro">
+      <ProBlur label="L'optimisation fiscale holding est réservée au plan Pro">
         {/* Scenario selector */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">

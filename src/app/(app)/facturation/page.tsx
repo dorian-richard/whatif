@@ -206,7 +206,7 @@ export default function FacturationPage() {
         </div>
       </div>
 
-      <ProBlur label="La facturation est réservée au plan Pro">
+      <ProBlur label="Les devis et factures sont réservés au plan Pro">
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <KPICard icon={FileText} label="Devis en attente" value={String(kpis.devisEnAttente)} color="#5682F2" />

@@ -125,7 +125,7 @@ export default function PaiementsPage() {
         </p>
       </div>
 
-      <ProBlur label="Le suivi des paiements est réservé au plan Pro">
+      <ProBlur label="Le suivi des paiements clients est réservé au plan Pro">
       {/* Month / Year selector */}
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-1">

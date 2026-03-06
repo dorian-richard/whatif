@@ -170,7 +170,7 @@ export default function PatrimoinePage() {
         </p>
       </div>
 
-      <ProBlur label="Le Simulateur Patrimoine est r&eacute;serv&eacute; au plan Pro">
+      <ProBlur label="Le simulateur patrimoine est réservé au plan Pro">
         {/* ── Summary cards ── */}
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
           <div className="bg-card rounded-xl p-4 border border-border">

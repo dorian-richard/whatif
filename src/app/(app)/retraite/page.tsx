@@ -187,7 +187,7 @@ export default function RetraitePage() {
         </p>
       </div>
 
-      <ProBlur label="La Projection Retraite est réservée au plan Pro">
+      <ProBlur label="La simulation retraite est réservée au plan Pro">
       {/* Input sliders */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* Age */}

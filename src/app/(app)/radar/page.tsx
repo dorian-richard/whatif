@@ -152,13 +152,13 @@ export default function RadarPage() {
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground mb-1">Radar Freelance</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-1">Diagnostic Freelance</h1>
         <p className="text-muted-foreground">
           Ton score de santé financière en un coup d&apos;œil.
         </p>
       </div>
 
-      <ProBlur label="Le Radar Freelance est réservé au plan Pro">
+      <ProBlur label="Le diagnostic de ton activité est réservé au plan Pro">
         {/* ── Hero: Global Score + Radar Chart ── */}
         <div className="bg-card rounded-2xl border border-border p-6">
           <div className="flex flex-col md:flex-row items-center gap-8">

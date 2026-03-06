@@ -1,13 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
-import { useCookieConsent } from "./CookieConsent";
 
 export function ConditionalAnalytics() {
-  const consent = useCookieConsent();
+  const [enabled, setEnabled] = useState(false);
 
-  // Don't load analytics until user has explicitly accepted
-  if (!consent?.analytics) return null;
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("freelens-cookie-consent");
+      if (raw) setEnabled(JSON.parse(raw)?.analytics === true);
+    } catch { /* ignore */ }
+  }, []);
 
+  if (!enabled) return null;
   return <Analytics />;
 }

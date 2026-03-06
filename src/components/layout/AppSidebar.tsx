@@ -18,7 +18,7 @@ const NAV_SECTIONS: NavSection[] = [
     label: null,
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/radar", label: "Radar", icon: Gauge, pro: true },
+      { href: "/radar", label: "Diagnostic", icon: Gauge, pro: true },
       { href: "/clients", label: "Mes clients", icon: Users },
     ],
   },
@@ -49,7 +49,7 @@ const NAV_SECTIONS: NavSection[] = [
       // { href: "/transition", label: "Transition", icon: Briefcase },
       // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
       // { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
-      { href: "/holding", label: "Holding", icon: Building2, pro: true },
+      { href: "/holding", label: "Holding (IS)", icon: Building2, pro: true },
       { href: "/patrimoine", label: "Patrimoine", icon: HandCoins, pro: true },
     ],
   },
@@ -65,7 +65,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: null,
     items: [
-      { href: "/radar", label: "Radar", icon: Gauge, pro: true },
+      { href: "/radar", label: "Diagnostic", icon: Gauge, pro: true },
       { href: "/clients", label: "Mes clients", icon: Users },
     ],
   },
@@ -95,7 +95,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
       // { href: "/transition", label: "Transition", icon: Briefcase },
       // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
       // { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
-      { href: "/holding", label: "Holding", icon: Building2, pro: true },
+      { href: "/holding", label: "Holding (IS)", icon: Building2, pro: true },
       { href: "/patrimoine", label: "Patrimoine", icon: HandCoins, pro: true },
     ],
   },
