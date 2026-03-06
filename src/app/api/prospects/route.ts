@@ -36,6 +36,11 @@ export async function POST(request: NextRequest) {
       contactPhone: body.contactPhone,
       billing: body.billing,
       dailyRate: body.dailyRate,
+      daysPerWeek: body.daysPerWeek,
+      monthlyAmount: body.monthlyAmount,
+      totalAmount: body.totalAmount,
+      startMonth: body.startMonth,
+      endMonth: body.endMonth,
       source: body.source,
     },
   });
@@ -64,6 +69,11 @@ export async function PUT(request: NextRequest) {
       ...(body.contactPhone !== undefined && { contactPhone: body.contactPhone }),
       ...(body.billing !== undefined && { billing: body.billing }),
       ...(body.dailyRate !== undefined && { dailyRate: body.dailyRate }),
+      ...(body.daysPerWeek !== undefined && { daysPerWeek: body.daysPerWeek }),
+      ...(body.monthlyAmount !== undefined && { monthlyAmount: body.monthlyAmount }),
+      ...(body.totalAmount !== undefined && { totalAmount: body.totalAmount }),
+      ...(body.startMonth !== undefined && { startMonth: body.startMonth }),
+      ...(body.endMonth !== undefined && { endMonth: body.endMonth }),
       ...(body.source !== undefined && { source: body.source }),
     },
   });

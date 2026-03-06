@@ -5,6 +5,8 @@ import { usePipelineStore, type ProspectStage, type Prospect } from "@/stores/us
 import { fmt, cn } from "@/lib/utils";
 import { Target, Plus, Users, TrendingUp, BarChart3, X } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
+import { MONTHS_SHORT } from "@/lib/constants";
+import { JOURS_OUVRES } from "@/lib/simulation-engine";
 
 const STAGES: ProspectStage[] = ["lead", "devis_envoye", "signe", "actif"];
 
@@ -24,23 +26,50 @@ const BILLING_OPTIONS = [
 
 const SOURCE_OPTIONS = ["LinkedIn", "Bouche-à-oreille", "Site web", "Malt", "Crème de la crème", "Événement", "Ancien client", "Autre"];
 
+const AVG_BUSINESS_DAYS = 20;
+
+function computeCAFromForm(form: FormState): number {
+  switch (form.billing) {
+    case "tjm": {
+      const rate = parseFloat(form.dailyRate) || 0;
+      const dpw = parseFloat(form.daysPerWeek) || 0;
+      return rate * (dpw / 5) * AVG_BUSINESS_DAYS;
+    }
+    case "forfait":
+      return parseFloat(form.monthlyAmount) || 0;
+    case "mission": {
+      const total = parseFloat(form.totalAmount) || 0;
+      const start = parseInt(form.startMonth);
+      const end = parseInt(form.endMonth);
+      const duration = Math.max(1, (isNaN(end) ? 0 : end) - (isNaN(start) ? 0 : start) + 1);
+      return total / duration;
+    }
+    default:
+      return parseFloat(form.estimatedCA) || 0;
+  }
+}
+
+interface FormState {
+  name: string; company: string; contactEmail: string; contactPhone: string;
+  estimatedCA: string; billing: string; dailyRate: string; daysPerWeek: string;
+  monthlyAmount: string; totalAmount: string; startMonth: string; endMonth: string;
+  stage: ProspectStage; expectedClose: string; source: string; notes: string;
+}
+
+const EMPTY_FORM: FormState = {
+  name: "", company: "", contactEmail: "", contactPhone: "",
+  estimatedCA: "", billing: "", dailyRate: "", daysPerWeek: "",
+  monthlyAmount: "", totalAmount: "", startMonth: "", endMonth: "",
+  stage: "lead", expectedClose: "", source: "", notes: "",
+};
+
 export default function PipelinePage() {
   const { prospects, setProspects, addProspect, updateProspect, removeProspect, setLoaded } = usePipelineStore();
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [form, setForm] = useState<FormState>(EMPTY_FORM);
 
-  // Form state
-  const [form, setForm] = useState({
-    name: "", company: "", contactEmail: "", contactPhone: "",
-    estimatedCA: "", dailyRate: "", billing: "", stage: "lead" as ProspectStage,
-    expectedClose: "", source: "", notes: "",
-  });
-
-  const resetForm = () => setForm({
-    name: "", company: "", contactEmail: "", contactPhone: "",
-    estimatedCA: "", dailyRate: "", billing: "", stage: "lead",
-    expectedClose: "", source: "", notes: "",
-  });
+  const resetForm = () => setForm(EMPTY_FORM);
 
   // Load from API
   useEffect(() => {
@@ -64,6 +93,11 @@ export default function PipelinePage() {
               contactPhone: p.contactPhone as string | undefined,
               billing: p.billing as string | undefined,
               dailyRate: p.dailyRate as number | undefined,
+              daysPerWeek: p.daysPerWeek as number | undefined,
+              monthlyAmount: p.monthlyAmount as number | undefined,
+              totalAmount: p.totalAmount as number | undefined,
+              startMonth: p.startMonth as number | undefined,
+              endMonth: p.endMonth as number | undefined,
               source: p.source as string | undefined,
             }))
           );
@@ -96,8 +130,9 @@ export default function PipelinePage() {
   }, []);
 
   const handleSubmit = () => {
-    if (!form.name.trim() || !form.estimatedCA) return;
-    const ca = parseFloat(form.estimatedCA);
+    if (!form.name.trim()) return;
+    const ca = form.billing ? computeCAFromForm(form) : parseFloat(form.estimatedCA) || 0;
+    if (ca <= 0 && !form.billing) return;
     const proba = STAGE_CONFIG[form.stage].defaultProba;
     const prospect: Omit<Prospect, "id"> = {
       name: form.name.trim(),
@@ -111,6 +146,11 @@ export default function PipelinePage() {
       contactPhone: form.contactPhone || undefined,
       billing: form.billing || undefined,
       dailyRate: form.dailyRate ? parseFloat(form.dailyRate) : undefined,
+      daysPerWeek: form.daysPerWeek ? parseFloat(form.daysPerWeek) : undefined,
+      monthlyAmount: form.monthlyAmount ? parseFloat(form.monthlyAmount) : undefined,
+      totalAmount: form.totalAmount ? parseFloat(form.totalAmount) : undefined,
+      startMonth: form.startMonth !== "" ? parseInt(form.startMonth) : undefined,
+      endMonth: form.endMonth !== "" ? parseInt(form.endMonth) : undefined,
       source: form.source || undefined,
     };
 
@@ -135,8 +175,13 @@ export default function PipelinePage() {
       contactEmail: p.contactEmail ?? "",
       contactPhone: p.contactPhone ?? "",
       estimatedCA: String(p.estimatedCA),
-      dailyRate: p.dailyRate ? String(p.dailyRate) : "",
       billing: p.billing ?? "",
+      dailyRate: p.dailyRate ? String(p.dailyRate) : "",
+      daysPerWeek: p.daysPerWeek ? String(p.daysPerWeek) : "",
+      monthlyAmount: p.monthlyAmount ? String(p.monthlyAmount) : "",
+      totalAmount: p.totalAmount ? String(p.totalAmount) : "",
+      startMonth: p.startMonth != null ? String(p.startMonth) : "",
+      endMonth: p.endMonth != null ? String(p.endMonth) : "",
       stage: p.stage,
       expectedClose: p.expectedClose ?? "",
       source: p.source ?? "",
@@ -179,6 +224,9 @@ export default function PipelinePage() {
     for (const p of prospects) grouped[p.stage].push(p);
     return grouped;
   }, [prospects]);
+
+  // Auto-compute CA from billing fields
+  const computedCA = form.billing ? computeCAFromForm(form) : 0;
 
   const inputCls = "px-3 py-2.5 rounded-xl border border-border bg-background text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/30 w-full";
 
@@ -288,9 +336,11 @@ export default function PipelinePage() {
                           <div className="text-xs font-semibold" style={{ color: cfg.color }}>
                             {fmt(Math.round(p.estimatedCA))}&euro;/mois
                           </div>
-                          {p.dailyRate && (
+                          {p.billing && (
                             <div className="text-[10px] text-muted-foreground/60 mt-0.5">
-                              TJM : {fmt(Math.round(p.dailyRate))}&euro;
+                              {p.billing === "tjm" && p.dailyRate ? `TJM : ${fmt(Math.round(p.dailyRate))}\u20AC` + (p.daysPerWeek ? ` \u00B7 ${p.daysPerWeek}j/sem` : "") : null}
+                              {p.billing === "forfait" ? "Forfait" : null}
+                              {p.billing === "mission" ? `Mission${p.startMonth != null && p.endMonth != null ? ` (${MONTHS_SHORT[p.startMonth]}\u2013${MONTHS_SHORT[p.endMonth]})` : ""}` : null}
                             </div>
                           )}
                           {p.source && (
@@ -368,9 +418,11 @@ export default function PipelinePage() {
                             <div className="text-sm font-bold mb-1" style={{ color: cfg.color }}>
                               {fmt(Math.round(p.estimatedCA))}&euro;/mois
                             </div>
-                            {p.dailyRate && (
+                            {p.billing && (
                               <div className="text-[11px] text-muted-foreground/60 mb-1">
-                                TJM : {fmt(Math.round(p.dailyRate))}&euro;
+                                {p.billing === "tjm" && p.dailyRate ? `TJM : ${fmt(Math.round(p.dailyRate))}\u20AC` + (p.daysPerWeek ? ` \u00B7 ${p.daysPerWeek}j/sem` : "") : null}
+                                {p.billing === "forfait" ? "Forfait" : null}
+                                {p.billing === "mission" ? `Mission${p.startMonth != null && p.endMonth != null ? ` (${MONTHS_SHORT[p.startMonth]}\u2013${MONTHS_SHORT[p.endMonth]})` : ""}` : null}
                               </div>
                             )}
                             {p.source && (
@@ -443,17 +495,162 @@ export default function PipelinePage() {
               </div>
             </div>
 
-            {/* Section: Commercial */}
+            {/* Section: Facturation */}
             <div className="mb-5">
-              <h3 className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium mb-2">Commercial</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input type="number" placeholder="CA mensuel estimé (€) *" value={form.estimatedCA} onChange={(e) => setForm({ ...form, estimatedCA: e.target.value })} className={inputCls} />
-                <input type="number" placeholder="TJM estimé (€)" value={form.dailyRate} onChange={(e) => setForm({ ...form, dailyRate: e.target.value })} className={inputCls} />
-                <select value={form.billing} onChange={(e) => setForm({ ...form, billing: e.target.value })} className={inputCls}>
+              <h3 className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium mb-2">Facturation</h3>
+              <div className="space-y-3">
+                {/* Billing type picker */}
+                <div className="flex gap-2">
                   {BILLING_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                    <button
+                      key={o.value}
+                      onClick={() => setForm({ ...form, billing: o.value })}
+                      className={cn(
+                        "px-3 py-2 rounded-xl text-xs font-medium transition-all border",
+                        form.billing === o.value
+                          ? "border-[#5682F2] bg-[#5682F2]/10 text-[#5682F2]"
+                          : "border-border bg-muted/50 text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {o.label}
+                    </button>
                   ))}
-                </select>
+                </div>
+
+                {/* TJM fields */}
+                {form.billing === "tjm" && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs text-muted-foreground/70 mb-1 block">TJM HT</label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            placeholder="500"
+                            value={form.dailyRate}
+                            onChange={(e) => setForm({ ...form, dailyRate: e.target.value })}
+                            className={cn(inputCls, "text-right pr-10")}
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70">&euro;/j</span>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-xs text-muted-foreground/70 mb-1 block">Jours / semaine</label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            step="0.5"
+                            min="0.5"
+                            max="5"
+                            placeholder="5"
+                            value={form.daysPerWeek}
+                            onChange={(e) => setForm({ ...form, daysPerWeek: e.target.value })}
+                            className={cn(inputCls, "text-right pr-12")}
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70">j/sem</span>
+                        </div>
+                      </div>
+                    </div>
+                    {computedCA > 0 && (
+                      <div className="text-[11px] text-muted-foreground bg-muted/50 border border-border px-3 py-1.5 rounded-lg">
+                        &asymp; {fmt(Math.round(computedCA))}&euro; HT/mois ({AVG_BUSINESS_DAYS} jours ouvrés moy.)
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Forfait fields */}
+                {form.billing === "forfait" && (
+                  <div>
+                    <label className="text-xs text-muted-foreground/70 mb-1 block">Montant mensuel HT</label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        placeholder="3000"
+                        value={form.monthlyAmount}
+                        onChange={(e) => setForm({ ...form, monthlyAmount: e.target.value })}
+                        className={cn(inputCls, "text-right pr-12")}
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70">&euro;/mois</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Mission fields */}
+                {form.billing === "mission" && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs text-muted-foreground/70 mb-1 block">Montant total HT</label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          placeholder="15000"
+                          value={form.totalAmount}
+                          onChange={(e) => setForm({ ...form, totalAmount: e.target.value })}
+                          className={cn(inputCls, "text-right pr-6")}
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70">&euro;</span>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs text-muted-foreground/70 mb-1 block">Début</label>
+                        <select
+                          value={form.startMonth}
+                          onChange={(e) => setForm({ ...form, startMonth: e.target.value })}
+                          className={inputCls}
+                        >
+                          <option value="">—</option>
+                          {MONTHS_SHORT.map((m, i) => (
+                            <option key={i} value={i}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs text-muted-foreground/70 mb-1 block">Fin</label>
+                        <select
+                          value={form.endMonth}
+                          onChange={(e) => setForm({ ...form, endMonth: e.target.value })}
+                          className={inputCls}
+                        >
+                          <option value="">—</option>
+                          {MONTHS_SHORT.map((m, i) => (
+                            <option key={i} value={i}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    {computedCA > 0 && (
+                      <div className="text-[11px] text-muted-foreground bg-muted/50 border border-border px-3 py-1.5 rounded-lg">
+                        &asymp; {fmt(Math.round(computedCA))}&euro; HT/mois
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* No billing type: manual CA */}
+                {!form.billing && (
+                  <div>
+                    <label className="text-xs text-muted-foreground/70 mb-1 block">CA mensuel estimé</label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        placeholder="5000"
+                        value={form.estimatedCA}
+                        onChange={(e) => setForm({ ...form, estimatedCA: e.target.value })}
+                        className={cn(inputCls, "text-right pr-12")}
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70">&euro;/mois</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Section: Pipeline */}
+            <div className="mb-5">
+              <h3 className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium mb-2">Pipeline</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <select value={form.stage} onChange={(e) => setForm({ ...form, stage: e.target.value as ProspectStage })} className={inputCls}>
                   {STAGES.map((s) => (
                     <option key={s} value={s}>{STAGE_CONFIG[s].label}</option>
@@ -481,11 +678,19 @@ export default function PipelinePage() {
               />
             </div>
 
+            {/* CA résumé */}
+            {form.billing && computedCA > 0 && (
+              <div className="mb-5 p-3 rounded-xl bg-[#5682F2]/10 border border-[#5682F2]/20">
+                <span className="text-sm font-bold text-[#5682F2]">{fmt(Math.round(computedCA))}&euro; HT/mois</span>
+                <span className="text-xs text-muted-foreground ml-2">estimé</span>
+              </div>
+            )}
+
             {/* Actions */}
             <div className="flex items-center gap-3">
               <button
                 onClick={handleSubmit}
-                disabled={!form.name.trim() || !form.estimatedCA}
+                disabled={!form.name.trim() || (form.billing ? computedCA <= 0 : !form.estimatedCA)}
                 className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {editId ? "Enregistrer" : "Ajouter"}

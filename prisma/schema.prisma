@@ -221,6 +221,11 @@ model Prospect {
   contactPhone  String?
   billing       String?
   dailyRate     Float?
+  daysPerWeek   Float?
+  monthlyAmount Float?
+  totalAmount   Float?
+  startMonth    Int?
+  endMonth      Int?
   source        String?
 
   createdAt     DateTime      @default(now())

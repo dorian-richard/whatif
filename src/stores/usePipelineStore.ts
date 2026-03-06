@@ -16,6 +16,11 @@ export interface Prospect {
   contactPhone?: string;
   billing?: string;
   dailyRate?: number;
+  daysPerWeek?: number;
+  monthlyAmount?: number;
+  totalAmount?: number;
+  startMonth?: number;
+  endMonth?: number;
   source?: string;
 }
 
