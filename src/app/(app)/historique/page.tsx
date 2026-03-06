@@ -54,10 +54,17 @@ export default function HistoriquePage() {
 
     const annualCA = getAnnualCA(clients, profile.vacationDaysPerMonth);
     const netAnnual = computeNetFromCA(annualCA, profile);
+    // Ratio net/CA annuel appliqué uniformément. Approximation acceptable :
+    // IR et charges sont calculés annuellement. Pour IS, la répartition est indicative.
     const netRate = annualCA > 0 ? netAnnual / annualCA : 0;
     const net = ca * netRate;
 
-    const activeClients = clients.filter((c) => c.isActive !== false);
+    const activeClients = clients.filter((c) => {
+      if (c.isActive === false) return false;
+      const start = c.startMonth ?? 0;
+      const end = c.endMonth ?? 11;
+      return month >= start && month <= end;
+    });
     const tjmClients = activeClients.filter((c) => c.billing === "tjm");
     const avgTJM = tjmClients.length > 0
       ? tjmClients.reduce((s, c) => s + (c.dailyRate ?? 0), 0) / tjmClients.length
