@@ -32,6 +32,11 @@ export async function POST(request: NextRequest) {
       notes: body.notes,
       expectedClose: body.expectedClose ? new Date(body.expectedClose) : null,
       contactEmail: body.contactEmail,
+      company: body.company,
+      contactPhone: body.contactPhone,
+      billing: body.billing,
+      dailyRate: body.dailyRate,
+      source: body.source,
     },
   });
 
@@ -55,6 +60,11 @@ export async function PUT(request: NextRequest) {
       ...(body.notes !== undefined && { notes: body.notes }),
       ...(body.expectedClose !== undefined && { expectedClose: body.expectedClose ? new Date(body.expectedClose) : null }),
       ...(body.contactEmail !== undefined && { contactEmail: body.contactEmail }),
+      ...(body.company !== undefined && { company: body.company }),
+      ...(body.contactPhone !== undefined && { contactPhone: body.contactPhone }),
+      ...(body.billing !== undefined && { billing: body.billing }),
+      ...(body.dailyRate !== undefined && { dailyRate: body.dailyRate }),
+      ...(body.source !== undefined && { source: body.source }),
     },
   });
 

@@ -121,6 +121,56 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                   ? `${client.daysPerYear}j/an \u2192 ~${Math.round(client.daysPerYear / 12)}j/mois \u2192 ${fmt((client.dailyRate ?? 0) * client.daysPerYear / 12)}\u20AC/mois`
                   : `${JOURS_OUVRES[new Date().getMonth()]} jours ouvrés ce mois (${(client.daysPerWeek ?? 0)}j/sem)`}
               </div>
+              {/* Période optionnelle */}
+              {(client.startMonth != null || client.endMonth != null) ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs text-muted-foreground/70">Période du contrat</label>
+                    <button
+                      onClick={() => onUpdate({ startMonth: undefined, endMonth: undefined })}
+                      className="text-[10px] text-muted-foreground/50 hover:text-foreground transition-colors"
+                    >
+                      Retirer
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-muted-foreground/70 mb-1 block">Début</label>
+                      <select
+                        className="w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
+                        value={client.startMonth ?? 0}
+                        onChange={(e) => onUpdate({ startMonth: Number(e.target.value) })}
+                      >
+                        {MONTHS_SHORT.map((m, i) => (
+                          <option key={i} value={i}>{m}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground/70 mb-1 block">Fin</label>
+                      <select
+                        className="w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
+                        value={client.endMonth ?? 11}
+                        onChange={(e) => onUpdate({ endMonth: Number(e.target.value) })}
+                      >
+                        {MONTHS_SHORT.map((m, i) => (
+                          <option key={i} value={i}>{m}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    const m = new Date().getMonth();
+                    onUpdate({ startMonth: m, endMonth: 11 });
+                  }}
+                  className="text-xs text-muted-foreground/50 hover:text-foreground transition-colors"
+                >
+                  + Définir une période (optionnel)
+                </button>
+              )}
             </div>
           )}
 

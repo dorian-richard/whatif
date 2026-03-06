@@ -34,7 +34,8 @@
       "Bash(vercel:*)",
       "Bash(dig:*)",
       "Bash(sudo dscacheutil:*)",
-      "Bash(sudo killall:*)"
+      "Bash(sudo killall:*)",
+      "Bash(sips:*)"
     ]
   }
 }

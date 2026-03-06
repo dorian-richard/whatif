@@ -12,6 +12,11 @@ export interface Prospect {
   notes?: string;
   expectedClose?: string;
   contactEmail?: string;
+  company?: string;
+  contactPhone?: string;
+  billing?: string;
+  dailyRate?: number;
+  source?: string;
 }
 
 interface PipelineState {

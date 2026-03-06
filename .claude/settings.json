@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "WebFetch(domain:www.malt.fr)",
+      "WebFetch(domain:open.urssaf.fr)",
+      "WebFetch(domain:www.codeur.com)",
+      "WebFetch(domain:www.free-work.com)",
+      "WebFetch(domain:mon-entreprise.urssaf.fr)",
+      "WebFetch(domain:api.gouv.fr)",
+      "WebFetch(domain:www.opteamis.com)",
+      "WebFetch(domain:www.silkhom.com)",
+      "WebFetch(domain:www.embarq.fr)",
+      "Bash(head:*)",
+      "Bash(python3:*)",
+      "Bash(npx vercel:*)",
+      "Bash(git -C /Users/dorianrichard/Documents/WhatIf status --short)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npx dotenv:*)",
+      "Bash(source:*)",
+      "Bash(node -e:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:Herm%C3%A8s12740%40@db.iscctnbcnwosljwlndfg.supabase.co:5432/postgres\" npx prisma db push:*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:Herm%C3%A8s12740%40@db.iscctnbcnwosljwlndfg.supabase.co:5432/postgres\" node:*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:Herm%C3%A8s12740%40@db.iscctnbcnwosljwlndfg.supabase.co:5432/postgres\" node -e \"\nconst { createClient } = require\\(''@supabase/supabase-js''\\);\nconst supabase = createClient\\(\n  ''https://iscctnbcnwosljwlndfg.supabase.co'',\n  ''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzY2N0bmJjbndvc2xqd2xuZGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4OTMxMzEsImV4cCI6MjA4NjQ2OTEzMX0.XHjPXNU9pMq90XTpX_vn9eV8NXS5DG7PJtcWxunGbYQ''\n\\);\n// List users from auth.users via admin API isn''t available with anon key\n// Let''s query the auth schema directly via SQL\nasync function main\\(\\) {\n  const { data, error } = await supabase.rpc\\(''get_user_id_by_email'', { email_input: ''dorich@icloud.com'' }\\);\n  console.log\\(''RPC result:'', data, error\\);\n}\nmain\\(\\);\n\")",
+      "Bash(DATABASE_URL=\"postgresql://postgres:Herm%C3%A8s12740%40@db.iscctnbcnwosljwlndfg.supabase.co:5432/postgres\" node -e:*)",
+      "Bash(done)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  }
+}

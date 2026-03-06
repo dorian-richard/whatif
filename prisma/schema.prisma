@@ -217,6 +217,11 @@ model Prospect {
   notes         String?
   expectedClose DateTime?
   contactEmail  String?
+  company       String?
+  contactPhone  String?
+  billing       String?
+  dailyRate     Float?
+  source        String?
 
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
