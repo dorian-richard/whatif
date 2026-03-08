@@ -25,12 +25,6 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   {
-    icon: ArrowLeftRight,
-    title: "Transition CDI → Freelance",
-    desc: "Salaire net CDI vs revenu freelance : combien facturer pour gagner autant (ou plus) qu'en salariat ?",
-    color: "#10b981",
-  },
-  {
     icon: Scale,
     title: "Comparateur de statuts",
     desc: "Micro, EURL, SASU, portage salarial — compare ton revenu net, tes charges et ta fiscalité statut par statut.",
@@ -41,6 +35,12 @@ const PRO_FEATURES = [
     title: "Benchmark TJM marché",
     desc: "27 métiers, 7 catégories, données réelles Silkhom 2025. Compare ton TJM au marché par séniorité et localisation.",
     color: "#F4BE7E",
+  },
+  {
+    icon: ArrowLeftRight,
+    title: "Transition CDI → Freelance",
+    desc: "Salaire net CDI vs revenu freelance : combien facturer pour gagner autant (ou plus) qu'en salariat ?",
+    color: "#10b981",
   },
   {
     icon: Target,

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { cn } from "@/lib/utils";
+import { ProBlur } from "@/components/ProBlur";
 import {
   BarChart3,
   TrendingUp,
@@ -164,6 +165,7 @@ export default function BenchmarkPage() {
       : 50;
 
   return (
+    <ProBlur label="Le benchmark TJM est réservé au plan Pro">
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
@@ -601,5 +603,6 @@ export default function BenchmarkPage() {
         </p>
       </div>
     </div>
+    </ProBlur>
   );
 }

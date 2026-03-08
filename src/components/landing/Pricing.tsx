@@ -7,14 +7,15 @@ import { AnimateOnScroll } from "./AnimateOnScroll";
 const FREE_FEATURES = [
   "Simulateur de revenus",
   "Dashboard & projections 12 mois",
-  "Comparateur de statuts juridiques",
-  "Benchmark TJM par métier",
-  "3 clients max",
+  "Objectif Revenu",
+  "1 client max",
   "1 scénario sauvegardé",
 ];
 
 const FREE_LIMITATIONS = [
   "Clients et scénarios illimités",
+  "Compare ton statut : Micro, EURL, SASU, portage",
+  "Compare ton TJM au marché (27 métiers)",
   "Suis tes factures : envoyées, payées, en retard",
   "Suis tes prospects et opportunités",
   "Ne rate plus aucune date URSSAF / TVA / IR",
@@ -30,6 +31,8 @@ const FREE_LIMITATIONS = [
 const PRO_FEATURES = [
   "Tout du plan Gratuit, plus :",
   "Clients et scénarios illimités",
+  "Compare ton statut : Micro, EURL, SASU, portage",
+  "Compare ton TJM au marché (27 métiers)",
   "Suis tes factures : envoyées, payées, en retard",
   "Suis tes prospects et opportunités",
   "Ne rate plus aucune date URSSAF / TVA / IR",

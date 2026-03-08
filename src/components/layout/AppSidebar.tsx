@@ -35,9 +35,9 @@ const NAV_SECTIONS: NavSection[] = [
   {
     label: "Analyse",
     items: [
-      { href: "/comparateur", label: "Comparateur", icon: Scale },
+      { href: "/comparateur", label: "Comparateur", icon: Scale, pro: true },
       { href: "/objectif", label: "Objectif", icon: Target },
-      { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
+      { href: "/benchmark", label: "Benchmark", icon: BarChart3, pro: true },
       { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
     ],
   },
@@ -81,9 +81,9 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: "Analyse",
     items: [
-      { href: "/comparateur", label: "Comparateur", icon: Scale },
+      { href: "/comparateur", label: "Comparateur", icon: Scale, pro: true },
       { href: "/objectif", label: "Objectif", icon: Target },
-      { href: "/benchmark", label: "Benchmark", icon: BarChart3 },
+      { href: "/benchmark", label: "Benchmark", icon: BarChart3, pro: true },
       { href: "/historique", label: "Historique", icon: TrendingUp, pro: true },
     ],
   },

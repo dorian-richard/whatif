@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getAnnualCA } from "@/lib/simulation-engine";
+import { ProBlur } from "@/components/ProBlur";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
@@ -209,6 +210,7 @@ export default function ComparateurPage() {
   const annualExpenses = monthlyExpenses * 12;
 
   return (
+    <ProBlur label="Le comparateur de statuts est réservé au plan Pro">
     <div id="comparateur-content" className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
@@ -498,5 +500,6 @@ export default function ComparateurPage() {
           Simulation indicative basée sur des taux moyens. Consulte un expert-comptable pour un conseil personnalisé.
         </div>
       </div>
+    </ProBlur>
   );
 }

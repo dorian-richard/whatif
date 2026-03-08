@@ -236,7 +236,7 @@ export const BUSINESS_STATUS_CONFIG: Record<
 
 /** Client-safe plan limits (no server secrets) */
 export const PLAN_LIMITS = {
-  FREE: { maxClients: 3, maxScenarios: 1 },
+  FREE: { maxClients: 1, maxScenarios: 1 },
   ACTIVE: { maxClients: Infinity, maxScenarios: Infinity },
 } as const;
 
