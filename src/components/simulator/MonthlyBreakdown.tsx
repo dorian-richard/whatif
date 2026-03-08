@@ -90,7 +90,20 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
                 onMouseLeave={() => setHoveredRow(null)}
               >
                 <td className="py-2.5 pr-4 font-semibold text-muted-foreground text-xs">{m}</td>
-                <td className="text-center py-2.5 px-2 text-muted-foreground/60 tabular-nums text-xs">{JOURS_OUVRES[i]}j</td>
+                <td className="text-center py-2.5 px-2 text-muted-foreground/60 tabular-nums text-xs leading-tight">
+                  {(() => {
+                    const vac = profile.vacationDaysPerMonth?.[i] ?? 0;
+                    const eff = JOURS_OUVRES[i] - vac;
+                    return vac > 0 ? (
+                      <>
+                        <div>{eff}j</div>
+                        <div className="text-[#fbbf24]/70 text-[9px]">{vac}j congés</div>
+                      </>
+                    ) : (
+                      <div>{JOURS_OUVRES[i]}j</div>
+                    );
+                  })()}
+                </td>
                 <td className="text-right py-2.5 px-3 text-muted-foreground/60 tabular-nums relative">
                   {fmt(projection.before[i])}&euro;
                   {/* Client breakdown tooltip */}
@@ -158,7 +171,20 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
           })}
           <tr className="border-t border-border font-bold bg-muted/40">
             <td className="py-3 pr-4 text-foreground text-xs">TOTAL</td>
-            <td className="text-center py-3 px-2 text-muted-foreground tabular-nums text-xs">{JOURS_OUVRES.reduce((a, b) => a + b, 0)}j</td>
+            <td className="text-center py-3 px-2 text-muted-foreground tabular-nums text-xs leading-tight">
+              {(() => {
+                const totalJours = JOURS_OUVRES.reduce((a, b) => a + b, 0);
+                const totalVac = profile.vacationDaysPerMonth?.reduce((a, b) => a + b, 0) ?? 0;
+                return totalVac > 0 ? (
+                  <>
+                    <div>{totalJours - totalVac}j</div>
+                    <div className="text-[#fbbf24]/70 text-[9px]">{totalVac}j congés</div>
+                  </>
+                ) : (
+                  <div>{totalJours}j</div>
+                );
+              })()}
+            </td>
             <td className="text-right py-3 px-3 text-muted-foreground tabular-nums">{fmt(totalBefore)}&euro;</td>
             <td className="text-right py-3 px-3 text-foreground tabular-nums">{fmt(totalAfter)}&euro;</td>
             <td
