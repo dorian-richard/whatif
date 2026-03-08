@@ -44,7 +44,7 @@ const NAV_SECTIONS: NavSection[] = [
   {
     label: "Projections",
     items: [
-      { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
+      { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal, pro: true },
       { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
       // { href: "/transition", label: "Transition", icon: Briefcase },
       // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
@@ -90,7 +90,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: "Projections",
     items: [
-      { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal },
+      { href: "/simulator", label: "Simulateur", icon: SlidersHorizontal, pro: true },
       { href: "/scenarios", label: "Scénarios", icon: ClipboardList },
       // { href: "/transition", label: "Transition", icon: Briefcase },
       // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },

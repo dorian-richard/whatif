@@ -5,7 +5,6 @@ import Link from "next/link";
 import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const FREE_FEATURES = [
-  "Simulateur de revenus",
   "Dashboard & projections 12 mois",
   "Objectif Revenu",
   "1 client max",
@@ -13,6 +12,7 @@ const FREE_FEATURES = [
 ];
 
 const FREE_LIMITATIONS = [
+  "Simulateur de revenus avancé",
   "Clients et scénarios illimités",
   "Compare ton statut : Micro, EURL, SASU, portage",
   "Compare ton TJM au marché (27 métiers)",
@@ -30,6 +30,7 @@ const FREE_LIMITATIONS = [
 
 const PRO_FEATURES = [
   "Tout du plan Gratuit, plus :",
+  "Simulateur de revenus avancé",
   "Clients et scénarios illimités",
   "Compare ton statut : Micro, EURL, SASU, portage",
   "Compare ton TJM au marché (27 métiers)",
