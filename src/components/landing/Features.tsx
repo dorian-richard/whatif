@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { SlidersHorizontal, BarChart3, Target, Briefcase, CalendarDays, Scale, ArrowLeftRight, PiggyBank, BadgePercent, Lock, Wallet, TrendingUp, CreditCard, Building2, Receipt, HandCoins, Gauge } from "@/components/ui/icons";
+import { SlidersHorizontal, BarChart3, Scale, Lock, Target, CreditCard, TrendingUp, Gauge } from "@/components/ui/icons";
 import { AnimateOnScroll } from "./AnimateOnScroll";
 
-const FREE_FEATURES = [
+const HERO_FEATURES = [
   {
     icon: SlidersHorizontal,
     title: "Et si je perdais un client ?",
@@ -23,113 +23,60 @@ const FREE_FEATURES = [
   },
 ];
 
-const PRO_FEATURES = [
+const PRO_GROUPS = [
   {
     icon: Scale,
-    title: "Comparateur de statuts",
-    desc: "Micro, EURL, SASU, portage salarial — compare ton revenu net, tes charges et ta fiscalité statut par statut.",
+    title: "Analyse & comparaison",
     color: "#5682F2",
-  },
-  {
-    icon: Briefcase,
-    title: "Benchmark TJM marché",
-    desc: "27 métiers, 7 catégories, données réelles Silkhom 2025. Compare ton TJM au marché par séniorité et localisation.",
-    color: "#F4BE7E",
-  },
-  {
-    icon: ArrowLeftRight,
-    title: "Transition CDI → Freelance",
-    desc: "Salaire net CDI vs revenu freelance : combien facturer pour gagner autant (ou plus) qu'en salariat ?",
-    color: "#10b981",
-  },
-  {
-    icon: Target,
-    title: "Objectif Revenu",
-    desc: "Tu vises un net mensuel ? On calcule le CA, le TJM et le nombre de clients nécessaires, statut par statut.",
-    color: "#a78bfa",
-  },
-  {
-    icon: CalendarDays,
-    title: "Calendrier fiscal",
-    desc: "Toutes tes échéances fiscales sur 12 mois : URSSAF, TVA, IS, IR. Montants provisionnels estimés + export .ics.",
-    color: "#f97316",
-  },
-  {
-    icon: PiggyBank,
-    title: "Simulation retraite",
-    desc: "Estime ta pension selon ton statut, ton CA et ton âge. Compare avec un CDI et calcule l'écart à combler.",
-    color: "#8b5cf6",
-  },
-  {
-    icon: BadgePercent,
-    title: "Simulation ACRE",
-    desc: "Calcule tes économies URSSAF avec l'ACRE sur 1 an, statut par statut. Micro, EURL et SASU comparés.",
-    color: "#06b6d4",
+    items: [
+      "Comparateur de statuts : Micro, EURL, SASU, portage",
+      "Benchmark TJM marché (27 métiers, données Silkhom 2025)",
+      "Objectif Revenu : du net cible au CA et TJM requis",
+      "Transition CDI → Freelance : combien facturer pour gagner plus ?",
+    ],
   },
   {
     icon: CreditCard,
-    title: "Suivi des paiements clients",
-    desc: "Suis tes factures en temps réel : envoyées, payées, en retard. Visualise ton taux d'encaissement et les montants en attente.",
+    title: "Pilotage au quotidien",
     color: "#ec4899",
-  },
-  {
-    icon: Wallet,
-    title: "Prévisions de trésorerie",
-    desc: "Projette ta trésorerie sur 12 mois : entrées, sorties, solde prévisionnel et alerte si tu passes sous ton seuil de sécurité.",
-    color: "#f97316",
-  },
-  {
-    icon: Target,
-    title: "Leads",
-    desc: "Gère tes prospects en kanban : lead, devis envoyé, signé, actif. Leads pondérés par probabilité de conversion.",
-    color: "#a78bfa",
+    items: [
+      "Suivi des factures : envoyées, payées, en retard",
+      "Pipeline commercial : prospects en kanban",
+      "Calendrier fiscal : URSSAF, TVA, IS, IR + export .ics",
+      "Devis et factures : numérotation auto, TVA, export PDF",
+    ],
   },
   {
     icon: TrendingUp,
-    title: "Historique et tendances",
-    desc: "Compare ton CA, TJM et taux d'encaissement d'une année sur l'autre. Identifie tes tendances et ta progression.",
+    title: "Trésorerie & historique",
     color: "#10b981",
+    items: [
+      "Prévisions de trésorerie sur 12 mois avec alertes",
+      "Historique et tendances : compare tes revenus YoY",
+    ],
   },
   {
-    icon: Building2,
-    title: "Optimisation holding",
-    desc: "Visualise ta structure holding avec un graphe interactif. Simule l'IS, le régime mère-fille et compare ton net avec et sans holding.",
+    icon: Target,
+    title: "Projections long terme",
     color: "#a78bfa",
-  },
-  {
-    icon: Receipt,
-    title: "Devis et factures",
-    desc: "Crée tes devis et factures en quelques clics. Numérotation auto, calcul TVA, export PDF professionnel et suivi des statuts.",
-    color: "#06b6d4",
-  },
-  {
-    icon: HandCoins,
-    title: "Simulateur Patrimoine",
-    desc: "Projette ta capacité d\u2019épargne sur 5 à 30 ans selon ton statut. Compare les véhicules d\u2019investissement et visualise ton chemin vers l\u2019indépendance financière.",
-    color: "#10b981",
+    items: [
+      "Simulation retraite : pension estimée vs CDI",
+      "Simulation ACRE : économies URSSAF sur 1 an",
+      "Simulateur patrimoine : épargne sur 5 à 30 ans",
+      "Optimisation holding : IS, mère-fille, graphe interactif",
+    ],
   },
   {
     icon: Gauge,
-    title: "Diagnostic Freelance",
-    desc: "Score de santé financière sur 6 axes : revenus, fiscalité, trésorerie, patrimoine, retraite et risque. Recommandations personnalisées.",
-    color: "#5682F2",
+    title: "Diagnostic",
+    color: "#F4BE7E",
+    items: [
+      "Score de santé financière sur 6 axes",
+      "Recommandations personnalisées",
+      "Export PDF & CSV de tous tes rapports",
+    ],
   },
 ];
-
-function FeatureCard({ f }: { f: { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; title: string; desc: string; color: string }; }) {
-  return (
-    <div className="group relative bg-muted/40 border border-border rounded-2xl p-6 hover:bg-muted hover:border-border transition-all duration-300">
-      <div
-        className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-        style={{ backgroundColor: `${f.color}15` }}
-      >
-        <f.icon className="size-6" style={{ color: f.color }} />
-      </div>
-      <h3 className="text-base font-semibold text-foreground mb-2">{f.title}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-    </div>
-  );
-}
 
 export function Features() {
   return (
@@ -152,11 +99,20 @@ export function Features() {
           </div>
         </AnimateOnScroll>
 
-        {/* Free features */}
+        {/* Hero features — 3 big cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-          {FREE_FEATURES.map((f, i) => (
+          {HERO_FEATURES.map((f, i) => (
             <AnimateOnScroll key={f.title} delay={0.05 * i}>
-              <FeatureCard f={f} />
+              <div className="group relative bg-muted/40 border border-border rounded-2xl p-6 hover:bg-muted hover:border-border transition-all duration-300">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+                  style={{ backgroundColor: `${f.color}15` }}
+                >
+                  <f.icon className="size-6" style={{ color: f.color }} />
+                </div>
+                <h3 className="text-base font-semibold text-foreground mb-2">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+              </div>
             </AnimateOnScroll>
           ))}
         </div>
@@ -179,15 +135,33 @@ export function Features() {
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#5682F2]/30 to-transparent" />
         </div>
 
-        {/* Pro features */}
+        {/* Pro features — grouped categories */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {PRO_FEATURES.map((f, i) => (
-            <AnimateOnScroll key={f.title} delay={0.05 * i}>
-              <div className="relative">
-                <FeatureCard f={f} />
+          {PRO_GROUPS.map((g, i) => (
+            <AnimateOnScroll key={g.title} delay={0.05 * i}>
+              <div className="relative bg-muted/40 border border-border rounded-2xl p-6 hover:bg-muted transition-all duration-300">
                 <span className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white px-2 py-0.5 rounded-full">
                   Pro
                 </span>
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="size-10 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: `${g.color}15` }}
+                  >
+                    <g.icon className="size-5" style={{ color: g.color }} />
+                  </div>
+                  <h3 className="text-base font-semibold text-foreground">{g.title}</h3>
+                </div>
+                <ul className="space-y-2">
+                  {g.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <svg className="size-4 text-[#4ade80] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </AnimateOnScroll>
           ))}
