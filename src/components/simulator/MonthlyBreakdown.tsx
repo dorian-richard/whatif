@@ -5,7 +5,7 @@ import type { LucideProps } from "lucide-react";
 import type { ProjectionResult, ClientData, FreelanceProfile, SimulationParams } from "@/types";
 import { MONTHS_SHORT, SEASONALITY } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
-import { getClientMonthlyCA, JOURS_OUVRES } from "@/lib/simulation-engine";
+import { getClientMonthlyCA, getAnnualCA, computeNetFromCA, JOURS_OUVRES } from "@/lib/simulation-engine";
 import { CalendarDays, Package, Target, AlertTriangle } from "@/components/ui/icons";
 
 const BILLING_BADGE: Record<string, { Icon: ComponentType<LucideProps>; label: string; color: string }> = {
@@ -27,7 +27,10 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
   const totalBefore = projection.before.reduce((a, b) => a + b, 0);
   const totalAfter = projection.after.reduce((a, b) => a + b, 0);
   const totalDiff = totalAfter - totalBefore;
-  const totalNet = totalAfter - expenses * 12;
+  const annualCA = getAnnualCA(clients, profile.vacationDaysPerMonth);
+  const netAnnual = computeNetFromCA(annualCA, profile);
+  const netRate = annualCA > 0 ? netAnnual / annualCA : 0;
+  const totalNet = totalAfter * netRate - expenses * 12;
   const maxAfter = Math.max(...projection.after);
 
   return (
@@ -59,7 +62,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
         <tbody>
           {MONTHS_SHORT.map((m, i) => {
             const diff = projection.after[i] - projection.before[i];
-            const net = projection.after[i] - expenses;
+            const net = projection.after[i] * netRate - expenses;
             const barPct = maxAfter > 0 ? (projection.after[i] / maxAfter) * 100 : 0;
 
             const activeBillings = new Set<string>();

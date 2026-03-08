@@ -57,7 +57,7 @@ export default function HistoriquePage() {
     // Ratio net/CA annuel appliqué uniformément. Approximation acceptable :
     // IR et charges sont calculés annuellement. Pour IS, la répartition est indicative.
     const netRate = annualCA > 0 ? netAnnual / annualCA : 0;
-    const net = ca * netRate;
+    const net = ca * netRate - (profile.monthlyExpenses ?? 0);
 
     const activeClients = clients.filter((c) => {
       if (c.isActive === false) return false;
