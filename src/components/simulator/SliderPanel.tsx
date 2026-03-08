@@ -36,7 +36,7 @@ function LabeledSlider({
     <div className="group p-3 rounded-xl hover:bg-muted/30 transition-colors">
       <div className="flex justify-between items-center mb-2.5">
         <label className="text-sm font-medium text-muted-foreground flex items-center gap-2" title={tooltip}>
-          <div className="size-7 rounded-lg bg-[#5682F2]/15 flex items-center justify-center group-hover:bg-[#5682F2]/20 transition-colors">
+          <div className="size-7 rounded-lg bg-muted flex items-center justify-center group-hover:bg-muted/80 transition-colors">
             {icon}
           </div>
           <span>{label}</span>
@@ -85,7 +85,7 @@ export function SliderPanel() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
         <LabeledSlider
-          icon={<Palmtree className="size-4 text-[#5682F2]" />}
+          icon={<Palmtree className="size-4 text-muted-foreground" />}
           label="Vacances"
           value={sim.vacationWeeks}
           onChange={(v) => sim.setParam("vacationWeeks", v)}
@@ -96,7 +96,7 @@ export function SliderPanel() {
           tooltip="TJM et Mission : revenu tombe a 0. Forfait : continue de tourner."
         />
         <LabeledSlider
-          icon={<TrendingUp className="size-4 text-[#5682F2]" />}
+          icon={<TrendingUp className="size-4 text-muted-foreground" />}
           label="Tarifs"
           value={sim.rateChange}
           onChange={(v) => sim.setParam("rateChange", v)}
@@ -107,7 +107,7 @@ export function SliderPanel() {
           tooltip="S'applique uniquement aux clients TJM."
         />
         <LabeledSlider
-          icon={<UserPlus className="size-4 text-[#5682F2]" />}
+          icon={<UserPlus className="size-4 text-muted-foreground" />}
           label="Nvx clients"
           value={sim.newClients}
           onChange={(v) => sim.setParam("newClients", v)}
@@ -117,7 +117,7 @@ export function SliderPanel() {
           unit=""
         />
         <LabeledSlider
-          icon={<Clock className="size-4 text-[#5682F2]" />}
+          icon={<Clock className="size-4 text-muted-foreground" />}
           label="Jours / sem"
           value={sim.workDaysPerWeek}
           onChange={(v) => sim.setParam("workDaysPerWeek", v)}
@@ -130,8 +130,8 @@ export function SliderPanel() {
 
         <div className="p-3 rounded-xl hover:bg-muted/30 transition-colors">
           <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 mb-2.5">
-            <div className="size-7 rounded-lg bg-[#5682F2]/15 flex items-center justify-center">
-              <HeartCrack className="size-4 text-[#5682F2]" />
+            <div className="size-7 rounded-lg bg-muted flex items-center justify-center">
+              <HeartCrack className="size-4 text-muted-foreground" />
             </div>
             Perte d&apos;un client
           </label>
@@ -159,7 +159,7 @@ export function SliderPanel() {
         </div>
 
         <LabeledSlider
-          icon={<Receipt className="size-4 text-[#5682F2]" />}
+          icon={<Receipt className="size-4 text-muted-foreground" />}
           label="Charges"
           value={sim.expenseChange}
           onChange={(v) => sim.setParam("expenseChange", v)}

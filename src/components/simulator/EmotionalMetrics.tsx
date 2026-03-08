@@ -41,9 +41,9 @@ const VERDICT_CONFIG: Record<Verdict, { label: string; color: string; bg: string
 };
 
 const GROUP_CONFIG = {
-  finances: { label: "Finances", color: "text-[#4ade80]" },
-  securite: { label: "Sécurité & risques", color: "text-[#fbbf24]" },
-  temps: { label: "Temps & capacité", color: "text-[#5682F2]" },
+  finances: { label: "Finances", color: "text-foreground" },
+  securite: { label: "Sécurité & risques", color: "text-foreground" },
+  temps: { label: "Temps & capacité", color: "text-foreground" },
 } as const;
 
 function ProgressRing({ value, max, color }: { value: number; max: number; color: string }) {
@@ -130,7 +130,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
 
   const metrics: MetricItem[] = [
     {
-      icon: <Banknote className="size-5 text-[#4ade80]" />,
+      icon: <Banknote className="size-5 text-muted-foreground" />,
       label: "Revenu net mensuel",
       explanation: `Ce qu'il vous reste chaque mois après impôts (${(urssafRate * 100).toFixed(0)}% URSSAF + IR) et charges fixes (${fmt(expenses)}\u20AC)`,
       before: Math.round(netMonthlyBefore),
@@ -141,7 +141,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       group: "finances",
     },
     ...(monthlySalary > 0 ? [{
-      icon: <HandCoins className="size-5 text-[#a78bfa]" />,
+      icon: <HandCoins className="size-5 text-muted-foreground" />,
       label: "Reste après rémunération",
       explanation: `Après vous être versé ${fmt(monthlySalary)}\u20AC/mois de salaire, il reste ce montant en trésorerie d'entreprise`,
       before: Math.round(netMonthlyBefore - monthlySalary),
@@ -152,7 +152,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       group: "finances" as const,
     }] as MetricItem[] : []),
     {
-      icon: <BadgePercent className="size-5 text-[#F4BE7E]" />,
+      icon: <BadgePercent className="size-5 text-muted-foreground" />,
       label: "Charges & prélèvements",
       explanation: `Total annuel des prélèvements (URSSAF${statusConfig.is > 0 ? `, IS${profile.remunerationType === "dividendes" || profile.remunerationType === "mixte" ? ", PFU/charges dividendes" : ""}` : ""}, IR). Taux effectif : ${chargesRateAfter.toFixed(0)}% (${statusConfig.label})`,
       before: Math.round(totalChargesBefore),
@@ -163,7 +163,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       group: "finances",
     },
     {
-      icon: <Wallet className="size-5 text-[#5682F2]" />,
+      icon: <Wallet className="size-5 text-muted-foreground" />,
       label: "Trésorerie fin d'année",
       explanation: "Solde prévu au 31 décembre : épargne actuelle + revenus nets - charges annuelles",
       before: Math.round(savingsEndBefore),
@@ -174,7 +174,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       group: "securite",
     },
     {
-      icon: <LifeBuoy className="size-5 text-[#5682F2]" />,
+      icon: <LifeBuoy className="size-5 text-muted-foreground" />,
       label: "Matelas de sécurité",
       explanation: "Combien de mois vous pouvez tenir sans aucun revenu, avec votre trésorerie actuelle",
       before: parseFloat(runwayBefore.toFixed(1)),
@@ -186,7 +186,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       group: "securite",
     },
     {
-      icon: <RefreshCw className="size-5 text-[#5682F2]" />,
+      icon: <RefreshCw className="size-5 text-muted-foreground" />,
       label: "Revenu prévisible",
       explanation: "Part du CA qui revient chaque mois (TJM réguliers + forfaits). Plus c'est haut, plus vos revenus sont stables",
       before: Math.round(recurringPctBefore),
@@ -198,7 +198,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       group: "securite",
     },
     {
-      icon: <Users className="size-5 text-[#fbbf24]" />,
+      icon: <Users className="size-5 text-muted-foreground" />,
       label: "Dépendance client",
       explanation: "Part de votre CA que représente votre plus gros client. Au-dessus de 50%, la perte de ce client serait critique",
       before: Math.round(dependencyPctBefore),
@@ -210,7 +210,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       group: "securite",
     },
     {
-      icon: <CalendarDays className="size-5 text-[#5682F2]" />,
+      icon: <CalendarDays className="size-5 text-muted-foreground" />,
       label: "Jours libres",
       explanation: "Jours non travaillés dans l'année : week-ends supplémentaires + vacances. Plus de temps pour vous",
       before: freedomDaysBefore,
@@ -222,7 +222,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       group: "temps",
     },
     {
-      icon: <Timer className="size-5 text-[#4ade80]" />,
+      icon: <Timer className="size-5 text-muted-foreground" />,
       label: "Jours facturés",
       explanation: "Nombre total de jours travaillés et facturés sur l'année. Attention au risque de surcharge",
       before: workingDaysBefore,
@@ -234,7 +234,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
       group: "temps",
     },
     {
-      icon: <Shield className="size-5 text-[#a78bfa]" />,
+      icon: <Shield className="size-5 text-muted-foreground" />,
       label: "Taux d'occupation",
       explanation: "Pourcentage du temps disponible (lun-ven) effectivement facturé. 100% = aucune marge pour l'imprévu",
       before: Math.round(utilizationBefore),

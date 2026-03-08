@@ -40,7 +40,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
         <div className="flex gap-3 text-xs text-muted-foreground/60">
           <span>
             Net total :{" "}
-            <strong className={totalNet >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}>
+            <strong className={totalNet >= 0 ? "text-foreground" : "text-[#f87171]"}>
               {fmt(totalNet)}&euro;
             </strong>
           </span>

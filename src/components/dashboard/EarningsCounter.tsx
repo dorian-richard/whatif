@@ -131,14 +131,14 @@ export function EarningsCounter() {
   return (
     <div className="bg-card rounded-2xl border border-border overflow-hidden">
       <div className="flex">
-        <div className="w-1 shrink-0 bg-[#4ade80]" />
+        <div className="w-1 shrink-0 bg-[#5682F2]" />
         <div className="flex-1 p-5">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
             <div className="flex items-center gap-2">
-              <div className="size-8 rounded-xl bg-[#4ade80]/12 flex items-center justify-center">
-                <Zap className="size-4 text-[#4ade80]" />
+              <div className="size-8 rounded-xl bg-[#5682F2]/12 flex items-center justify-center">
+                <Zap className="size-4 text-[#5682F2]" />
               </div>
-              <span className="text-xs font-semibold text-[#4ade80] uppercase tracking-wider">
+              <span className="text-xs font-semibold text-[#5682F2] uppercase tracking-wider">
                 Gagné {viewMode === "day" ? "aujourd\u2019hui" : viewMode === "week" ? "cette semaine" : "ce mois"}
               </span>
             </div>
@@ -154,7 +154,7 @@ export function EarningsCounter() {
                   className={cn(
                     "px-2.5 py-1 rounded-lg text-xs font-medium transition-all",
                     viewMode === key
-                      ? "bg-[#4ade80]/15 text-[#4ade80] ring-1 ring-[#4ade80]/30"
+                      ? "bg-[#5682F2]/15 text-[#5682F2] ring-1 ring-[#4ade80]/30"
                       : "bg-muted/50 text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -163,7 +163,7 @@ export function EarningsCounter() {
               ))}
             </div>
           </div>
-          <div className="text-3xl font-bold text-[#4ade80] tabular-nums">
+          <div className="text-3xl font-bold text-[#5682F2] tabular-nums">
             {fmt(Math.round(animatedValue))}&euro;
             <span className="text-sm font-normal text-muted-foreground/60 ml-2">net</span>
           </div>

@@ -104,8 +104,8 @@ export function SimulatorEngine() {
             </div>
             <div className="flex items-center gap-3 mt-2">
               <div className="flex items-center gap-1.5">
-                <Banknote className="size-4 text-[#4ade80]" />
-                <span className="text-sm text-[#4ade80] font-semibold">
+                <Banknote className="size-4 text-white/70" />
+                <span className="text-sm text-white/90 font-semibold">
                   Net : {fmt(Math.round(netMonthlyAfter))}&euro;/mois
                 </span>
               </div>
