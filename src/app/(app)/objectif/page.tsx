@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
-import { AVG_JOURS_OUVRES, getAnnualCA, reverseCA, computeNetFromCA } from "@/lib/simulation-engine";
+import { AVG_JOURS_OUVRES, getAnnualCA, reverseCA, computeNetFromCA, computeIS } from "@/lib/simulation-engine";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
 import {
@@ -14,6 +14,8 @@ import {
   Banknote,
   CalendarDays,
   Gauge,
+  ArrowLeftRight,
+  Info,
 } from "@/components/ui/icons";
 
 const STATUTS: BusinessStatus[] = ["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
@@ -43,10 +45,104 @@ interface GoalResult {
   requiredTJM: number;
   requiredDaysPerWeek: number;
   tauxEffectif: number;
+  tauxSocial: number;
+  tauxFiscal: number;
+  netResult: number; // net annuel (used in CA mode)
   color: string;
   ineligible: boolean;
   ineligibleReason?: string;
   difficulty: "accessible" | "moyen" | "ambitieux" | "difficile";
+}
+
+const PFU_RATE = 0.30;
+
+/** Compute net from CA for a specific status (without needing a full profile) */
+function computeNetForStatus(
+  annualCA: number,
+  status: BusinessStatus,
+  remType: RemunerationType,
+  mixtePartSalaire: number,
+  customIrRate?: number
+): number {
+  const cfg = BUSINESS_STATUS_CONFIG[status];
+  const urssaf = cfg.urssaf;
+  const ir = customIrRate ?? cfg.ir;
+
+  if (status === "micro") return annualCA * (1 - urssaf - ir);
+  if (cfg.is === 0) return annualCA * (1 - urssaf) * (1 - ir);
+
+  const isSASU = status === "sasu_is";
+  if (remType === "salaire") return annualCA * (1 - urssaf) * (1 - ir);
+  if (remType === "dividendes") {
+    const isAmt = computeIS(annualCA);
+    const afterIS = annualCA - isAmt;
+    if (isSASU) return afterIS * (1 - PFU_RATE);
+    return afterIS * (1 - urssaf) * (1 - ir);
+  }
+  // mixte
+  const salPart = mixtePartSalaire / 100;
+  const sCost = Math.min(annualCA * salPart, annualCA);
+  const sNet = sCost * (1 - urssaf) * (1 - ir);
+  const remaining = Math.max(0, annualCA - sCost);
+  const isAmt = computeIS(remaining);
+  const afterIS = remaining - isAmt;
+  const dNet = isSASU ? afterIS * (1 - PFU_RATE) : afterIS * (1 - urssaf) * (1 - ir);
+  return sNet + dNet;
+}
+
+/** Breakdown taux effectif into social charges vs fiscal (IR/IS) */
+function computeTauxBreakdown(
+  status: BusinessStatus,
+  requiredCA: number,
+  remType: RemunerationType,
+  mixtePartSalaire: number,
+  customIrRate?: number
+): { social: number; fiscal: number } {
+  if (requiredCA <= 0) return { social: 0, fiscal: 0 };
+  const cfg = BUSINESS_STATUS_CONFIG[status];
+  const urssaf = cfg.urssaf;
+  const ir = customIrRate ?? cfg.ir;
+
+  if (status === "micro") return { social: urssaf, fiscal: ir };
+  if (cfg.is === 0) return { social: urssaf, fiscal: (1 - urssaf) * ir };
+
+  const isSASU = status === "sasu_is";
+  if (remType === "salaire") return { social: urssaf, fiscal: (1 - urssaf) * ir };
+
+  if (remType === "dividendes") {
+    const isAmt = computeIS(requiredCA);
+    const afterIS = requiredCA - isAmt;
+    if (isSASU) {
+      return {
+        social: (afterIS * 0.172) / requiredCA,
+        fiscal: (isAmt + afterIS * 0.128) / requiredCA,
+      };
+    }
+    const socialAmt = afterIS * urssaf;
+    const irAmt = (afterIS - socialAmt) * ir;
+    return { social: socialAmt / requiredCA, fiscal: (isAmt + irAmt) / requiredCA };
+  }
+
+  // Mixte
+  const salPart = mixtePartSalaire / 100;
+  const salCost = requiredCA * salPart;
+  const salSocialAmt = salCost * urssaf;
+  const salIRAmt = (salCost - salSocialAmt) * ir;
+  const remaining = requiredCA - salCost;
+  const isAmt = computeIS(remaining);
+  const afterIS = remaining - isAmt;
+  let divSocialAmt: number, divIRAmt: number;
+  if (isSASU) {
+    divSocialAmt = afterIS * 0.172;
+    divIRAmt = afterIS * 0.128;
+  } else {
+    divSocialAmt = afterIS * urssaf;
+    divIRAmt = (afterIS - divSocialAmt) * ir;
+  }
+  return {
+    social: (salSocialAmt + divSocialAmt) / requiredCA,
+    fiscal: (isAmt + salIRAmt + divIRAmt) / requiredCA,
+  };
 }
 
 function getDifficulty(tjm: number): GoalResult["difficulty"] {
@@ -77,8 +173,10 @@ export default function ObjectifPage() {
     return Math.round(netAnnual / 12 / 100) * 100; // round to nearest 100
   }, [clients, vacationDaysPerMonth, profile]);
 
+  const [inputMode, setInputMode] = useState<"net" | "ca">("net");
   const [targetNet, setTargetNet] = useState<number | null>(null);
   const effectiveTargetNet = targetNet ?? userMonthlyNet;
+  const [targetMonthlyCA, setTargetMonthlyCA] = useState<number>(8000);
 
   // Compute vacation weeks from profile vacation days
   const profileVacationWeeks = useMemo(() => {
@@ -98,19 +196,32 @@ export default function ObjectifPage() {
 
   const targetAnnualNet = effectiveTargetNet * 12;
 
+  const targetAnnualCA = targetMonthlyCA * 12;
+
   const results = useMemo((): GoalResult[] => {
     return STATUTS.map((s) => {
       const cfg = BUSINESS_STATUS_CONFIG[s];
       const color = STATUT_COLORS[s] ?? "#5682F2";
       const remType = (s === "eurl_is" || s === "sasu_is" || s === "sasu_ir") ? localRemType : "salaire";
 
-      const requiredCA = reverseCA(targetAnnualNet, s, remType, localMixte, customIrRate);
+      let requiredCA: number;
+      let netResult: number;
+
+      if (inputMode === "net") {
+        requiredCA = reverseCA(targetAnnualNet, s, remType, localMixte, customIrRate);
+        netResult = targetAnnualNet;
+      } else {
+        requiredCA = targetAnnualCA;
+        netResult = computeNetForStatus(targetAnnualCA, s, remType, localMixte, customIrRate);
+      }
+
       const requiredTJM = workedDaysPerYear > 0 ? requiredCA / workedDaysPerYear : 0;
       const requiredDaysPerWeek = workedWeeks > 0 && requiredTJM > 0
         ? requiredCA / (workedWeeks * requiredTJM)
         : 0;
 
-      const tauxEffectif = requiredCA > 0 ? (requiredCA - targetAnnualNet) / requiredCA : 0;
+      const tauxEffectif = requiredCA > 0 ? (requiredCA - netResult) / requiredCA : 0;
+      const breakdown = computeTauxBreakdown(s, requiredCA, remType, localMixte, customIrRate);
 
       const ineligible = s === "micro" && requiredCA > MICRO_PLAFOND;
 
@@ -121,22 +232,29 @@ export default function ObjectifPage() {
         requiredTJM,
         requiredDaysPerWeek,
         tauxEffectif,
+        tauxSocial: breakdown.social,
+        tauxFiscal: breakdown.fiscal,
+        netResult,
         color,
         ineligible,
         ineligibleReason: ineligible ? `CA requis dépasse le plafond micro (${fmt(MICRO_PLAFOND)} €)` : undefined,
         difficulty: getDifficulty(requiredTJM),
       };
     });
-  }, [targetAnnualNet, localRemType, localMixte, workedDaysPerYear, workedWeeks, customIrRate]);
+  }, [targetAnnualNet, targetAnnualCA, inputMode, localRemType, localMixte, workedDaysPerYear, workedWeeks, customIrRate]);
 
-  // Best = lowest required TJM among eligible
+  // Best = lowest required TJM (net mode) or highest net result (CA mode)
   const best = useMemo(() => {
     const eligible = results.filter((r) => !r.ineligible && isFinite(r.requiredTJM));
     if (eligible.length === 0) return results[0];
+    if (inputMode === "ca") {
+      return eligible.reduce((a, b) => (a.netResult > b.netResult ? a : b));
+    }
     return eligible.reduce((a, b) => (a.requiredTJM < b.requiredTJM ? a : b));
-  }, [results]);
+  }, [results, inputMode]);
 
   const maxTJM = Math.max(...results.filter((r) => isFinite(r.requiredTJM)).map((r) => r.requiredTJM), 1);
+  const maxNet = Math.max(...results.map((r) => r.netResult), 1);
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
@@ -148,32 +266,112 @@ export default function ObjectifPage() {
         </p>
       </div>
 
-      {/* Goal slider */}
+      {/* Mode toggle + Goal slider */}
       <div className="bg-card rounded-2xl border border-border p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Mon objectif net mensuel</div>
-            <div className="text-3xl font-bold fn-gradient-text">{fmt(effectiveTargetNet)} &euro;/mois</div>
-          </div>
-          <div className="text-right">
-            <div className="text-xs text-muted-foreground/60">Soit par an</div>
-            <div className="text-lg font-bold text-foreground">{fmt(targetAnnualNet)} &euro;</div>
-          </div>
+        {/* Mode toggle */}
+        <div className="flex items-center gap-2 mb-5">
+          <button
+            onClick={() => setInputMode("net")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all",
+              inputMode === "net"
+                ? "bg-primary/15 text-primary ring-1 ring-primary/30"
+                : "bg-muted/50 text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Net mensuel
+          </button>
+          <ArrowLeftRight className="size-3.5 text-muted-foreground/40" />
+          <button
+            onClick={() => setInputMode("ca")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all",
+              inputMode === "ca"
+                ? "bg-primary/15 text-primary ring-1 ring-primary/30"
+                : "bg-muted/50 text-muted-foreground hover:text-foreground"
+            )}
+          >
+            CA brut mensuel
+          </button>
         </div>
-        <input
-          type="range"
-          min={1500}
-          max={15000}
-          step={100}
-          value={effectiveTargetNet}
-          onChange={(e) => setTargetNet(Number(e.target.value))}
-          className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
-        />
-        <div className="flex justify-between text-xs text-muted-foreground/60 mt-2">
-          <span>1 500 &euro;</span>
-          <span>8 000 &euro;</span>
-          <span>15 000 &euro;</span>
-        </div>
+
+        {inputMode === "net" ? (
+          <>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Mon objectif net mensuel</div>
+                <div className="flex items-baseline gap-3">
+                  <input
+                    type="number"
+                    min={500}
+                    max={50000}
+                    step={100}
+                    value={effectiveTargetNet}
+                    onChange={(e) => setTargetNet(Math.max(500, Number(e.target.value)))}
+                    className="text-3xl font-bold fn-gradient-text bg-transparent border-none outline-none w-32 tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  <span className="text-lg text-muted-foreground/60">&euro;/mois</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-muted-foreground/60">Soit par an</div>
+                <div className="text-lg font-bold text-foreground">{fmt(targetAnnualNet)} &euro;</div>
+              </div>
+            </div>
+            <input
+              type="range"
+              min={1500}
+              max={25000}
+              step={100}
+              value={Math.min(effectiveTargetNet, 25000)}
+              onChange={(e) => setTargetNet(Number(e.target.value))}
+              className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground/60 mt-2">
+              <span>1 500 &euro;</span>
+              <span>12 500 &euro;</span>
+              <span>25 000 &euro;</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Mon CA brut mensuel</div>
+                <div className="flex items-baseline gap-3">
+                  <input
+                    type="number"
+                    min={1000}
+                    max={100000}
+                    step={500}
+                    value={targetMonthlyCA}
+                    onChange={(e) => setTargetMonthlyCA(Math.max(1000, Number(e.target.value)))}
+                    className="text-3xl font-bold fn-gradient-text bg-transparent border-none outline-none w-32 tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  <span className="text-lg text-muted-foreground/60">&euro;/mois</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-muted-foreground/60">Soit par an</div>
+                <div className="text-lg font-bold text-foreground">{fmt(targetAnnualCA)} &euro;</div>
+              </div>
+            </div>
+            <input
+              type="range"
+              min={2000}
+              max={40000}
+              step={500}
+              value={Math.min(targetMonthlyCA, 40000)}
+              onChange={(e) => setTargetMonthlyCA(Number(e.target.value))}
+              className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground/60 mt-2">
+              <span>2 000 &euro;</span>
+              <span>20 000 &euro;</span>
+              <span>40 000 &euro;</span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Vacation + Remuneration controls */}
@@ -253,7 +451,11 @@ export default function ObjectifPage() {
           <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">Statut le plus avantageux</div>
           <div className="text-lg font-bold text-foreground">{best.label}</div>
           <div className="text-sm text-muted-foreground">
-            TJM minimum {fmt(best.requiredTJM)} &euro; &middot; CA requis {fmt(best.requiredCA)} &euro;/an
+            {inputMode === "net" ? (
+              <>TJM minimum {fmt(best.requiredTJM)} &euro; &middot; CA requis {fmt(best.requiredCA)} &euro;/an</>
+            ) : (
+              <>Net {fmt(best.netResult / 12)} &euro;/mois &middot; TJM équivalent {fmt(best.requiredTJM)} &euro;</>
+            )}
           </div>
         </div>
         <div className={cn("px-3 py-1.5 rounded-full text-xs font-bold", DIFFICULTY_CONFIG[best.difficulty].bg)}
@@ -266,7 +468,9 @@ export default function ObjectifPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
         {results.map((r) => {
           const isBest = r.status === best.status && !r.ineligible;
-          const barWidth = maxTJM > 0 && isFinite(r.requiredTJM) ? (r.requiredTJM / maxTJM) * 100 : 0;
+          const barWidth = inputMode === "net"
+            ? (maxTJM > 0 && isFinite(r.requiredTJM) ? (r.requiredTJM / maxTJM) * 100 : 0)
+            : (maxNet > 0 ? (r.netResult / maxNet) * 100 : 0);
           const diffCfg = DIFFICULTY_CONFIG[r.difficulty];
 
           return (
@@ -312,15 +516,22 @@ export default function ObjectifPage() {
               <h3 className="text-base font-bold text-foreground mb-1">{r.label}</h3>
               <p className="text-xs text-muted-foreground/60 mb-4">{BUSINESS_STATUS_CONFIG[r.status].regime}</p>
 
-              {/* TJM - big number */}
+              {/* Big number: TJM (net mode) or Net mensuel (CA mode) */}
               <div className="mb-4">
-                <div className="text-2xl font-bold" style={{ color: r.color }}>
-                  {fmt(r.requiredTJM)} &euro;
-                  <span className="text-sm font-normal text-muted-foreground/60">/jour</span>
-                </div>
+                {inputMode === "net" ? (
+                  <div className="text-2xl font-bold" style={{ color: r.color }}>
+                    {fmt(r.requiredTJM)} &euro;
+                    <span className="text-sm font-normal text-muted-foreground/60">/jour</span>
+                  </div>
+                ) : (
+                  <div className="text-2xl font-bold" style={{ color: r.color }}>
+                    {fmt(r.netResult / 12)} &euro;
+                    <span className="text-sm font-normal text-muted-foreground/60">/mois net</span>
+                  </div>
+                )}
               </div>
 
-              {/* TJM bar (inverted: lower = better) */}
+              {/* Bar */}
               <div className="h-2 bg-muted/50 rounded-full mb-5 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-500"
@@ -330,19 +541,40 @@ export default function ObjectifPage() {
 
               {/* Details */}
               <div className="space-y-2.5 text-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Banknote className="size-3.5" />
-                    <span>CA requis</span>
+                {inputMode === "net" ? (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Banknote className="size-3.5" />
+                      <span>CA requis</span>
+                    </div>
+                    <span className="font-medium text-foreground">{fmt(r.requiredCA)} &euro;</span>
                   </div>
-                  <span className="font-medium text-foreground">{fmt(r.requiredCA)} &euro;</span>
-                </div>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <CalendarDays className="size-3.5" />
+                      <span>TJM équiv.</span>
+                    </div>
+                    <span className="font-medium text-foreground">{fmt(r.requiredTJM)} &euro;</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Gauge className="size-3.5" />
                     <span>Taux effectif</span>
                   </div>
                   <span className="font-bold text-foreground">{Math.round(r.tauxEffectif * 100)}%</span>
+                </div>
+                {/* Breakdown: cotisations sociales + impôts */}
+                <div className="ml-5.5 space-y-1 text-xs text-muted-foreground/80">
+                  <div className="flex items-center justify-between">
+                    <span>Cotisations sociales</span>
+                    <span>{Math.round(r.tauxSocial * 100)}%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Impôts (IR/IS)</span>
+                    <span>{Math.round(r.tauxFiscal * 100)}%</span>
+                  </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-muted-foreground">
@@ -358,22 +590,37 @@ export default function ObjectifPage() {
       </div>
 
       {/* Context: expenses reminder */}
+      {inputMode === "net" && (
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <div className="flex items-center gap-3">
+            <CircleAlert className="size-5 text-[#F4BE7E] shrink-0" />
+            <div className="text-sm text-muted-foreground">
+              Ton objectif de <strong className="text-foreground">{fmt(effectiveTargetNet)} &euro; net/mois</strong> inclut tes charges de vie.
+              Avec <strong className="text-foreground">{fmt(monthlyExpenses)} &euro;/mois</strong> de charges,
+              il te reste <strong className={cn(effectiveTargetNet - monthlyExpenses >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
+                {fmt(effectiveTargetNet - monthlyExpenses)} &euro;
+              </strong> d&apos;épargne/loisirs.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Info: taux effectif explanation */}
       <div className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-3">
-          <CircleAlert className="size-5 text-[#F4BE7E] shrink-0" />
+          <Info className="size-5 text-muted-foreground/60 shrink-0" />
           <div className="text-sm text-muted-foreground">
-            Ton objectif de <strong className="text-foreground">{fmt(effectiveTargetNet)} &euro; net/mois</strong> inclut tes charges de vie.
-            Avec <strong className="text-foreground">{fmt(monthlyExpenses)} &euro;/mois</strong> de charges,
-            il te reste <strong className={cn(effectiveTargetNet - monthlyExpenses >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
-              {fmt(effectiveTargetNet - monthlyExpenses)} &euro;
-            </strong> d&apos;épargne/loisirs.
+            Le <strong className="text-foreground">taux effectif</strong> inclut les cotisations sociales (URSSAF)
+            <strong> et </strong> l&apos;impôt sur le revenu/sociétés.
+            Un comptable peut indiquer un taux inférieur s&apos;il ne montre que les cotisations sociales.
+            <strong className="text-foreground"> Hors TVA.</strong>
           </div>
         </div>
       </div>
 
       {/* Disclaimer */}
       <div className="text-center text-xs text-muted-foreground/60 pb-8">
-        Simulation indicative basée sur des taux moyens et {workedDaysPerYear} jours travaillés/an.
+        Simulation indicative &middot; Hors TVA &middot; {workedDaysPerYear} jours travaillés/an &middot; Taux moyens.
         Consulte un expert-comptable pour un conseil personnalisé.
       </div>
     </div>
