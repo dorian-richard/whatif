@@ -135,11 +135,11 @@ export function Features() {
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#5682F2]/30 to-transparent" />
         </div>
 
-        {/* Pro features — grouped categories */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {PRO_GROUPS.map((g, i) => (
+        {/* Pro features — 2x2 grid + 1 full width */}
+        <div className="grid sm:grid-cols-2 gap-5 mb-5">
+          {PRO_GROUPS.slice(0, 4).map((g, i) => (
             <AnimateOnScroll key={g.title} delay={0.05 * i}>
-              <div className="relative bg-muted/40 border border-border rounded-2xl p-6 hover:bg-muted transition-all duration-300">
+              <div className="relative bg-muted/40 border border-border rounded-2xl p-6 hover:bg-muted transition-all duration-300 h-full">
                 <span className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white px-2 py-0.5 rounded-full">
                   Pro
                 </span>
@@ -166,6 +166,40 @@ export function Features() {
             </AnimateOnScroll>
           ))}
         </div>
+        {/* Last group — full width */}
+        {(() => {
+          const last = PRO_GROUPS[4];
+          if (!last) return null;
+          const LastIcon = last.icon;
+          return (
+            <AnimateOnScroll delay={0.2}>
+              <div className="relative bg-muted/40 border border-border rounded-2xl p-6 hover:bg-muted transition-all duration-300">
+                <span className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white px-2 py-0.5 rounded-full">
+                  Pro
+                </span>
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="size-10 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: `${last.color}15` }}
+                  >
+                    <LastIcon className="size-5" style={{ color: last.color }} />
+                  </div>
+                  <h3 className="text-base font-semibold text-foreground">{last.title}</h3>
+                </div>
+                <ul className="flex flex-wrap gap-x-8 gap-y-2">
+                  {last.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <svg className="size-4 text-[#4ade80] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </AnimateOnScroll>
+          );
+        })()}
       </div>
     </section>
   );
