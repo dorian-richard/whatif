@@ -408,6 +408,446 @@ export const BLOG_POSTS: BlogPost[] = [
       { label: "Comparateur de statuts", href: "/comparateur-statuts-freelance" },
     ],
   },
+
+  // ─── Article 4 : Devenir freelance ───
+  {
+    slug: "devenir-freelance-guide-2026",
+    title: "Devenir freelance en 2026 : le guide complet pour se lancer",
+    description:
+      "Comment devenir freelance en 2026 : démarches administratives, choix du statut, premiers clients, TJM, protection sociale. Guide étape par étape avec checklist.",
+    date: "2026-03-08",
+    readingTime: "15 min",
+    keywords: [
+      "devenir freelance",
+      "se lancer en freelance 2026",
+      "comment devenir freelance",
+      "freelance débutant",
+      "créer son activité freelance",
+    ],
+    sections: [
+      {
+        title: "Pourquoi devenir freelance en 2026",
+        content: `<p>En France, le nombre de travailleurs indépendants a dépassé les <strong>4 millions en 2025</strong>. Le freelancing n'est plus un choix marginal — c'est une trajectoire de carrière à part entière, portée par le télétravail, la pénurie de talents tech, et le désir d'autonomie.</p>
+<p>Les avantages concrets :</p>
+<ul>
+<li><strong>Revenus supérieurs</strong> : un développeur senior facture 550-700€/jour en freelance, soit 115-150k€/an de CA — bien au-dessus d'un salaire CDI équivalent.</li>
+<li><strong>Liberté d'organisation</strong> : choix des missions, des horaires, du lieu de travail.</li>
+<li><strong>Diversification</strong> : travailler pour plusieurs clients réduit le risque par rapport à un seul employeur.</li>
+</ul>
+<p>Mais le freelancing a aussi ses défis : irrégularité des revenus, isolement, gestion administrative. Ce guide couvre tout ce qu'il faut savoir pour se lancer sereinement.</p>`,
+      },
+      {
+        title: "Étape 1 : Valider son projet avant de quitter son CDI",
+        content: `<p>Ne quitte pas ton emploi du jour au lendemain. Voici comment valider ton projet :</p>
+
+<p><strong>Teste en parallèle</strong></p>
+<p>Rien n'interdit de faire du freelance en parallèle de ton CDI (sauf clause d'exclusivité ou de non-concurrence). Prends une première mission le week-end ou le soir pour valider la demande, ton TJM et ta capacité à trouver des clients.</p>
+
+<p><strong>Constitue un matelas de trésorerie</strong></p>
+<p>La règle d'or : <strong>3 à 6 mois de charges fixes</strong> avant de te lancer à 100%. Si tes charges mensuelles sont de 3 000€, vise 9 000 à 18 000€ d'épargne. Cela te permet de refuser les missions sous-payées et de négocier sereinement.</p>
+
+<p><strong>Identifie ton marché</strong></p>
+<p>Pose-toi ces questions : quelle est ta compétence clé ? Qui sont tes clients cibles ? Quel problème résous-tu que d'autres ne résolvent pas ? Plus ta spécialisation est nette, plus tu trouveras facilement des missions bien payées.</p>
+
+<p><strong>Prépare ta rupture conventionnelle</strong></p>
+<p>Si tu es en CDI, négocie une rupture conventionnelle plutôt que de démissionner. Tu auras droit aux allocations chômage (ARE), qui peuvent être cumulées avec des revenus freelance sous certaines conditions, ou converties en ARCE (aide à la création d'entreprise = 60% de tes droits en 2 versements).</p>`,
+      },
+      {
+        title: "Étape 2 : Choisir son statut juridique",
+        content: `<p>C'est la décision qui a le plus d'impact financier. En résumé :</p>
+
+<p><strong>Tu débutes ou tu vises &lt; 77 700€/an de CA ?</strong></p>
+<p>→ <strong>Micro-entreprise</strong>. Création en 15 minutes sur le guichet unique (formalites.entreprises.gouv.fr). Charges de ~21% du CA, comptabilité minimale.</p>
+
+<p><strong>Tu vises 80 000 à 150 000€/an de CA ?</strong></p>
+<p>→ <strong>EURL à l'IS</strong>. Optimisation via mix salaire/dividendes. Charges plus élevées mais déduction des frais. Nécessite un expert-comptable (~150€/mois).</p>
+
+<p><strong>Tu veux la meilleure protection sociale ?</strong></p>
+<p>→ <strong>SASU à l'IS</strong>. Régime général (pas de RSI/SSI). Charges élevées (~65% sur le salaire) mais couverture maladie, retraite et prévoyance supérieures.</p>
+
+<p><strong>Tu veux zéro admin ?</strong></p>
+<p>→ <strong>Portage salarial</strong>. Tu es salarié, avec chômage et mutuelle. Il te reste ~48% du CA après frais de gestion et charges.</p>
+
+<p>Pour comparer précisément selon ton CA prévisionnel, utilise le <a href="/comparateur">comparateur de statuts Freelens</a>.</p>`,
+      },
+      {
+        title: "Étape 3 : Les démarches administratives",
+        content: `<p>Checklist des démarches selon ton statut :</p>
+
+<p><strong>Micro-entreprise (1 jour)</strong></p>
+<ul>
+<li>Inscription sur le guichet unique des formalités d'entreprise</li>
+<li>Choix de la catégorie BNC (Bénéfices Non Commerciaux) pour les prestations intellectuelles</li>
+<li>Demande d'ACRE (exonération 50% des cotisations la 1re année)</li>
+<li>Ouverture d'un compte bancaire dédié (obligatoire si CA &gt; 10 000€/an)</li>
+</ul>
+
+<p><strong>EURL / SASU (2-4 semaines)</strong></p>
+<ul>
+<li>Rédaction des statuts (modèle en ligne ou avocat ~500€)</li>
+<li>Dépôt du capital social (1€ minimum, 1 000€ recommandé)</li>
+<li>Publication d'une annonce légale (~150€)</li>
+<li>Immatriculation au greffe via le guichet unique (~70€)</li>
+<li>Choix d'un expert-comptable</li>
+<li>Ouverture du compte bancaire professionnel</li>
+<li>Souscription à une RC Pro (responsabilité civile professionnelle)</li>
+</ul>
+
+<p><strong>Dans tous les cas</strong></p>
+<ul>
+<li>Mutuelle santé (obligatoire en société, recommandée en micro)</li>
+<li>Prévoyance (maintien de salaire en cas d'arrêt — crucial en freelance)</li>
+<li>Assurance RC Pro (souvent exigée par les clients)</li>
+</ul>`,
+      },
+      {
+        title: "Étape 4 : Trouver ses premiers clients",
+        content: `<p>C'est l'angoisse n°1 du freelance débutant. Voici les canaux qui fonctionnent, classés par efficacité :</p>
+
+<p><strong>1. Ton réseau existant (50% des premières missions)</strong></p>
+<p>Anciens collègues, anciens managers, contacts LinkedIn. Envoie un message simple : "Je me lance en freelance sur [compétence]. Si tu connais quelqu'un qui cherche, n'hésite pas à me mettre en contact." La plupart des premières missions viennent du bouche-à-oreille.</p>
+
+<p><strong>2. Les plateformes freelance</strong></p>
+<p>Malt, Comet, Crème de la Crème, Freelance.com, Silkhom, Club Freelance. Crée un profil complet avec portfolio. Les plateformes prennent 5 à 15% de commission mais t'amènent des clients que tu n'aurais pas trouvés seul.</p>
+
+<p><strong>3. LinkedIn (canal d'acquisition gratuit le plus puissant)</strong></p>
+<p>Poste régulièrement sur ton expertise. Commente les posts de ton secteur. Contacte directement les CTO/VP Engineering des entreprises qui recrutent. Le freelance qui est visible sur LinkedIn ne manque jamais de missions.</p>
+
+<p><strong>4. Les ESN et sociétés de conseil</strong></p>
+<p>Capgemini, Accenture, Sopra, etc. travaillent souvent avec des freelances pour compléter leurs équipes. TJM légèrement plus bas mais volume garanti.</p>
+
+<p><strong>5. Les communautés tech</strong></p>
+<p>Meetups, conférences, Slack/Discord de ta technologie. Les missions trouvées via la communauté sont souvent mieux payées car tu es recommandé comme expert.</p>`,
+      },
+      {
+        title: "Étape 5 : Fixer son TJM et facturer",
+        content: `<p>Ne fixe pas ton TJM au hasard. La méthode :</p>
+
+<p><strong>Formule : TJM = (Revenu net cible annuel ÷ taux de rétention) ÷ jours facturés</strong></p>
+
+<p>Le taux de rétention, c'est ce qui te reste après charges et impôts : ~65% en micro, ~55% en EURL IS, ~48% en SASU IS.</p>
+
+<p>Exemple : tu vises 4 000€ net/mois en micro → 48 000€/an net → CA nécessaire = 48 000 / 0,65 = 73 850€ → TJM = 73 850 / 210 jours ≈ <strong>350€/jour</strong>.</p>
+
+<p>Utilise l'outil <a href="/objectif">Objectif Revenu Freelens</a> pour un calcul précis avec le barème fiscal en vigueur.</p>
+
+<p><strong>Facturation : les bases</strong></p>
+<ul>
+<li>Facture chaque fin de mois (ou selon le contrat)</li>
+<li>Mentions obligatoires : numéro de facture, SIRET, détail des prestations, montant HT/TTC</li>
+<li>Délai de paiement : 30 jours fin de mois est le standard</li>
+<li>Relance dès J+1 de retard — les impayés sont le fléau du freelance</li>
+</ul>`,
+      },
+      {
+        title: "Les erreurs fatales du freelance débutant",
+        content: `<p>Évite ces pièges qui font échouer 1 freelance sur 3 dans sa première année :</p>
+
+<p><strong>1. Se lancer sans trésorerie.</strong> Même avec un premier client signé, les délais de paiement (30-60 jours) signifient que tu ne seras pas payé avant 2 mois. Sans matelas, tu paniques et acceptes n'importe quoi.</p>
+
+<p><strong>2. Sous-facturer "pour décrocher".</strong> Un TJM trop bas attire les mauvais clients (exigeants, mauvais payeurs) et te bloque dans une spirale descendante. Facture à ta valeur dès le départ.</p>
+
+<p><strong>3. Dépendre d'un seul client.</strong> Si ton unique client te lâche, ton CA tombe à zéro. Vise au minimum 2 clients simultanés dès que possible. <a href="/signup">Freelens</a> te permet de simuler l'impact de la perte d'un client.</p>
+
+<p><strong>4. Négliger l'administratif.</strong> Cotisations URSSAF non provisionnées = régularisation douloureuse. Mets de côté 25-30% de chaque encaissement pour les charges et impôts.</p>
+
+<p><strong>5. S'isoler.</strong> Le freelancing peut être solitaire. Rejoins un coworking, une communauté de freelances, ou un collectif. Le réseau, c'est aussi du soutien moral.</p>`,
+      },
+    ],
+    cta: {
+      text: "Simuler mon lancement en freelance \u2192",
+      href: "/signup",
+      sub: "Calcule ton TJM idéal \u00B7 Compare les statuts \u00B7 Gratuit",
+    },
+    relatedLinks: [
+      { label: "Comparateur de statuts freelance", href: "/comparateur-statuts-freelance" },
+      { label: "Calculer son TJM", href: "/blog/combien-facturer-freelance-2026-tjm" },
+      { label: "Charges freelance 2026", href: "/blog/charges-freelance-2026-urssaf-impots" },
+      { label: "Simulateur de revenus", href: "/simulateur-revenus-freelance" },
+    ],
+  },
+
+  // ─── Article 5 : Trésorerie freelance ───
+  {
+    slug: "tresorerie-freelance-guide-gestion",
+    title: "Gérer sa trésorerie en freelance : le guide anti-galère",
+    description:
+      "Comment gérer sa trésorerie freelance : provisions charges, matelas de sécurité, runway, outils de suivi. Méthodes concrètes pour ne jamais être à sec.",
+    date: "2026-03-08",
+    readingTime: "11 min",
+    keywords: [
+      "trésorerie freelance",
+      "gestion trésorerie indépendant",
+      "provisions charges freelance",
+      "épargne freelance",
+      "runway freelance",
+    ],
+    sections: [
+      {
+        title: "Pourquoi la trésorerie est le nerf de la guerre",
+        content: `<p>En freelance, <strong>le cash ne suit jamais le travail</strong>. Tu travailles en janvier, tu factures fin janvier, tu es payé fin février (si le client paie à temps). Pendant ce temps, ton loyer, ta mutuelle et tes cotisations URSSAF, eux, ne t'attendent pas.</p>
+<p>Résultat : beaucoup de freelances rentables sur le papier se retrouvent <strong>en tension de trésorerie</strong>. Ce n'est pas un problème de revenus, c'est un problème de timing.</p>
+<p>La bonne nouvelle : quelques règles simples suffisent pour ne jamais être à sec.</p>`,
+      },
+      {
+        title: "Règle n°1 : Le matelas de sécurité (3-6 mois)",
+        content: `<p>Avant tout, constitue un <strong>matelas de trésorerie</strong> équivalent à 3 à 6 mois de charges fixes. Tes charges fixes incluent :</p>
+<ul>
+<li>Loyer / crédit immobilier</li>
+<li>Assurances (RC Pro, mutuelle, prévoyance)</li>
+<li>Abonnements (outils, coworking, téléphone)</li>
+<li>Expert-comptable</li>
+<li>Cotisations URSSAF estimées</li>
+<li>Charges personnelles incompressibles</li>
+</ul>
+
+<p><strong>Exemple</strong> : tes charges fixes = 3 500€/mois → matelas minimum = 10 500€, idéal = 21 000€.</p>
+
+<p>Ce matelas te permet de :</p>
+<ul>
+<li><strong>Refuser les missions sous-payées</strong> — tu n'es pas désespéré</li>
+<li><strong>Absorber les retards de paiement</strong> — un client qui paie à 60j au lieu de 30j ne te met pas en danger</li>
+<li><strong>Traverser un intercontrat</strong> — 1 à 2 mois sans mission arrivent à tout le monde</li>
+</ul>
+
+<p>Le concept de <strong>runway</strong> (combien de mois tu tiens sans revenus) est l'indicateur clé. Sur <a href="/signup">Freelens</a>, il est calculé automatiquement dans ton tableau de bord.</p>`,
+      },
+      {
+        title: "Règle n°2 : Provisionner 30% de chaque encaissement",
+        content: `<p>Dès que tu encaisses un paiement, <strong>transfère immédiatement 25 à 30%</strong> sur un compte épargne dédié. Cet argent n'est pas à toi — il appartient à l'URSSAF et aux impôts.</p>
+
+<p><strong>Répartition indicative pour un freelance en micro :</strong></p>
+<ul>
+<li>~21% pour les cotisations URSSAF</li>
+<li>~5-10% pour l'impôt sur le revenu</li>
+<li>~2-3% pour la CFE et imprévus</li>
+</ul>
+
+<p><strong>Pour un freelance en EURL/SASU IS :</strong></p>
+<ul>
+<li>~30-35% pour les charges sociales</li>
+<li>~10-15% pour l'IS</li>
+<li>~5% pour la CFE et imprévus</li>
+</ul>
+
+<p>L'erreur fatale : utiliser cet argent pour des dépenses courantes. Quand l'URSSAF envoie l'appel de cotisations, les freelances qui n'ont pas provisionné se retrouvent avec une dette de plusieurs milliers d'euros.</p>
+
+<p><strong>Méthode des 3 comptes :</strong></p>
+<ol>
+<li><strong>Compte courant pro</strong> — encaissements et dépenses pro</li>
+<li><strong>Compte épargne "charges"</strong> — provisions URSSAF + IR (ne pas toucher)</li>
+<li><strong>Compte épargne "sécurité"</strong> — matelas de trésorerie</li>
+</ol>`,
+      },
+      {
+        title: "Règle n°3 : Facturer vite, relancer fort",
+        content: `<p>Le délai entre la prestation et l'encaissement est ton ennemi. Réduis-le au maximum :</p>
+
+<p><strong>Facturer immédiatement.</strong> Ne laisse pas traîner. Facture le dernier jour ouvré du mois (ou dès la livraison pour les projets au forfait). Chaque jour de retard sur ta facture = 1 jour de retard sur ton paiement.</p>
+
+<p><strong>Conditions de paiement.</strong> 30 jours fin de mois est le standard. Pour les nouveaux clients ou les petites structures, négocie 15 jours ou le paiement à réception. Pour les grosses missions, demande un acompte de 30%.</p>
+
+<p><strong>Relances.</strong> Systématise tes relances :</p>
+<ul>
+<li>J-3 avant échéance : rappel courtois par email</li>
+<li>J+1 : relance formelle</li>
+<li>J+7 : appel téléphonique</li>
+<li>J+15 : mise en demeure</li>
+<li>J+30 : pénalités de retard (mentionnées dans tes CGV)</li>
+</ul>
+
+<p><strong>Pénalités de retard</strong> : la loi t'autorise à appliquer des pénalités (taux BCE × 3 + indemnité forfaitaire de 40€). Mentionne-les dans tes factures — ça dissuade les mauvais payeurs.</p>`,
+      },
+      {
+        title: "Règle n°4 : Anticiper les périodes creuses",
+        content: `<p>Tout freelance connaît des <strong>creux saisonniers</strong>. En France, le freelancing tech suit un cycle prévisible :</p>
+<ul>
+<li><strong>Janvier-février</strong> : reprise lente, budgets en validation</li>
+<li><strong>Mars-juin</strong> : pleine activité</li>
+<li><strong>Juillet-août</strong> : ralentissement (vacances clients)</li>
+<li><strong>Septembre-novembre</strong> : pic d'activité</li>
+<li><strong>Décembre</strong> : ralentissement (fêtes, clôtures budgétaires)</li>
+</ul>
+
+<p><strong>Stratégies pour lisser les revenus :</strong></p>
+<ul>
+<li><strong>Contrats longs</strong> : un client au forfait mensuel garantit un revenu minimum même en période creuse</li>
+<li><strong>Diversification</strong> : 2-3 clients en parallèle réduit l'impact si l'un met en pause</li>
+<li><strong>Prospection continue</strong> : ne prospecte pas seulement quand tu es en intercontrat — c'est trop tard. Consacre 2-3h/semaine à la prospection même quand tu es full.</li>
+</ul>
+
+<p>Sur <a href="/signup">Freelens</a>, le graphique mensuel te montre la <strong>saisonnalité de tes revenus</strong> et te permet de simuler l'impact d'un intercontrat ou de la perte d'un client.</p>`,
+      },
+      {
+        title: "Les indicateurs de trésorerie à surveiller",
+        content: `<p>Voici les 4 métriques essentielles à suivre chaque mois :</p>
+
+<p><strong>1. Le runway</strong></p>
+<p>Trésorerie disponible ÷ charges mensuelles = nombre de mois que tu tiens sans revenus. <strong>Objectif : toujours &gt; 3 mois.</strong> En dessous de 2 mois, c'est la zone rouge.</p>
+
+<p><strong>2. Le taux de dépendance client</strong></p>
+<p>CA de ton plus gros client ÷ CA total. <strong>Au-dessus de 50%, tu es en danger.</strong> Si ce client part, tu perds plus de la moitié de tes revenus. Diversifie.</p>
+
+<p><strong>3. Le net mensuel réel</strong></p>
+<p>CA facturé - charges sociales provisionnées - IR provisionné - charges fixes. C'est ce qui reste vraiment dans ta poche. Si ce chiffre est négatif certains mois, il faut réagir.</p>
+
+<p><strong>4. Le délai moyen de paiement (DSO)</strong></p>
+<p>Nombre moyen de jours entre la facturation et l'encaissement. L'objectif est &lt; 35 jours. Au-delà de 45 jours, tes clients te font crédit gratuitement.</p>
+
+<p>Ces indicateurs sont disponibles en un coup d'œil sur le <a href="/signup">tableau de bord Freelens</a>.</p>`,
+      },
+    ],
+    cta: {
+      text: "Surveiller ma trésorerie freelance \u2192",
+      href: "/signup",
+      sub: "Runway \u00B7 Dépendance client \u00B7 Net mensuel",
+    },
+    relatedLinks: [
+      { label: "Simulateur de revenus freelance", href: "/simulateur-revenus-freelance" },
+      { label: "Charges freelance 2026", href: "/blog/charges-freelance-2026-urssaf-impots" },
+      { label: "Devenir freelance", href: "/blog/devenir-freelance-guide-2026" },
+      { label: "Diversifier ses revenus", href: "/blog/diversifier-revenus-freelance" },
+    ],
+  },
+
+  // ─── Article 6 : Diversifier ses revenus ───
+  {
+    slug: "diversifier-revenus-freelance",
+    title: "Freelance : comment diversifier ses revenus et réduire les risques",
+    description:
+      "Stratégies pour diversifier ses revenus en freelance : multi-clients, mix TJM/forfait/mission, revenus passifs, pipeline commercial. Avec exemples concrets.",
+    date: "2026-03-08",
+    readingTime: "12 min",
+    keywords: [
+      "diversifier revenus freelance",
+      "multi client freelance",
+      "risque freelance",
+      "revenus passifs freelance",
+      "pipeline commercial freelance",
+    ],
+    sections: [
+      {
+        title: "Le piège du client unique",
+        content: `<p>46% des freelances français tirent <strong>plus de 70% de leur CA d'un seul client</strong>. C'est confortable… jusqu'au jour où ce client réduit son budget, change de prestataire, ou fait faillite.</p>
+<p>Quand ton client principal représente 80% de tes revenus et qu'il met fin à la mission, tu te retrouves du jour au lendemain avec un CA quasi nul et la pression de retrouver une mission immédiatement — souvent au rabais.</p>
+<p><strong>La diversification n'est pas un luxe, c'est une assurance vie.</strong> Voici comment la mettre en place concrètement.</p>`,
+      },
+      {
+        title: "Stratégie 1 : Le multi-clients (2 à 4 simultanés)",
+        content: `<p>L'approche la plus directe : travailler pour plusieurs clients en même temps.</p>
+
+<p><strong>Le modèle 3+1</strong></p>
+<p>Répartis ta semaine de travail :</p>
+<ul>
+<li><strong>Client principal</strong> : 2-3 jours/semaine (base stable, TJM ou forfait)</li>
+<li><strong>Client secondaire</strong> : 1-2 jours/semaine (diversification)</li>
+<li><strong>Missions ponctuelles / projets</strong> : le reste (marge élevée)</li>
+</ul>
+
+<p><strong>Objectif</strong> : qu'aucun client ne dépasse 50% de ton CA. Idéalement, le top client = 30-40%.</p>
+
+<p><strong>Comment convaincre tes clients ?</strong></p>
+<p>La plupart des clients tech acceptent les freelances à temps partiel. Sois transparent : "Je travaille 3 jours/semaine pour vous, et je suis disponible sur ces jours à 100%." Les clients préfèrent un freelance motivé 3j/semaine qu'un freelance démotivé 5j/semaine.</p>
+
+<p><strong>Gestion pratique</strong></p>
+<p>Bloque des jours fixes par client (ex : lundi-mardi-mercredi = Client A, jeudi-vendredi = Client B). Évite le context switching dans la même journée. Utilise des outils de time tracking pour facturer précisément.</p>`,
+      },
+      {
+        title: "Stratégie 2 : Mix TJM + forfait + mission",
+        content: `<p>Ne mets pas tous tes œufs dans le même panier tarifaire. Combine les 3 modes de facturation :</p>
+
+<p><strong>TJM (Taux Journalier Moyen)</strong></p>
+<p>Ta base stable. Tu factures au jour. Avantage : prévisible, simple. Inconvénient : tu vends ton temps, pas ta valeur. Si tu ne travailles pas, tu ne gagnes rien.</p>
+
+<p><strong>Forfait mensuel</strong></p>
+<p>Un montant fixe par mois pour un périmètre défini. Le <strong>meilleur mode pour la récurrence</strong>. Exemples : maintenance applicative, support technique, consulting récurrent. Même en vacances ou malade, le forfait continue — c'est ton filet de sécurité.</p>
+
+<p><strong>Mission ponctuelle (forfait projet)</strong></p>
+<p>Prix fixe pour un livrable. Marge potentiellement très élevée si tu es rapide. Exemples : audit technique, développement d'une feature, migration. Tu peux facturer la valeur créée, pas le temps passé.</p>
+
+<p><strong>Le mix idéal :</strong></p>
+<ul>
+<li>50-60% du CA en TJM ou forfait mensuel (récurrence)</li>
+<li>20-30% en missions ponctuelles (marge)</li>
+<li>10-20% en activités à valeur ajoutée (formation, conseil, produits)</li>
+</ul>
+
+<p>Sur <a href="/signup">Freelens</a>, tu peux configurer chaque client avec son mode de facturation (TJM, forfait, mission) et visualiser la répartition dans ton tableau de bord.</p>`,
+      },
+      {
+        title: "Stratégie 3 : Le pipeline commercial",
+        content: `<p>La diversification ne se fait pas le jour où tu perds un client. Elle se prépare <strong>en continu</strong>.</p>
+
+<p><strong>Le concept de pipeline</strong></p>
+<p>Comme un commercial, tu dois avoir des prospects à différents stades :</p>
+<ul>
+<li><strong>Leads</strong> : contacts identifiés, pas encore approchés</li>
+<li><strong>Devis envoyé</strong> : proposition commerciale transmise</li>
+<li><strong>Signé</strong> : contrat validé, mission à venir</li>
+<li><strong>Actif</strong> : mission en cours</li>
+</ul>
+
+<p><strong>La règle du 3x</strong> : pour signer 1 mission, il faut en moyenne 3 propositions envoyées, soit 9 contacts qualifiés. Alimente ton pipeline en permanence, même quand tu es full.</p>
+
+<p><strong>Prospection hebdomadaire (2-3h/semaine)</strong></p>
+<ul>
+<li>1h : veille LinkedIn + commentaires sur des posts de ton secteur</li>
+<li>1h : contacts directs (messages personnalisés à des prospects identifiés)</li>
+<li>30min : suivi des propositions en cours</li>
+</ul>
+
+<p>Le <a href="/signup">pipeline Freelens</a> te permet de suivre tes prospects, leur CA estimé et la probabilité de conversion.</p>`,
+      },
+      {
+        title: "Stratégie 4 : Les revenus complémentaires",
+        content: `<p>Au-delà des missions client, d'autres sources de revenus réduisent ta dépendance :</p>
+
+<p><strong>Formation et mentorat</strong></p>
+<p>Si tu es expert sur un sujet, la formation se facture 1 200 à 2 500€/jour (2 à 4x un TJM classique). Organismes de formation, entreprises en interne, bootcamps — la demande est forte. Tu peux aussi proposer du mentorat individuel à 100-200€/h.</p>
+
+<p><strong>Contenu et communauté</strong></p>
+<p>Newsletter payante, e-book, cours en ligne, YouTube. Ces revenus sont faibles au début mais deviennent passifs avec le temps. Un cours Udemy ou une formation Teachable peut générer 500-2 000€/mois en pilote automatique après quelques mois de travail initial.</p>
+
+<p><strong>Micro-SaaS ou produits numériques</strong></p>
+<p>Templates, plugins, outils — si tu identifies un besoin récurrent chez tes clients, transforme ta solution en produit. Le passage de freelance à "freelance + produit" est la transition la plus puissante pour l'indépendance financière.</p>
+
+<p><strong>Open source sponsorisé</strong></p>
+<p>Si tu maintiens un projet open source populaire, les sponsorships GitHub ou Open Collective peuvent compléter tes revenus.</p>`,
+      },
+      {
+        title: "Mesurer sa diversification",
+        content: `<p>Comment savoir si tu es bien diversifié ? Voici les indicateurs clés :</p>
+
+<p><strong>Indice de concentration (Herfindahl)</strong></p>
+<p>Somme des carrés des parts de CA de chaque client. Plus c'est bas, mieux c'est.</p>
+<ul>
+<li>1 client à 100% → indice = 10 000 (danger absolu)</li>
+<li>2 clients à 50/50 → indice = 5 000 (insuffisant)</li>
+<li>3 clients à 40/30/30 → indice = 3 400 (correct)</li>
+<li>4 clients à 25/25/25/25 → indice = 2 500 (excellent)</li>
+</ul>
+
+<p><strong>Part du CA récurrent</strong></p>
+<p>Pourcentage du CA en TJM régulier ou forfait mensuel. <strong>Objectif : &gt; 60%</strong>. En dessous, tu dépends trop des missions ponctuelles et tu risques des trous de trésorerie.</p>
+
+<p><strong>Top client &lt; 40%</strong></p>
+<p>Si un client représente plus de 40% de ton CA, tu es en zone de risque. Plus de 60%, c'est critique.</p>
+
+<p>Tous ces indicateurs sont calculés automatiquement dans le <a href="/signup">tableau de bord Freelens</a>. Tu peux aussi simuler la perte d'un client pour voir l'impact sur tes revenus avec le simulateur de scénarios.</p>`,
+      },
+    ],
+    cta: {
+      text: "Analyser ma diversification \u2192",
+      href: "/signup",
+      sub: "Dépendance client \u00B7 Récurrence \u00B7 Simulation de risque",
+    },
+    relatedLinks: [
+      { label: "Simulateur de revenus freelance", href: "/simulateur-revenus-freelance" },
+      { label: "Gérer sa trésorerie", href: "/blog/tresorerie-freelance-guide-gestion" },
+      { label: "Combien facturer en freelance", href: "/blog/combien-facturer-freelance-2026-tjm" },
+      { label: "Devenir freelance", href: "/blog/devenir-freelance-guide-2026" },
+    ],
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
