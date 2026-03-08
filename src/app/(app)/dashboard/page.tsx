@@ -126,6 +126,12 @@ export default function DashboardPage() {
   const annualCA = projection.before.reduce((a, b) => a + b, 0);
   const currentMonth = new Date().getMonth();
   const currentMonthCA = projection.before[currentMonth];
+  const activeClientsCount = profile.clients.filter((c) => {
+    if (c.isActive === false) return false;
+    const start = c.startMonth ?? 0;
+    const end = c.endMonth ?? 11;
+    return currentMonth >= start && currentMonth <= end;
+  }).length;
   const expenses = profile.monthlyExpenses;
 
   const statusConfig = BUSINESS_STATUS_CONFIG[profile.businessStatus ?? "micro"];
@@ -166,7 +172,7 @@ export default function DashboardPage() {
     Math.min(100, 100 - Math.max(0, dependencyPct - 30)), // diversification (>30% bad)
     netAfterExpenses > 0 ? Math.min(100, (netAfterExpenses / (expenses * 12)) * 100) : 0, // profitability
     Math.min(100, utilizationPct),                    // utilization
-    profile.clients.length >= 2 ? 100 : profile.clients.length * 50, // nb clients
+    activeClientsCount >= 2 ? 100 : activeClientsCount * 50, // nb clients
   ];
   const healthScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
   const meteo = getMeteo(healthScore);
@@ -249,7 +255,7 @@ export default function DashboardPage() {
                       ["Métrique", "Valeur"],
                       ["CA mensuel", `${fmt(currentMonthCA)}€`],
                       ["CA annuel", `${fmt(annualCA)}€`],
-                      ["Clients actifs", String(profile.clients.length)],
+                      ["Clients actifs", String(activeClientsCount)],
                       ["Runway", `${runway.toFixed(1)} mois`],
                       ["Récurrent", `${recurringPct.toFixed(0)}%`],
                       ["Top client", `${dependencyPct.toFixed(0)}%`],
@@ -313,7 +319,7 @@ export default function DashboardPage() {
       <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-1 md:grid md:grid-cols-4 md:overflow-visible md:pb-0">
         {[
           { icon: <Wallet className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "CA mensuel", value: `${fmt(currentMonthCA)}\u20AC`, sub: `${fmt(annualCA)}\u20AC/an`, tip: "CA du mois en cours basé sur les jours ouvrés réels" },
-          { icon: <Users className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "Clients actifs", value: String(profile.clients.length), sub: `${totalDaysPerWeek}j/sem facturés`, tip: "Nombre de clients configurés dans ton profil" },
+          { icon: <Users className="size-4 text-[#5682F2]" />, iconBg: "bg-[#5682F2]/15", label: "Clients actifs", value: String(activeClientsCount), sub: `${totalDaysPerWeek}j/sem facturés`, tip: "Clients actifs ce mois-ci (selon période de contrat)" },
           { icon: <LifeBuoy className="size-4 text-[#4ade80]" />, iconBg: "bg-[#4ade80]/12", label: "Runway", value: `${runway.toFixed(1)} mois`, sub: `${fmt(profile.savings)}\u20AC de trésorerie`, tip: "Mois de trésorerie restante si ton CA tombe à zéro" },
           { icon: <RefreshCw className="size-4 text-[#a78bfa]" />, iconBg: "bg-[#a78bfa]/12", label: "Récurrent", value: `${recurringPct.toFixed(0)}%`, sub: recurringPct >= 60 ? "Stable" : "À renforcer", tip: "Part du CA en TJM ou forfait (revenu prévisible)" },
           { icon: <Shield className="size-4 text-[#fbbf24]" />, iconBg: "bg-[#fbbf24]/12", label: "Top client", value: `${dependencyPct.toFixed(0)}%`, sub: dependencyPct > 50 ? "Risque concentration" : "Diversifié", tip: "Part du CA venant de ton plus gros client. Au-dessus de 50% = risque de dépendance" },
