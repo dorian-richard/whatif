@@ -261,25 +261,31 @@
 
 .blog-content table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.8125rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
   border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid var(--border);
+  margin: 1.5rem 0;
 }
 
 .blog-content thead th {
   background-color: var(--muted);
   color: var(--foreground);
-  font-weight: 600;
+  font-weight: 700;
   text-align: left;
-  padding: 0.625rem 0.75rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0.875rem 1rem;
+  border-bottom: 2px solid var(--border);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
 }
 
 .blog-content tbody td {
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border);
+  line-height: 1.6;
 }
 
 .blog-content tbody tr:last-child td {
@@ -287,11 +293,44 @@
 }
 
 .blog-content tbody tr:nth-child(even) {
+  background-color: color-mix(in srgb, var(--muted) 50%, transparent);
+}
+
+.blog-content tbody tr:hover {
   background-color: var(--muted);
 }
 
 .blog-content table strong {
   color: var(--foreground);
+}
+
+.blog-content tbody td:first-child {
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+/* ========= BLOG CONTENT GENERAL ========= */
+
+.blog-content p {
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
+}
+
+.blog-content h2,
+.blog-content h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog-content ul,
+.blog-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.blog-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
 }
 
 @media (max-width: 640px) {

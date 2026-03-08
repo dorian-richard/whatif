@@ -12,7 +12,7 @@ const QUESTIONS = [
   },
   {
     q: "Quelle diff\u00e9rence entre Free et Pro ?",
-    a: "Le plan Free te donne acc\u00e8s au simulateur, au comparateur de statuts, \u00e0 l\u2019objectif revenu et au benchmark TJM (3 clients max, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients et sc\u00e9narios illimit\u00e9s, suivi des paiements, pipeline commercial, calendrier fiscal, simulateur de tr\u00e9sorerie, historique & tendances, et export PDF & CSV.",
+    a: "Le plan Free te donne acc\u00e8s au simulateur, au comparateur de statuts, \u00e0 l\u2019objectif revenu et au benchmark TJM (3 clients max, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients et sc\u00e9narios illimit\u00e9s, suivi des factures et paiements, gestion de tes prospects, calendrier avec toutes tes \u00e9ch\u00e9ances fiscales (URSSAF, TVA, IR), pr\u00e9visions de tr\u00e9sorerie, comparaison d\u2019une ann\u00e9e sur l\u2019autre, estimation retraite et aides \u00e0 la cr\u00e9ation (ACRE), devis et factures, et export PDF & CSV.",
   },
   {
     q: "Les calculs sont-ils fiables ?",
