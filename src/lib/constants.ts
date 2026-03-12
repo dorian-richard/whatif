@@ -215,10 +215,10 @@ export const BUSINESS_STATUS_CONFIG: Record<
     urssaf: 0.50,
     ir: 0.30,
     is: 0,
-    desc: "Assimilé salarié ~50% charges · Frais gestion ~8% · Pas de création d'entreprise",
+    desc: "Assimilé salarié ~50% charges tout compris (cotisations + frais de gestion) · Pas de création d'entreprise",
     regime: "Assimilé salarié (portage)",
     details:
-      "Salarié d'une société de portage qui facture vos clients. Charges sociales ~50% (patronales + salariales) gérées par le porteur. Frais de gestion ~5-10% du CA en sus. Protection sociale CDI (maladie, retraite, chômage). Bulletin de paie mensuel. Idéal pour débuter ou si création d'entreprise impossible (visa, simplicité).",
+      "Salarié d'une société de portage qui facture vos clients. Charges tout compris ~50% du CA (cotisations patronales + salariales + frais de gestion du porteur). Protection sociale CDI (maladie, retraite, chômage). Bulletin de paie mensuel. Idéal pour débuter ou si création d'entreprise impossible (visa, simplicité).",
     avantages: [
       "Protection sociale complète (maladie, retraite, chômage)",
       "Aucune création d'entreprise nécessaire",
@@ -226,10 +226,10 @@ export const BUSINESS_STATUS_CONFIG: Record<
       "Fiches de paie (crédibilité prêts, location, visa)",
     ],
     inconvenients: [
-      "Charges sociales élevées (~50%)",
-      "Frais de gestion ~5-10% du CA en plus",
+      "Charges sociales + frais de gestion élevés (~50% tout compris)",
       "Moins d'optimisation fiscale possible",
       "Dépendance vis-à-vis de la société de portage",
+      "Marge de négociation limitée sur les frais",
     ],
   },
 };

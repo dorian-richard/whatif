@@ -129,67 +129,60 @@ export function computeIS(profit: number): number {
 }
 
 /**
+ * IR progressif bareme 2026 (revenus 2025, LFI 2026 art. 2 ter, +0.9%).
+ * Applique le quotient familial puis multiplie par le nombre de parts.
+ */
+const IR_BRACKETS: [number, number][] = [
+  [11600, 0],
+  [29579, 0.11],
+  [84577, 0.30],
+  [181917, 0.41],
+  [Infinity, 0.45],
+];
+
+export function computeIR(taxableIncome: number, parts = 1): number {
+  if (taxableIncome <= 0) return 0;
+  const quotient = taxableIncome / parts;
+  let tax = 0;
+  let prev = 0;
+  for (const [limit, rate] of IR_BRACKETS) {
+    if (quotient <= prev) break;
+    const taxable = Math.min(quotient, limit) - prev;
+    tax += taxable * rate;
+    prev = limit;
+  }
+  return tax * parts;
+}
+
+/**
  * Reverse calculation: given a desired annual net, find the required CA.
+ * Uses iterative Newton-style approach for all cases (progressive IR is non-linear).
  */
 export function reverseCA(
   targetNet: number,
   status: BusinessStatus,
   remType: RemunerationType,
   mixtePartSalaire: number,
-  customIrRate?: number
+  customIrRate?: number,
+  nbParts?: number
 ): number {
-  const cfg = BUSINESS_STATUS_CONFIG[status];
-  const urssaf = cfg.urssaf;
-  const ir = customIrRate ?? cfg.ir;
-  const is = cfg.is;
-
-  if (status === "micro") {
-    return targetNet / (1 - urssaf - ir);
-  }
-
-  if (is === 0) {
-    if (status === "sasu_ir" && remType === "dividendes") {
-      return targetNet / (1 - ir);
-    }
-    if (status === "sasu_ir" && remType === "mixte") {
-      const salPart = mixtePartSalaire / 100;
-      const divPart = 1 - salPart;
-      const multiplier = salPart * (1 - urssaf) * (1 - ir) + divPart * (1 - ir);
-      return targetNet / multiplier;
-    }
-    return targetNet / ((1 - urssaf) * (1 - ir));
-  }
-
-  const isSASU = status === "sasu_is";
-
-  if (remType === "salaire") {
-    return targetNet / ((1 - urssaf) * (1 - ir));
-  }
-
-  // IS structures with dividends or mixte: use iterative approach
-  // because progressive IS brackets make the formula non-linear
-  const computeNetForCA = (ca: number): number => {
-    if (remType === "dividendes") {
-      const isAmount = computeIS(ca);
-      const afterIS = ca - isAmount;
-      if (isSASU) return afterIS * (1 - PFU_RATE);
-      return afterIS * (1 - urssaf) * (1 - ir);
-    }
-    // mixte
-    const salPart = mixtePartSalaire / 100;
-    const sCost = Math.min(ca * salPart, ca);
-    const sNet = sCost * (1 - urssaf) * (1 - ir);
-    const remaining = Math.max(0, ca - sCost);
-    const isAmount = computeIS(remaining);
-    const afterIS = remaining - isAmount;
-    const dNet = isSASU ? afterIS * (1 - PFU_RATE) : afterIS * (1 - urssaf) * (1 - ir);
-    return sNet + dNet;
+  // Build a minimal profile to reuse computeNetFromCA
+  const profile: FreelanceProfile = {
+    monthlyExpenses: 0,
+    savings: 0,
+    adminHoursPerWeek: 0,
+    workDaysPerWeek: 5,
+    businessStatus: status,
+    remunerationType: remType,
+    mixtePartSalaire,
+    customIrRate,
+    nbParts: nbParts ?? 1,
   };
 
-  // Newton-style iteration: converges in ~5 iterations
+  // Newton-style iteration: converges in ~5-10 iterations
   let ca = targetNet * 2;
-  for (let i = 0; i < 20; i++) {
-    const net = computeNetForCA(ca);
+  for (let i = 0; i < 30; i++) {
+    const net = computeNetFromCA(ca, profile);
     if (Math.abs(net - targetNet) < 1) break;
     if (net <= 0) { ca *= 2; continue; }
     ca = ca * (targetNet / net);
@@ -200,10 +193,12 @@ export function reverseCA(
 /**
  * Calcule le revenu net apres toutes charges et impots.
  *
- * Micro : URSSAF + IR sont des taux effectifs sur le CA
- * IR (ei, eurl_ir, sasu_ir) : URSSAF sur CA, puis IR sur le reste
+ * Utilise le bareme IR progressif 2026 sauf si customIrRate est defini.
+ *
+ * Micro : URSSAF sur CA, IR progressif sur assiette (CA × 0.66 apres abattement 34%)
+ * IR (ei, eurl_ir, sasu_ir, portage) : charges pro deductibles, URSSAF, puis IR progressif
  * IS (eurl_is, sasu_is) : depend du mode de remuneration :
- *   - Salaire : charges sociales + IR, salaire deductible donc pas d'IS
+ *   - Salaire : charges sociales + IR progressif
  *   - Dividendes : IS sur benefice, puis PFU 30% (SASU) ou charges TNS + IR (EURL)
  *   - Mixte : partie salaire + dividendes sur le reste
  */
@@ -213,70 +208,103 @@ export function computeNetFromCA(
 ): number {
   const statusConfig = BUSINESS_STATUS_CONFIG[profile.businessStatus ?? "micro"];
   const urssafRate = profile.customUrssafRate ?? statusConfig.urssaf;
-  const irRate = profile.customIrRate ?? statusConfig.ir;
+  const useProgressiveIR = profile.customIrRate == null;
+  const flatIrRate = profile.customIrRate ?? statusConfig.ir;
   const isRate = statusConfig.is;
+  const parts = profile.nbParts ?? 1;
+  const chargesProRate = profile.chargesPro ?? 0;
 
-  // Micro : taux forfaitaires appliques directement sur le CA
+  // Helper: compute IR (progressive or flat)
+  const irOn = (taxable: number) =>
+    useProgressiveIR ? computeIR(taxable, parts) : taxable * flatIrRate;
+
+  // Micro : URSSAF sur CA, IR sur assiette apres abattement 34%
   if (profile.businessStatus === "micro") {
-    return annualCA * (1 - urssafRate - irRate);
+    const urssaf = annualCA * urssafRate;
+    const taxableIncome = annualCA * 0.66; // abattement BNC 34%
+    const ir = irOn(taxableIncome);
+    return annualCA - urssaf - ir;
   }
 
-  // Structures IR (pas d'IS) : URSSAF puis IR
+  // Charges pro deductibles (EI, EURL IR/IS — pas micro, pas SASU, pas portage)
+  const deductChargesPro = ["ei", "eurl_ir", "eurl_is"].includes(profile.businessStatus ?? "");
+  const caAfterChargesPro = deductChargesPro
+    ? annualCA * (1 - chargesProRate / 100)
+    : annualCA;
+
+  // Structures IR (pas d'IS) : URSSAF puis IR progressif
   if (isRate === 0) {
-    return annualCA * (1 - urssafRate) * (1 - irRate);
+    const afterUrssaf = caAfterChargesPro * (1 - urssafRate);
+    const ir = irOn(afterUrssaf);
+    return afterUrssaf - ir;
   }
 
   // --- Structures IS (eurl_is, sasu_is) ---
   const remunerationType = profile.remunerationType ?? "salaire";
   const isSASU = profile.businessStatus === "sasu_is";
+  const isEURL = profile.businessStatus === "eurl_is";
+  const capitalSocial = profile.capitalSocial ?? 0;
 
-  // Calcul net des dividendes apres IS :
-  // SASU : PFU 30% flat (inclut IR + social)
-  // EURL : charges TNS (~45%) + IR (dividendes > 10% du capital)
-  const netFromDividends = (dividends: number) => {
+  // Net des dividendes apres IS :
+  // SASU : PFU 30% flat
+  // EURL : dividendes <= 10% capital social → PFU 30%, au-dela → TNS + IR
+  const netFromDividends = (dividends: number, otherTaxableIncome = 0) => {
     if (isSASU) return dividends * (1 - PFU_RATE);
-    return dividends * (1 - urssafRate) * (1 - irRate);
+    if (isEURL && capitalSocial > 0) {
+      const seuilPFU = capitalSocial * 0.10;
+      const partPFU = Math.min(dividends, seuilPFU);
+      const partTNS = Math.max(0, dividends - seuilPFU);
+      const netPFU = partPFU * (1 - PFU_RATE);
+      const afterTNS = partTNS * (1 - urssafRate);
+      const ir = irOn(afterTNS + otherTaxableIncome) - irOn(otherTaxableIncome);
+      return netPFU + afterTNS - ir;
+    }
+    // EURL sans capital social renseigne → tout en TNS (conservateur)
+    const afterUrssaf = dividends * (1 - urssafRate);
+    const ir = irOn(afterUrssaf + otherTaxableIncome) - irOn(otherTaxableIncome);
+    return afterUrssaf - ir;
   };
 
   // 100% Salaire : tout en remuneration, deductible = pas d'IS
   if (remunerationType === "salaire") {
-    return annualCA * (1 - urssafRate) * (1 - irRate);
+    const afterUrssaf = caAfterChargesPro * (1 - urssafRate);
+    const ir = irOn(afterUrssaf);
+    return afterUrssaf - ir;
   }
 
   // 100% Dividendes : IS progressif sur tout le benefice, puis taxation dividendes
   if (remunerationType === "dividendes") {
-    const isAmount = computeIS(annualCA);
-    const afterIS = annualCA - isAmount;
+    const isAmount = computeIS(caAfterChargesPro);
+    const afterIS = caAfterChargesPro - isAmount;
     return netFromDividends(afterIS);
   }
 
   // Mixte : repartition salaire/dividendes selon pourcentage ou monthlySalary
   const mixtePartSalaire = profile.mixtePartSalaire ?? 50;
 
-  // Calculer le cout salaire : soit via pourcentage du CA, soit via monthlySalary (fallback)
   let salaryCost: number;
   if (mixtePartSalaire > 0) {
-    // Pourcentage du CA alloue en remuneration salaire (avant charges)
-    salaryCost = Math.min(annualCA * (mixtePartSalaire / 100), annualCA);
+    salaryCost = Math.min(caAfterChargesPro * (mixtePartSalaire / 100), caAfterChargesPro);
   } else {
     const annualSalary = (profile.monthlySalary ?? 0) * 12;
     if (annualSalary <= 0) {
-      const isAmount = computeIS(annualCA);
-      const afterIS = annualCA - isAmount;
+      const isAmount = computeIS(caAfterChargesPro);
+      const afterIS = caAfterChargesPro - isAmount;
       return netFromDividends(afterIS);
     }
-    salaryCost = Math.min(annualSalary / (1 - urssafRate), annualCA);
+    salaryCost = Math.min(annualSalary / (1 - urssafRate), caAfterChargesPro);
   }
 
-  const actualSalaryNet = salaryCost * (1 - urssafRate);
+  const salaryNet = salaryCost * (1 - urssafRate);
+  const irSalary = irOn(salaryNet);
+  const netSalary = salaryNet - irSalary;
 
   // Benefice restant → IS progressif → dividendes
-  const remainingCA = Math.max(0, annualCA - salaryCost);
+  const remainingCA = Math.max(0, caAfterChargesPro - salaryCost);
   const isAmount = computeIS(remainingCA);
   const afterIS = remainingCA - isAmount;
 
-  const netSalary = actualSalaryNet * (1 - irRate);
-  const netDividends = netFromDividends(afterIS);
+  const netDividends = netFromDividends(afterIS, salaryNet);
 
   return netSalary + netDividends;
 }
@@ -352,9 +380,12 @@ export function simulate(
 
       if (params.vacationWeeks > 0) {
         const vacMonths = params.vacationWeeks / 4.33;
-        const isFullVacMonth = month < Math.floor(vacMonths);
+        // Repartir les vacances sur l'ete d'abord : aout, juillet, sept, juin...
+        const VAC_ORDER = [7, 6, 8, 5, 9, 4, 10, 3, 11, 0, 1, 2];
+        const vacRank = VAC_ORDER.indexOf(month);
+        const isFullVacMonth = vacRank < Math.floor(vacMonths);
         const isPartialVacMonth =
-          !isFullVacMonth && month < Math.ceil(vacMonths);
+          !isFullVacMonth && vacRank < Math.ceil(vacMonths);
 
         if (client.billing === "tjm" || client.billing === "mission") {
           if (isFullVacMonth) {

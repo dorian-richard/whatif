@@ -48,6 +48,9 @@ export interface FreelanceProfile {
   customTaxRate?: number;
   monthlySalary?: number;
   mixtePartSalaire?: number;
+  nbParts?: number;
+  chargesPro?: number;
+  capitalSocial?: number;
   role?: string;
   age?: number;
 }

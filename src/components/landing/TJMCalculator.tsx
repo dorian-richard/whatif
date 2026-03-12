@@ -179,6 +179,9 @@ export function TJMCalculator() {
               >
                 Affiner mon calcul &rarr;
               </Link>
+              <p className="text-[10px] text-muted-foreground/40 mt-4 leading-relaxed">
+                Estimations bas&eacute;es sur le bar&egrave;me IR 2026 et les taux URSSAF en vigueur. Consultez un expert-comptable pour une analyse personnalis&eacute;e.
+              </p>
             </div>
           </div>
         </AnimateOnScroll>

@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { simulate, getClientMonthlyCA, getClientBaseCA, JOURS_OUVRES, AVG_JOURS_OUVRES } from "./simulation-engine";
+import { simulate, getClientMonthlyCA, getClientBaseCA, computeIR, computeNetFromCA, JOURS_OUVRES, AVG_JOURS_OUVRES } from "./simulation-engine";
 import type { ClientData, SimulationParams, FreelanceProfile } from "@/types";
 import { DEFAULT_SIM, SEASONALITY } from "./constants";
 
@@ -56,6 +56,109 @@ describe("Jours ouvres", () => {
   test("moyenne autour de 21-22", () => {
     expect(AVG_JOURS_OUVRES).toBeGreaterThan(20);
     expect(AVG_JOURS_OUVRES).toBeLessThan(23);
+  });
+});
+
+// ─── computeIR ───
+
+describe("computeIR — bareme progressif 2026", () => {
+  test("0€ → 0€ d'IR", () => {
+    expect(computeIR(0)).toBe(0);
+  });
+
+  test("revenu negatif → 0€", () => {
+    expect(computeIR(-5000)).toBe(0);
+  });
+
+  test("10 000€ → 0€ (sous le seuil 11 600€)", () => {
+    expect(computeIR(10000)).toBe(0);
+  });
+
+  test("20 000€ → tranche 11% partielle", () => {
+    // (20000 - 11600) * 0.11 = 924€
+    expect(computeIR(20000)).toBeCloseTo(924, 0);
+  });
+
+  test("50 000€ → tranches 0 + 11 + 30%", () => {
+    // 0→11600: 0€
+    // 11601→29579: (29579-11600)*0.11 = 1977.69€
+    // 29580→50000: (50000-29579)*0.30 = 6126.30€
+    // Total = 8103.99€
+    expect(computeIR(50000)).toBeCloseTo(8104, 0);
+  });
+
+  test("100 000€ → tranches 0 + 11 + 30 + 41%", () => {
+    // 0→11600: 0€
+    // 11601→29579: 1977.69€
+    // 29580→84577: (84577-29579)*0.30 = 16499.40€
+    // 84578→100000: (100000-84577)*0.41 = 6323.43€
+    // Total = 24800.52€
+    expect(computeIR(100000)).toBeCloseTo(24801, 0);
+  });
+
+  test("2 parts fiscales → quotient familial", () => {
+    // 50k / 2 parts = 25k par part → (25000-11600)*0.11 = 1474€ par part → 2948€
+    expect(computeIR(50000, 2)).toBeCloseTo(2948, 0);
+  });
+
+  test("1.5 parts", () => {
+    const ir = computeIR(50000, 1.5);
+    expect(ir).toBeGreaterThan(computeIR(50000, 2));
+    expect(ir).toBeLessThan(computeIR(50000, 1));
+  });
+});
+
+// ─── computeNetFromCA ───
+
+describe("computeNetFromCA — IR progressif", () => {
+  test("Micro 50k : URSSAF 25.6% + IR progressif sur 66%", () => {
+    const profile: FreelanceProfile = {
+      monthlyExpenses: 0, savings: 0, adminHoursPerWeek: 0,
+      workDaysPerWeek: 5, businessStatus: "micro",
+    };
+    const net = computeNetFromCA(50000, profile);
+    const urssaf = 50000 * 0.256; // 12800
+    const taxable = 50000 * 0.66; // 33000
+    const ir = computeIR(taxable); // ~2005
+    expect(net).toBeCloseTo(50000 - urssaf - ir, 0);
+  });
+
+  test("Micro avec customIrRate → flat rate", () => {
+    const profile: FreelanceProfile = {
+      monthlyExpenses: 0, savings: 0, adminHoursPerWeek: 0,
+      workDaysPerWeek: 5, businessStatus: "micro", customIrRate: 0.11,
+    };
+    const net = computeNetFromCA(50000, profile);
+    // flat: 50000 * (1 - 0.256) - 50000 * 0.66 * 0.11 — wait, with flat rate it's still
+    // urssaf + ir on CA (old formula was CA * (1 - urssaf - ir))
+    // But new formula: urssaf on CA, ir flat on taxable (66% of CA)
+    // Actually let me check — with customIrRate the irOn function does taxable * flatIrRate
+    // So: 50000 - 50000*0.256 - 50000*0.66*0.11 = 50000 - 12800 - 3630 = 33570
+    expect(net).toBeCloseTo(33570, 0);
+  });
+
+  test("EI 80k : charges pro deductibles", () => {
+    const profile: FreelanceProfile = {
+      monthlyExpenses: 0, savings: 0, adminHoursPerWeek: 0,
+      workDaysPerWeek: 5, businessStatus: "ei", chargesPro: 15,
+    };
+    const net = computeNetFromCA(80000, profile);
+    const afterCharges = 80000 * 0.85; // 68000
+    const afterUrssaf = afterCharges * 0.55; // 37400
+    const ir = computeIR(afterUrssaf);
+    expect(net).toBeCloseTo(afterUrssaf - ir, 0);
+  });
+
+  test("SASU IS dividendes : PFU 30% inchange", () => {
+    const profile: FreelanceProfile = {
+      monthlyExpenses: 0, savings: 0, adminHoursPerWeek: 0,
+      workDaysPerWeek: 5, businessStatus: "sasu_is", remunerationType: "dividendes",
+    };
+    const net = computeNetFromCA(100000, profile);
+    // IS: 42500*0.15 + 57500*0.25 = 6375 + 14375 = 20750
+    // After IS: 79250
+    // PFU 30%: 79250 * 0.70 = 55475
+    expect(net).toBeCloseTo(55475, 0);
   });
 });
 
@@ -138,24 +241,32 @@ describe("Moteur de simulation", () => {
     expect(result.before).toHaveLength(12);
   });
 
-  test("TJM : vacances -> revenu tombe a 0", () => {
+  test("TJM : vacances -> revenu tombe a 0 en aout (mois 7)", () => {
     const params = { ...defaultParams, vacationWeeks: 4.33 };
     const result = simulate([tjmClient], params, defaultProfile);
-    expect(result.after[0]).toBe(0);
-    expect(result.after[3]).toBeGreaterThan(0);
+    // Vacances summer-first: aout (7) est le premier mois de vacances
+    expect(result.after[7]).toBe(0);
+    // Janvier (0) n'est plus touche
+    expect(result.after[0]).toBeGreaterThan(0);
   });
 
   test("Forfait : vacances -> revenu continue", () => {
     const params = { ...defaultParams, vacationWeeks: 4.33 };
     const result = simulate([forfaitClient], params, defaultProfile);
-    expect(result.after[0]).toBe(3000);
-    expect(result.after[1]).toBe(3000);
+    expect(result.after[7]).toBe(3000);
+    expect(result.after[6]).toBe(3000);
   });
 
-  test("Mission : vacances -> revenu tombe a 0", () => {
+  test("Mission : vacances -> revenu tombe a 0 en aout", () => {
+    // Mission active mois 2-5, vacances touchent aout qui est hors periode
+    // Testons avec une mission active toute l'annee
+    const fullMission: ClientData = {
+      id: "fm", name: "Full Mission", billing: "mission",
+      totalAmount: 12000, startMonth: 0, endMonth: 11,
+    };
     const params = { ...defaultParams, vacationWeeks: 4.33 };
-    const result = simulate([missionClient], params, defaultProfile);
-    expect(result.after[0]).toBe(0);
+    const result = simulate([fullMission], params, defaultProfile);
+    expect(result.after[7]).toBe(0); // aout
   });
 
   test("Variation tarifs : s'applique uniquement au TJM", () => {
@@ -218,11 +329,12 @@ describe("Moteur de simulation", () => {
     expect(result.after.every((v) => v === 0)).toBe(true);
   });
 
-  test("Edge case : 12 semaines vacances", () => {
+  test("Edge case : 12 semaines vacances (ete d'abord)", () => {
     const params = { ...defaultParams, vacationWeeks: 12 };
     const result = simulate([tjmClient], params, defaultProfile);
-    expect(result.after[0]).toBe(0);
-    expect(result.after[1]).toBe(0);
+    // 12 semaines ≈ 2.77 mois → aout (7) et juillet (6) a 0
+    expect(result.after[7]).toBe(0);
+    expect(result.after[6]).toBe(0);
     const totalBefore = result.before.reduce((a, b) => a + b, 0);
     const totalAfter = result.after.reduce((a, b) => a + b, 0);
     expect(totalAfter).toBeLessThan(totalBefore);

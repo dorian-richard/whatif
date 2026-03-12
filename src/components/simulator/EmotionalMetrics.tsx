@@ -131,8 +131,8 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
   const metrics: MetricItem[] = [
     {
       icon: <Banknote className="size-5 text-muted-foreground" />,
-      label: "Revenu net mensuel",
-      explanation: `Ce qu'il vous reste chaque mois après impôts (${(urssafRate * 100).toFixed(0)}% URSSAF + IR) et charges fixes (${fmt(expenses)}\u20AC)`,
+      label: "Reste à vivre",
+      explanation: `Ce qu'il vous reste chaque mois après impôts (URSSAF + IR barème progressif) et charges fixes personnelles (${fmt(expenses)}\u20AC)`,
       before: Math.round(netMonthlyBefore),
       after: Math.round(netMonthlyAfter),
       unit: "\u20AC",
@@ -340,6 +340,10 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
           </div>
         ))}
       </div>
+
+      <p className="text-[10px] text-muted-foreground/40 mt-5 leading-relaxed text-center">
+        Estimations bas&eacute;es sur le bar&egrave;me IR 2026 et les taux URSSAF en vigueur. Consultez un expert-comptable pour une analyse personnalis&eacute;e.
+      </p>
     </div>
   );
 }
