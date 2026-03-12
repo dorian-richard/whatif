@@ -43,7 +43,7 @@ export const BLOG_POSTS: BlogPost[] = [
         content: `<p>En France en 2026, un freelance peut exercer sous 5 formes juridiques principales :</p>
 
 <p><strong>1. La micro-entreprise (ex auto-entrepreneur)</strong></p>
-<p>Le statut le plus simple. Pas de comptabilité, déclaration trimestrielle du CA, cotisations calculées sur le CA (pas le bénéfice). Idéal pour démarrer ou si ton CA reste sous le plafond de 77 700€ (prestations BNC). Charges sociales : environ 21,1% du CA en BNC (taux URSSAF 2026 : 23,1% dont 2% pour la formation, ou 24,6% avec versement libératoire de l'IR).</p>
+<p>Le statut le plus simple. Pas de comptabilité, déclaration trimestrielle du CA, cotisations calculées sur le CA (pas le bénéfice). Idéal pour démarrer ou si ton CA reste sous le plafond de 83 600€ (prestations BNC). Charges sociales : 25,6% du CA en BNC (taux URSSAF 2026), dont une part fléchée vers la retraite complémentaire.</p>
 
 <p><strong>2. L'entreprise individuelle au réel (EI)</strong></p>
 <p>Pas de plafond de CA. Tu déduis tes frais réels (matériel, coworking, déplacements). Cotisations calculées sur le bénéfice (~45%). Intéressant si tu as des charges professionnelles élevées. Depuis 2022, l'EI bénéficie de la séparation des patrimoines automatique.</p>
@@ -70,8 +70,8 @@ export const BLOG_POSTS: BlogPost[] = [
         content: `<table>
 <thead><tr><th>Critère</th><th>Micro</th><th>EI</th><th>EURL IS</th><th>SASU IS</th><th>Portage</th></tr></thead>
 <tbody>
-<tr><td><strong>Charges sociales</strong></td><td>~21%</td><td>~45%</td><td>~35-50%</td><td>~65%</td><td>~50%</td></tr>
-<tr><td><strong>Plafond CA</strong></td><td>77 700€</td><td>Illimité</td><td>Illimité</td><td>Illimité</td><td>Illimité</td></tr>
+<tr><td><strong>Charges sociales</strong></td><td>~26%</td><td>~45%</td><td>~35-50%</td><td>~65%</td><td>~50%</td></tr>
+<tr><td><strong>Plafond CA</strong></td><td>83 600€</td><td>Illimité</td><td>Illimité</td><td>Illimité</td><td>Illimité</td></tr>
 <tr><td><strong>Protection sociale</strong></td><td>Minimale</td><td>TNS</td><td>TNS</td><td>Régime général</td><td>Salarié</td></tr>
 <tr><td><strong>Déduction frais</strong></td><td>Non</td><td>Oui</td><td>Oui</td><td>Oui</td><td>Non</td></tr>
 <tr><td><strong>Dividendes</strong></td><td>Non</td><td>Non</td><td>Oui</td><td>Oui (PFU 30%)</td><td>Non</td></tr>
@@ -85,17 +85,17 @@ export const BLOG_POSTS: BlogPost[] = [
         title: "Quel statut choisir selon ton CA ?",
         content: `<p>Voici des recommandations générales basées sur le chiffre d'affaires annuel :</p>
 
-<p><strong>CA &lt; 40 000€/an</strong> — La <strong>micro-entreprise</strong> est presque toujours le meilleur choix. Charges faibles (~21%), admin minimale, pas de comptable nécessaire. Le versement libératoire de l'IR peut être avantageux si ton taux d'imposition est bas.</p>
+<p><strong>CA &lt; 40 000€/an</strong> — La <strong>micro-entreprise</strong> est presque toujours le meilleur choix. Charges faibles (~26%), admin minimale, pas de comptable nécessaire. Le versement libératoire de l'IR peut être avantageux si ton taux d'imposition est bas.</p>
 
-<p><strong>CA 40 000 — 77 700€/an</strong> — La micro reste intéressante, mais <strong>compare avec l'EURL à l'IS</strong> si tu as des frais professionnels significatifs (matériel, déplacements, sous-traitance). L'EURL permet de déduire ces frais et d'optimiser via les dividendes.</p>
+<p><strong>CA 40 000 — 83 600€/an</strong> — La micro reste intéressante, mais <strong>compare avec l'EURL à l'IS</strong> si tu as des frais professionnels significatifs (matériel, déplacements, sous-traitance). L'EURL permet de déduire ces frais et d'optimiser via les dividendes.</p>
 
-<p><strong>CA 77 700 — 120 000€/an</strong> — Tu dépasses le plafond micro. Le choix se fait entre <strong>EURL IS</strong> (charges plus faibles, statut TNS) et <strong>SASU IS</strong> (charges plus élevées, meilleure protection sociale). L'EURL IS est souvent plus avantageuse en net pur.</p>
+<p><strong>CA 83 600 — 120 000€/an</strong> — Tu dépasses le plafond micro. Le choix se fait entre <strong>EURL IS</strong> (charges plus faibles, statut TNS) et <strong>SASU IS</strong> (charges plus élevées, meilleure protection sociale). L'EURL IS est souvent plus avantageuse en net pur.</p>
 
 <p><strong>CA &gt; 120 000€/an</strong> — Les deux structures IS fonctionnent bien. La SASU IS permet de se verser des dividendes au PFU (30% flat tax) sans cotisations sociales supplémentaires, ce qui peut être très avantageux. Consulte un expert-comptable pour optimiser le mix salaire/dividendes.</p>
 
 <p><strong>Exemples chiffrés (CA 100 000€, TJM ~500€, 200 jours)</strong> :</p>
 <ul>
-<li>Micro-entreprise : impossible (plafond 77 700€)</li>
+<li>Micro-entreprise : impossible (plafond 83 600€)</li>
 <li>EURL IS (mix salaire 3 000€/mois + dividendes) : <strong>~62 000€ net</strong></li>
 <li>SASU IS (salaire 3 000€/mois + dividendes) : <strong>~55 000€ net</strong></li>
 <li>Portage salarial (8% de frais) : <strong>~48 000€ net</strong></li>
@@ -163,7 +163,7 @@ export const BLOG_POSTS: BlogPost[] = [
         content: `<p>Les cotisations sociales sont le premier prélèvement sur ton activité. Elles financent ta retraite, ta santé, et tes indemnités journalières.</p>
 
 <p><strong>Micro-entreprise (BNC)</strong></p>
-<p>Taux unique calculé sur le CA : <strong>23,1%</strong> (dont 0,3% de formation professionnelle). Si tu optes pour le versement libératoire de l'IR, ajoute 2,2%, soit 25,3% au total. C'est simple mais tu ne peux pas déduire tes frais.</p>
+<p>Taux unique calculé sur le CA : <strong>25,6%</strong> (dont une part retraite complémentaire renforcée depuis 2026). Si tu optes pour le versement libératoire de l'IR, ajoute 2,2%. C'est simple mais tu ne peux pas déduire tes frais.</p>
 
 <p><strong>EI au réel / EURL à l'IR</strong></p>
 <p>Cotisations TNS calculées sur le <strong>bénéfice</strong> (CA - charges déductibles). Taux global : environ <strong>45%</strong> du bénéfice. Détail : maladie-maternité (~6,5%), retraite de base (~17,75%), retraite complémentaire (~7-8%), invalidité-décès (~1,3%), allocations familiales (~3,1%), CSG/CRDS (~9,7%), formation (~0,3%).</p>
@@ -212,7 +212,7 @@ export const BLOG_POSTS: BlogPost[] = [
         title: "La CFE et autres taxes",
         content: `<p><strong>La CFE (Cotisation Foncière des Entreprises)</strong> est due par tous les freelances, quel que soit le statut. Son montant dépend de ta commune et de ton CA (de 200 à 2 000€/an en général). Tu en es exonéré la première année d'activité.</p>
 <p><strong>La CVAE (Cotisation sur la Valeur Ajoutée)</strong> ne concerne que les CA supérieurs à 500 000€ — rare pour un freelance solo.</p>
-<p><strong>La TVA</strong> : en franchise en base si CA &lt; 36 800€ (prestations). Au-delà, tu collectes 20% de TVA sur tes factures et tu reverses à l'État. Ce n'est pas une charge car le client la paie, mais c'est de l'admin en plus.</p>`,
+<p><strong>La TVA</strong> : en franchise en base si CA &lt; 37 500€ (prestations). Au-delà, tu collectes 20% de TVA sur tes factures et tu reverses à l'État. Ce n'est pas une charge car le client la paie, mais c'est de l'admin en plus.</p>`,
       },
       {
         title: "Du CA brut au net réel : exemples chiffrés",
@@ -227,7 +227,7 @@ export const BLOG_POSTS: BlogPost[] = [
 <tr><td>400€</td><td>~72 000€</td><td>~52 000€</td><td>~47 000€</td><td>~40 000€</td></tr>
 </tbody>
 </table>
-<p><em>*Plafond micro BNC : 77 700€. Estimations incluant cotisations sociales + IR (taux moyen). Le net EURL/SASU IS suppose un mix salaire/dividendes optimisé.</em></p>
+<p><em>*Plafond micro BNC : 83 600€. Estimations incluant cotisations sociales + IR (taux moyen). Le net EURL/SASU IS suppose un mix salaire/dividendes optimisé.</em></p>
 
 <p>Pour un calcul précis adapté à ta situation, utilise le <a href="/simulateur-revenus-freelance">simulateur Freelens</a> qui intègre les taux URSSAF 2026 et le barème IR en vigueur.</p>`,
       },
@@ -456,8 +456,8 @@ export const BLOG_POSTS: BlogPost[] = [
         title: "Étape 2 : Choisir son statut juridique",
         content: `<p>C'est la décision qui a le plus d'impact financier. En résumé :</p>
 
-<p><strong>Tu débutes ou tu vises &lt; 77 700€/an de CA ?</strong></p>
-<p>→ <strong>Micro-entreprise</strong>. Création en 15 minutes sur le guichet unique (formalites.entreprises.gouv.fr). Charges de ~21% du CA, comptabilité minimale.</p>
+<p><strong>Tu débutes ou tu vises &lt; 83 600€/an de CA ?</strong></p>
+<p>→ <strong>Micro-entreprise</strong>. Création en 15 minutes sur le guichet unique (formalites.entreprises.gouv.fr). Charges de ~26% du CA, comptabilité minimale.</p>
 
 <p><strong>Tu vises 80 000 à 150 000€/an de CA ?</strong></p>
 <p>→ <strong>EURL à l'IS</strong>. Optimisation via mix salaire/dividendes. Charges plus élevées mais déduction des frais. Nécessite un expert-comptable (~150€/mois).</p>
@@ -618,7 +618,7 @@ export const BLOG_POSTS: BlogPost[] = [
 
 <p><strong>Répartition indicative pour un freelance en micro :</strong></p>
 <ul>
-<li>~21% pour les cotisations URSSAF</li>
+<li>~26% pour les cotisations URSSAF</li>
 <li>~5-10% pour l'impôt sur le revenu</li>
 <li>~2-3% pour la CFE et imprévus</li>
 </ul>

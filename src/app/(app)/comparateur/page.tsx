@@ -32,7 +32,7 @@ const STATUT_COLORS: Record<string, string> = {
 };
 
 const PFU_RATE = 0.30;
-const MICRO_PLAFOND = 77700;
+const MICRO_PLAFOND = 83600;
 
 interface StatusResult {
   status: BusinessStatus;

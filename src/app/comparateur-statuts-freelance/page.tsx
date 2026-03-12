@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Comparateur statuts freelance 2025 : micro, EURL, SASU, portage — Freelens",
+  title: "Comparateur statuts freelance 2026 : micro, EURL, SASU, portage — Freelens",
   description:
     "Compare micro-entreprise, EI, EURL IR/IS, SASU IR/IS et portage salarial côte à côte. Calcul du net après charges et impôts selon ton CA réel. Gratuit.",
   alternates: { canonical: "https://freelens.io/comparateur-statuts-freelance" },
@@ -42,7 +42,7 @@ export default function ComparateurStatutsPage() {
           <h2 className="text-xl font-bold text-foreground">Ce que le comparateur calcule</h2>
           <div className="grid gap-3 sm:grid-cols-2 text-sm">
             {[
-              { title: "Cotisations URSSAF", desc: "Taux r\u00e9els 2025 par statut : 21,1% en micro, 45% en EI, 65%+ en SASU" },
+              { title: "Cotisations URSSAF", desc: "Taux r\u00e9els 2026 par statut : 25,6% en micro, 45% en EI, 65%+ en SASU" },
               { title: "Imp\u00f4t sur le revenu", desc: "Bar\u00e8me progressif IR appliqu\u00e9 au revenu imposable de chaque statut" },
               { title: "Imp\u00f4t sur les soci\u00e9t\u00e9s", desc: "Pour EURL IS et SASU IS : IS 15%/25% + flat tax sur dividendes" },
               { title: "Revenu net annuel", desc: "Ce qui reste apr\u00e8s toutes les charges, pour chaque statut" },
@@ -61,8 +61,8 @@ export default function ComparateurStatutsPage() {
           <h2 className="text-xl font-bold text-foreground">Quel statut choisir en freelance ?</h2>
           <div className="text-sm text-muted-foreground leading-relaxed space-y-3">
             <p>
-              En dessous de <strong className="text-foreground">77 700&euro; de CA annuel</strong> (prestations BNC), la micro-entreprise est souvent le statut
-              le plus simple et le plus avantageux gr&acirc;ce &agrave; ses cotisations r&eacute;duites (~21%) et son r&eacute;gime fiscal simplifi&eacute;.
+              En dessous de <strong className="text-foreground">83 600&euro; de CA annuel</strong> (prestations BNC), la micro-entreprise est souvent le statut
+              le plus simple et le plus avantageux gr&acirc;ce &agrave; ses cotisations r&eacute;duites (~26%) et son r&eacute;gime fiscal simplifi&eacute;.
             </p>
             <p>
               Au-del&agrave; de ce seuil, l&apos;<strong className="text-foreground">EURL &agrave; l&apos;IS</strong> ou la <strong className="text-foreground">SASU &agrave; l&apos;IS</strong> permettent
@@ -88,7 +88,7 @@ export default function ComparateurStatutsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                <tr><td className="px-4 py-2.5 text-foreground">Micro-entreprise</td><td className="px-4 py-2.5 text-right text-muted-foreground">~21%</td><td className="px-4 py-2.5 text-center text-muted-foreground">77 700&euro;</td></tr>
+                <tr><td className="px-4 py-2.5 text-foreground">Micro-entreprise</td><td className="px-4 py-2.5 text-right text-muted-foreground">~26%</td><td className="px-4 py-2.5 text-center text-muted-foreground">83 600&euro;</td></tr>
                 <tr><td className="px-4 py-2.5 text-foreground">EI</td><td className="px-4 py-2.5 text-right text-muted-foreground">~45%</td><td className="px-4 py-2.5 text-center text-muted-foreground">Illimit&eacute;</td></tr>
                 <tr><td className="px-4 py-2.5 text-foreground">EURL IR</td><td className="px-4 py-2.5 text-right text-muted-foreground">~45%</td><td className="px-4 py-2.5 text-center text-muted-foreground">Illimit&eacute;</td></tr>
                 <tr><td className="px-4 py-2.5 text-foreground">EURL IS</td><td className="px-4 py-2.5 text-right text-muted-foreground">~35-50%</td><td className="px-4 py-2.5 text-center text-muted-foreground">Illimit&eacute;</td></tr>

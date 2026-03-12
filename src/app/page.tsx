@@ -34,7 +34,7 @@ const jsonLd = [
       },
       {
         "@type": "Offer",
-        price: "9.99",
+        price: "9",
         priceCurrency: "EUR",
         description: "Plan Pro — Tous les outils, clients illimités",
       },

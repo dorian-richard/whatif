@@ -23,10 +23,10 @@ import {
    Constantes retraite
    ════════════════════════════════════════════════ */
 
-/** Seuil de revenu cotise pour valider 1 trimestre (2025) */
-const TRIMESTRE_THRESHOLD = 1747;
-/** Plafond annuel de la securite sociale 2025 */
-const PLAFOND_SS = 46368;
+/** Seuil de revenu cotise pour valider 1 trimestre (2026) */
+const TRIMESTRE_THRESHOLD = 1803;
+/** Plafond annuel de la securite sociale 2026 */
+const PLAFOND_SS = 48060;
 /** Abattement micro BNC */
 const ABATTEMENT_MICRO = 0.34;
 /** Age taux plein automatique (defaut) */

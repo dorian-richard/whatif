@@ -82,11 +82,11 @@ export const BUSINESS_STATUS_CONFIG: Record<
     urssaf: 0.256,
     ir: 0.11,
     is: 0,
-    desc: "25.6% du CA \u00B7 Abattement BNC 34% \u00B7 Plafond 77 700\u20AC",
+    desc: "25.6% du CA \u00B7 Abattement BNC 34% \u00B7 Plafond 83 600\u20AC",
     regime: "TNS simplifié",
-    plafond: "77 700\u20AC/an (BNC)",
+    plafond: "83 600\u20AC/an (BNC)",
     details:
-      "Cotisations sociales 25.6% (BNC) prélevées sur le CA. IR calculé après abattement forfaitaire de 34% : seuls 66% du CA sont imposés. Option versement libératoire à 2.2% si éligible. Franchise de TVA sous 36 800\u20AC. Comptabilité ultra-simplifiée.",
+      "Cotisations sociales 25.6% (BNC) prélevées sur le CA. IR calculé après abattement forfaitaire de 34% : seuls 66% du CA sont imposés. Option versement libératoire à 2.2% si éligible. Franchise de TVA sous 37 500\u20AC. Comptabilité ultra-simplifiée.",
     avantages: [
       "Comptabilité simplifiée, pas de bilan",
       "Cotisations calculées sur le CA réel",
@@ -94,7 +94,7 @@ export const BUSINESS_STATUS_CONFIG: Record<
       "Versement libératoire IR possible",
     ],
     inconvenients: [
-      "Plafond CA 77 700\u20AC (BNC)",
+      "Plafond CA 83 600\u20AC (BNC)",
       "Charges non déductibles du CA",
       "Pas de déduction de TVA",
       "Protection sociale minimale",

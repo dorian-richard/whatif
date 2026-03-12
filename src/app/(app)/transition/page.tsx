@@ -28,7 +28,7 @@ const STATUT_COLORS: Record<string, string> = {
 };
 
 const CHARGES_SALARIALES = 0.23;
-const MICRO_PLAFOND = 77700;
+const MICRO_PLAFOND = 83600;
 const PFU_RATE = 0.30;
 
 /* ── Avantages CDI ── */

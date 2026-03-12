@@ -45,7 +45,7 @@ export const RISK_PROFILES: Record<RiskProfile, { label: string; rate: number; c
 const STATUTS: BusinessStatus[] = ["micro", "ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is", "portage"];
 
 /** Plafond CA micro-entreprise BNC */
-const MICRO_PLAFOND = 77700;
+const MICRO_PLAFOND = 83600;
 
 const STATUT_COLORS: Record<BusinessStatus, string> = {
   micro: "#F4BE7E",

@@ -29,7 +29,7 @@ const STATUT_COLORS: Record<string, string> = {
   portage: "#06b6d4",
 };
 
-const MICRO_PLAFOND = 77700;
+const MICRO_PLAFOND = 83600;
 
 // TJM market benchmarks for difficulty badges
 const TJM_SEUILS = {

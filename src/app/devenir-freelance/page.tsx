@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Devenir freelance en 2025 : guide complet pour se lancer — Freelens",
+  title: "Devenir freelance en 2026 : guide complet pour se lancer — Freelens",
   description:
     "Tout ce qu'il faut savoir pour devenir freelance : choisir son statut, fixer son TJM, trouver des clients, gérer ses finances. Guide pratique gratuit.",
   alternates: { canonical: "https://freelens.io/devenir-freelance" },
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Devenir freelance en 2025 : guide complet pour se lancer",
+  headline: "Devenir freelance en 2026 : guide complet pour se lancer",
   url: "https://freelens.io/devenir-freelance",
   author: { "@type": "Organization", name: "Freelens", url: "https://freelens.io" },
   publisher: { "@type": "Organization", name: "Freelens", logo: { "@type": "ImageObject", url: "https://freelens.io/logo.webp" } },
@@ -29,7 +29,7 @@ export default function DevenirFreelancePage() {
 
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-5xl font-bold text-foreground leading-tight">
-            Devenir freelance en 2025 :{" "}
+            Devenir freelance en 2026 :{" "}
             <span className="fn-gradient-text">le guide complet</span>
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
@@ -44,11 +44,11 @@ export default function DevenirFreelancePage() {
           <div className="text-sm text-muted-foreground leading-relaxed space-y-3">
             <p>
               Le statut d&eacute;termine tes <strong className="text-foreground">charges sociales, ta fiscalit&eacute; et ta protection</strong>.
-              En 2025, les principales options sont :
+              En 2026, les principales options sont :
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
               {[
-                { name: "Micro-entreprise", desc: "Simple, 21-24% de charges. Idéal pour démarrer sous 77 700€ de CA." },
+                { name: "Micro-entreprise", desc: "Simple, ~26% de charges. Idéal pour démarrer sous 83 600€ de CA." },
                 { name: "EI au réel", desc: "Charges ~45%, mais déduction des frais réels. Pas de plafond CA." },
                 { name: "EURL", desc: "Société unipersonnelle, IR ou IS. Optimisation rémunération/dividendes." },
                 { name: "SASU", desc: "Président assimilé salarié. Charges élevées (~65%) mais meilleure couverture." },

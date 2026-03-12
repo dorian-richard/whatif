@@ -55,11 +55,11 @@ function fmt(n: number): string {
 }
 
 /** Plafond CA micro-entreprise BNC */
-const MICRO_PLAFOND = 77700;
+const MICRO_PLAFOND = 83600;
 
 /** Retraite constants (mirrored from retraite/page.tsx) */
-const TRIMESTRE_THRESHOLD = 1747;
-const PLAFOND_SS = 46368;
+const TRIMESTRE_THRESHOLD = 1803;
+const PLAFOND_SS = 48060;
 const ABATTEMENT_MICRO = 0.34;
 const PENSION_RATE = 0.50;
 const RETRAITE_RATE_TNS = 0.17;
