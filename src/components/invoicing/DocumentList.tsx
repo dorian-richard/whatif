@@ -2,7 +2,7 @@
 
 import type { InvoiceDocument, DocumentStatus, DocumentType } from "@/types";
 import { fmt, cn } from "@/lib/utils";
-import { FileText, AlertTriangle, Check, Clock, X, CircleMinus } from "@/components/ui/icons";
+import { FileText, AlertTriangle, Check, Clock, X, CircleMinus, Copy } from "@/components/ui/icons";
 
 const STATUS_CONFIG: Record<DocumentStatus, { label: string; color: string; bg: string }> = {
   draft: { label: "Brouillon", color: "#8b8b9e", bg: "bg-[#8b8b9e]/12" },
@@ -35,9 +35,10 @@ interface DocumentListProps {
   filter: DocumentType | "all";
   onSelect: (doc: InvoiceDocument) => void;
   onDelete: (id: string) => void;
+  onDuplicate?: (doc: InvoiceDocument) => void;
 }
 
-export function DocumentList({ documents, filter, onSelect, onDelete }: DocumentListProps) {
+export function DocumentList({ documents, filter, onSelect, onDelete, onDuplicate }: DocumentListProps) {
   const filtered = filter === "all" ? documents : documents.filter((d) => d.type === filter);
   const sorted = [...filtered].sort((a, b) => new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime());
 
@@ -74,6 +75,7 @@ export function DocumentList({ documents, filter, onSelect, onDelete }: Document
               </div>
               <div className="text-xs text-muted-foreground/60">
                 {doc.clientSnapshot?.name ?? "Client"} &middot; {formatDate(doc.issueDate)}
+                {doc.items?.length ? ` \u00B7 ${doc.items.length} ligne${doc.items.length > 1 ? "s" : ""}` : ""}
               </div>
             </div>
 
@@ -82,12 +84,24 @@ export function DocumentList({ documents, filter, onSelect, onDelete }: Document
               <div className="text-[10px] text-muted-foreground/60">{doc.type === "devis" ? "Devis" : "Facture"}</div>
             </div>
 
-            <button
-              onClick={(e) => { e.stopPropagation(); onDelete(doc.id); }}
-              className="text-muted-foreground/40 hover:text-red-400 transition-colors text-lg shrink-0"
-            >
-              &times;
-            </button>
+            <div className="flex items-center gap-1 shrink-0">
+              {onDuplicate && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); onDuplicate(doc); }}
+                  className="text-muted-foreground/40 hover:text-primary transition-colors p-1"
+                  title="Dupliquer"
+                >
+                  <Copy className="size-3.5" />
+                </button>
+              )}
+              <button
+                onClick={(e) => { e.stopPropagation(); if (window.confirm(`Supprimer ${doc.number} ?`)) onDelete(doc.id); }}
+                className="text-muted-foreground/40 hover:text-red-400 transition-colors p-1"
+                title="Supprimer"
+              >
+                <X className="size-3.5" />
+              </button>
+            </div>
           </div>
         );
       })}

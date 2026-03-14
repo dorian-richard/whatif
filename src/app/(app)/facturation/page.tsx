@@ -8,7 +8,7 @@ import { Receipt, FileText, AlertTriangle, Banknote, Check } from "@/components/
 import { ProBlur } from "@/components/ProBlur";
 import { DocumentList } from "@/components/invoicing/DocumentList";
 import { DocumentForm } from "@/components/invoicing/DocumentForm";
-import type { InvoiceDocument, DocumentType, DocumentStatus, IssuerSnapshot } from "@/types";
+import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, IssuerSnapshot } from "@/types";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -19,6 +19,18 @@ export default function FacturationPage() {
   const [year, setYear] = useState(CURRENT_YEAR);
   const [filter, setFilter] = useState<DocumentType | "all">("all");
   const [editing, setEditing] = useState<InvoiceDocument | null>(null);
+
+  // Pick up prefilled devis from pipeline
+  useEffect(() => {
+    try {
+      const prefill = sessionStorage.getItem("freelens-prefill-devis");
+      if (prefill) {
+        sessionStorage.removeItem("freelens-prefill-devis");
+        const devis = JSON.parse(prefill) as InvoiceDocument;
+        setEditing(devis);
+      }
+    } catch { /* ignore */ }
+  }, []);
 
   // Load from API
   useEffect(() => {
@@ -46,6 +58,7 @@ export default function FacturationPage() {
           issuerSnapshot: d.issuerSnapshot as InvoiceDocument["issuerSnapshot"],
           notes: d.notes as string | undefined,
           sourceDevisId: d.sourceDevisId as string | undefined,
+          prospectId: d.prospectId as string | undefined,
           items: ((d.items as Record<string, unknown>[]) ?? []).map((item) => ({
             id: item.id as string,
             description: item.description as string,
@@ -53,14 +66,34 @@ export default function FacturationPage() {
             unitPrice: Number(item.unitPrice) || 0,
             totalHT: Number(item.totalHT) || 0,
             sortOrder: Number(item.sortOrder) || 0,
+            itemType: (item.itemType as string) || undefined,
+            unit: (item.unit as string) || undefined,
           })),
         }));
         setDocuments(docs);
+
+        // Auto-detect late invoices
+        const today = new Date().toISOString().slice(0, 10);
+        for (const doc of docs) {
+          if (doc.type === "facture" && doc.status === "sent" && doc.dueDate && doc.dueDate.slice(0, 10) < today) {
+            // Mark as late via API
+            try {
+              const r = await fetch("/api/invoices", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: doc.id, status: "LATE" }),
+              });
+              if (r.ok) {
+                updateDocument(doc.id, { status: "late" });
+              }
+            } catch { /* ignore */ }
+          }
+        }
       } catch { /* silently fail */ }
       setLoaded(true);
     }
     load();
-  }, [year, setDocuments, setLoaded]);
+  }, [year, setDocuments, setLoaded, updateDocument]);
 
   const issuerSnapshot: IssuerSnapshot = useMemo(() => ({
     companyName, siret, tvaNumber,
@@ -160,6 +193,21 @@ export default function FacturationPage() {
     } catch { /* silently fail */ }
   }, [updateDocument]);
 
+  // Duplicate document
+  const handleDuplicate = useCallback((doc: InvoiceDocument) => {
+    setEditing({
+      ...doc,
+      id: "new",
+      number: "",
+      status: "draft",
+      issueDate: new Date().toISOString(),
+      dueDate: doc.type === "facture" ? new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10) : undefined,
+      sentAt: undefined,
+      paidAt: undefined,
+      items: doc.items.map((item) => ({ ...item, id: crypto.randomUUID() })),
+    });
+  }, []);
+
   // New document
   function handleNew(type: DocumentType) {
     setEditing({
@@ -255,6 +303,8 @@ export default function FacturationPage() {
             onClose={() => setEditing(null)}
             onConvert={handleConvert}
             onStatusChange={handleStatusChange}
+            onDuplicate={handleDuplicate}
+            existingDocuments={documents}
           />
         )}
 
@@ -265,6 +315,7 @@ export default function FacturationPage() {
             filter={filter}
             onSelect={setEditing}
             onDelete={handleDelete}
+            onDuplicate={handleDuplicate}
           />
         )}
       </ProBlur>
@@ -306,6 +357,7 @@ function mapApiDoc(d: Record<string, unknown>): InvoiceDocument {
     issuerSnapshot: d.issuerSnapshot as InvoiceDocument["issuerSnapshot"],
     notes: d.notes as string | undefined,
     sourceDevisId: d.sourceDevisId as string | undefined,
+    prospectId: d.prospectId as string | undefined,
     items: ((d.items as Record<string, unknown>[]) ?? []).map((item) => ({
       id: item.id as string,
       description: item.description as string,
@@ -313,6 +365,8 @@ function mapApiDoc(d: Record<string, unknown>): InvoiceDocument {
       unitPrice: Number(item.unitPrice) || 0,
       totalHT: Number(item.totalHT) || 0,
       sortOrder: Number(item.sortOrder) || 0,
+      itemType: (item.itemType as DocumentItem["itemType"]) || undefined,
+      unit: (item.unit as string) || undefined,
     })),
   };
 }

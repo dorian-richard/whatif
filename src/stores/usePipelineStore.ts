@@ -22,6 +22,7 @@ export interface Prospect {
   startMonth?: number;
   endMonth?: number;
   source?: string;
+  clientId?: string;
 }
 
 interface PipelineState {

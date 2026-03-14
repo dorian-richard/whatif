@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { usePipelineStore, type ProspectStage, type Prospect } from "@/stores/usePipelineStore";
+import { useProfileStore } from "@/stores/useProfileStore";
+import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { fmt, cn } from "@/lib/utils";
-import { Target, Plus, Users, TrendingUp, BarChart3, X } from "@/components/ui/icons";
+import { Target, Plus, Users, TrendingUp, BarChart3, X, UserPlus, FileText } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 import { MONTHS_SHORT } from "@/lib/constants";
 import { JOURS_OUVRES } from "@/lib/simulation-engine";
+import type { BillingType, IssuerSnapshot } from "@/types";
 
 const STAGES: ProspectStage[] = ["lead", "devis_envoye", "signe", "actif"];
 
@@ -211,6 +215,134 @@ export default function PipelinePage() {
     }
   };
 
+  // Convert prospect to client
+  const { addClient, clients: existingClients, businessStatus, companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic } = useProfileStore();
+  const { addDocument } = useInvoiceStore();
+  const router = useRouter();
+
+  const handleConvertToClient = useCallback((prospect: Prospect) => {
+    // Check if already converted
+    if (prospect.clientId) {
+      alert("Ce prospect a déjà été converti en client.");
+      return;
+    }
+
+    const billing: BillingType = (prospect.billing as BillingType) || "tjm";
+    addClient({
+      name: prospect.name,
+      billing,
+      dailyRate: prospect.dailyRate,
+      daysPerWeek: prospect.daysPerWeek,
+      monthlyAmount: prospect.monthlyAmount,
+      totalAmount: prospect.totalAmount,
+      startMonth: prospect.startMonth,
+      endMonth: prospect.endMonth,
+      email: prospect.contactEmail,
+      companyName: prospect.company,
+      isActive: true,
+    });
+
+    // Get the newly created client ID (last in list)
+    const newClients = useProfileStore.getState().clients;
+    const newClient = newClients[newClients.length - 1];
+
+    // Link prospect to client
+    updateProspect(prospect.id, { clientId: newClient.id, stage: "actif", probability: 100 });
+    syncProspect("update", { id: prospect.id, clientId: newClient.id, stage: "actif", probability: 100 });
+  }, [addClient, updateProspect, syncProspect]);
+
+  // Create devis from prospect
+  const handleCreateDevis = useCallback((prospect: Prospect) => {
+    const billing: BillingType = (prospect.billing as BillingType) || "tjm";
+    const issuerSnapshot: IssuerSnapshot = { companyName, siret, tvaNumber, address: invoiceAddress, city: invoiceCity, zip: invoiceZip, iban, bic };
+
+    // Build items from prospect billing config
+    const items = [];
+    switch (billing) {
+      case "tjm":
+        items.push({
+          id: crypto.randomUUID(),
+          description: `Prestation de conseil — ${prospect.name}`,
+          quantity: (prospect.daysPerWeek ?? 5) * 4.33,
+          unitPrice: prospect.dailyRate ?? 0,
+          totalHT: 0,
+          sortOrder: 0,
+          itemType: "tjm" as const,
+          unit: "jour",
+        });
+        break;
+      case "forfait":
+        items.push({
+          id: crypto.randomUUID(),
+          description: `Forfait mensuel — ${prospect.name}`,
+          quantity: 1,
+          unitPrice: prospect.monthlyAmount ?? 0,
+          totalHT: 0,
+          sortOrder: 0,
+          itemType: "forfait" as const,
+          unit: "mois",
+        });
+        break;
+      case "mission":
+        items.push({
+          id: crypto.randomUUID(),
+          description: `Mission — ${prospect.name}`,
+          quantity: 1,
+          unitPrice: prospect.totalAmount ?? 0,
+          totalHT: 0,
+          sortOrder: 0,
+          itemType: "mission" as const,
+          unit: "forfait",
+        });
+        break;
+    }
+    items.forEach(i => { i.totalHT = i.quantity * i.unitPrice; });
+
+    const totalHT = items.reduce((s, i) => s + i.totalHT, 0);
+    const tvaRate = businessStatus === "micro" ? 0 : 20;
+    const totalTVA = totalHT * (tvaRate / 100);
+
+    // Find or create client
+    let clientId = prospect.clientId;
+    if (!clientId) {
+      // Auto-convert to client first
+      handleConvertToClient(prospect);
+      clientId = useProfileStore.getState().clients[useProfileStore.getState().clients.length - 1]?.id;
+    }
+
+    // Create the devis document in the store for immediate editing
+    const devis = {
+      id: "new" as string,
+      clientId: clientId ?? "",
+      type: "devis" as const,
+      number: "",
+      status: "draft" as const,
+      issueDate: new Date().toISOString(),
+      validUntil: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
+      totalHT,
+      totalTVA,
+      totalTTC: totalHT + totalTVA,
+      tvaRate,
+      issuerSnapshot,
+      clientSnapshot: { name: prospect.name, companyName: prospect.company },
+      notes: businessStatus === "micro" ? "TVA non applicable, art. 293 B du CGI" : undefined,
+      prospectId: prospect.id,
+      items,
+    };
+
+    // Store the devis data in session storage for the facturation page to pick up
+    sessionStorage.setItem("freelens-prefill-devis", JSON.stringify(devis));
+
+    // Update prospect stage
+    if (prospect.stage === "lead") {
+      updateProspect(prospect.id, { stage: "devis_envoye", probability: 50 });
+      syncProspect("update", { id: prospect.id, stage: "devis_envoye", probability: 50 });
+    }
+
+    // Navigate to facturation
+    router.push("/facturation");
+  }, [handleConvertToClient, businessStatus, companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic, updateProspect, syncProspect, router]);
+
   // Summary
   const totalPipeline = prospects.reduce((s, p) => s + p.estimatedCA, 0);
   const weightedPipeline = prospects.filter((p) => p.stage !== "actif").reduce((s, p) => s + p.estimatedCA * (p.probability / 100), 0);
@@ -356,13 +488,31 @@ export default function PipelinePage() {
                           {p.notes && (
                             <div className="text-[10px] text-muted-foreground/60 mt-1 truncate">{p.notes}</div>
                           )}
-                          <div className="flex items-center gap-1 mt-2">
+                          <div className="flex items-center gap-1 mt-2 flex-wrap">
                             <button
                               onClick={() => handleEdit(p)}
                               className="text-[10px] font-medium text-muted-foreground hover:text-foreground transition-colors"
                             >
                               Modifier
                             </button>
+                            <span className="text-muted-foreground/30">&middot;</span>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleCreateDevis(p); }}
+                              className="text-[10px] font-medium text-[#5682F2] hover:text-[#5682F2]/80 transition-colors flex items-center gap-0.5"
+                            >
+                              <FileText className="size-3" /> Devis
+                            </button>
+                            {(stage === "signe" || stage === "actif") && !p.clientId && (
+                              <>
+                                <span className="text-muted-foreground/30">&middot;</span>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); handleConvertToClient(p); }}
+                                  className="text-[10px] font-medium text-[#4ade80] hover:text-[#4ade80]/80 transition-colors flex items-center gap-0.5"
+                                >
+                                  <UserPlus className="size-3" /> Client
+                                </button>
+                              </>
+                            )}
                             <span className="text-muted-foreground/30">&middot;</span>
                             <button
                               onClick={() => handleDelete(p.id)}
@@ -438,6 +588,20 @@ export default function PipelinePage() {
                                   style={{ backgroundColor: `${STAGE_CONFIG[nextStage].color}20`, color: STAGE_CONFIG[nextStage].color }}
                                 >
                                   &rarr; {STAGE_CONFIG[nextStage].label}
+                                </button>
+                              )}
+                              <button
+                                onClick={() => handleCreateDevis(p)}
+                                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#5682F2]/10 text-[#5682F2] hover:bg-[#5682F2]/20 transition-colors flex items-center gap-1"
+                              >
+                                <FileText className="size-3" /> Devis
+                              </button>
+                              {(p.stage === "signe" || p.stage === "actif") && !p.clientId && (
+                                <button
+                                  onClick={() => handleConvertToClient(p)}
+                                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#4ade80]/10 text-[#4ade80] hover:bg-[#4ade80]/20 transition-colors flex items-center gap-1"
+                                >
+                                  <UserPlus className="size-3" /> Client
                                 </button>
                               )}
                               <button

@@ -59,6 +59,11 @@ import {
   CreditCard,
   Kanban,
   Building2,
+  Loader2,
+  Copy,
+  Wand2,
+  ChevronDown,
+  ChevronUp,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -175,4 +180,9 @@ export {
   CreditCard,
   Kanban,
   Building2,
+  Loader2,
+  Copy,
+  Wand2,
+  ChevronDown,
+  ChevronUp,
 };

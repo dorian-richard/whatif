@@ -1,5 +1,8 @@
 export type BillingType = "tjm" | "forfait" | "mission";
 
+// Types de lignes pour devis/factures
+export type ItemType = "prestation" | "tjm" | "forfait" | "mission" | "produit" | "abonnement" | "licence" | "formation" | "acompte" | "avoir";
+
 export interface ClientData {
   id: string;
   name: string;
@@ -16,11 +19,20 @@ export interface ClientData {
   isActive?: boolean;
   // Contact / facturation
   email?: string;
+  phone?: string;
+  contactName?: string;
   companyName?: string;
   siret?: string;
+  siren?: string;
+  tvaNumber?: string;
+  nafCode?: string;
+  legalForm?: string;
   clientAddress?: string;
   clientCity?: string;
   clientZip?: string;
+  clientCountry?: string;
+  website?: string;
+  paymentTermDays?: number;
 }
 
 export type BusinessStatus =
@@ -139,16 +151,21 @@ export interface DocumentItem {
   unitPrice: number;
   totalHT: number;
   sortOrder: number;
+  itemType?: ItemType;
+  unit?: string; // "jour", "heure", "mois", "unité", "forfait", "licence"
 }
 
 export interface ClientSnapshot {
   name: string;
   companyName?: string;
   siret?: string;
+  tvaNumber?: string;
   address?: string;
   city?: string;
   zip?: string;
+  country?: string;
   email?: string;
+  phone?: string;
 }
 
 export interface IssuerSnapshot {
@@ -181,6 +198,7 @@ export interface InvoiceDocument {
   issuerSnapshot?: IssuerSnapshot;
   notes?: string;
   sourceDevisId?: string;
+  prospectId?: string;
   items: DocumentItem[];
 }
 
