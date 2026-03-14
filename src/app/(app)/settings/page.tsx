@@ -625,7 +625,7 @@ export default function SettingsPage() {
                     <p className="text-xs text-muted-foreground/70">
                       {isTrial
                         ? `${trialDays} jour${trialDays > 1 ? "s" : ""} restant${trialDays > 1 ? "s" : ""} — toutes les fonctionnalités Pro`
-                        : "3 clients, 1 scénario sauvegardé"}
+                        : "1 client, 1 scénario sauvegardé"}
                     </p>
                   </div>
                   <span className={cn(

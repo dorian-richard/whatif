@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Simulateur de revenus freelance gratuit 2025 — Freelens",
+  title: "Simulateur de revenus freelance gratuit 2026 — Freelens",
   description:
     "Calcule ton revenu net freelance mois par mois : TJM, charges URSSAF, impôts, vacances. Micro-entreprise, EURL, SASU, portage. Outil gratuit en ligne.",
   alternates: { canonical: "https://freelens.io/simulateur-revenus-freelance" },
@@ -42,7 +42,7 @@ export default function SimulateurRevenusPage() {
           <h2 className="text-xl font-bold text-foreground">Comment &ccedil;a marche ?</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {[
-              { step: "1", title: "Ajoute tes clients", desc: "TJM, forfait mensuel ou mission ponctuelle. Jusqu\u2019\u00e0 3 clients en gratuit." },
+              { step: "1", title: "Ajoute tes clients", desc: "TJM, forfait mensuel ou mission ponctuelle. 1 client en gratuit, illimité en Pro." },
               { step: "2", title: "Configure ton profil", desc: "Statut juridique (micro, EI, EURL, SASU, portage), charges fixes, \u00e9pargne." },
               { step: "3", title: "Ajuste tes param\u00e8tres", desc: "Vacances, jours travaill\u00e9s par semaine, saisonnalit\u00e9, variation de tarifs." },
               { step: "4", title: "Visualise tes revenus", desc: "Graphique 12 mois avec CA brut, net apr\u00e8s charges, et cumul annuel." },
@@ -73,7 +73,7 @@ export default function SimulateurRevenusPage() {
               Sans simulation, tu navigues &agrave; l&apos;aveugle.
             </p>
             <p>
-              Freelens int&egrave;gre les <strong className="text-foreground">taux URSSAF 2025</strong> et le <strong className="text-foreground">bar&egrave;me IR en vigueur</strong> pour te donner
+              Freelens int&egrave;gre les <strong className="text-foreground">taux URSSAF 2026</strong> et le <strong className="text-foreground">bar&egrave;me IR en vigueur</strong> pour te donner
               une projection fid&egrave;le de ce que tu gagneras r&eacute;ellement, mois par mois.
             </p>
           </div>
@@ -102,11 +102,11 @@ export default function SimulateurRevenusPage() {
           <div className="space-y-3 text-sm">
             <div>
               <div className="font-semibold text-foreground">Le simulateur est-il gratuit ?</div>
-              <div className="text-muted-foreground">Oui, 100% gratuit avec 3 clients et 1 sc&eacute;nario. Le plan Pro d&eacute;bloque clients et sc&eacute;narios illimit&eacute;s.</div>
+              <div className="text-muted-foreground">Oui, 100% gratuit avec 1 client et 1 sc&eacute;nario. Le plan Pro d&eacute;bloque clients et sc&eacute;narios illimit&eacute;s.</div>
             </div>
             <div>
               <div className="font-semibold text-foreground">Les calculs sont-ils fiables ?</div>
-              <div className="text-muted-foreground">Le moteur utilise les taux URSSAF 2025 et le bar&egrave;me IR en vigueur. Tu peux aussi ajuster manuellement les taux.</div>
+              <div className="text-muted-foreground">Le moteur utilise les taux URSSAF 2026 et le bar&egrave;me IR en vigueur. Tu peux aussi ajuster manuellement les taux.</div>
             </div>
             <div>
               <div className="font-semibold text-foreground">Combien de temps prend la simulation ?</div>
@@ -128,7 +128,7 @@ export default function SimulateurRevenusPage() {
         <div className="text-xs text-muted-foreground/40 border-t border-border pt-6 space-y-2">
           <p>
             Voir aussi : <Link href="/comparateur-statuts-freelance" className="text-primary hover:underline">Comparateur de statuts freelance</Link>
-            {" "}&middot;{" "}<Link href="/tjm-freelance" className="text-primary hover:underline">TJM freelance 2025</Link>
+            {" "}&middot;{" "}<Link href="/tjm-freelance" className="text-primary hover:underline">TJM freelance 2026</Link>
             {" "}&middot;{" "}<Link href="/devenir-freelance" className="text-primary hover:underline">Devenir freelance</Link>
           </p>
         </div>

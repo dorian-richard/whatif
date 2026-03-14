@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
-import { getAnnualCA, AVG_JOURS_OUVRES, reverseCA, computeIS } from "@/lib/simulation-engine";
+import { BUSINESS_STATUS_CONFIG, CHARGES_SALARIALES, MICRO_PLAFOND } from "@/lib/constants";
+import { getAnnualCA, AVG_JOURS_OUVRES, reverseCA, computeNetFromCA } from "@/lib/simulation-engine";
 import { fmt, cn } from "@/lib/utils";
-import type { BusinessStatus, RemunerationType } from "@/types";
+import type { BusinessStatus, FreelanceProfile, RemunerationType } from "@/types";
 import {
   Briefcase,
   Check,
@@ -27,9 +27,6 @@ const STATUT_COLORS: Record<string, string> = {
   portage: "#06b6d4",
 };
 
-const CHARGES_SALARIALES = 0.23;
-const MICRO_PLAFOND = 83600;
-const PFU_RATE = 0.30;
 
 /* ── Avantages CDI ── */
 interface AvantageCDI {
@@ -95,56 +92,23 @@ const COUTS_FREELANCE: CoutFreelance[] = [
 
 /* ── Calculs ── */
 
-/** Forward: CA → net (avec IS progressif) */
-function forwardNet(
-  annualCA: number,
+/** Build a minimal profile for a given status */
+function buildProfileForStatus(
   status: BusinessStatus,
   remType: RemunerationType,
   mixtePartSalaire: number,
   customIrRate?: number
-): number {
-  const cfg = BUSINESS_STATUS_CONFIG[status];
-  const urssaf = cfg.urssaf;
-  const ir = customIrRate ?? cfg.ir;
-  const isRate = cfg.is;
-
-  if (status === "micro") return annualCA * (1 - urssaf - ir);
-
-  if (isRate === 0) {
-    if (status === "sasu_ir" && remType === "dividendes") {
-      return annualCA * (1 - ir);
-    }
-    if (status === "sasu_ir" && remType === "mixte") {
-      const salCost = annualCA * (mixtePartSalaire / 100);
-      const salNet = salCost * (1 - urssaf);
-      const remaining = annualCA - salCost;
-      return (salNet + remaining) * (1 - ir);
-    }
-    return annualCA * (1 - urssaf) * (1 - ir);
-  }
-
-  // IS structures: progressive brackets
-  const isSASU = status === "sasu_is";
-
-  if (remType === "salaire") {
-    return annualCA * (1 - urssaf) * (1 - ir);
-  }
-  if (remType === "dividendes") {
-    const isAmount = computeIS(annualCA);
-    const afterIS = annualCA - isAmount;
-    if (isSASU) return afterIS * (1 - PFU_RATE);
-    return afterIS * (1 - urssaf) * (1 - ir);
-  }
-  // Mixte
-  const salCost = annualCA * (mixtePartSalaire / 100);
-  const salNet = salCost * (1 - urssaf) * (1 - ir);
-  const remaining = Math.max(0, annualCA - salCost);
-  const isAmount = computeIS(remaining);
-  const afterIS = remaining - isAmount;
-  const divNet = isSASU
-    ? afterIS * (1 - PFU_RATE)
-    : afterIS * (1 - urssaf) * (1 - ir);
-  return salNet + divNet;
+): FreelanceProfile {
+  return {
+    monthlyExpenses: 0,
+    savings: 0,
+    adminHoursPerWeek: 0,
+    workDaysPerWeek: 5,
+    businessStatus: status,
+    remunerationType: remType,
+    mixtePartSalaire,
+    customIrRate,
+  } as FreelanceProfile;
 }
 
 function getDifficulty(
@@ -273,7 +237,7 @@ export default function TransitionPage() {
     const annualCA = effectiveExplorerTJM * workedDaysPerYear;
     return STATUTS.map((s) => {
       const remType = (s === "eurl_is" || s === "sasu_is" || s === "sasu_ir") ? localRemType : "salaire";
-      const freelanceNetAnnuel = forwardNet(annualCA, s, remType, localMixte, customIrRate);
+      const freelanceNetAnnuel = computeNetFromCA(annualCA, buildProfileForStatus(s, remType, localMixte, customIrRate));
       const freelanceNetAfterCosts = freelanceNetAnnuel - freelanceCostsAnnuel;
       const deltaMensuel =
         freelanceNetAfterCosts / 12 - cdiPackageMensuel;

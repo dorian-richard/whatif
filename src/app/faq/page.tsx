@@ -19,11 +19,11 @@ const QUESTIONS = [
   },
   {
     q: "Quelle diff\u00e9rence entre Free et Pro ?",
-    a: "Le plan Free te donne acc\u00e8s au simulateur, au comparateur de statuts, \u00e0 l\u2019objectif revenu, \u00e0 la transition CDI \u2192 freelance et au benchmark TJM (3 clients max, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients et sc\u00e9narios illimit\u00e9s, suivi des paiements, pipeline commercial, calendrier fiscal, simulateur de tr\u00e9sorerie, historique & tendances, simulation retraite & ACRE, et export PDF & CSV.",
+    a: "Le plan Free te donne acc\u00e8s au simulateur, au comparateur de statuts, \u00e0 l\u2019objectif revenu, \u00e0 la transition CDI \u2192 freelance et au benchmark TJM (1 client, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients et sc\u00e9narios illimit\u00e9s, suivi des paiements, pipeline commercial, calendrier fiscal, simulateur de tr\u00e9sorerie, historique & tendances, simulation retraite & ACRE, et export PDF & CSV.",
   },
   {
     q: "Les calculs sont-ils fiables ?",
-    a: "Le moteur de simulation utilise les taux officiels URSSAF 2025 et les bar\u00e8mes d\u2019IR en vigueur. Les cotisations sont calcul\u00e9es selon ton statut juridique r\u00e9el (micro, EI, EURL IR/IS, SASU IR/IS, portage). Le simulateur de tr\u00e9sorerie int\u00e8gre URSSAF, IR et IS pour une projection fid\u00e8le.",
+    a: "Le moteur de simulation utilise les taux officiels URSSAF 2026 et les bar\u00e8mes d\u2019IR en vigueur. Les cotisations sont calcul\u00e9es selon ton statut juridique r\u00e9el (micro, EI, EURL IR/IS, SASU IR/IS, portage). Le simulateur de tr\u00e9sorerie int\u00e8gre URSSAF, IR et IS pour une projection fid\u00e8le.",
   },
   {
     q: "Comment fonctionne le simulateur de revenus ?",

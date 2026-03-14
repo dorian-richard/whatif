@@ -18,7 +18,7 @@ const jsonLd = {
   publisher: { "@type": "Organization", name: "Freelens", logo: { "@type": "ImageObject", url: "https://freelens.io/logo.webp" } },
   description: "Tout ce qu'il faut savoir pour devenir freelance : choisir son statut, fixer son TJM, trouver des clients, gérer ses finances.",
   datePublished: "2025-01-15",
-  dateModified: "2025-03-01",
+  dateModified: "2026-03-14",
 };
 
 export default function DevenirFreelancePage() {
@@ -74,7 +74,7 @@ export default function DevenirFreelancePage() {
           <div className="text-sm text-muted-foreground leading-relaxed space-y-3">
             <p>
               Ton <strong className="text-foreground">taux journalier moyen (TJM)</strong> d&eacute;pend de ton m&eacute;tier,
-              ton exp&eacute;rience et ta localisation. En France en 2025, les TJM tech varient de 300&euro; (junior marketing)
+              ton exp&eacute;rience et ta localisation. En France en 2026, les TJM tech varient de 300&euro; (junior marketing)
               &agrave; 1 000&euro;+ (CTO/Lead Tech).
             </p>
             <p>
@@ -195,7 +195,7 @@ export default function DevenirFreelancePage() {
           <p>
             Voir aussi : <Link href="/simulateur-revenus-freelance" className="text-primary hover:underline">Simulateur de revenus freelance</Link>
             {" "}&middot;{" "}<Link href="/comparateur-statuts-freelance" className="text-primary hover:underline">Comparateur de statuts</Link>
-            {" "}&middot;{" "}<Link href="/tjm-freelance" className="text-primary hover:underline">TJM freelance 2025</Link>
+            {" "}&middot;{" "}<Link href="/tjm-freelance" className="text-primary hover:underline">TJM freelance 2026</Link>
           </p>
         </div>
       </div>

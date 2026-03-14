@@ -90,7 +90,7 @@ const jsonLd = [
         name: "Quelle différence entre Free et Pro ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Le plan Free te donne accès au simulateur, au comparateur de statuts, à l\u2019objectif revenu, à la transition CDI → freelance et au benchmark TJM (3 clients max, 1 scénario). Le plan Pro débloque tout : clients et scénarios illimités, suivi des paiements, pipeline commercial, calendrier fiscal, simulateur de trésorerie, historique & tendances, simulation retraite & ACRE, et export PDF & CSV.",
+          text: "Le plan Free te donne accès au simulateur, au comparateur de statuts, à l\u2019objectif revenu, à la transition CDI → freelance et au benchmark TJM (1 client, 1 scénario). Le plan Pro débloque tout : clients et scénarios illimités, suivi des paiements, pipeline commercial, calendrier fiscal, simulateur de trésorerie, historique & tendances, simulation retraite & ACRE, et export PDF & CSV.",
         },
       },
       {
@@ -98,7 +98,7 @@ const jsonLd = [
         name: "Les calculs sont-ils fiables ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Le moteur de simulation utilise les taux officiels URSSAF 2025 et les barèmes d\u2019IR en vigueur. Les cotisations sont calculées selon ton statut juridique réel (micro, EI, EURL IR/IS, SASU IR/IS, portage). Le simulateur de trésorerie intègre URSSAF, IR et IS pour une projection fidèle.",
+          text: "Le moteur de simulation utilise les taux officiels URSSAF 2026 et les barèmes d\u2019IR en vigueur. Les cotisations sont calculées selon ton statut juridique réel (micro, EI, EURL IR/IS, SASU IR/IS, portage). Le simulateur de trésorerie intègre URSSAF, IR et IS pour une projection fidèle.",
         },
       },
       {

@@ -1,5 +1,5 @@
 import type { ClientData, SimulationParams, ProjectionResult, FreelanceProfile, BusinessStatus, RemunerationType } from "@/types";
-import { SEASONALITY, BUSINESS_STATUS_CONFIG } from "./constants";
+import { SEASONALITY, BUSINESS_STATUS_CONFIG, PFU_RATE } from "./constants";
 
 /**
  * Calcule les jours ouvres (lun-ven) pour chaque mois de l'annee donnee.
@@ -61,7 +61,7 @@ export function getClientMonthlyCA(
     case "forfait":
       return client.monthlyAmount ?? 0;
     case "mission": {
-      const duration = Math.max(1, (client.endMonth ?? 0) - (client.startMonth ?? 0) + 1);
+      const duration = Math.max(1, (client.endMonth ?? 11) - (client.startMonth ?? 0) + 1);
       return (client.totalAmount ?? 0) / duration;
     }
     default:
@@ -114,7 +114,6 @@ export function getAnnualCA(clients: ClientData[], vacationDaysPerMonth?: number
 }
 
 /** Taux du Prelevement Forfaitaire Unique (flat tax dividendes) */
-const PFU_RATE = 0.30; // 12.8% IR + 17.2% CSG/CRDS
 
 /**
  * IS progressif France :

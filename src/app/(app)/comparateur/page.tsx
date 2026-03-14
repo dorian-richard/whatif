@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getAnnualCA } from "@/lib/simulation-engine";
 import { ProBlur } from "@/components/ProBlur";
-import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
+import { BUSINESS_STATUS_CONFIG, PFU_RATE, MICRO_PLAFOND } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
 import {
@@ -30,9 +30,6 @@ const STATUT_COLORS: Record<string, string> = {
   sasu_is: "#4ade80",
   portage: "#06b6d4",
 };
-
-const PFU_RATE = 0.30;
-const MICRO_PLAFOND = 83600;
 
 interface StatusResult {
   status: BusinessStatus;

@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { getAnnualCA } from "@/lib/simulation-engine";
+import { getAnnualCA, computeNetFromCA } from "@/lib/simulation-engine";
 import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
-import type { BusinessStatus, RemunerationType } from "@/types";
+import type { BusinessStatus, FreelanceProfile, RemunerationType } from "@/types";
 import { Shield, TrendingUp, Banknote, CalendarDays } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 
@@ -19,8 +19,6 @@ const STATUT_COLORS: Record<string, string> = {
   sasu_ir: "#f87171",
   sasu_is: "#4ade80",
 };
-
-const PFU_RATE = 0.30;
 
 interface AcreResult {
   status: BusinessStatus;
@@ -37,22 +35,20 @@ interface AcreResult {
 
 /**
  * Taux URSSAF avec ACRE :
- * - TNS (micro, ei, eurl_ir, eurl_is) : 50% de reduction sur le total
- * - SASU (assimile salarie) : seule la part patronale (~45%) est reduite de 50%,
- *   la part salariale (~22%) reste intacte. Soit : 0.65 - 0.225 = 0.425
+ * - TNS (micro, ei, eurl_ir, eurl_is) : 50% de réduction sur le total
+ * - SASU (assimilé salarié) : seule la part patronale (~23% sur 45%) est réduite de 50%,
+ *   la part salariale (~22%) reste intacte. Réduction ≈ 0.115. Soit : 0.45 - 0.115 = 0.335
  */
 function getAcreUrssafRate(status: BusinessStatus): number {
   const cfg = BUSINESS_STATUS_CONFIG[status];
   if (status === "sasu_ir" || status === "sasu_is") {
-    return cfg.urssaf - 0.225; // 0.425
+    return cfg.urssaf - 0.115; // ~0.335
   }
   return cfg.urssaf * 0.5;
 }
 
-/**
- * Calcul net identique au comparateur, avec urssaf paramétrable.
- */
-function computeNet(
+/** Compute net using the canonical engine, with a custom URSSAF rate */
+function computeNetForAcre(
   annualCA: number,
   status: BusinessStatus,
   urssafRate: number,
@@ -60,53 +56,18 @@ function computeNet(
   mixtePartSalaire: number,
   customIrRate?: number,
 ): number {
-  const cfg = BUSINESS_STATUS_CONFIG[status];
-  const ir = customIrRate ?? cfg.ir;
-  const is = cfg.is;
-
-  if (status === "micro") {
-    return annualCA * (1 - urssafRate - ir);
-  }
-
-  if (is === 0) {
-    // IR structures
-    if (status === "sasu_ir" && remunerationType === "dividendes") {
-      return annualCA * (1 - ir);
-    }
-    if (status === "sasu_ir" && remunerationType === "mixte") {
-      const salaryCost = annualCA * (mixtePartSalaire / 100);
-      const salaryNet = salaryCost * (1 - urssafRate);
-      const remaining = annualCA - salaryCost;
-      return (salaryNet + remaining) * (1 - ir);
-    }
-    return annualCA * (1 - urssafRate) * (1 - ir);
-  }
-
-  // IS structures
-  const isSASU = status === "sasu_is";
-
-  if (remunerationType === "salaire") {
-    return annualCA * (1 - urssafRate) * (1 - ir);
-  }
-
-  if (remunerationType === "dividendes") {
-    const afterIS = annualCA * (1 - is);
-    if (isSASU) return afterIS * (1 - PFU_RATE);
-    return afterIS * (1 - urssafRate) * (1 - ir);
-  }
-
-  // Mixte
-  const salaryCost = annualCA * (mixtePartSalaire / 100);
-  const salaryNet = salaryCost * (1 - urssafRate);
-  const salaryAfterIR = salaryNet * (1 - ir);
-
-  const remaining = Math.max(0, annualCA - salaryCost);
-  const afterIS = remaining * (1 - is);
-
-  if (isSASU) {
-    return salaryAfterIR + afterIS * (1 - PFU_RATE);
-  }
-  return salaryAfterIR + afterIS * (1 - urssafRate) * (1 - ir);
+  const profile: FreelanceProfile = {
+    monthlyExpenses: 0,
+    savings: 0,
+    adminHoursPerWeek: 0,
+    workDaysPerWeek: 5,
+    businessStatus: status,
+    remunerationType,
+    mixtePartSalaire,
+    customUrssafRate: urssafRate,
+    customIrRate,
+  };
+  return computeNetFromCA(annualCA, profile);
 }
 
 export default function AcrePage() {
@@ -128,8 +89,8 @@ export default function AcrePage() {
       const normalUrssaf = cfg.urssaf;
       const acreUrssaf = getAcreUrssafRate(s);
 
-      const netNormal = computeNet(annualCA, s, normalUrssaf, remType, localMixte, customIrRate);
-      const netAcre = computeNet(annualCA, s, acreUrssaf, remType, localMixte, customIrRate);
+      const netNormal = computeNetForAcre(annualCA, s, normalUrssaf, remType, localMixte, customIrRate);
+      const netAcre = computeNetForAcre(annualCA, s, acreUrssaf, remType, localMixte, customIrRate);
       const economie = netAcre - netNormal;
 
       return {

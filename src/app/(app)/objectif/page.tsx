@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
+import { BUSINESS_STATUS_CONFIG, MICRO_PLAFOND } from "@/lib/constants";
 import { AVG_JOURS_OUVRES, getAnnualCA, reverseCA, computeNetFromCA, computeIS } from "@/lib/simulation-engine";
 import { fmt, cn } from "@/lib/utils";
-import type { BusinessStatus, RemunerationType } from "@/types";
+import type { BusinessStatus, FreelanceProfile, RemunerationType } from "@/types";
 import {
   Check,
   CircleAlert,
@@ -28,8 +28,6 @@ const STATUT_COLORS: Record<string, string> = {
   sasu_is: "#4ade80",
   portage: "#06b6d4",
 };
-
-const MICRO_PLAFOND = 83600;
 
 // TJM market benchmarks for difficulty badges
 const TJM_SEUILS = {
@@ -54,40 +52,23 @@ interface GoalResult {
   difficulty: "accessible" | "moyen" | "ambitieux" | "difficile";
 }
 
-const PFU_RATE = 0.30;
-
-/** Compute net from CA for a specific status (without needing a full profile) */
-function computeNetForStatus(
-  annualCA: number,
+/** Build a minimal FreelanceProfile for a given status */
+function buildProfileForStatus(
   status: BusinessStatus,
   remType: RemunerationType,
   mixtePartSalaire: number,
   customIrRate?: number
-): number {
-  const cfg = BUSINESS_STATUS_CONFIG[status];
-  const urssaf = cfg.urssaf;
-  const ir = customIrRate ?? cfg.ir;
-
-  if (status === "micro") return annualCA * (1 - urssaf - ir);
-  if (cfg.is === 0) return annualCA * (1 - urssaf) * (1 - ir);
-
-  const isSASU = status === "sasu_is";
-  if (remType === "salaire") return annualCA * (1 - urssaf) * (1 - ir);
-  if (remType === "dividendes") {
-    const isAmt = computeIS(annualCA);
-    const afterIS = annualCA - isAmt;
-    if (isSASU) return afterIS * (1 - PFU_RATE);
-    return afterIS * (1 - urssaf) * (1 - ir);
-  }
-  // mixte
-  const salPart = mixtePartSalaire / 100;
-  const sCost = Math.min(annualCA * salPart, annualCA);
-  const sNet = sCost * (1 - urssaf) * (1 - ir);
-  const remaining = Math.max(0, annualCA - sCost);
-  const isAmt = computeIS(remaining);
-  const afterIS = remaining - isAmt;
-  const dNet = isSASU ? afterIS * (1 - PFU_RATE) : afterIS * (1 - urssaf) * (1 - ir);
-  return sNet + dNet;
+): FreelanceProfile {
+  return {
+    monthlyExpenses: 0,
+    savings: 0,
+    adminHoursPerWeek: 0,
+    workDaysPerWeek: 5,
+    businessStatus: status,
+    remunerationType: remType,
+    mixtePartSalaire,
+    customIrRate,
+  } as FreelanceProfile;
 }
 
 /** Breakdown taux effectif into social charges vs fiscal (IR/IS) */
@@ -99,50 +80,36 @@ function computeTauxBreakdown(
   customIrRate?: number
 ): { social: number; fiscal: number } {
   if (requiredCA <= 0) return { social: 0, fiscal: 0 };
+  const p = buildProfileForStatus(status, remType, mixtePartSalaire, customIrRate);
+  const net = computeNetFromCA(requiredCA, p);
+  const totalCharges = requiredCA - net;
+  const tauxEffectif = totalCharges / requiredCA;
+  // Approximate split: social = URSSAF portion, fiscal = remainder (IR/IS/PFU)
   const cfg = BUSINESS_STATUS_CONFIG[status];
   const urssaf = cfg.urssaf;
-  const ir = customIrRate ?? cfg.ir;
-
-  if (status === "micro") return { social: urssaf, fiscal: ir };
-  if (cfg.is === 0) return { social: urssaf, fiscal: (1 - urssaf) * ir };
-
-  const isSASU = status === "sasu_is";
-  if (remType === "salaire") return { social: urssaf, fiscal: (1 - urssaf) * ir };
-
-  if (remType === "dividendes") {
+  // For micro, URSSAF is on CA directly
+  if (status === "micro") {
+    const socialRate = urssaf;
+    return { social: socialRate, fiscal: tauxEffectif - socialRate };
+  }
+  // For IS dividendes, social charges are minimal (PFU social component or TNS on dividends)
+  if (cfg.is > 0 && remType === "dividendes") {
+    // IS + PFU/TNS — compute net without IS/dividends taxation to isolate social
     const isAmt = computeIS(requiredCA);
     const afterIS = requiredCA - isAmt;
-    if (isSASU) {
-      return {
-        social: (afterIS * 0.172) / requiredCA,
-        fiscal: (isAmt + afterIS * 0.128) / requiredCA,
-      };
-    }
-    const socialAmt = afterIS * urssaf;
-    const irAmt = (afterIS - socialAmt) * ir;
-    return { social: socialAmt / requiredCA, fiscal: (isAmt + irAmt) / requiredCA };
+    const socialRatio = status === "sasu_is" ? (afterIS * 0.172) / requiredCA : (afterIS * urssaf) / requiredCA;
+    return { social: socialRatio, fiscal: tauxEffectif - socialRatio };
   }
-
-  // Mixte
+  // For salaire / IR structures: URSSAF is on CA (or caAfterChargesPro)
+  if (cfg.is === 0 || remType === "salaire") {
+    return { social: urssaf, fiscal: tauxEffectif - urssaf };
+  }
+  // Mixte: weighted average
   const salPart = mixtePartSalaire / 100;
-  const salCost = requiredCA * salPart;
-  const salSocialAmt = salCost * urssaf;
-  const salIRAmt = (salCost - salSocialAmt) * ir;
-  const remaining = requiredCA - salCost;
-  const isAmt = computeIS(remaining);
-  const afterIS = remaining - isAmt;
-  let divSocialAmt: number, divIRAmt: number;
-  if (isSASU) {
-    divSocialAmt = afterIS * 0.172;
-    divIRAmt = afterIS * 0.128;
-  } else {
-    divSocialAmt = afterIS * urssaf;
-    divIRAmt = (afterIS - divSocialAmt) * ir;
-  }
-  return {
-    social: (salSocialAmt + divSocialAmt) / requiredCA,
-    fiscal: (isAmt + salIRAmt + divIRAmt) / requiredCA,
-  };
+  const isAmt = computeIS(requiredCA * (1 - salPart));
+  const afterIS = requiredCA * (1 - salPart) - isAmt;
+  const socialAmt = requiredCA * salPart * urssaf + (status === "sasu_is" ? afterIS * 0.172 : afterIS * urssaf);
+  return { social: socialAmt / requiredCA, fiscal: tauxEffectif - socialAmt / requiredCA };
 }
 
 function getDifficulty(tjm: number): GoalResult["difficulty"] {
@@ -212,7 +179,7 @@ export default function ObjectifPage() {
         netResult = targetAnnualNet;
       } else {
         requiredCA = targetAnnualCA;
-        netResult = computeNetForStatus(targetAnnualCA, s, remType, localMixte, customIrRate);
+        netResult = computeNetFromCA(targetAnnualCA, buildProfileForStatus(s, remType, localMixte, customIrRate));
       }
 
       const requiredTJM = workedDaysPerYear > 0 ? requiredCA / workedDaysPerYear : 0;

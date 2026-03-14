@@ -34,7 +34,7 @@ export default function CGVPage() {
             <h2 className="text-lg font-semibold text-foreground">3. Offres et tarifs</h2>
             <p>Freelens propose deux formules :</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Free</strong> : gratuit, acc&egrave;s limit&eacute; (3 clients, 1 sc&eacute;nario)</li>
+              <li><strong>Free</strong> : gratuit, acc&egrave;s limit&eacute; (1 client, 1 sc&eacute;nario)</li>
               <li><strong>Pro</strong> : 9&euro;/mois ou 79&euro;/an (soit 2 mois offerts)</li>
             </ul>
             <p>

@@ -1,5 +1,11 @@
 import type { SimulationParams } from "@/types";
 
+/* ── Constantes réglementaires ── */
+export const PFU_RATE = 0.30; // 12.8% IR + 17.2% CSG/CRDS
+export const MICRO_PLAFOND = 83600; // Plafond micro-entreprise BNC 2026
+export const PLAFOND_SS = 48060; // Plafond annuel Sécurité Sociale 2026
+export const CHARGES_SALARIALES = 0.23; // Taux moyen charges salariales CDI
+
 export const MONTHS_SHORT = [
   "Jan", "Fév", "Mar", "Avr", "Mai", "Jun",
   "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc",

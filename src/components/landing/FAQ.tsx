@@ -16,7 +16,7 @@ const QUESTIONS = [
   },
   {
     q: "Les calculs sont-ils fiables ?",
-    a: "Le moteur de simulation utilise les taux officiels URSSAF 2025 et les bar\u00e8mes d\u2019IR en vigueur. Les cotisations sont calcul\u00e9es selon ton statut juridique r\u00e9el (micro, EI, EURL IR/IS, SASU IR/IS, portage).",
+    a: "Le moteur de simulation utilise les taux officiels URSSAF 2026 et les bar\u00e8mes d\u2019IR en vigueur. Les cotisations sont calcul\u00e9es selon ton statut juridique r\u00e9el (micro, EI, EURL IR/IS, SASU IR/IS, portage).",
   },
   {
     q: "Mes donn\u00e9es sont-elles en s\u00e9curit\u00e9 ?",

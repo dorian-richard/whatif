@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getAnnualCA } from "@/lib/simulation-engine";
-import { BUSINESS_STATUS_CONFIG } from "@/lib/constants";
+import { BUSINESS_STATUS_CONFIG, PLAFOND_SS } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus } from "@/types";
 import { Landmark, CalendarDays, TrendingUp, Banknote, Gauge, CircleAlert } from "@/components/ui/icons";
@@ -25,8 +25,6 @@ import {
 
 /** Seuil de revenu cotise pour valider 1 trimestre (2026) */
 const TRIMESTRE_THRESHOLD = 1803;
-/** Plafond annuel de la securite sociale 2026 */
-const PLAFOND_SS = 48060;
 /** Abattement micro BNC */
 const ABATTEMENT_MICRO = 0.34;
 /** Age taux plein automatique (defaut) */

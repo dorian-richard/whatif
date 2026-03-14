@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "TJM freelance 2025 : combien facturer ? Benchmark + calculateur — Freelens",
+  title: "TJM freelance 2026 : combien facturer ? Benchmark + calculateur — Freelens",
   description:
     "Découvre les TJM du marché freelance français par métier (dev, data, design, product). Calcule ton TJM idéal selon ton objectif de revenu net. Gratuit.",
   alternates: { canonical: "https://freelens.io/tjm-freelance" },
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "Benchmark TJM freelance 2025 — Freelens",
+  name: "Benchmark TJM freelance 2026 — Freelens",
   url: "https://freelens.io/tjm-freelance",
   applicationCategory: "FinanceApplication",
   operatingSystem: "Web",
@@ -28,7 +28,7 @@ export default function TJMFreelancePage() {
 
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-5xl font-bold text-foreground leading-tight">
-            TJM freelance 2025 :{" "}
+            TJM freelance 2026 :{" "}
             <span className="fn-gradient-text">combien facturer ?</span>
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
@@ -39,7 +39,7 @@ export default function TJMFreelancePage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-foreground">TJM moyens par m&eacute;tier en France (2025)</h2>
+          <h2 className="text-xl font-bold text-foreground">TJM moyens par m&eacute;tier en France (2026)</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm border border-border rounded-xl overflow-hidden">
               <thead>
@@ -62,7 +62,7 @@ export default function TJMFreelancePage() {
             </table>
           </div>
           <p className="text-xs text-muted-foreground/60">
-            Sources : Silkhom 2025, Malt 2024. Les TJM varient selon l&apos;exp&eacute;rience, la localisation et la sp&eacute;cialisation.
+            Sources : Silkhom 2026, Malt 2024. Les TJM varient selon l&apos;exp&eacute;rience, la localisation et la sp&eacute;cialisation.
             Freelens propose un benchmark d&eacute;taill&eacute; sur 27 m&eacute;tiers.
           </p>
         </div>
