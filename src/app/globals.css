@@ -46,37 +46,37 @@
 /* ── Light mode ── */
 :root {
   --radius: 0.625rem;
-  --background: #ffffff;
+  --background: #f5f6fa;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #5682F2;
+  --primary: #4a6ee0;
   --primary-foreground: #ffffff;
-  --secondary: #f8f9fb;
+  --secondary: #eef0f5;
   --secondary-foreground: #0f172a;
-  --muted: #f4f5f7;
-  --muted-foreground: #374151;
-  --accent: #f4f5f7;
+  --muted: #e8eaf0;
+  --muted-foreground: #4b5563;
+  --accent: #e8eaf0;
   --accent-foreground: #0f172a;
-  --destructive: #ef4444;
-  --border: #e5e7eb;
-  --input: #e5e7eb;
-  --ring: #5682F2;
-  --chart-1: #5682F2;
-  --chart-2: #4ade80;
-  --chart-3: #f97316;
-  --chart-4: #a78bfa;
-  --chart-5: #F4BE7E;
+  --destructive: #dc2626;
+  --border: #d1d5db;
+  --input: #d1d5db;
+  --ring: #4a6ee0;
+  --chart-1: #4a6ee0;
+  --chart-2: #16a34a;
+  --chart-3: #ea580c;
+  --chart-4: #7c3aed;
+  --chart-5: #d97706;
   --sidebar: #ffffff;
   --sidebar-foreground: #0f172a;
-  --sidebar-primary: #5682F2;
+  --sidebar-primary: #4a6ee0;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f4f5f7;
+  --sidebar-accent: #e8eaf0;
   --sidebar-accent-foreground: #0f172a;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: #5682F2;
+  --sidebar-border: #d1d5db;
+  --sidebar-ring: #4a6ee0;
 }
 
 /* ── Dark mode (matches current hardcoded hex values) ── */
@@ -123,8 +123,69 @@
   }
 }
 
+/* ========= LIGHT MODE ENHANCEMENTS ========= */
+
+/* Cards — subtle blue-tinted shadow for depth + brand cohesion */
+:root .bg-card {
+  box-shadow:
+    0 1px 2px rgba(74, 110, 224, 0.04),
+    0 2px 6px rgba(74, 110, 224, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+/* Rounded cards (2xl) — slightly stronger shadow */
+:root .bg-card.rounded-2xl,
+:root .rounded-2xl.bg-card {
+  box-shadow:
+    0 1px 3px rgba(74, 110, 224, 0.05),
+    0 4px 12px rgba(74, 110, 224, 0.07);
+}
+
+/* Sidebar — right edge shadow for separation */
+:root .bg-sidebar {
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Inputs — inset shadow for depth */
+:root input:not([type="checkbox"]):not([type="radio"]),
+:root select,
+:root textarea {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Muted surfaces at low opacity — enforce minimum visibility */
+:root .bg-muted\/30 { background-color: rgba(232, 234, 240, 0.55); }
+:root .bg-muted\/40 { background-color: rgba(232, 234, 240, 0.65); }
+:root .bg-muted\/50 { background-color: rgba(232, 234, 240, 0.75); }
+
+/* Text at low opacity — enforce minimum contrast */
+:root .text-muted-foreground\/40 { color: rgba(75, 85, 99, 0.55); }
+:root .text-muted-foreground\/50 { color: rgba(75, 85, 99, 0.65); }
+:root .text-muted-foreground\/60 { color: rgba(75, 85, 99, 0.78); }
+
+/* Accent color badges — darker in light mode for contrast */
+:root .text-\[\#4ade80\] { color: #15803d; }
+:root .text-\[\#f87171\] { color: #dc2626; }
+:root .text-\[\#F4BE7E\] { color: #b45309; }
+:root .text-\[\#a78bfa\] { color: #6d28d9; }
+:root .text-\[\#f97316\] { color: #c2410c; }
+:root .text-\[\#fbbf24\] { color: #a16207; }
+
 /* ========= DARK MODE OVERRIDES ========= */
 /* Unlayered rules override @layer utilities by cascade priority */
+.dark .bg-card {
+  box-shadow: none;
+}
+
+.dark .bg-sidebar {
+  box-shadow: none;
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark select,
+.dark textarea {
+  box-shadow: none;
+}
 
 /* Surfaces */
 .dark .bg-white { background-color: #0f172a; }
@@ -199,6 +260,10 @@
 
 /* Gradient page background helper */
 .dark-page-bg {
+  background-color: var(--background);
+}
+
+.dark .dark-page-bg {
   background-image: linear-gradient(to bottom right, #020617, rgba(30, 27, 75, 0.15), #020617);
 }
 
@@ -224,6 +289,13 @@
 /* ========= FINARY-STYLE LANDING ========= */
 
 .fn-gradient-text {
+  background: linear-gradient(135deg, #3b63c9 0%, #c88a2e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .fn-gradient-text {
   background: linear-gradient(135deg, #5682F2 0%, #F4BE7E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -231,10 +303,18 @@
 }
 
 .fn-glow {
-  box-shadow: 0 0 30px rgba(86, 130, 242, 0.25), 0 0 60px rgba(86, 130, 242, 0.08);
+  box-shadow: 0 4px 20px rgba(74, 110, 224, 0.12), 0 0 40px rgba(74, 110, 224, 0.06);
 }
 
 .fn-glow-gold {
+  box-shadow: 0 4px 20px rgba(217, 119, 6, 0.1), 0 0 40px rgba(217, 119, 6, 0.05);
+}
+
+.dark .fn-glow {
+  box-shadow: 0 0 30px rgba(86, 130, 242, 0.25), 0 0 60px rgba(86, 130, 242, 0.08);
+}
+
+.dark .fn-glow-gold {
   box-shadow: 0 0 30px rgba(244, 190, 126, 0.2), 0 0 60px rgba(244, 190, 126, 0.06);
 }
 

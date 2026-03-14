@@ -104,7 +104,7 @@ function DashboardMockup() {
         <svg viewBox="0 0 480 120" className="w-full h-auto">
           {/* Grid lines */}
           {[0, 30, 60, 90].map((y) => (
-            <line key={y} x1="0" y1={y} x2="480" y2={y} stroke="rgba(255,255,255,0.04)" />
+            <line key={y} x1="0" y1={y} x2="480" y2={y} stroke="currentColor" opacity="0.06" />
           ))}
           {/* Actuel line */}
           <defs>

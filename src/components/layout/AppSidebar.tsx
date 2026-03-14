@@ -26,7 +26,7 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Pilotage",
     items: [
       { href: "/paiements", label: "Paiements", icon: CreditCard, pro: true },
-      // { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
+      { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
       { href: "/pipeline", label: "Leads", icon: Kanban, pro: true },
       { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
       { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },
@@ -72,7 +72,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: "Pilotage",
     items: [
-      // { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
+      { href: "/facturation", label: "Facturation", icon: Receipt, pro: true },
       { href: "/pipeline", label: "Leads", icon: Kanban, pro: true },
       { href: "/tresorerie", label: "Trésorerie", icon: Wallet, pro: true },
       { href: "/calendrier", label: "Calendrier", icon: CalendarDays, pro: true },

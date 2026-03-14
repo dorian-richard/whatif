@@ -97,7 +97,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
               }`}
             >
               Annuel
-              <span className="text-[10px] font-bold bg-[#F4BE7E] text-[#07070e] px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold bg-[#F4BE7E] dark:bg-[#F4BE7E] text-[#1a1a2e] px-2 py-0.5 rounded-full">
                 &Eacute;conomise 29&euro;
               </span>
             </button>
@@ -125,7 +125,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
                 </li>
               ))}
               {FREE_LIMITATIONS.map((f) => (
-                <li key={f} className="flex items-center gap-2.5 text-sm text-muted-foreground/40">
+                <li key={f} className="flex items-center gap-2.5 text-sm text-muted-foreground/50 dark:text-muted-foreground/40">
                   <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
                   </svg>
@@ -142,7 +142,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
           </div>
 
           {/* Pro */}
-          <div className="relative rounded-2xl p-6 border bg-gradient-to-b from-[#5682F2]/10 to-transparent border-[#5682F2]/30 fn-glow transition-all duration-300">
+          <div className="relative rounded-2xl p-6 border bg-gradient-to-b from-[#5682F2]/15 to-card dark:from-[#5682F2]/10 dark:to-transparent border-[#5682F2]/40 dark:border-[#5682F2]/30 fn-glow transition-all duration-300">
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white text-xs font-semibold px-4 py-1 rounded-full">
               14 jours gratuits
             </span>
