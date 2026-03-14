@@ -13,7 +13,7 @@ import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, Issue
 const CURRENT_YEAR = new Date().getFullYear();
 
 export default function FacturationPage() {
-  const { clients, businessStatus, companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic, invoiceNotes } = useProfileStore();
+  const { clients, businessStatus, companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic, invoiceNotes, setProfile } = useProfileStore();
   const { documents, setDocuments, addDocument, updateDocument, removeDocument, loaded, setLoaded } = useInvoiceStore();
 
   const [year, setYear] = useState(CURRENT_YEAR);
@@ -193,6 +193,11 @@ export default function FacturationPage() {
     } catch { /* silently fail */ }
   }, [updateDocument]);
 
+  // Save default notes
+  const handleSaveDefaultNotes = useCallback((notes: string) => {
+    setProfile({ invoiceNotes: notes });
+  }, [setProfile]);
+
   // Duplicate document
   const handleDuplicate = useCallback((doc: InvoiceDocument) => {
     setEditing({
@@ -305,6 +310,8 @@ export default function FacturationPage() {
             onStatusChange={handleStatusChange}
             onDuplicate={handleDuplicate}
             existingDocuments={documents}
+            defaultNotes={invoiceNotes}
+            onSaveDefaultNotes={handleSaveDefaultNotes}
           />
         )}
 

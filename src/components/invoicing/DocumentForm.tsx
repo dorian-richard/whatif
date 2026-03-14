@@ -3,8 +3,21 @@
 import { useState, useMemo, useCallback } from "react";
 import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, ClientData, ClientSnapshot, IssuerSnapshot, ItemType } from "@/types";
 import { fmt, cn } from "@/lib/utils";
-import { Plus, X, Download, Check, FileText, Wand2, Copy } from "@/components/ui/icons";
+import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown } from "@/components/ui/icons";
 import { generateInvoicePDF } from "./DocumentPDF";
+
+// Conditions de paiement prédéfinies
+const PAYMENT_CONDITIONS = [
+  { id: "30j", label: "30 jours", text: "Paiement à 30 jours à compter de la date de facturation, par virement bancaire." },
+  { id: "45j", label: "45 jours", text: "Paiement à 45 jours fin de mois à compter de la date de facturation, par virement bancaire." },
+  { id: "60j", label: "60 jours", text: "Paiement à 60 jours à compter de la date de facturation, par virement bancaire." },
+  { id: "reception", label: "À réception", text: "Paiement à réception de la facture, par virement bancaire." },
+  { id: "50_50", label: "50% / 50%", text: "Acompte de 50% à la commande, solde de 50% à la livraison. Paiement par virement bancaire." },
+  { id: "30_70", label: "30% / 70%", text: "Acompte de 30% à la commande, solde de 70% à la livraison. Paiement par virement bancaire." },
+  { id: "tiers", label: "3 × 1/3", text: "Paiement en 3 versements égaux : 1/3 à la commande, 1/3 à mi-parcours, 1/3 à la livraison." },
+  { id: "micro_tva", label: "Micro (TVA)", text: "TVA non applicable, art. 293 B du CGI." },
+  { id: "penalites", label: "+ Pénalités", text: "En cas de retard de paiement, une pénalité de 3 fois le taux d'intérêt légal sera appliquée, ainsi qu'une indemnité forfaitaire de 40€ pour frais de recouvrement (art. L441-10 du Code de commerce)." },
+];
 
 const STATUS_LABELS: Record<DocumentStatus, string> = {
   draft: "Brouillon",
@@ -73,9 +86,11 @@ interface DocumentFormProps {
   onStatusChange?: (id: string, status: DocumentStatus) => void;
   onDuplicate?: (doc: InvoiceDocument) => void;
   existingDocuments?: InvoiceDocument[];
+  defaultNotes?: string;
+  onSaveDefaultNotes?: (notes: string) => void;
 }
 
-export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onSave, onClose, onConvert, onStatusChange, onDuplicate, existingDocuments = [] }: DocumentFormProps) {
+export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onSave, onClose, onConvert, onStatusChange, onDuplicate, existingDocuments = [], defaultNotes, onSaveDefaultNotes }: DocumentFormProps) {
   const isNew = !doc?.id || doc.id === "new";
 
   const [type, setType] = useState<DocumentType>(doc?.type ?? "devis");
@@ -84,7 +99,8 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
   const [dueDate, setDueDate] = useState(doc?.dueDate ? toISODate(new Date(doc.dueDate)) : toISODate(new Date(Date.now() + 30 * 86400000)));
   const [validUntil, setValidUntil] = useState(doc?.validUntil ? toISODate(new Date(doc.validUntil)) : toISODate(new Date(Date.now() + 30 * 86400000)));
   const [tvaRate, setTvaRate] = useState(doc?.tvaRate ?? (businessStatus === "micro" ? 0 : 20));
-  const [notes, setNotes] = useState(doc?.notes ?? (isNew && businessStatus === "micro" ? "TVA non applicable, art. 293 B du CGI" : ""));
+  const [notes, setNotes] = useState(doc?.notes ?? (isNew ? (defaultNotes || (businessStatus === "micro" ? "TVA non applicable, art. 293 B du CGI" : "")) : ""));
+  const [showConditions, setShowConditions] = useState(false);
   const [items, setItems] = useState<DocumentItem[]>(
     doc?.items?.length ? doc.items : [{ id: crypto.randomUUID(), description: "", quantity: 1, unitPrice: 0, totalHT: 0, sortOrder: 0, itemType: "prestation", unit: "unité" }]
   );
@@ -444,16 +460,73 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
         </div>
       </div>
 
-      {/* Notes */}
-      <div>
-        <label className="text-xs text-muted-foreground/70 mb-1 block">Notes / conditions</label>
+      {/* Notes & conditions de paiement */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-xs text-muted-foreground/70">Notes / conditions de paiement</label>
+          <div className="flex items-center gap-2">
+            {onSaveDefaultNotes && notes && notes !== defaultNotes && (
+              <button
+                onClick={() => onSaveDefaultNotes(notes)}
+                className="text-[10px] font-medium text-primary hover:text-primary/80 transition-colors"
+              >
+                Sauvegarder par d&eacute;faut
+              </button>
+            )}
+            <button
+              onClick={() => setShowConditions(!showConditions)}
+              className="flex items-center gap-1 text-[10px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ChevronDown className={cn("size-3 transition-transform", showConditions && "rotate-180")} />
+              Suggestions
+            </button>
+          </div>
+        </div>
+
+        {/* Condition templates */}
+        {showConditions && (
+          <div className="flex flex-wrap gap-1.5">
+            {PAYMENT_CONDITIONS.map((cond) => (
+              <button
+                key={cond.id}
+                onClick={() => {
+                  // Append if notes exist, replace if empty
+                  setNotes((prev) => {
+                    if (!prev.trim()) return cond.text;
+                    // Don't add duplicate
+                    if (prev.includes(cond.text)) return prev;
+                    return prev + "\n" + cond.text;
+                  });
+                }}
+                className={cn(
+                  "px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all border",
+                  notes.includes(cond.text)
+                    ? "border-primary/30 bg-primary/10 text-primary"
+                    : "border-border bg-muted/50 text-muted-foreground hover:text-foreground hover:border-border"
+                )}
+              >
+                {cond.label}
+              </button>
+            ))}
+          </div>
+        )}
+
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          rows={2}
+          rows={3}
           placeholder={businessStatus === "micro" ? "TVA non applicable, art. 293 B du CGI" : "Conditions de paiement..."}
           className={cn(inputCls, "resize-none")}
         />
+
+        {defaultNotes && !notes && (
+          <button
+            onClick={() => setNotes(defaultNotes)}
+            className="text-[10px] text-muted-foreground/60 hover:text-foreground transition-colors"
+          >
+            Utiliser les conditions par d&eacute;faut sauvegard&eacute;es
+          </button>
+        )}
       </div>
 
       {/* Actions */}
