@@ -225,8 +225,8 @@ export function computeNetFromCA(
     return annualCA - urssaf - ir;
   }
 
-  // Charges pro deductibles (EI, EURL IR/IS — pas micro, pas SASU, pas portage)
-  const deductChargesPro = ["ei", "eurl_ir", "eurl_is"].includes(profile.businessStatus ?? "");
+  // Charges pro deductibles (EI, EURL IR/IS, SASU IR — pas micro, pas SASU IS, pas portage)
+  const deductChargesPro = ["ei", "eurl_ir", "eurl_is", "sasu_ir"].includes(profile.businessStatus ?? "");
   const caAfterChargesPro = deductChargesPro
     ? annualCA * (1 - chargesProRate / 100)
     : annualCA;

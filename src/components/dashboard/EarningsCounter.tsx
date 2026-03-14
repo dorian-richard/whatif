@@ -154,7 +154,7 @@ export function EarningsCounter() {
                   className={cn(
                     "px-2.5 py-1 rounded-lg text-xs font-medium transition-all",
                     viewMode === key
-                      ? "bg-[#5682F2]/15 text-[#5682F2] ring-1 ring-[#4ade80]/30"
+                      ? "bg-primary/15 text-primary ring-1 ring-primary/30"
                       : "bg-muted/50 text-muted-foreground hover:text-foreground"
                   )}
                 >

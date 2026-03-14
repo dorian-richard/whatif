@@ -81,6 +81,7 @@ export const BUSINESS_STATUS_CONFIG: Record<
     details: string;
     avantages: string[];
     inconvenients: string[];
+    warnings?: string[];
   }
 > = {
   micro: {
@@ -174,24 +175,28 @@ export const BUSINESS_STATUS_CONFIG: Record<
   },
   sasu_ir: {
     label: "SASU à l'IR",
-    urssaf: 0.45,
+    urssaf: 0.097,
     ir: 0.30,
     is: 0,
-    desc: "Assimilé salarié ~45% charges sur CA · IR progressif · Option 5 ans",
-    regime: "Assimilé salarié",
+    desc: "Transparence fiscale · Prélèvements sociaux 9,7% · IR progressif · Option 5 ans max",
+    regime: "Assimilé salarié (transparence fiscale)",
     details:
-      "Président assimilé salarié : charges patronales (~42% du brut) + salariales (~22% du brut), soit ~45% du coût total employeur. IR au barème progressif. Protection sociale quasi-identique à un salarié (maladie, retraite, prévoyance) sauf chômage. Option IR temporaire, limitée à 5 exercices max.",
+      "En SASU à l'IR (option temporaire, 5 exercices max), le résultat de la société est directement imposé à l'IR au nom de l'associé unique (transparence fiscale). Les prélèvements sociaux s'élèvent à 9,7% (CSG/CRDS sur revenus professionnels). Attention : le paiement des 9,7% se fait auprès de l'URSSAF par courrier (pas de télépaiement). Les acomptes sur résultat en cours d'exercice sont interdits (compte courant d'associé débiteur interdit) : il faut attendre la clôture et l'établissement du bilan.",
     avantages: [
-      "Protection sociale proche d'un salarié",
-      "Fiches de paie (crédibilité prêts, location)",
-      "Pas de cotisations TNS sur dividendes",
-      "Possibilité de repasser à l'IS",
+      "Prélèvements sociaux faibles (9,7% vs 45% en salaire)",
+      "Transparence fiscale : pas d'IS, résultat imposé directement à l'IR",
+      "Charges pro déductibles du résultat fiscal",
+      "Possibilité de repasser à l'IS à tout moment",
     ],
     inconvenients: [
-      "Charges élevées (~45% du CA en salaire)",
       "Option IR limitée à 5 exercices",
       "Pas de droit au chômage",
-      "Bulletins de paie obligatoires",
+      "Pas d'acomptes sur résultat (attendre la clôture)",
+      "Paiement URSSAF 9,7% par courrier uniquement",
+      "Risque de requalification en 17,2% (contrôles fiscaux récents)",
+    ],
+    warnings: [
+      "Certaines SASU IR font l'objet de contrôles ciblés : l'administration conteste parfois le taux de 9,7%, considérant que les revenus relèvent du patrimoine (17,2%). La position majoritaire des experts-comptables défend le 9,7% (revenus professionnels). Par prudence, provisionner les sommes sur base 17,2% (droit de reprise sur 3 exercices).",
     ],
   },
   sasu_is: {

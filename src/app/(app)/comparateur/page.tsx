@@ -16,6 +16,7 @@ import {
   HandCoins,
   Download,
   FileText,
+  AlertTriangle,
 } from "@/components/ui/icons";
 import { exportCSV, exportPDF } from "@/lib/export";
 
@@ -491,6 +492,22 @@ export default function ComparateurPage() {
             </ul>
           </div>
         </div>
+
+        {/* Warnings for best status */}
+        {BUSINESS_STATUS_CONFIG[best.status].warnings && (
+          <div className="bg-[#fbbf24]/12 border border-[#fbbf24]/20 rounded-2xl p-5">
+            <h3 className="text-sm font-semibold text-[#fbbf24] uppercase tracking-wider mb-3 flex items-center gap-2">
+              <AlertTriangle className="size-4" /> Points de vigilance — {best.label}
+            </h3>
+            <ul className="space-y-2.5">
+              {BUSINESS_STATUS_CONFIG[best.status].warnings!.map((w, i) => (
+                <li key={i} className="text-sm text-muted-foreground leading-relaxed">
+                  {w}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Disclaimer */}
         <div className="text-center text-xs text-muted-foreground/60 pb-8">

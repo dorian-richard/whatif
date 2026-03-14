@@ -112,10 +112,12 @@ export default function SettingsPage() {
           {/* Rates summary */}
           <div className="grid grid-cols-3 gap-3 mb-3">
             <div className="text-center p-2 bg-muted/40 rounded-lg">
-              <div className="text-lg font-bold text-primary">{(currentConfig.urssaf * 100).toFixed(0)}%</div>
-              <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium">Cotisations</div>
+              <div className="text-lg font-bold text-primary">{(currentConfig.urssaf * 100).toFixed(1).replace(/\.0$/, "")}%</div>
+              <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium">
+                {profile.businessStatus === "sasu_ir" ? "Prélèvements sociaux" : "Cotisations"}
+              </div>
               <div className="text-[9px] text-muted-foreground/60">
-                {currentConfig.is > 0 ? "sur rémunération" : profile.businessStatus === "micro" ? "sur le CA" : "sur bénéfice"}
+                {currentConfig.is > 0 ? "sur rémunération" : profile.businessStatus === "micro" ? "sur le CA" : profile.businessStatus === "sasu_ir" ? "CSG/CRDS sur résultat" : "sur bénéfice"}
               </div>
             </div>
             <div className="text-center p-2 bg-muted/40 rounded-lg">
@@ -159,6 +161,19 @@ export default function SettingsPage() {
               </ul>
             </div>
           </div>
+
+          {/* Warnings */}
+          {currentConfig.warnings && currentConfig.warnings.length > 0 && (
+            <div className="mt-3 p-3 bg-[#fbbf24]/12 border border-[#fbbf24]/20 rounded-lg">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Info className="size-3 text-[#fbbf24]" />
+                <span className="text-[10px] font-semibold text-[#fbbf24] uppercase tracking-wider">Points de vigilance</span>
+              </div>
+              {currentConfig.warnings.map((w, i) => (
+                <p key={i} className="text-[10px] text-muted-foreground leading-relaxed">{w}</p>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Custom IR rate */}
@@ -194,33 +209,39 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* SASU IR: option to disable social charges */}
+        {/* SASU IR: prélèvements sociaux rate choice */}
         {profile.businessStatus === "sasu_ir" && (
-          <div className="mt-4 p-4 bg-muted/40 rounded-xl border border-border">
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={profile.customUrssafRate === 0}
-                onChange={() =>
-                  profile.setProfile({
-                    customUrssafRate: profile.customUrssafRate === 0 ? undefined : 0,
-                  })
-                }
-                className="w-4 h-4 rounded border-border bg-muted/50 text-[#5682F2] focus:ring-primary/40"
-              />
-              <div>
-                <div className="text-xs font-medium text-foreground">Pas de rémunération président</div>
-                <div className="text-[10px] text-muted-foreground/60">0% de charges sociales. Le bénéfice est imposé à l&apos;IR au nom de l&apos;associé unique.</div>
-              </div>
-            </label>
-            {profile.customUrssafRate === 0 && (
-              <div className="flex items-start gap-1.5 mt-3 pt-3 border-t border-border">
-                <Info className="size-3 text-[#F4BE7E] shrink-0 mt-0.5" />
-                <p className="text-[10px] text-muted-foreground">
-                  Sans salaire, pas de protection sociale (maladie, retraite, prévoyance). Le résultat est directement imposé à l&apos;IR au barème progressif dans votre déclaration personnelle.
-                </p>
-              </div>
-            )}
+          <div className="mt-4 p-4 bg-muted/40 rounded-xl border border-border space-y-3">
+            <div className="text-sm font-medium text-foreground">Taux de prélèvements sociaux</div>
+            <div className="text-[10px] text-muted-foreground leading-relaxed">
+              Le résultat est imposé à l&apos;IR au nom de l&apos;associé unique (transparence fiscale). Les prélèvements sociaux (CSG/CRDS) s&apos;appliquent sur le résultat fiscal.
+            </div>
+            <div className="flex gap-2">
+              {([
+                { rate: 0.097, label: "9,7%", desc: "Revenus professionnels (position EC)" },
+                { rate: 0.172, label: "17,2%", desc: "Provisionnement prudent" },
+              ]).map(({ rate, label, desc }) => (
+                <button
+                  key={rate}
+                  onClick={() => profile.setProfile({ customUrssafRate: rate === 0.097 ? undefined : rate })}
+                  className={cn(
+                    "flex-1 p-3 rounded-xl text-left transition-all border",
+                    (profile.customUrssafRate ?? 0.097) === rate
+                      ? "bg-primary/10 border-primary/30 ring-1 ring-primary/20"
+                      : "bg-muted/30 border-border hover:bg-muted/50"
+                  )}
+                >
+                  <div className="text-sm font-bold text-foreground">{label}</div>
+                  <div className="text-[10px] text-muted-foreground">{desc}</div>
+                </button>
+              ))}
+            </div>
+            <div className="flex items-start gap-1.5 pt-2 border-t border-border">
+              <Info className="size-3 text-[#fbbf24] shrink-0 mt-0.5" />
+              <p className="text-[10px] text-muted-foreground leading-relaxed">
+                L&apos;administration fiscale conteste parfois le taux de 9,7% en requalifiant les revenus en revenus du patrimoine (17,2%). Par prudence, provisionnez sur la base de 17,2%. Paiement auprès de l&apos;URSSAF par courrier uniquement.
+              </p>
+            </div>
           </div>
         )}
 
