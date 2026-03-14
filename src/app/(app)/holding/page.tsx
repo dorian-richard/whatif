@@ -325,14 +325,6 @@ export default function HoldingPage() {
         {/* KPI Cards */}
         <HoldingSummaryCards result={taxResult} />
 
-        {/* Advisor — full width, above the map */}
-        <HoldingAdvisor
-          result={taxResult}
-          entities={activeScenario !== "current" ? simEntities : entities}
-          flows={activeScenario !== "current" ? simFlows : flows}
-          profile={freelanceProfile}
-        />
-
         {/* Graph + integrated flow editor (desktop) */}
         <div className="hidden md:grid md:grid-cols-[1fr_340px] gap-0 bg-card border border-border rounded-xl overflow-hidden">
           <ReactFlowProvider>
@@ -346,6 +338,14 @@ export default function HoldingPage() {
             <HoldingFlowEditor integrated />
           </div>
         </div>
+
+        {/* Advisor — full width, below the map */}
+        <HoldingAdvisor
+          result={taxResult}
+          entities={activeScenario !== "current" ? simEntities : entities}
+          flows={activeScenario !== "current" ? simFlows : flows}
+          profile={freelanceProfile}
+        />
 
         {/* Mobile entity list + flow editor */}
         <div className="md:hidden space-y-3">
