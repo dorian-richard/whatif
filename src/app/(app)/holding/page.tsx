@@ -14,7 +14,7 @@ import { HoldingFlowEditor } from "@/components/holding/HoldingFlowEditor";
 import { HoldingGuide } from "@/components/holding/HoldingGuide";
 import { HoldingAdvisor } from "@/components/holding/HoldingAdvisor";
 import { HoldingScenarios, applyScenario, type HoldingScenarioId } from "@/components/holding/HoldingScenarios";
-import { getClientBaseCA } from "@/lib/simulation-engine";
+import { getAnnualCA } from "@/lib/simulation-engine";
 import { Plus, Building2, Info } from "@/components/ui/icons";
 import type { HoldingEntity, HoldingFlow, HoldingEntityType, EntityTaxResult, FreelanceProfile, ClientData } from "@/types";
 
@@ -27,8 +27,9 @@ function getDefaultTemplate(
   businessStatus: string,
   clients: ClientData[],
   monthlySalary?: number,
+  vacationDaysPerMonth?: number[],
 ): DefaultTemplate {
-  const annualCA = clients.reduce((sum, c) => sum + getClientBaseCA(c) * 12, 0);
+  const annualCA = getAnnualCA(clients, vacationDaysPerMonth);
   const annualSalary = (monthlySalary ?? 0) * 12;
 
   return {
@@ -86,12 +87,12 @@ export default function HoldingPage() {
   // Sync operating entity CA from profile clients
   useEffect(() => {
     if (!loaded || entities.length === 0) return;
-    const annualCA = Math.round(profile.clients.reduce((sum, c) => sum + getClientBaseCA(c) * 12, 0));
+    const annualCA = Math.round(getAnnualCA(profile.clients, profile.vacationDaysPerMonth));
     const operating = entities.find((e) => e.type === "operating");
     if (operating && operating.annualCA !== annualCA) {
       updateEntity(operating.id, { annualCA });
     }
-  }, [loaded, profile.clients, entities, updateEntity]);
+  }, [loaded, profile.clients, profile.vacationDaysPerMonth, entities, updateEntity]);
 
   // Load from API on mount
   useEffect(() => {
@@ -152,6 +153,7 @@ export default function HoldingPage() {
       profile.businessStatus ?? "sasu_is",
       profile.clients,
       profile.monthlySalary,
+      profile.vacationDaysPerMonth,
     );
     // Add entities first, collect their generated IDs
     const entityIds: string[] = [];
@@ -172,7 +174,7 @@ export default function HoldingPage() {
         annualAmount: flow.annualAmount,
       });
     }
-  }, [addEntity, addFlow, profile.businessStatus, profile.clients, profile.monthlySalary]);
+  }, [addEntity, addFlow, profile.businessStatus, profile.clients, profile.monthlySalary, profile.vacationDaysPerMonth]);
 
   // Build profile for engine
   const freelanceProfile: FreelanceProfile = useMemo(
@@ -267,7 +269,7 @@ export default function HoldingPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -323,8 +325,16 @@ export default function HoldingPage() {
         {/* KPI Cards */}
         <HoldingSummaryCards result={taxResult} />
 
-        {/* Graph + side panels (desktop) */}
-        <div className="hidden md:grid md:grid-cols-[1fr_320px] gap-4">
+        {/* Advisor — full width, above the map */}
+        <HoldingAdvisor
+          result={taxResult}
+          entities={activeScenario !== "current" ? simEntities : entities}
+          flows={activeScenario !== "current" ? simFlows : flows}
+          profile={freelanceProfile}
+        />
+
+        {/* Graph + integrated flow editor (desktop) */}
+        <div className="hidden md:grid md:grid-cols-[1fr_340px] gap-0 bg-card border border-border rounded-xl overflow-hidden">
           <ReactFlowProvider>
             <HoldingGraph
               entityResults={entityResultsMap}
@@ -332,28 +342,12 @@ export default function HoldingPage() {
               displayFlows={activeScenario !== "current" ? simFlows : undefined}
             />
           </ReactFlowProvider>
-          <div className="space-y-5">
-            <HoldingAdvisor
-              result={taxResult}
-              entities={activeScenario !== "current" ? simEntities : entities}
-              flows={activeScenario !== "current" ? simFlows : flows}
-              profile={freelanceProfile}
-            />
-            <HoldingFlowEditor />
+          <div className="border-l border-border overflow-y-auto max-h-[520px]">
+            <HoldingFlowEditor integrated />
           </div>
         </div>
 
-        {/* Mobile advisor */}
-        <div className="md:hidden">
-          <HoldingAdvisor
-            result={taxResult}
-            entities={activeScenario !== "current" ? simEntities : entities}
-            flows={activeScenario !== "current" ? simFlows : flows}
-            profile={freelanceProfile}
-          />
-        </div>
-
-        {/* Mobile entity list */}
+        {/* Mobile entity list + flow editor */}
         <div className="md:hidden space-y-3">
           {entities.map((entity) => {
             const result = entityResultsMap.get(entity.id);

@@ -21,6 +21,8 @@ export interface FiscalDeadline {
   category: DeadlineCategory;
   statuses: BusinessStatus[];
   estimateAmount?: (annualCA: number, status: BusinessStatus, ctx?: FiscalEstimateContext) => number;
+  /** When set, uses the month-specific CA instead of annual average (e.g. TVA) */
+  estimateFromMonthlyCA?: (monthlyCA: number) => number;
   note?: string;
 }
 
@@ -153,11 +155,12 @@ export const DEADLINES: FiscalDeadline[] = [
     estimateAmount: (ca, s, ctx) => estimateAnnualUrssaf(ca, s, ctx) / 12,
   })),
 
-  // TVA: declaration mensuelle (non-micro)
+  // TVA: declaration mensuelle (non-micro) — uses actual monthly CA, not annual average
   ...Array.from({ length: 12 }, (_, i): FiscalDeadline => ({
     month: i, day: 19, label: "Declaration TVA", category: "tva",
     statuses: ["ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"],
     estimateAmount: (ca) => ca * TVA_RATE / 12,
+    estimateFromMonthlyCA: (monthlyCA) => monthlyCA * TVA_RATE,
     note: "TVA collectee - TVA deductible",
   })),
 

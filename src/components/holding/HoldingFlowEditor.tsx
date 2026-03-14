@@ -7,7 +7,7 @@ import { Plus, X } from "@/components/ui/icons";
 import { fmt } from "@/lib/utils";
 import type { HoldingFlowType } from "@/types";
 
-export function HoldingFlowEditor() {
+export function HoldingFlowEditor({ integrated = false }: { integrated?: boolean }) {
   const entities = useHoldingStore((s) => s.entities);
   const flows = useHoldingStore((s) => s.flows);
   const addFlow = useHoldingStore((s) => s.addFlow);
@@ -36,7 +36,7 @@ export function HoldingFlowEditor() {
   };
 
   return (
-    <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+    <div className={integrated ? "p-4 space-y-4" : "bg-card border border-border rounded-xl p-5 space-y-4"}>
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground">
           Flux financiers
