@@ -74,7 +74,7 @@ export default function SettingsPage() {
                   "p-3 rounded-xl border text-left transition-all duration-150",
                   profile.businessStatus === key
                     ? "bg-primary/15 border-primary/30"
-                    : "bg-muted/40 border-border hover:border-border"
+                    : "bg-muted/20 border-border hover:border-border"
                 )}
               >
                 <div className={cn(
@@ -100,7 +100,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Detail panel for selected status */}
-        <div className="mt-4 p-4 bg-muted/40 rounded-xl border border-border">
+        <div className="mt-4 p-4 bg-muted/20 rounded-xl border border-border">
           <div className="flex items-center gap-2 mb-3">
             <Landmark className="size-4 text-primary" />
             <span className="text-sm font-bold text-foreground">{currentConfig.label}</span>
@@ -111,7 +111,7 @@ export default function SettingsPage() {
 
           {/* Rates summary */}
           <div className="grid grid-cols-3 gap-3 mb-3">
-            <div className="text-center p-2 bg-muted/40 rounded-lg">
+            <div className="text-center p-2 bg-muted/20 rounded-lg">
               <div className="text-lg font-bold text-primary">{(currentConfig.urssaf * 100).toFixed(1).replace(/\.0$/, "")}%</div>
               <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium">
                 {profile.businessStatus === "sasu_ir" ? "Prélèvements sociaux" : "Cotisations"}
@@ -120,14 +120,14 @@ export default function SettingsPage() {
                 {currentConfig.is > 0 ? "sur rémunération" : profile.businessStatus === "micro" ? "sur le CA" : profile.businessStatus === "sasu_ir" ? "CSG/CRDS sur résultat" : "sur bénéfice"}
               </div>
             </div>
-            <div className="text-center p-2 bg-muted/40 rounded-lg">
+            <div className="text-center p-2 bg-muted/20 rounded-lg">
               <div className="text-lg font-bold text-[#F4BE7E]">{(currentConfig.ir * 100).toFixed(1)}%</div>
               <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium">IR estimé</div>
               <div className="text-[9px] text-muted-foreground/60">
                 {profile.businessStatus === "micro" ? "après abattement 34%" : "barème progressif"}
               </div>
             </div>
-            <div className="text-center p-2 bg-muted/40 rounded-lg">
+            <div className="text-center p-2 bg-muted/20 rounded-lg">
               <div className="text-lg font-bold text-[#a78bfa]">{currentConfig.is > 0 ? `${(currentConfig.is * 100).toFixed(0)}%` : "\u2014"}</div>
               <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium">IS</div>
               <div className="text-[9px] text-muted-foreground/60">
@@ -177,7 +177,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Custom IR rate */}
-        <div className="mt-4 p-4 bg-muted/40 rounded-xl border border-border">
+        <div className="mt-4 p-4 bg-muted/20 rounded-xl border border-border">
           <div className="flex justify-between items-center mb-2">
             <label className="text-sm font-medium text-muted-foreground">Taux IR personnalisé</label>
             <div className="flex items-center gap-2">
@@ -211,7 +211,7 @@ export default function SettingsPage() {
 
         {/* SASU IR: prélèvements sociaux rate choice */}
         {profile.businessStatus === "sasu_ir" && (
-          <div className="mt-4 p-4 bg-muted/40 rounded-xl border border-border space-y-3">
+          <div className="mt-4 p-4 bg-muted/20 rounded-xl border border-border space-y-3">
             <div className="text-sm font-medium text-foreground">Taux de prélèvements sociaux</div>
             <div className="text-[10px] text-muted-foreground leading-relaxed">
               Le résultat est imposé à l&apos;IR au nom de l&apos;associé unique (transparence fiscale). Les prélèvements sociaux (CSG/CRDS) s&apos;appliquent sur le résultat fiscal.
@@ -228,7 +228,7 @@ export default function SettingsPage() {
                     "flex-1 p-3 rounded-xl text-left transition-all border",
                     (profile.customUrssafRate ?? 0.097) === rate
                       ? "bg-primary/10 border-primary/30 ring-1 ring-primary/20"
-                      : "bg-muted/30 border-border hover:bg-muted/50"
+                      : "bg-muted/15 border-border hover:bg-muted/25"
                   )}
                 >
                   <div className="text-sm font-bold text-foreground">{label}</div>
@@ -247,7 +247,7 @@ export default function SettingsPage() {
 
         {/* Remuneration type — only for IS structures */}
         {(profile.businessStatus === "eurl_is" || profile.businessStatus === "sasu_is") && (
-          <div className="mt-4 p-4 bg-muted/50 rounded-xl border border-border">
+          <div className="mt-4 p-4 bg-muted/25 rounded-xl border border-border">
             <label className="text-sm font-medium text-muted-foreground mb-3 block">Mode de rémunération</label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               {([
@@ -262,7 +262,7 @@ export default function SettingsPage() {
                     "p-3 rounded-xl border text-left transition-all duration-150",
                     (profile.remunerationType ?? "salaire") === opt.key
                       ? "bg-[#5682F2]/15 border-[#5682F2]/30"
-                      : "bg-muted/50 border-border hover:border-border"
+                      : "bg-muted/25 border-border hover:border-border"
                   )}
                 >
                   <div className="flex items-center gap-1.5 mb-1">
@@ -297,7 +297,7 @@ export default function SettingsPage() {
               const salairePart = totalCA * (pct / 100);
               const divPart = totalCA - salairePart;
               return (
-                <div className="mt-4 p-4 bg-muted/30 rounded-xl border border-border">
+                <div className="mt-4 p-4 bg-muted/15 rounded-xl border border-border">
                   <div className="flex justify-between items-center mb-2">
                     <label className="text-xs font-medium text-muted-foreground">Répartition</label>
                     <span className="text-xs font-bold text-[#5682F2]">{pct}% salaire &middot; {100 - pct}% dividendes</span>
@@ -310,7 +310,7 @@ export default function SettingsPage() {
                     step={5}
                   />
                   {/* Visual bar */}
-                  <div className="flex h-2 rounded-full overflow-hidden mt-3 bg-muted/50">
+                  <div className="flex h-2 rounded-full overflow-hidden mt-3 bg-muted/25">
                     <div
                       className="h-full bg-emerald-400 transition-all duration-200"
                       style={{ width: `${pct}%` }}
@@ -370,7 +370,7 @@ export default function SettingsPage() {
                           "px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all",
                           profile.role === m.id
                             ? "ring-1"
-                            : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
+                            : "bg-muted/25 text-muted-foreground hover:text-foreground hover:bg-muted"
                         )}
                         style={
                           profile.role === m.id
@@ -419,7 +419,7 @@ export default function SettingsPage() {
                   "text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors",
                   (profile.workedDaysPerYear ?? 218) === profile.workDaysPerWeek * 52 - 25
                     ? "bg-[#5682F2]/15 text-[#5682F2] border-[#5682F2]/30"
-                    : "bg-muted/50 text-muted-foreground border-border hover:border-border"
+                    : "bg-muted/25 text-muted-foreground border-border hover:border-border"
                 )}
               >
                 5 sem. congés ({profile.workDaysPerWeek * 52 - 25}j)
@@ -453,7 +453,7 @@ export default function SettingsPage() {
                         profile.setProfile({ vacationDaysPerMonth: newDays });
                       }}
                       className={cn(
-                        "w-full text-center text-sm font-semibold py-1.5 rounded-lg border bg-muted/30 focus:outline-none focus:ring-1 focus:ring-[#fbbf24]/40 transition-colors",
+                        "w-full text-center text-sm font-semibold py-1.5 rounded-lg border bg-muted/15 focus:outline-none focus:ring-1 focus:ring-[#fbbf24]/40 transition-colors",
                         val > 0 ? "border-[#fbbf24]/30 text-[#fbbf24]" : "border-border text-muted-foreground/60"
                       )}
                     />
@@ -468,7 +468,7 @@ export default function SettingsPage() {
                   onClick={() => {
                     profile.setProfile({ vacationDaysPerMonth: [0,0,0,0,0,0,5,10,0,0,0,5] });
                   }}
-                  className="text-[10px] font-medium px-2 py-0.5 rounded-full border bg-muted/50 text-muted-foreground border-border hover:border-border transition-colors"
+                  className="text-[10px] font-medium px-2 py-0.5 rounded-full border bg-muted/25 text-muted-foreground border-border hover:border-border transition-colors"
                 >
                   Classique (20j)
                 </button>
@@ -476,7 +476,7 @@ export default function SettingsPage() {
                   onClick={() => {
                     profile.setProfile({ vacationDaysPerMonth: [0,0,0,0,0,0,0,0,0,0,0,0] });
                   }}
-                  className="text-[10px] font-medium px-2 py-0.5 rounded-full border bg-muted/50 text-muted-foreground border-border hover:border-border transition-colors"
+                  className="text-[10px] font-medium px-2 py-0.5 rounded-full border bg-muted/25 text-muted-foreground border-border hover:border-border transition-colors"
                 >
                   Aucun
                 </button>
@@ -549,7 +549,7 @@ export default function SettingsPage() {
               onChange={(e) => profile.setProfile({ invoiceNotes: e.target.value || undefined })}
               rows={2}
               placeholder={profile.businessStatus === "micro" ? "TVA non applicable, art. 293 B du CGI" : "Paiement à 30 jours par virement bancaire."}
-              className="w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
+              className="w-full px-3 py-2 bg-muted/25 border border-border rounded-xl text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
             />
           </div>
         </div>
@@ -579,7 +579,7 @@ export default function SettingsPage() {
                   alert("Erreur de connexion au portail de paiement.");
                 }
               }}
-              className="w-full py-3 bg-muted/50 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-muted transition-colors"
+              className="w-full py-3 bg-muted/25 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-muted transition-colors"
             >
               Gérer mon abonnement
             </button>
@@ -610,7 +610,7 @@ export default function SettingsPage() {
           </>
         ) : profile.subscriptionStatus === "CANCELED" ? (
           <>
-            <div className="flex items-center justify-between p-4 bg-muted/50 rounded-xl border border-border mb-4">
+            <div className="flex items-center justify-between p-4 bg-muted/25 rounded-xl border border-border mb-4">
               <div>
                 <span className="text-sm font-semibold text-muted-foreground">Plan Pro annulé</span>
                 <p className="text-xs text-muted-foreground/70">Votre abonnement a été annulé</p>
@@ -637,7 +637,7 @@ export default function SettingsPage() {
               <>
                 <div className={cn(
                   "flex items-center justify-between p-4 rounded-xl border mb-4",
-                  isTrial ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-border"
+                  isTrial ? "bg-primary/10 border-primary/20" : "bg-muted/25 border-border"
                 )}>
                   <div>
                     <span className={cn("text-sm font-semibold", isTrial ? "text-primary" : "text-foreground")}>
@@ -743,7 +743,7 @@ function InvoiceField({ label, value, onChange, placeholder, className }: {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
+        className="w-full px-3 py-2 bg-muted/25 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
       />
     </div>
   );
@@ -775,7 +775,7 @@ function AppearanceSection() {
                 "p-3 rounded-xl border text-center transition-all duration-150",
                 isActive
                   ? "bg-primary/15 border-primary/30"
-                  : "bg-muted/40 border-border hover:border-border"
+                  : "bg-muted/20 border-border hover:border-border"
               )}
             >
               <Icon className={cn("size-5 mx-auto mb-1.5", isActive ? "text-primary" : "text-muted-foreground")} />
