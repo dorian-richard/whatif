@@ -12,6 +12,7 @@ import { HoldingTaxComparison } from "@/components/holding/HoldingTaxComparison"
 import { HoldingEntityPanel } from "@/components/holding/HoldingEntityPanel";
 import { HoldingFlowEditor } from "@/components/holding/HoldingFlowEditor";
 import { HoldingGuide } from "@/components/holding/HoldingGuide";
+import { HoldingAdvisor } from "@/components/holding/HoldingAdvisor";
 import { HoldingScenarios, applyScenario, type HoldingScenarioId } from "@/components/holding/HoldingScenarios";
 import { getClientBaseCA } from "@/lib/simulation-engine";
 import { Plus, Building2, Info } from "@/components/ui/icons";
@@ -323,7 +324,7 @@ export default function HoldingPage() {
         <HoldingSummaryCards result={taxResult} />
 
         {/* Graph + side panels (desktop) */}
-        <div className="hidden md:grid md:grid-cols-[1fr_300px] gap-4">
+        <div className="hidden md:grid md:grid-cols-[1fr_320px] gap-4">
           <ReactFlowProvider>
             <HoldingGraph
               entityResults={entityResultsMap}
@@ -331,9 +332,25 @@ export default function HoldingPage() {
               displayFlows={activeScenario !== "current" ? simFlows : undefined}
             />
           </ReactFlowProvider>
-          <div className="space-y-4">
+          <div className="space-y-5">
+            <HoldingAdvisor
+              result={taxResult}
+              entities={activeScenario !== "current" ? simEntities : entities}
+              flows={activeScenario !== "current" ? simFlows : flows}
+              profile={freelanceProfile}
+            />
             <HoldingFlowEditor />
           </div>
+        </div>
+
+        {/* Mobile advisor */}
+        <div className="md:hidden">
+          <HoldingAdvisor
+            result={taxResult}
+            entities={activeScenario !== "current" ? simEntities : entities}
+            flows={activeScenario !== "current" ? simFlows : flows}
+            profile={freelanceProfile}
+          />
         </div>
 
         {/* Mobile entity list */}

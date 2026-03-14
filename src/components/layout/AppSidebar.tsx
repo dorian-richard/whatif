@@ -49,7 +49,7 @@ const NAV_SECTIONS: NavSection[] = [
       // { href: "/transition", label: "Transition", icon: Briefcase },
       // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
       // { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
-      { href: "/holding", label: "Holding (IS)", icon: Building2, pro: true },
+      { href: "/holding", label: "Holding", icon: Building2, pro: true },
       { href: "/patrimoine", label: "Patrimoine", icon: HandCoins, pro: true },
     ],
   },
@@ -95,7 +95,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
       // { href: "/transition", label: "Transition", icon: Briefcase },
       // { href: "/acre", label: "ACRE", icon: BadgePercent, pro: true },
       // { href: "/retraite", label: "Retraite", icon: Landmark, pro: true },
-      { href: "/holding", label: "Holding (IS)", icon: Building2, pro: true },
+      { href: "/holding", label: "Holding", icon: Building2, pro: true },
       { href: "/patrimoine", label: "Patrimoine", icon: HandCoins, pro: true },
     ],
   },
@@ -130,6 +130,7 @@ export function AppSidebar() {
 
   const upcomingDeadlines = mounted ? getUpcomingDeadlines(businessStatus, 7) : [];
   const hasUpcoming = upcomingDeadlines.length > 0;
+  const showNewBadge = mounted && new Date() < new Date("2026-05-01");
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -167,7 +168,8 @@ export function AppSidebar() {
               <div className="space-y-0.5">
                 {section.items.map((item) => {
                   const isActive = pathname === item.href;
-                  const showBadge = item.href === "/calendrier" && hasUpcoming;
+                  const showCalBadge = item.href === "/calendrier" && hasUpcoming;
+                  const showNew = item.href === "/facturation" && showNewBadge;
                   return (
                     <button
                       key={item.href}
@@ -181,12 +183,14 @@ export function AppSidebar() {
                     >
                       <span className="relative">
                         <item.icon className="size-[18px]" />
-                        {showBadge && (
+                        {showCalBadge && (
                           <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-[#f87171] ring-2 ring-sidebar" />
                         )}
                       </span>
                       <span>{item.label}</span>
-                      {showBadge ? (
+                      {showNew ? (
+                        <span className="ml-auto text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[#4ade80]/15 text-[#4ade80]">New</span>
+                      ) : showCalBadge ? (
                         <span className="ml-auto text-[10px] font-bold text-[#f87171]">{upcomingDeadlines.length}</span>
                       ) : item.pro && !isPro ? (
                         <span className="ml-auto text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">Pro</span>
@@ -271,7 +275,8 @@ export function AppSidebar() {
               <div className="grid grid-cols-4 gap-2">
                 {section.items.map((item) => {
                   const isActive = pathname === item.href;
-                  const showBadge = item.href === "/calendrier" && hasUpcoming;
+                  const showCalBadge = item.href === "/calendrier" && hasUpcoming;
+                  const showNew = item.href === "/facturation" && showNewBadge;
                   return (
                     <button
                       key={item.href}
@@ -286,12 +291,14 @@ export function AppSidebar() {
                     >
                       <span className="relative">
                         <item.icon className="size-5" />
-                        {showBadge && (
+                        {showCalBadge && (
                           <span className="absolute -top-1 -right-1 size-2 rounded-full bg-[#f87171] ring-2 ring-sidebar" />
                         )}
-                        {item.pro && !isPro && !showBadge && (
+                        {showNew ? (
+                          <span className="absolute -top-1.5 -right-3 text-[7px] font-bold uppercase text-[#4ade80]">New</span>
+                        ) : item.pro && !isPro && !showCalBadge ? (
                           <span className="absolute -top-1 -right-2.5 text-[7px] font-bold uppercase text-primary">Pro</span>
-                        )}
+                        ) : null}
                       </span>
                       <span className="text-[10px] font-medium">{item.label}</span>
                     </button>
