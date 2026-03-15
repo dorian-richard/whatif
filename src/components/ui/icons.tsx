@@ -65,6 +65,9 @@ import {
   ChevronDown,
   ChevronUp,
   Upload,
+  MessageCircle,
+  Send,
+  Bot,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -108,6 +111,9 @@ const ICON_MAP: Record<string, ComponentType<LucideProps>> = {
   timer: Timer,
   "bar-chart": BarChart3,
   users: Users,
+  "message-circle": MessageCircle,
+  send: Send,
+  bot: Bot,
 };
 
 interface IconProps extends LucideProps {
@@ -187,4 +193,7 @@ export {
   ChevronDown,
   ChevronUp,
   Upload,
+  MessageCircle,
+  Send,
+  Bot,
 };
