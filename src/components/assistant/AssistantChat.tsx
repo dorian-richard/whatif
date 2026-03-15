@@ -178,7 +178,7 @@ export function AssistantChat() {
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-20 right-6 z-50 w-[380px] max-h-[70vh] flex flex-col bg-card border border-border rounded-2xl shadow-2xl overflow-hidden">
+        <div className="fixed bottom-20 right-6 z-50 w-[380px] h-[80vh] max-h-[700px] flex flex-col bg-card border border-border rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-gradient-to-r from-[#5682F2]/10 to-[#7C5BF2]/10">
             <div className="size-8 rounded-lg bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] flex items-center justify-center">
@@ -191,7 +191,7 @@ export function AssistantChat() {
           </div>
 
           {/* Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-[200px] max-h-[50vh]">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
             {messages.length === 0 && (
               <div className="space-y-3 pt-2">
                 <p className="text-sm text-muted-foreground text-center">
