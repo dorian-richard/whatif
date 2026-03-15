@@ -349,7 +349,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                     min={0}
                     max={90}
                     value={client.paymentTermDays ?? 30}
-                    onChange={(e) => onUpdate({ paymentTermDays: Number(e.target.value) || 30 })}
+                    onChange={(e) => onUpdate({ paymentTermDays: e.target.value === "" ? undefined : Number(e.target.value) })}
                     className={cn(inputCls, "w-32 text-right")}
                   />
                 </div>
@@ -381,7 +381,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                       type="number"
                       className={cn(inputCls, "text-right pr-10")}
                       value={client.dailyRate ?? ""}
-                      onChange={(e) => onUpdate({ dailyRate: Number(e.target.value) || 0 })}
+                      onChange={(e) => onUpdate({ dailyRate: e.target.value === "" ? undefined : Number(e.target.value) })}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70">&euro;/j</span>
                   </div>
@@ -396,7 +396,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                       max="5"
                       className={cn(inputCls, "text-right pr-10")}
                       value={client.daysPerWeek ?? ""}
-                      onChange={(e) => onUpdate({ daysPerWeek: Number(e.target.value) || 0 })}
+                      onChange={(e) => onUpdate({ daysPerWeek: e.target.value === "" ? undefined : Number(e.target.value) })}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70">j/sem</span>
                   </div>
@@ -431,7 +431,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                   <div className="flex items-center justify-between">
                     <label className="text-xs text-muted-foreground/70">Période du contrat</label>
                     <button
-                      onClick={() => onUpdate({ startMonth: undefined, endMonth: undefined })}
+                      onClick={() => onUpdate({ startMonth: undefined, endMonth: undefined, startYear: undefined, endYear: undefined })}
                       className="text-[10px] text-muted-foreground/50 hover:text-foreground transition-colors"
                     >
                       Retirer
@@ -440,27 +440,49 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs text-muted-foreground/70 mb-1 block">Début</label>
-                      <select
-                        className={inputCls}
-                        value={client.startMonth ?? 0}
-                        onChange={(e) => onUpdate({ startMonth: Number(e.target.value) })}
-                      >
-                        {MONTHS_SHORT.map((m, i) => (
-                          <option key={i} value={i}>{m}</option>
-                        ))}
-                      </select>
+                      <div className="flex gap-1.5">
+                        <select
+                          className={cn(inputCls, "flex-1")}
+                          value={client.startMonth ?? 0}
+                          onChange={(e) => onUpdate({ startMonth: Number(e.target.value) })}
+                        >
+                          {MONTHS_SHORT.map((m, i) => (
+                            <option key={i} value={i}>{m}</option>
+                          ))}
+                        </select>
+                        <select
+                          className={cn(inputCls, "w-20")}
+                          value={client.startYear ?? new Date().getFullYear()}
+                          onChange={(e) => onUpdate({ startYear: Number(e.target.value) })}
+                        >
+                          {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 3 + i).map((y) => (
+                            <option key={y} value={y}>{y}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                     <div>
                       <label className="text-xs text-muted-foreground/70 mb-1 block">Fin</label>
-                      <select
-                        className={inputCls}
-                        value={client.endMonth ?? 11}
-                        onChange={(e) => onUpdate({ endMonth: Number(e.target.value) })}
-                      >
-                        {MONTHS_SHORT.map((m, i) => (
-                          <option key={i} value={i}>{m}</option>
-                        ))}
-                      </select>
+                      <div className="flex gap-1.5">
+                        <select
+                          className={cn(inputCls, "flex-1")}
+                          value={client.endMonth ?? 11}
+                          onChange={(e) => onUpdate({ endMonth: Number(e.target.value) })}
+                        >
+                          {MONTHS_SHORT.map((m, i) => (
+                            <option key={i} value={i}>{m}</option>
+                          ))}
+                        </select>
+                        <select
+                          className={cn(inputCls, "w-20")}
+                          value={client.endYear ?? new Date().getFullYear()}
+                          onChange={(e) => onUpdate({ endYear: Number(e.target.value) })}
+                        >
+                          {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 3 + i).map((y) => (
+                            <option key={y} value={y}>{y}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -468,7 +490,8 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                 <button
                   onClick={() => {
                     const m = new Date().getMonth();
-                    onUpdate({ startMonth: m, endMonth: 11 });
+                    const y = new Date().getFullYear();
+                    onUpdate({ startMonth: m, endMonth: 11, startYear: y, endYear: y });
                   }}
                   className="text-xs text-muted-foreground/50 hover:text-foreground transition-colors"
                 >
@@ -486,7 +509,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                   type="number"
                   className={cn(inputCls, "text-right pr-12")}
                   value={client.monthlyAmount ?? ""}
-                  onChange={(e) => onUpdate({ monthlyAmount: Number(e.target.value) || 0 })}
+                  onChange={(e) => onUpdate({ monthlyAmount: e.target.value === "" ? undefined : Number(e.target.value) })}
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70">&euro;/mois</span>
               </div>
@@ -502,35 +525,57 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                     type="number"
                     className={cn(inputCls, "text-right pr-6")}
                     value={client.totalAmount ?? ""}
-                    onChange={(e) => onUpdate({ totalAmount: Number(e.target.value) || 0 })}
+                    onChange={(e) => onUpdate({ totalAmount: e.target.value === "" ? undefined : Number(e.target.value) })}
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/70">&euro;</span>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-muted-foreground/70 mb-1 block">Debut</label>
-                  <select
-                    className={inputCls}
-                    value={client.startMonth ?? 0}
-                    onChange={(e) => onUpdate({ startMonth: Number(e.target.value) })}
-                  >
-                    {MONTHS_SHORT.map((m, i) => (
-                      <option key={i} value={i}>{m}</option>
-                    ))}
-                  </select>
+                  <label className="text-xs text-muted-foreground/70 mb-1 block">Début</label>
+                  <div className="flex gap-1.5">
+                    <select
+                      className={cn(inputCls, "flex-1")}
+                      value={client.startMonth ?? 0}
+                      onChange={(e) => onUpdate({ startMonth: Number(e.target.value) })}
+                    >
+                      {MONTHS_SHORT.map((m, i) => (
+                        <option key={i} value={i}>{m}</option>
+                      ))}
+                    </select>
+                    <select
+                      className={cn(inputCls, "w-20")}
+                      value={client.startYear ?? new Date().getFullYear()}
+                      onChange={(e) => onUpdate({ startYear: Number(e.target.value) })}
+                    >
+                      {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 3 + i).map((y) => (
+                        <option key={y} value={y}>{y}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <div>
                   <label className="text-xs text-muted-foreground/70 mb-1 block">Fin</label>
-                  <select
-                    className={inputCls}
-                    value={client.endMonth ?? 11}
-                    onChange={(e) => onUpdate({ endMonth: Number(e.target.value) })}
-                  >
-                    {MONTHS_SHORT.map((m, i) => (
-                      <option key={i} value={i}>{m}</option>
-                    ))}
-                  </select>
+                  <div className="flex gap-1.5">
+                    <select
+                      className={cn(inputCls, "flex-1")}
+                      value={client.endMonth ?? 11}
+                      onChange={(e) => onUpdate({ endMonth: Number(e.target.value) })}
+                    >
+                      {MONTHS_SHORT.map((m, i) => (
+                        <option key={i} value={i}>{m}</option>
+                      ))}
+                    </select>
+                    <select
+                      className={cn(inputCls, "w-20")}
+                      value={client.endYear ?? new Date().getFullYear()}
+                      onChange={(e) => onUpdate({ endYear: Number(e.target.value) })}
+                    >
+                      {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 3 + i).map((y) => (
+                        <option key={y} value={y}>{y}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>

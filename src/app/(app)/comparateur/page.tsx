@@ -446,7 +446,14 @@ export default function ComparateurPage() {
                       <HandCoins className="size-3.5" />
                       <span>Taux effectif</span>
                     </div>
-                    <span className="font-bold text-foreground">{Math.round(r.tauxEffectif * 100)}%</span>
+                    <div className="text-right">
+                      <span className="font-bold text-foreground">{Math.round(r.tauxEffectif * 100)}%</span>
+                      {annualCA > 0 && (
+                        <div className="text-[10px] text-muted-foreground/60 mt-0.5">
+                          {Math.round((r.chargesSociales / annualCA) * 100)}% social + {Math.round((r.impots / annualCA) * 100)}% fiscal
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-muted-foreground">

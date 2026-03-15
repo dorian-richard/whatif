@@ -15,6 +15,8 @@ export interface ClientData {
   totalAmount?: number;
   startMonth?: number;
   endMonth?: number;
+  startYear?: number;
+  endYear?: number;
   color?: string;
   isActive?: boolean;
   // Contact / facturation
