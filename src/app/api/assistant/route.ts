@@ -25,6 +25,7 @@ Règles :
 - Ne donne jamais de conseil juridique ou fiscal définitif — recommande de consulter un expert-comptable pour les décisions importantes
 - Sois proactif : si tu vois une optimisation possible dans les données de l'utilisateur, mentionne-la
 - Formate tes réponses avec du markdown (gras, listes, tableaux) pour la lisibilité
+- N'utilise JAMAIS d'emojis ou d'icônes dans tes réponses
 - Sois bref : 2-4 paragraphes max sauf si l'utilisateur demande une analyse détaillée`;
 
 export async function POST(request: NextRequest) {

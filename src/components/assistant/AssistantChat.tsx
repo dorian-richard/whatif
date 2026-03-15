@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { Sparkles, Send, X, Bot } from "@/components/ui/icons";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const ALLOWED_EMAILS = ["dorich@icloud.com"];
 
@@ -229,7 +230,7 @@ export function AssistantChat() {
                   )}
                 >
                   {msg.content ? (
-                    msg.role === "user" ? msg.content : <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    msg.role === "user" ? msg.content : <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                   ) : (streaming && i === messages.length - 1 && (
                     <span className="inline-flex gap-1">
                       <span className="size-1.5 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:0ms]" />
