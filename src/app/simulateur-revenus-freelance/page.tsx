@@ -129,7 +129,9 @@ export default function SimulateurRevenusPage() {
           <p>
             Voir aussi : <Link href="/comparateur-statuts-freelance" className="text-primary hover:underline">Comparateur de statuts freelance</Link>
             {" "}&middot;{" "}<Link href="/tjm-freelance" className="text-primary hover:underline">TJM freelance 2026</Link>
-            {" "}&middot;{" "}<Link href="/devenir-freelance" className="text-primary hover:underline">Devenir freelance</Link>
+            {" "}&middot;{" "}<Link href="/calculateur-charges-auto-entrepreneur" className="text-primary hover:underline">Charges auto-entrepreneur</Link>
+            {" "}&middot;{" "}<Link href="/comparateur-sasu-eurl" className="text-primary hover:underline">SASU vs EURL</Link>
+            {" "}&middot;{" "}<Link href="/calcul-tva-freelance" className="text-primary hover:underline">Calcul TVA freelance</Link>
           </p>
         </div>
       </div>
