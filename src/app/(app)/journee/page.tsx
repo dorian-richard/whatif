@@ -10,6 +10,7 @@ import { SEASONALITY } from "@/lib/constants";
 import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
 import { fmt, cn } from "@/lib/utils";
 import { ProBlur } from "@/components/ProBlur";
+import { generateWeeklyReportPDF } from "@/components/journee/WeeklyReportPDF";
 import {
   Clock,
   Zap,
@@ -26,6 +27,7 @@ import {
   TrendingDown,
   Banknote,
   Gauge,
+  Download,
 } from "@/components/ui/icons";
 
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -260,6 +262,27 @@ export default function JourneePage() {
   const clientName = (id: string) => clients.find((c) => c.id === id)?.name ?? "Client inconnu";
   const clientColor = (id: string) => clients.find((c) => c.id === id)?.color ?? "#5682F2";
 
+  // Weekly report PDF
+  const handleDownloadWeeklyReport = useCallback(() => {
+    const pdf = generateWeeklyReportPDF({
+      weekEntries: weekData.weekEntries,
+      totalWeekHours: weekData.totalHours,
+      monthCA: monthStats.monthCA,
+      monthHours: monthStats.totalHoursMonth,
+      monthWorkedDays: monthStats.workedDays,
+      monthTotalBizDays: monthStats.totalBizDays,
+      overallTJM: profitability.overallTJM,
+      utilizationRate: profitability.utilizationRate,
+      hourlyRate: profitability.totalMonthHours > 0 ? monthStats.monthCA / profitability.totalMonthHours : 0,
+      clientStats: profitability.clientStats,
+      urgentActions,
+      clientName,
+      companyName: profile.companyName,
+    });
+    const monday = weekData.weekEntries[0]?.day ?? "semaine";
+    pdf.save(`rapport-semaine-${monday}.pdf`);
+  }, [weekData, monthStats, profitability, urgentActions, clientName, profile.companyName]);
+
   if (!isDbSynced) {
     return <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 animate-pulse"><div className="h-8 bg-muted rounded w-48 mb-8" /><div className="grid gap-4 sm:grid-cols-3"><div className="h-32 bg-muted rounded-xl" /><div className="h-32 bg-muted rounded-xl" /><div className="h-32 bg-muted rounded-xl" /></div></div>;
   }
@@ -278,12 +301,22 @@ export default function JourneePage() {
               {new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
             </p>
           </div>
-          {currentStreak > 1 && (
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#fbbf24]/10 rounded-full">
-              <Flame className="size-4 text-[#fbbf24]" />
-              <span className="text-sm font-bold text-[#fbbf24]">{currentStreak}j</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {currentStreak > 1 && (
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#fbbf24]/10 rounded-full">
+                <Flame className="size-4 text-[#fbbf24]" />
+                <span className="text-sm font-bold text-[#fbbf24]">{currentStreak}j</span>
+              </div>
+            )}
+            <button
+              onClick={handleDownloadWeeklyReport}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-xs font-medium hover:bg-primary/20 transition-colors"
+              title="T&eacute;l&eacute;charger le rapport de la semaine"
+            >
+              <Download className="size-3.5" />
+              <span className="hidden sm:inline">Rapport semaine</span>
+            </button>
+          </div>
         </div>
 
         {/* Row 1: Briefing cards */}
