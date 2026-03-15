@@ -64,6 +64,7 @@ import {
   Wand2,
   ChevronDown,
   ChevronUp,
+  Upload,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -185,4 +186,5 @@ export {
   Wand2,
   ChevronDown,
   ChevronUp,
+  Upload,
 };

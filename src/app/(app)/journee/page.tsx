@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { useWorkLogStore, type WorkEntry } from "@/stores/useWorkLogStore";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
@@ -12,7 +12,6 @@ import { fmt, cn } from "@/lib/utils";
 import { ProBlur } from "@/components/ProBlur";
 import {
   Clock,
-  Timer,
   Zap,
   Flame,
   Target,
@@ -90,28 +89,15 @@ export default function JourneePage() {
   const clients = profile.clients ?? [];
   const isDbSynced = useProfileStore((s) => s.isDbSynced);
 
-  const { entries, timerClientId, timerStartedAt, addEntry, removeEntry, startTimer, stopTimer, cancelTimer, currentStreak } = useWorkLogStore();
+  const { entries, addEntry, removeEntry, currentStreak } = useWorkLogStore();
   const documents = useInvoiceStore((s) => s.documents);
   const prospects = usePipelineStore((s) => s.prospects);
 
-  // Timer display
-  const [timerDisplay, setTimerDisplay] = useState("00:00:00");
-  const [manualHours, setManualHours] = useState("");
+  const [manualH, setManualH] = useState("0");
+  const [manualM, setManualM] = useState("0");
   const [manualClientId, setManualClientId] = useState("");
   const [manualDesc, setManualDesc] = useState("");
   const [showManualForm, setShowManualForm] = useState(false);
-
-  useEffect(() => {
-    if (!timerStartedAt) { setTimerDisplay("00:00:00"); return; }
-    const interval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - timerStartedAt) / 1000);
-      const h = Math.floor(elapsed / 3600).toString().padStart(2, "0");
-      const m = Math.floor((elapsed % 3600) / 60).toString().padStart(2, "0");
-      const s = (elapsed % 60).toString().padStart(2, "0");
-      setTimerDisplay(`${h}:${m}:${s}`);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timerStartedAt]);
 
   // Today's revenue — sum of active clients' daily revenue
   const todayRevenue = useMemo(() => {
@@ -251,17 +237,24 @@ export default function JourneePage() {
 
   // Manual entry submit
   const handleManualSubmit = useCallback(() => {
-    if (!manualClientId || !manualHours) return;
+    const h = parseInt(manualH) || 0;
+    const m = parseInt(manualM) || 0;
+    const totalHours = h + m / 60;
+    if (!manualClientId || totalHours <= 0) return;
+    // Round to nearest 0.25 (15min)
+    const rounded = Math.round(totalHours * 4) / 4;
+    if (rounded <= 0) return;
     addEntry({
       date: TODAY,
       clientId: manualClientId,
-      hours: parseFloat(manualHours),
+      hours: rounded,
       description: manualDesc || undefined,
     });
-    setManualHours("");
+    setManualH("0");
+    setManualM("0");
     setManualDesc("");
     setShowManualForm(false);
-  }, [manualClientId, manualHours, manualDesc, addEntry]);
+  }, [manualClientId, manualH, manualM, manualDesc, addEntry]);
 
   // Client name helper
   const clientName = (id: string) => clients.find((c) => c.id === id)?.name ?? "Client inconnu";
@@ -378,154 +371,132 @@ export default function JourneePage() {
           </div>
         </div>
 
-        {/* Row 2: Timer + Manual log */}
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Timer */}
-          <div className="bg-card border border-border rounded-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Timer className="size-4 text-muted-foreground" />
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Timer</span>
-              </div>
-              {timerStartedAt && (
-                <div className="flex items-center gap-1.5">
-                  <div className="size-2 rounded-full bg-[#f87171] animate-pulse" />
-                  <span className="text-xs text-muted-foreground">En cours</span>
-                </div>
-              )}
+        {/* Row 2: Time logging */}
+        <div className="bg-card border border-border rounded-xl p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Clock className="size-4 text-muted-foreground" />
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Suivi du temps</span>
             </div>
-
-            {!timerStartedAt ? (
-              <div className="space-y-3">
-                <select
-                  className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground"
-                  value={manualClientId}
-                  onChange={(e) => setManualClientId(e.target.value)}
-                >
-                  <option value="">S&eacute;lectionner un client</option>
-                  {clients.filter((c) => c.isActive !== false).map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-                <button
-                  onClick={() => manualClientId && startTimer(manualClientId)}
-                  disabled={!manualClientId}
-                  className="w-full py-2.5 bg-[#5682F2] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40"
-                >
-                  D&eacute;marrer le timer
-                </button>
-              </div>
-            ) : (
-              <div className="text-center space-y-3">
-                <div className="text-3xl font-mono font-bold text-foreground">{timerDisplay}</div>
-                <div className="text-sm text-muted-foreground">
-                  {clientName(timerClientId!)}
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={stopTimer}
-                    className="flex-1 py-2 bg-[#4ade80] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5"
-                  >
-                    <Check className="size-3.5" /> Enregistrer
-                  </button>
-                  <button
-                    onClick={cancelTimer}
-                    className="px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm hover:bg-muted/80 transition-colors"
-                  >
-                    <X className="size-3.5" />
-                  </button>
-                </div>
-              </div>
+            {!showManualForm && (
+              <button
+                onClick={() => setShowManualForm(true)}
+                className="text-xs text-[#5682F2] font-medium hover:opacity-80 flex items-center gap-1"
+              >
+                <Plus className="size-3" /> Ajouter
+              </button>
             )}
           </div>
 
-          {/* Manual entry */}
-          <div className="bg-card border border-border rounded-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Clock className="size-4 text-muted-foreground" />
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Log manuel</span>
-              </div>
-              {!showManualForm && (
-                <button
-                  onClick={() => setShowManualForm(true)}
-                  className="text-xs text-[#5682F2] font-medium hover:opacity-80 flex items-center gap-1"
-                >
-                  <Plus className="size-3" /> Ajouter
-                </button>
-              )}
-            </div>
-
-            {showManualForm ? (
-              <div className="space-y-2.5">
-                <select
-                  className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground"
-                  value={manualClientId}
-                  onChange={(e) => setManualClientId(e.target.value)}
-                >
-                  <option value="">Client</option>
-                  {clients.filter((c) => c.isActive !== false).map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-                <div className="flex gap-2">
+          {showManualForm && (
+            <div className="mb-4 p-4 bg-muted/30 rounded-xl space-y-3">
+              <select
+                className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground"
+                value={manualClientId}
+                onChange={(e) => setManualClientId(e.target.value)}
+              >
+                <option value="">Client</option>
+                {clients.filter((c) => c.isActive !== false).map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              <div className="flex gap-2 items-end">
+                <div className="flex-1">
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 block">Heures</label>
                   <input
                     type="number"
-                    step="0.25"
-                    min="0.25"
+                    min="0"
                     max="24"
-                    placeholder="Heures"
-                    className="flex-1 bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground"
-                    value={manualHours}
-                    onChange={(e) => setManualHours(e.target.value)}
+                    step="1"
+                    className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground text-center"
+                    value={manualH}
+                    onChange={(e) => setManualH(e.target.value)}
                   />
+                </div>
+                <span className="pb-2 text-muted-foreground font-bold">:</span>
+                <div className="flex-1">
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 block">Minutes</label>
+                  <select
+                    className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground text-center"
+                    value={manualM}
+                    onChange={(e) => setManualM(e.target.value)}
+                  >
+                    {[0, 15, 30, 45].map((m) => (
+                      <option key={m} value={m}>{String(m).padStart(2, "0")}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex-[2]">
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 block">Description</label>
                   <input
                     type="text"
-                    placeholder="Description (opt.)"
-                    className="flex-1 bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground"
+                    placeholder="Optionnel"
+                    className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground"
                     value={manualDesc}
                     onChange={(e) => setManualDesc(e.target.value)}
                   />
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleManualSubmit}
-                    disabled={!manualClientId || !manualHours}
-                    className="flex-1 py-2 bg-[#5682F2] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40"
-                  >
-                    Enregistrer
-                  </button>
-                  <button
-                    onClick={() => setShowManualForm(false)}
-                    className="px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm"
-                  >
-                    Annuler
-                  </button>
-                </div>
               </div>
-            ) : todayEntries.length > 0 ? (
-              <div className="space-y-2">
-                {todayEntries.map((e) => (
+              <div className="flex gap-2">
+                <button
+                  onClick={handleManualSubmit}
+                  disabled={!manualClientId || ((parseInt(manualH) || 0) === 0 && (parseInt(manualM) || 0) === 0)}
+                  className="flex-1 py-2 bg-[#5682F2] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40 flex items-center justify-center gap-1.5"
+                >
+                  <Check className="size-3.5" /> Enregistrer
+                </button>
+                <button
+                  onClick={() => setShowManualForm(false)}
+                  className="px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm hover:bg-muted/80 transition-colors"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          )}
+
+          {todayEntries.length > 0 ? (
+            <div className="space-y-2">
+              {todayEntries.map((e) => {
+                const h = Math.floor(e.hours);
+                const m = Math.round((e.hours - h) * 60);
+                return (
                   <div key={e.id} className="flex items-center gap-2 text-sm">
                     <div className="size-2 rounded-full shrink-0" style={{ backgroundColor: clientColor(e.clientId) }} />
                     <span className="font-medium text-foreground">{clientName(e.clientId)}</span>
-                    <span className="text-muted-foreground">{e.hours}h</span>
+                    <span className="text-muted-foreground">{h}h{m > 0 ? String(m).padStart(2, "0") : ""}</span>
                     {e.description && <span className="text-muted-foreground/60 truncate">&middot; {e.description}</span>}
                     <button onClick={() => removeEntry(e.id)} className="ml-auto text-muted-foreground/40 hover:text-[#f87171]">
                       <X className="size-3" />
                     </button>
                   </div>
-                ))}
-                <div className="pt-1 border-t border-border text-xs text-muted-foreground font-medium">
-                  Total : {todayHours}h
-                </div>
+                );
+              })}
+              <div className="pt-2 border-t border-border flex items-center justify-between">
+                <span className="text-xs text-muted-foreground font-medium">
+                  Total : {Math.floor(todayHours)}h{Math.round((todayHours - Math.floor(todayHours)) * 60) > 0 ? String(Math.round((todayHours - Math.floor(todayHours)) * 60)).padStart(2, "0") : ""}
+                </span>
+                {!showManualForm && (
+                  <button
+                    onClick={() => setShowManualForm(true)}
+                    className="text-xs text-[#5682F2] font-medium hover:opacity-80 flex items-center gap-1"
+                  >
+                    <Plus className="size-3" /> Ajouter
+                  </button>
+                )}
               </div>
-            ) : (
-              <div className="text-sm text-muted-foreground/60 text-center py-4">
-                Aucune entr&eacute;e aujourd&apos;hui
-              </div>
-            )}
-          </div>
+            </div>
+          ) : !showManualForm ? (
+            <div className="text-center py-6">
+              <div className="text-sm text-muted-foreground/60 mb-3">Aucune entr&eacute;e aujourd&apos;hui</div>
+              <button
+                onClick={() => setShowManualForm(true)}
+                className="px-4 py-2 bg-[#5682F2] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity inline-flex items-center gap-1.5"
+              >
+                <Plus className="size-3.5" /> Ajouter du temps
+              </button>
+            </div>
+          ) : null}
         </div>
 
         {/* Row 3: Week view */}

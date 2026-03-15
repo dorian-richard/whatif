@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback } from "react";
 import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, ClientData, ClientSnapshot, IssuerSnapshot, ItemType } from "@/types";
 import { fmt, cn } from "@/lib/utils";
-import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown } from "@/components/ui/icons";
+import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown, Upload } from "@/components/ui/icons";
 import { generateInvoicePDF } from "./DocumentPDF";
 
 // Conditions de paiement prédéfinies
@@ -88,9 +88,10 @@ interface DocumentFormProps {
   existingDocuments?: InvoiceDocument[];
   defaultNotes?: string;
   onSaveDefaultNotes?: (notes: string) => void;
+  onLogoChange?: (logo: string | undefined) => void;
 }
 
-export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onSave, onClose, onConvert, onStatusChange, onDuplicate, existingDocuments = [], defaultNotes, onSaveDefaultNotes }: DocumentFormProps) {
+export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onSave, onClose, onConvert, onStatusChange, onDuplicate, existingDocuments = [], defaultNotes, onSaveDefaultNotes, onLogoChange }: DocumentFormProps) {
   const isNew = !doc?.id || doc.id === "new";
 
   const [type, setType] = useState<DocumentType>(doc?.type ?? "devis");
@@ -261,6 +262,22 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
     });
   }
 
+  const handleLogoUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 500 * 1024) {
+      alert("Le logo ne doit pas dépasser 500 Ko.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      onLogoChange?.(dataUrl);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }, [onLogoChange]);
+
   const inputCls = "w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40";
 
   return (
@@ -284,6 +301,40 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
           <X className="size-5" />
         </button>
       </div>
+
+      {/* Logo upload */}
+      {onLogoChange && (
+        <div>
+          <label className="text-xs text-muted-foreground/70 mb-1.5 block">Logo (apparaît sur le PDF)</label>
+          <div className="flex items-center gap-3">
+            {issuerSnapshot.logo ? (
+              <div className="relative group">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={issuerSnapshot.logo} alt="Logo" className="h-12 w-auto max-w-[120px] object-contain rounded-lg border border-border bg-white p-1" />
+                <button
+                  onClick={() => onLogoChange(undefined)}
+                  className="absolute -top-1.5 -right-1.5 size-5 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="size-3" />
+                </button>
+              </div>
+            ) : (
+              <label className="flex items-center gap-2 px-3 py-2 rounded-xl border border-dashed border-border bg-muted/30 text-sm text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors cursor-pointer">
+                <Upload className="size-4" />
+                <span>Ajouter un logo</span>
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={handleLogoUpload} className="hidden" />
+              </label>
+            )}
+            {issuerSnapshot.logo && (
+              <label className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                <Upload className="size-3.5" />
+                <span>Changer</span>
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={handleLogoUpload} className="hidden" />
+              </label>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Type + Client */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

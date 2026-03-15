@@ -179,6 +179,7 @@ export interface IssuerSnapshot {
   zip?: string;
   iban?: string;
   bic?: string;
+  logo?: string;
 }
 
 export interface InvoiceDocument {
@@ -214,4 +215,5 @@ export interface InvoiceSettings {
   iban?: string;
   bic?: string;
   invoiceNotes?: string;
+  invoiceLogo?: string;
 }

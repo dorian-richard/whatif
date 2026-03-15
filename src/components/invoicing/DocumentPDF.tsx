@@ -25,6 +25,15 @@ export function generateInvoicePDF(doc: InvoiceDocument): jsPDF {
   const dark: [number, number, number] = [15, 15, 30];
   const gray: [number, number, number] = [120, 120, 140];
 
+  // ─── Logo (top-right) ───
+  if (issuer?.logo) {
+    try {
+      pdf.addImage(issuer.logo, "AUTO", pageW - marginR - 40, y - 5, 40, 20);
+    } catch {
+      // ignore invalid images
+    }
+  }
+
   // ─── Title ───
   pdf.setFontSize(22);
   pdf.setTextColor(...primary);
