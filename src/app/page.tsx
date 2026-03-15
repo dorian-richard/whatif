@@ -66,7 +66,7 @@ const jsonLd = [
         name: "Freelens, c\u2019est quoi exactement ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Freelens est le copilote financier des freelances en France. Bien plus qu\u2019un simulateur : c\u2019est une plateforme complète qui combine simulateur de revenus, comparateur de statuts juridiques, pipeline commercial, suivi des paiements, calendrier fiscal, simulateur de trésorerie, historique avec tendances YoY, et benchmark TJM marché.",
+          text: "Freelens est le copilote financier des freelances en France. Simulateur de revenus, comparateur de statuts (micro, EURL IR/IS, SASU IR/IS, portage), facturation avec devis et factures PDF, pipeline commercial, calendrier fiscal, trésorerie prévisionnelle et benchmark TJM — tout en un.",
         },
       },
       {
@@ -74,7 +74,7 @@ const jsonLd = [
         name: "Qu\u2019est-ce que je peux faire avec Freelens ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Simuler tes revenus nets mois par mois selon ton statut, comparer les statuts juridiques (micro, EI, EURL, SASU, portage), gérer ton pipeline de prospects, suivre tes paiements clients, anticiper ta trésorerie sur 12 mois, consulter le calendrier de tes échéances fiscales, analyser tes tendances année après année, et calculer le TJM idéal pour atteindre ton objectif de revenu.",
+          text: "Simuler tes revenus nets mois par mois, comparer les statuts juridiques avec mix salaire/dividendes optimisé, créer devis et factures PDF, gérer ton pipeline de prospects, suivre tes paiements, anticiper ta trésorerie sur 12 mois, consulter ton calendrier fiscal, analyser tes tendances YoY, et calculer le TJM pour atteindre ton objectif de revenu.",
         },
       },
       {
@@ -90,7 +90,7 @@ const jsonLd = [
         name: "Quelle différence entre Free et Pro ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Le plan Free te donne accès au simulateur, au comparateur de statuts, à l\u2019objectif revenu, à la transition CDI → freelance et au benchmark TJM (1 client, 1 scénario). Le plan Pro débloque tout : clients et scénarios illimités, suivi des paiements, pipeline commercial, calendrier fiscal, simulateur de trésorerie, historique & tendances, simulation retraite & ACRE, et export PDF & CSV.",
+          text: "Le plan Free te donne accès au dashboard avec projections 12 mois et à l\u2019objectif revenu (1 client, 1 scénario). Le plan Pro débloque tout : clients et scénarios illimités, comparateur de statuts avec mix salaire/dividendes, devis et factures PDF, suivi des paiements, pipeline commercial, calendrier fiscal, trésorerie, tendances YoY, simulation retraite/ACRE, benchmark TJM (27 métiers), diagnostic financier et export PDF/CSV.",
         },
       },
       {
@@ -98,7 +98,7 @@ const jsonLd = [
         name: "Les calculs sont-ils fiables ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Le moteur de simulation utilise les taux officiels URSSAF 2026 et les barèmes d\u2019IR en vigueur. Les cotisations sont calculées selon ton statut juridique réel (micro, EI, EURL IR/IS, SASU IR/IS, portage). Le simulateur de trésorerie intègre URSSAF, IR et IS pour une projection fidèle.",
+          text: "Le moteur utilise les taux URSSAF 2026, le barème IR progressif, l\u2019IS progressif (15%/25%), le PFU à 31,4%, l\u2019abattement 10% frais pro sur les salaires, et la taxe PUMa sur les dividendes. Tous les statuts sont supportés : micro, EI, EURL IR/IS, SASU IR/IS, portage.",
         },
       },
       {
@@ -107,6 +107,14 @@ const jsonLd = [
         acceptedAnswer: {
           "@type": "Answer",
           text: "Tu renseignes tes clients (TJM, forfait ou mission), ton statut juridique, tes jours travaillés et tes vacances. Le simulateur calcule ton CA et ton revenu net mois par mois sur 12 mois, en intégrant la saisonnalité, les cotisations URSSAF et l\u2019impôt sur le revenu. Tu peux créer plusieurs scénarios pour comparer différentes stratégies.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Puis-je créer des devis et factures ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Oui. L\u2019outil de facturation intégré gère devis et factures avec numérotation automatique, TVA configurable, conditions de paiement, export PDF professionnel, conversion devis → facture en 1 clic, et détection automatique des retards.",
         },
       },
       {

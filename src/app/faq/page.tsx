@@ -7,11 +7,11 @@ import { cn } from "@/lib/utils";
 const QUESTIONS = [
   {
     q: "Freelens, c\u2019est quoi exactement ?",
-    a: "Freelens est le copilote financier des freelances en France. Bien plus qu\u2019un simulateur : c\u2019est une plateforme compl\u00e8te qui combine simulateur de revenus, comparateur de statuts juridiques, pipeline commercial, suivi des paiements, calendrier fiscal, simulateur de tr\u00e9sorerie, historique avec tendances YoY, et benchmark TJM march\u00e9. Tout ce qu\u2019il te faut pour piloter ton activit\u00e9.",
+    a: "Freelens est le copilote financier des freelances en France. Simulateur de revenus, comparateur de statuts (micro, EURL IR/IS, SASU IR/IS, portage), facturation avec devis et factures PDF, pipeline commercial, calendrier fiscal, tr\u00e9sorerie pr\u00e9visionnelle et benchmark TJM \u2014 tout en un.",
   },
   {
     q: "Qu\u2019est-ce que je peux faire avec Freelens ?",
-    a: "Simuler tes revenus nets mois par mois selon ton statut, comparer les statuts juridiques (micro, EI, EURL, SASU, portage), g\u00e9rer ton pipeline de prospects, suivre tes paiements clients, anticiper ta tr\u00e9sorerie sur 12 mois, consulter le calendrier de tes \u00e9ch\u00e9ances fiscales, analyser tes tendances ann\u00e9e apr\u00e8s ann\u00e9e, et calculer le TJM id\u00e9al pour atteindre ton objectif de revenu.",
+    a: "Simuler tes revenus nets mois par mois, comparer les statuts juridiques avec mix salaire/dividendes optimis\u00e9, cr\u00e9er devis et factures PDF, g\u00e9rer ton pipeline de prospects, suivre tes paiements, anticiper ta tr\u00e9sorerie sur 12 mois, consulter ton calendrier fiscal, analyser tes tendances YoY, et calculer le TJM pour atteindre ton objectif de revenu.",
   },
   {
     q: "Mes donn\u00e9es sont-elles en s\u00e9curit\u00e9 ?",
@@ -19,11 +19,15 @@ const QUESTIONS = [
   },
   {
     q: "Quelle diff\u00e9rence entre Free et Pro ?",
-    a: "Le plan Free te donne acc\u00e8s au simulateur, au comparateur de statuts, \u00e0 l\u2019objectif revenu, \u00e0 la transition CDI \u2192 freelance et au benchmark TJM (1 client, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients et sc\u00e9narios illimit\u00e9s, suivi des paiements, pipeline commercial, calendrier fiscal, simulateur de tr\u00e9sorerie, historique & tendances, simulation retraite & ACRE, et export PDF & CSV.",
+    a: "Le plan Free te donne acc\u00e8s au dashboard avec projections 12 mois et \u00e0 l\u2019objectif revenu (1 client, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients et sc\u00e9narios illimit\u00e9s, comparateur de statuts avec mix salaire/dividendes, devis et factures PDF, suivi des paiements, pipeline commercial, calendrier fiscal, tr\u00e9sorerie, tendances YoY, simulation retraite/ACRE, benchmark TJM (27 m\u00e9tiers), diagnostic financier et export PDF/CSV.",
   },
   {
     q: "Les calculs sont-ils fiables ?",
-    a: "Le moteur de simulation utilise les taux officiels URSSAF 2026 et les bar\u00e8mes d\u2019IR en vigueur. Les cotisations sont calcul\u00e9es selon ton statut juridique r\u00e9el (micro, EI, EURL IR/IS, SASU IR/IS, portage). Le simulateur de tr\u00e9sorerie int\u00e8gre URSSAF, IR et IS pour une projection fid\u00e8le.",
+    a: "Le moteur utilise les taux URSSAF 2026, le bar\u00e8me IR progressif, l\u2019IS progressif (15%/25%), le PFU \u00e0 31,4%, l\u2019abattement 10% frais pro sur les salaires, et la taxe PUMa sur les dividendes. Tous les statuts sont support\u00e9s : micro, EI, EURL IR/IS, SASU IR/IS, portage.",
+  },
+  {
+    q: "Puis-je cr\u00e9er des devis et factures ?",
+    a: "Oui. L\u2019outil de facturation int\u00e9gr\u00e9 g\u00e8re devis et factures avec num\u00e9rotation automatique, TVA configurable, conditions de paiement, export PDF professionnel, conversion devis \u2192 facture en 1 clic, et d\u00e9tection automatique des retards.",
   },
   {
     q: "Comment fonctionne le simulateur de revenus ?",
@@ -31,7 +35,7 @@ const QUESTIONS = [
   },
   {
     q: "\u00c0 quoi sert le comparateur de statuts ?",
-    a: "Il compare c\u00f4te \u00e0 c\u00f4te les statuts juridiques (micro-entreprise, EI, EURL IR/IS, SASU IR/IS, portage salarial) sur la base de ton CA r\u00e9el. Tu vois imm\u00e9diatement le net apr\u00e8s charges et imp\u00f4ts pour chaque statut, ce qui t\u2019aide \u00e0 choisir le plus avantageux pour ta situation.",
+    a: "Il compare c\u00f4te \u00e0 c\u00f4te les statuts juridiques sur la base de ton CA r\u00e9el. Tu vois le net apr\u00e8s charges et imp\u00f4ts pour chaque statut, avec le d\u00e9tail social + fiscal. Le comparateur int\u00e8gre le mix salaire/dividendes, la taxe PUMa et l\u2019abattement 10% frais pro pour des r\u00e9sultats r\u00e9alistes.",
   },
   {
     q: "Que fait le pipeline commercial ?",
@@ -42,12 +46,8 @@ const QUESTIONS = [
     a: "Il projette ton solde bancaire sur 12 mois en int\u00e9grant tes entr\u00e9es (CA clients) et tes sorties (URSSAF, IR, IS, charges fixes). Tu d\u00e9finis un seuil d\u2019alerte et le simulateur t\u2019avertit si ta tr\u00e9sorerie risque de passer en dessous. Id\u00e9al pour anticiper les mois creux.",
   },
   {
-    q: "Que montre l\u2019historique & tendances ?",
-    a: "Il enregistre tes donn\u00e9es mois apr\u00e8s mois (CA, net, TJM moyen, nombre de clients) et les compare ann\u00e9e apr\u00e8s ann\u00e9e. Tu visualises ta progression avec des graphiques Year over Year et tu identifies les tendances de ton activit\u00e9.",
-  },
-  {
     q: "Combien facturer en freelance ?",
-    a: "Freelens inclut un benchmark TJM bas\u00e9 sur 27 m\u00e9tiers tech et un outil Objectif Revenu qui calcule le TJM n\u00e9cessaire pour atteindre ton revenu net cible, en tenant compte de ton statut juridique, tes charges et tes vacances. Tu peux aussi comparer les statuts pour voir lequel te laisse le plus de net.",
+    a: "Freelens inclut un benchmark TJM bas\u00e9 sur 27 m\u00e9tiers tech et un outil Objectif Revenu qui calcule le TJM n\u00e9cessaire pour atteindre ton revenu net cible, en tenant compte de ton statut juridique, tes charges et tes vacances.",
   },
   {
     q: "\u00c0 quoi servent le calendrier fiscal et le suivi des paiements ?",
@@ -55,7 +55,7 @@ const QUESTIONS = [
   },
   {
     q: "Quels moyens de paiement acceptez-vous ?",
-    a: "Nous acceptons les cartes bancaires (Visa, Mastercard, Amex) via Stripe. Le paiement est s\u00e9curis\u00e9 et conforme PCI-DSS. Tu peux choisir un abonnement mensuel (9\u20ac/mois) ou annuel (79\u20ac/an, soit 2 mois offerts).",
+    a: "Cartes bancaires (Visa, Mastercard, Amex) via Stripe. Paiement s\u00e9curis\u00e9 et conforme PCI-DSS. Abonnement mensuel (9\u20ac/mois) ou annuel (79\u20ac/an, soit 2 mois offerts).",
   },
   {
     q: "Puis-je \u00eatre rembours\u00e9 ?",
