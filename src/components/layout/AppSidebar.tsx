@@ -171,7 +171,7 @@ export function AppSidebar() {
                 {section.items.map((item) => {
                   const isActive = pathname === item.href;
                   const showCalBadge = item.href === "/calendrier" && hasUpcoming;
-                  const showNew = item.href === "/facturation" && showNewBadge;
+                  const showNew = (item.href === "/facturation" || item.href === "/journee") && showNewBadge;
                   return (
                     <button
                       key={item.href}
@@ -278,7 +278,7 @@ export function AppSidebar() {
                 {section.items.map((item) => {
                   const isActive = pathname === item.href;
                   const showCalBadge = item.href === "/calendrier" && hasUpcoming;
-                  const showNew = item.href === "/facturation" && showNewBadge;
+                  const showNew = (item.href === "/facturation" || item.href === "/journee") && showNewBadge;
                   return (
                     <button
                       key={item.href}
