@@ -13,7 +13,7 @@ import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, Issue
 const CURRENT_YEAR = new Date().getFullYear();
 
 export default function FacturationPage() {
-  const { clients, businessStatus, companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic, invoiceNotes, invoiceLogo, setProfile } = useProfileStore();
+  const { clients, businessStatus, companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic, invoiceNotes, invoiceLogo, setProfile, addClient } = useProfileStore();
   const { documents, setDocuments, addDocument, updateDocument, removeDocument, loaded, setLoaded } = useInvoiceStore();
 
   const [year, setYear] = useState(CURRENT_YEAR);
@@ -326,6 +326,8 @@ export default function FacturationPage() {
                 defaultNotes={invoiceNotes}
                 onSaveDefaultNotes={handleSaveDefaultNotes}
                 onLogoChange={(logo) => setProfile({ invoiceLogo: logo })}
+                onIssuerChange={(updates) => setProfile(updates)}
+                onAddClient={addClient}
               />
             </div>
           </div>

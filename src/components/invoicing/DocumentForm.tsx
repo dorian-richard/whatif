@@ -1,11 +1,22 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, ClientData, ClientSnapshot, IssuerSnapshot, ItemType } from "@/types";
 import { fmt, cn } from "@/lib/utils";
-import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown, Upload, Lock } from "@/components/ui/icons";
+import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown, Upload, Lock, Search, Building2, UserPlus } from "@/components/ui/icons";
 import type jsPDF from "jspdf";
 import { generateInvoicePDF } from "./DocumentPDF";
+
+interface CompanyLookupResult {
+  siren: string;
+  siret: string;
+  companyName: string;
+  legalForm: string;
+  nafCode: string;
+  address: string;
+  zip: string;
+  city: string;
+}
 
 // Conditions de paiement prédéfinies
 const PAYMENT_CONDITIONS = [
@@ -105,9 +116,11 @@ interface DocumentFormProps {
   defaultNotes?: string;
   onSaveDefaultNotes?: (notes: string) => void;
   onLogoChange?: (logo: string | undefined) => void;
+  onIssuerChange?: (updates: Partial<IssuerSnapshot & { invoiceAddress?: string; invoiceCity?: string; invoiceZip?: string }>) => void;
+  onAddClient?: (client: Omit<ClientData, "id" | "color">) => void;
 }
 
-export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onSave, onClose, onConvert, onStatusChange, onDuplicate, existingDocuments = [], defaultNotes, onSaveDefaultNotes, onLogoChange }: DocumentFormProps) {
+export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onSave, onClose, onConvert, onStatusChange, onDuplicate, existingDocuments = [], defaultNotes, onSaveDefaultNotes, onLogoChange, onIssuerChange, onAddClient }: DocumentFormProps) {
   const isNew = !doc?.id || doc.id === "new";
   const isLocked = !isNew && doc?.status !== "draft";
 
@@ -298,6 +311,64 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
     e.target.value = "";
   }, [onLogoChange]);
 
+  // ─── SIRET search state ───
+  const [siretQuery, setSiretQuery] = useState("");
+  const [siretResults, setSiretResults] = useState<CompanyLookupResult[]>([]);
+  const [siretLoading, setSiretLoading] = useState(false);
+  const [showNewClient, setShowNewClient] = useState(false);
+  const siretTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [showIssuerEdit, setShowIssuerEdit] = useState(false);
+
+  const handleSiretSearch = useCallback((q: string) => {
+    setSiretQuery(q);
+    if (siretTimeout.current) clearTimeout(siretTimeout.current);
+    if (q.length < 3) { setSiretResults([]); return; }
+    setSiretLoading(true);
+    siretTimeout.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/company-lookup?q=${encodeURIComponent(q)}`);
+        if (res.ok) {
+          const data: CompanyLookupResult[] = await res.json();
+          setSiretResults(data);
+        }
+      } catch { /* ignore */ }
+      setSiretLoading(false);
+    }, 400);
+  }, []);
+
+  const [pendingClientName, setPendingClientName] = useState<string | null>(null);
+
+  const handleSelectCompany = useCallback((company: CompanyLookupResult) => {
+    if (!onAddClient) return;
+    onAddClient({
+      name: company.companyName,
+      billing: "tjm",
+      companyName: company.companyName,
+      siret: company.siret,
+      siren: company.siren,
+      nafCode: company.nafCode,
+      legalForm: company.legalForm,
+      clientAddress: company.address,
+      clientCity: company.city,
+      clientZip: company.zip,
+      isActive: true,
+    });
+    setSiretQuery("");
+    setSiretResults([]);
+    setShowNewClient(false);
+    setPendingClientName(company.companyName);
+  }, [onAddClient]);
+
+  // Auto-select newly added client when it appears in the list
+  useEffect(() => {
+    if (!pendingClientName) return;
+    const match = clients.find(c => c.companyName === pendingClientName || c.name === pendingClientName);
+    if (match) {
+      setClientId(match.id);
+      setPendingClientName(null);
+    }
+  }, [clients, pendingClientName]);
+
   const inputCls = "w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40";
 
   return (
@@ -376,37 +447,85 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
         </div>
       )}
 
-      {/* Type + Client */}
-      <div className={cn("grid grid-cols-1 sm:grid-cols-2 gap-3", isLocked && "opacity-60 pointer-events-none")}>
-        {isNew && (
-          <div>
-            <label className="text-xs text-muted-foreground/70 mb-1 block">Type</label>
-            <div className="flex gap-2">
-              {(["devis", "facture"] as DocumentType[]).map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setType(t)}
-                  className={cn(
-                    "flex-1 py-2 rounded-xl text-sm font-medium transition-all",
-                    type === t
-                      ? "bg-primary/15 text-primary ring-1 ring-primary/30"
-                      : "bg-muted/50 text-muted-foreground hover:bg-muted"
-                  )}
-                >
-                  {t === "devis" ? "Devis" : "Facture"}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
+      {/* Type */}
+      {isNew && !isLocked && (
         <div>
-          <label className="text-xs text-muted-foreground/70 mb-1 block">Client</label>
+          <label className="text-xs text-muted-foreground/70 mb-1 block">Type</label>
+          <div className="flex gap-2">
+            {(["devis", "facture"] as DocumentType[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => setType(t)}
+                className={cn(
+                  "flex-1 py-2 rounded-xl text-sm font-medium transition-all",
+                  type === t
+                    ? "bg-primary/15 text-primary ring-1 ring-primary/30"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                )}
+              >
+                {t === "devis" ? "Devis" : "Facture"}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Issuer + Client info blocks */}
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 gap-3", isLocked && "opacity-60 pointer-events-none")}>
+        {/* Émetteur */}
+        <div className="bg-muted/30 rounded-xl border border-border p-3 space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">Émetteur</span>
+            {onIssuerChange && !isLocked && (
+              <button
+                onClick={() => setShowIssuerEdit(!showIssuerEdit)}
+                className="text-[10px] font-medium text-primary hover:text-primary/80 transition-colors"
+              >
+                {showIssuerEdit ? "Fermer" : "Modifier"}
+              </button>
+            )}
+          </div>
+          {!showIssuerEdit ? (
+            <>
+              <p className="text-sm font-medium text-foreground">{issuerSnapshot.companyName || <span className="text-muted-foreground/40 italic">Nom entreprise non renseigné</span>}</p>
+              {issuerSnapshot.siret && <p className="text-xs text-muted-foreground">SIRET : {issuerSnapshot.siret}</p>}
+              {issuerSnapshot.tvaNumber && <p className="text-xs text-muted-foreground">TVA : {issuerSnapshot.tvaNumber}</p>}
+              {(issuerSnapshot.address || issuerSnapshot.zip || issuerSnapshot.city) && (
+                <p className="text-xs text-muted-foreground">
+                  {[issuerSnapshot.address, `${issuerSnapshot.zip ?? ""} ${issuerSnapshot.city ?? ""}`.trim()].filter(Boolean).join(", ")}
+                </p>
+              )}
+              {issuerSnapshot.iban && <p className="text-xs text-muted-foreground">IBAN : {issuerSnapshot.iban}</p>}
+              {!issuerSnapshot.companyName && !issuerSnapshot.siret && (
+                <p className="text-[11px] text-amber-500">Renseigne tes informations pour qu&apos;elles apparaissent sur tes documents.</p>
+              )}
+            </>
+          ) : (
+            <div className="space-y-2 pt-1">
+              <input placeholder="Nom de l'entreprise" value={issuerSnapshot.companyName ?? ""} onChange={(e) => onIssuerChange?.({ companyName: e.target.value })} className={cn(inputCls, "text-xs")} />
+              <input placeholder="SIRET" value={issuerSnapshot.siret ?? ""} onChange={(e) => onIssuerChange?.({ siret: e.target.value })} className={cn(inputCls, "text-xs")} />
+              <input placeholder="N° TVA intracommunautaire" value={issuerSnapshot.tvaNumber ?? ""} onChange={(e) => onIssuerChange?.({ tvaNumber: e.target.value })} className={cn(inputCls, "text-xs")} />
+              <input placeholder="Adresse" value={issuerSnapshot.address ?? ""} onChange={(e) => onIssuerChange?.({ invoiceAddress: e.target.value, address: e.target.value })} className={cn(inputCls, "text-xs")} />
+              <div className="grid grid-cols-2 gap-2">
+                <input placeholder="Code postal" value={issuerSnapshot.zip ?? ""} onChange={(e) => onIssuerChange?.({ invoiceZip: e.target.value, zip: e.target.value })} className={cn(inputCls, "text-xs")} />
+                <input placeholder="Ville" value={issuerSnapshot.city ?? ""} onChange={(e) => onIssuerChange?.({ invoiceCity: e.target.value, city: e.target.value })} className={cn(inputCls, "text-xs")} />
+              </div>
+              <input placeholder="IBAN" value={issuerSnapshot.iban ?? ""} onChange={(e) => onIssuerChange?.({ iban: e.target.value })} className={cn(inputCls, "text-xs")} />
+              <input placeholder="BIC" value={issuerSnapshot.bic ?? ""} onChange={(e) => onIssuerChange?.({ bic: e.target.value })} className={cn(inputCls, "text-xs")} />
+            </div>
+          )}
+        </div>
+
+        {/* Destinataire */}
+        <div className="bg-muted/30 rounded-xl border border-border p-3 space-y-1.5">
+          <span className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">Destinataire</span>
+
+          {/* Client selector */}
           <div className="flex gap-2">
             <select
               value={clientId}
               onChange={(e) => setClientId(e.target.value)}
-              className={cn(inputCls, "flex-1")}
+              className={cn(inputCls, "flex-1 text-xs")}
             >
               {clients.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}{c.companyName ? ` (${c.companyName})` : ""}</option>
@@ -414,12 +533,83 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
             </select>
             <button
               onClick={handlePrefillFromClient}
-              title="Pré-remplir depuis le client"
-              className="px-3 py-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+              title="Pré-remplir les lignes depuis le client"
+              className="px-2 py-1.5 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
             >
-              <Wand2 className="size-4" />
+              <Wand2 className="size-3.5" />
             </button>
+            {onAddClient && (
+              <button
+                onClick={() => setShowNewClient(!showNewClient)}
+                title="Ajouter un nouveau client"
+                className={cn("px-2 py-1.5 rounded-xl transition-colors", showNewClient ? "bg-primary/20 text-primary" : "bg-muted/50 text-muted-foreground hover:text-foreground")}
+              >
+                <UserPlus className="size-3.5" />
+              </button>
+            )}
           </div>
+
+          {/* SIRET search for new client */}
+          {showNewClient && onAddClient && (
+            <div className="space-y-2 pt-1">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                <input
+                  value={siretQuery}
+                  onChange={(e) => handleSiretSearch(e.target.value)}
+                  placeholder="Rechercher par SIRET, SIREN ou nom..."
+                  className={cn(inputCls, "text-xs pl-8")}
+                  autoFocus
+                />
+                {siretLoading && (
+                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2 size-3.5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                )}
+              </div>
+              {siretResults.length > 0 && (
+                <div className="max-h-40 overflow-y-auto space-y-1 rounded-xl border border-border bg-card p-1.5">
+                  {siretResults.map((r) => (
+                    <button
+                      key={r.siret}
+                      onClick={() => handleSelectCompany(r)}
+                      className="w-full text-left px-2.5 py-2 rounded-lg hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Building2 className="size-3.5 text-muted-foreground/40 shrink-0" />
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium text-foreground truncate">{r.companyName}</p>
+                          <p className="text-[10px] text-muted-foreground">SIRET {r.siret} · {r.zip} {r.city}</p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {siretQuery.length >= 3 && !siretLoading && siretResults.length === 0 && (
+                <p className="text-[11px] text-muted-foreground/60 px-1">Aucun résultat trouvé.</p>
+              )}
+            </div>
+          )}
+
+          {/* Selected client details */}
+          {selectedClient && !showNewClient && (
+            <>
+              <p className="text-sm font-medium text-foreground">{selectedClient.companyName || selectedClient.name}</p>
+              {selectedClient.companyName && selectedClient.name !== selectedClient.companyName && (
+                <p className="text-xs text-muted-foreground">{selectedClient.name}</p>
+              )}
+              {selectedClient.siret && <p className="text-xs text-muted-foreground">SIRET : {selectedClient.siret}</p>}
+              {selectedClient.tvaNumber && <p className="text-xs text-muted-foreground">TVA : {selectedClient.tvaNumber}</p>}
+              {(selectedClient.clientAddress || selectedClient.clientZip || selectedClient.clientCity) && (
+                <p className="text-xs text-muted-foreground">
+                  {[selectedClient.clientAddress, `${selectedClient.clientZip ?? ""} ${selectedClient.clientCity ?? ""}`.trim()].filter(Boolean).join(", ")}
+                </p>
+              )}
+              {selectedClient.email && <p className="text-xs text-muted-foreground">{selectedClient.email}</p>}
+            </>
+          )}
+          {!selectedClient && !showNewClient && (
+            <p className="text-[11px] text-amber-500">Sélectionne ou ajoute un client.</p>
+          )}
         </div>
       </div>
 
