@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { fmt, cn } from "@/lib/utils";
@@ -19,6 +19,11 @@ export default function FacturationPage() {
   const [year, setYear] = useState(CURRENT_YEAR);
   const [filter, setFilter] = useState<DocumentType | "all">("all");
   const [editing, setEditing] = useState<InvoiceDocument | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const openDocument = useCallback((doc: InvoiceDocument) => {
+    setEditing(doc);
+  }, []);
 
   // Pick up prefilled devis from pipeline
   useEffect(() => {
@@ -201,7 +206,7 @@ export default function FacturationPage() {
 
   // Duplicate document
   const handleDuplicate = useCallback((doc: InvoiceDocument) => {
-    setEditing({
+    openDocument({
       ...doc,
       id: "new",
       number: "",
@@ -212,11 +217,11 @@ export default function FacturationPage() {
       paidAt: undefined,
       items: doc.items.map((item) => ({ ...item, id: crypto.randomUUID() })),
     });
-  }, []);
+  }, [openDocument]);
 
   // New document
   function handleNew(type: DocumentType) {
-    setEditing({
+    openDocument({
       id: "new",
       clientId: clients[0]?.id ?? "",
       type,
@@ -298,23 +303,27 @@ export default function FacturationPage() {
           </select>
         </div>
 
-        {/* Edit form */}
+        {/* Edit form — modal */}
         {editing && (
-          <DocumentForm
-            doc={editing}
-            clients={activeClients}
-            issuerSnapshot={issuerSnapshot}
-            businessStatus={businessStatus}
-            onSave={handleSave}
-            onClose={() => setEditing(null)}
-            onConvert={handleConvert}
-            onStatusChange={handleStatusChange}
-            onDuplicate={handleDuplicate}
-            existingDocuments={documents}
-            defaultNotes={invoiceNotes}
-            onSaveDefaultNotes={handleSaveDefaultNotes}
-            onLogoChange={(logo) => setProfile({ invoiceLogo: logo })}
-          />
+          <div className="fixed inset-0 z-50 flex items-start justify-center pt-8 pb-8 px-4 overflow-y-auto bg-black/50 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setEditing(null); }}>
+            <div ref={formRef} className="w-full max-w-3xl">
+              <DocumentForm
+                doc={editing}
+                clients={activeClients}
+                issuerSnapshot={issuerSnapshot}
+                businessStatus={businessStatus}
+                onSave={handleSave}
+                onClose={() => setEditing(null)}
+                onConvert={handleConvert}
+                onStatusChange={handleStatusChange}
+                onDuplicate={handleDuplicate}
+                existingDocuments={documents}
+                defaultNotes={invoiceNotes}
+                onSaveDefaultNotes={handleSaveDefaultNotes}
+                onLogoChange={(logo) => setProfile({ invoiceLogo: logo })}
+              />
+            </div>
+          </div>
         )}
 
         {/* Document list */}
@@ -322,7 +331,7 @@ export default function FacturationPage() {
           <DocumentList
             documents={documents}
             filter={filter}
-            onSelect={setEditing}
+            onSelect={openDocument}
             onDelete={handleDelete}
             onDuplicate={handleDuplicate}
           />

@@ -25,7 +25,7 @@ export default function BlogIndexPage() {
         </div>
 
         <div className="space-y-6">
-          {BLOG_POSTS.map((post) => (
+          {[...BLOG_POSTS].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((post) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}

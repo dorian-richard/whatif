@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback } from "react";
 import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, ClientData, ClientSnapshot, IssuerSnapshot, ItemType } from "@/types";
 import { fmt, cn } from "@/lib/utils";
-import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown, Upload } from "@/components/ui/icons";
+import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown, Upload, Lock } from "@/components/ui/icons";
 import { generateInvoicePDF } from "./DocumentPDF";
 
 // Conditions de paiement prédéfinies
@@ -93,6 +93,7 @@ interface DocumentFormProps {
 
 export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onSave, onClose, onConvert, onStatusChange, onDuplicate, existingDocuments = [], defaultNotes, onSaveDefaultNotes, onLogoChange }: DocumentFormProps) {
   const isNew = !doc?.id || doc.id === "new";
+  const isLocked = !isNew && doc?.status !== "draft";
 
   const [type, setType] = useState<DocumentType>(doc?.type ?? "devis");
   const [clientId, setClientId] = useState(doc?.clientId ?? clients[0]?.id ?? "");
@@ -302,8 +303,16 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
         </button>
       </div>
 
+      {/* Locked banner */}
+      {isLocked && (
+        <div className="flex items-center gap-2 px-4 py-2.5 bg-[#fbbf24]/10 border border-[#fbbf24]/20 rounded-xl text-sm text-[#b45309]">
+          <Lock className="size-4 shrink-0" />
+          <span>Ce document est valid&eacute; et ne peut plus &ecirc;tre modifi&eacute;. Vous pouvez le dupliquer ou &eacute;mettre un avoir.</span>
+        </div>
+      )}
+
       {/* Logo upload */}
-      {onLogoChange && (
+      {onLogoChange && !isLocked && (
         <div>
           <label className="text-xs text-muted-foreground/70 mb-1.5 block">Logo (apparaît sur le PDF)</label>
           <div className="flex items-center gap-3">
@@ -337,7 +346,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
       )}
 
       {/* Type + Client */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 gap-3", isLocked && "opacity-60 pointer-events-none")}>
         {isNew && (
           <div>
             <label className="text-xs text-muted-foreground/70 mb-1 block">Type</label>
@@ -384,7 +393,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
       </div>
 
       {/* Dates */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className={cn("grid grid-cols-2 sm:grid-cols-3 gap-3", isLocked && "opacity-60 pointer-events-none")}>
         <div>
           <label className="text-xs text-muted-foreground/70 mb-1 block">Date d&apos;émission</label>
           <input type="date" value={issueDate} onChange={(e) => setIssueDate(e.target.value)}
@@ -413,7 +422,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
       </div>
 
       {/* Line items */}
-      <div>
+      <div className={cn(isLocked && "opacity-60 pointer-events-none")}>
         <label className="text-xs text-muted-foreground/70 mb-2 block">Prestations & produits</label>
         <div className="space-y-2">
           {/* Header - desktop */}
@@ -512,7 +521,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
       </div>
 
       {/* Notes & conditions de paiement */}
-      <div className="space-y-2">
+      <div className={cn("space-y-2", isLocked && "opacity-60 pointer-events-none")}>
         <div className="flex items-center justify-between">
           <label className="text-xs text-muted-foreground/70">Notes / conditions de paiement</label>
           <div className="flex items-center gap-2">
@@ -582,12 +591,14 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
 
       {/* Actions */}
       <div className="flex flex-wrap gap-2 pt-2">
-        <button
-          onClick={handleSave}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
-        >
-          <Check className="size-4" /> Sauvegarder
-        </button>
+        {!isLocked && (
+          <button
+            onClick={handleSave}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
+          >
+            <Check className="size-4" /> {isNew ? "Sauvegarder brouillon" : "Sauvegarder"}
+          </button>
+        )}
         <button
           onClick={handleDownloadPDF}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors"
@@ -604,10 +615,14 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
         )}
         {!isNew && doc?.status === "draft" && onStatusChange && (
           <button
-            onClick={() => onStatusChange(doc.id, "sent")}
+            onClick={() => {
+              if (window.confirm("Une fois validé, ce document ne pourra plus être modifié. Continuer ?")) {
+                onStatusChange(doc.id, "sent");
+              }
+            }}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#5682F2]/10 text-[#5682F2] text-sm font-medium hover:bg-[#5682F2]/20 transition-colors"
           >
-            <FileText className="size-4" /> Marquer envoyé
+            <FileText className="size-4" /> Valider et envoyer
           </button>
         )}
         {!isNew && doc?.type === "devis" && doc?.status === "sent" && onConvert && (
@@ -623,7 +638,38 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
             onClick={() => onStatusChange(doc.id, "paid")}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4ade80]/10 text-[#4ade80] text-sm font-medium hover:bg-[#4ade80]/20 transition-colors"
           >
-            <Check className="size-4" /> Marquer payé
+            <Check className="size-4" /> Marquer pay&eacute;
+          </button>
+        )}
+        {isLocked && doc?.status !== "canceled" && onDuplicate && (
+          <button
+            onClick={() => {
+              if (!window.confirm("Émettre un avoir annulera ce document et créera un avoir du même montant. Continuer ?")) return;
+              // Create credit note (avoir)
+              onDuplicate({
+                ...doc!,
+                id: "new",
+                number: "",
+                type: "facture",
+                status: "draft",
+                issueDate: new Date().toISOString(),
+                notes: `Avoir sur ${doc!.type === "devis" ? "devis" : "facture"} ${doc!.number}.\n${notes || ""}`,
+                items: items.map((item, i) => ({
+                  ...item,
+                  id: crypto.randomUUID(),
+                  description: `[AVOIR] ${item.description}`,
+                  unitPrice: -Math.abs(item.unitPrice),
+                  totalHT: -(item.quantity * Math.abs(item.unitPrice)),
+                  sortOrder: i,
+                  itemType: "avoir" as const,
+                })),
+              });
+              // Mark original as canceled
+              onStatusChange?.(doc!.id, "canceled");
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#f87171]/10 text-[#f87171] text-sm font-medium hover:bg-[#f87171]/20 transition-colors"
+          >
+            <X className="size-4" /> &Eacute;mettre un avoir
           </button>
         )}
       </div>

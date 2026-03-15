@@ -100,9 +100,10 @@ export function generateInvoicePDF(doc: InvoiceDocument): jsPDF {
 
   // ─── Table header ───
   const colDesc = marginL;
-  const colQty = marginL + contentW - 90;
-  const colPU = marginL + contentW - 60;
-  const colTotal = marginL + contentW - 25;
+  const colQty = marginL + contentW - 105;
+  const colUnit = marginL + contentW - 85;
+  const colPU = marginL + contentW - 50;
+  const colTotal = marginL + contentW;
 
   pdf.setFillColor(245, 245, 250);
   pdf.rect(marginL, y - 4, contentW, 8, "F");
@@ -111,6 +112,7 @@ export function generateInvoicePDF(doc: InvoiceDocument): jsPDF {
   pdf.setFont("helvetica", "bold");
   pdf.text("Description", colDesc, y);
   pdf.text("Qté", colQty, y, { align: "right" });
+  pdf.text("Unité", colUnit, y);
   pdf.text("PU HT", colPU, y, { align: "right" });
   pdf.text("Total HT", colTotal, y, { align: "right" });
   y += 8;
@@ -126,14 +128,22 @@ export function generateInvoicePDF(doc: InvoiceDocument): jsPDF {
       y = 20;
     }
 
-    // Wrap description text
-    const descLines = pdf.splitTextToSize(item.description || "-", colQty - colDesc - 15);
+    // Wrap description text — limit to available width before Qté column
+    const descMaxW = colQty - colDesc - 20;
+    const descLines = pdf.splitTextToSize(item.description || "-", descMaxW);
     for (let i = 0; i < descLines.length; i++) {
       pdf.text(descLines[i], colDesc, y + i * 4);
     }
     pdf.text(String(item.quantity), colQty, y, { align: "right" });
-    pdf.text(`${fmtNum(item.unitPrice)} €`, colPU, y, { align: "right" });
-    pdf.text(`${fmtNum(item.quantity * item.unitPrice)} €`, colTotal, y, { align: "right" });
+    pdf.setFontSize(8);
+    pdf.setTextColor(...gray);
+    pdf.text(item.unit || "", colUnit, y);
+    pdf.setFontSize(9);
+    pdf.setTextColor(...dark);
+    pdf.text(`${fmtNum(item.unitPrice)} \u20ac`, colPU, y, { align: "right" });
+    pdf.setFont("helvetica", "bold");
+    pdf.text(`${fmtNum(item.quantity * item.unitPrice)} \u20ac`, colTotal, y, { align: "right" });
+    pdf.setFont("helvetica", "normal");
 
     y += Math.max(descLines.length * 4, 4) + 4;
 
@@ -145,7 +155,7 @@ export function generateInvoicePDF(doc: InvoiceDocument): jsPDF {
   y += 4;
 
   // ─── Totals ───
-  const totalsX = marginL + contentW - 60;
+  const totalsX = marginL + contentW - 65;
   const totalsValX = marginL + contentW;
 
   pdf.setFontSize(9);
@@ -192,7 +202,13 @@ export function generateInvoicePDF(doc: InvoiceDocument): jsPDF {
   }
 
   if (issuer?.iban) {
-    pdf.text(`Règlement par virement bancaire — IBAN : ${issuer.iban}${issuer.bic ? ` — BIC : ${issuer.bic}` : ""}`, marginL, y);
+    const ibanText = `Règlement par virement bancaire — IBAN : ${issuer.iban}${issuer.bic ? ` — BIC : ${issuer.bic}` : ""}`;
+    const ibanLines = pdf.splitTextToSize(ibanText, contentW);
+    for (const line of ibanLines) {
+      if (y > 285) { pdf.addPage(); y = 20; }
+      pdf.text(line, marginL, y);
+      y += 3.5;
+    }
   }
 
   // Page footer
