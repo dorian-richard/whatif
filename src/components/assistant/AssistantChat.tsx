@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { createClient } from "@/lib/supabase/client";
@@ -8,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Sparkles, Send, X, Bot } from "@/components/ui/icons";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import type { InvoiceDocument, DocumentItem } from "@/types";
 
 const ALLOWED_EMAILS = ["dorich@icloud.com"];
 
@@ -32,6 +34,7 @@ export function AssistantChat() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const router = useRouter();
   const profile = useProfileStore();
   const { documents } = useInvoiceStore();
 
@@ -91,6 +94,7 @@ export function AssistantChat() {
       nbParts: profile.nbParts,
       chargesPro: profile.chargesPro,
       clients: activeClients.map(c => ({
+        id: c.id,
         name: c.name,
         companyName: c.companyName,
         billing: c.billing,
@@ -104,6 +108,78 @@ export function AssistantChat() {
       caAnnuel: Math.round(totalCA),
       invoices: invoiceStats,
     };
+  }
+
+  function handleAction(action: { type: string; data: Record<string, unknown> }) {
+    const clients = profile.clients.filter(c => c.isActive !== false);
+
+    if (action.type === "create_invoice" || action.type === "create_devis") {
+      const clientName = (action.data.clientName as string).toLowerCase();
+      const client = clients.find(c =>
+        c.name.toLowerCase().includes(clientName) ||
+        (c.companyName ?? "").toLowerCase().includes(clientName)
+      );
+
+      const qty = action.data.quantity as number;
+      const price = action.data.unitPrice as number;
+      const unit = (action.data.unit as string) ?? "jour";
+      const desc = action.data.description as string;
+      const totalHT = qty * price;
+      const tvaRate = profile.businessStatus === "micro" ? 0 : 20;
+      const totalTVA = totalHT * (tvaRate / 100);
+
+      const item: DocumentItem = {
+        id: crypto.randomUUID(),
+        description: desc,
+        quantity: qty,
+        unitPrice: price,
+        totalHT,
+        sortOrder: 0,
+        itemType: "tjm",
+        unit,
+      };
+
+      const docType = action.type === "create_devis" ? "devis" : "facture";
+
+      // Build issue date from month/year if provided
+      let issueDate = new Date().toISOString();
+      if (action.data.month) {
+        const year = (action.data.year as number) ?? new Date().getFullYear();
+        issueDate = new Date(year, (action.data.month as number) - 1, 1).toISOString();
+      }
+
+      const prefill: InvoiceDocument = {
+        id: "new",
+        clientId: client?.id ?? "",
+        type: docType,
+        number: "",
+        status: "draft",
+        issueDate,
+        dueDate: docType === "facture" ? new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10) : undefined,
+        validUntil: docType === "devis" ? new Date(Date.now() + ((action.data.validDays as number) ?? 30) * 86400000).toISOString().slice(0, 10) : undefined,
+        totalHT,
+        totalTVA,
+        totalTTC: totalHT + totalTVA,
+        tvaRate,
+        items: [item],
+        clientSnapshot: client ? {
+          name: client.name,
+          companyName: client.companyName,
+          siret: client.siret,
+          address: client.clientAddress,
+          city: client.clientCity,
+          zip: client.clientZip,
+          email: client.email,
+        } : { name: action.data.clientName as string },
+      };
+
+      // Store in sessionStorage and navigate to facturation
+      sessionStorage.setItem("freelens-prefill-devis", JSON.stringify(prefill));
+      router.push("/facturation");
+    } else if (action.type === "navigate") {
+      const page = action.data.page as string;
+      router.push(`/${page}`);
+    }
   }
 
   async function handleSend(text?: string) {
@@ -143,6 +219,13 @@ export function AssistantChat() {
           updated[updated.length - 1] = { role: "assistant", content: data.text ?? "Pas de réponse." };
           return updated;
         });
+
+        // Execute actions returned by the AI
+        if (data.actions) {
+          for (const action of data.actions as Array<{ type: string; data: Record<string, unknown> }>) {
+            handleAction(action);
+          }
+        }
       }
     } catch {
       setMessages(prev => {

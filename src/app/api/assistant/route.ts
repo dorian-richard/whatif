@@ -7,6 +7,57 @@ export const maxDuration = 60;
 
 const anthropic = new Anthropic();
 
+const TOOLS: Anthropic.Tool[] = [
+  {
+    name: "create_invoice",
+    description: "Crée un brouillon de facture pour un client. Utilise cette fonction quand l'utilisateur demande de créer/générer une facture.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        clientName: { type: "string", description: "Nom du client (doit correspondre à un client existant)" },
+        description: { type: "string", description: "Description de la prestation" },
+        quantity: { type: "number", description: "Nombre de jours/unités" },
+        unitPrice: { type: "number", description: "Prix unitaire HT" },
+        unit: { type: "string", description: "Unité (jour, heure, mois, forfait)", default: "jour" },
+        month: { type: "number", description: "Mois de la prestation (1-12)" },
+        year: { type: "number", description: "Année de la prestation" },
+      },
+      required: ["clientName", "description", "quantity", "unitPrice"],
+    },
+  },
+  {
+    name: "create_devis",
+    description: "Crée un brouillon de devis pour un client. Utilise cette fonction quand l'utilisateur demande de créer/générer un devis.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        clientName: { type: "string", description: "Nom du client" },
+        description: { type: "string", description: "Description de la prestation" },
+        quantity: { type: "number", description: "Nombre de jours/unités" },
+        unitPrice: { type: "number", description: "Prix unitaire HT" },
+        unit: { type: "string", description: "Unité (jour, heure, mois, forfait)", default: "jour" },
+        validDays: { type: "number", description: "Durée de validité en jours", default: 30 },
+      },
+      required: ["clientName", "description", "quantity", "unitPrice"],
+    },
+  },
+  {
+    name: "navigate",
+    description: "Navigue vers une page de l'application Freelens. Utilise cette fonction quand l'utilisateur demande d'aller quelque part ou de voir quelque chose.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        page: {
+          type: "string",
+          enum: ["dashboard", "simulateur", "facturation", "journee", "pipeline", "settings", "objectif", "holding"],
+          description: "Page de destination",
+        },
+      },
+      required: ["page"],
+    },
+  },
+];
+
 const SYSTEM_PROMPT = `Tu es l'assistant IA de Freelens, le copilote financier des freelances en France.
 
 Tu aides les freelances à :
@@ -16,6 +67,11 @@ Tu aides les freelances à :
 - Fixer leur TJM et négocier leurs tarifs
 - Gérer leur facturation et leurs clients
 - Planifier (vacances, épargne, retraite, investissement)
+
+Tu peux aussi AGIR pour l'utilisateur :
+- Créer des factures et devis via l'outil create_invoice / create_devis
+- Naviguer vers les pages de l'app via l'outil navigate
+Quand l'utilisateur te demande de créer un document, utilise les outils. Déduis le TJM et les infos client du contexte utilisateur.
 
 Règles :
 - Réponds en français, de manière concise et directe
@@ -35,7 +91,6 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Feature restricted to specific users
   const ALLOWED_EMAILS = ["dorich@icloud.com"];
   if (!ALLOWED_EMAILS.includes(user.email ?? "")) {
     return Response.json({ error: "Feature not available" }, { status: 403 });
@@ -54,7 +109,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Missing messages" }, { status: 400 });
   }
 
-  // Build context block from user's profile data
+  // Build context block
   let contextBlock = "";
   if (context) {
     const parts: string[] = [];
@@ -74,11 +129,11 @@ export async function POST(request: NextRequest) {
     if (clients?.length) {
       parts.push(`\nClients (${clients.length}) :`);
       for (const c of clients) {
-        const billing = c.billing === "tjm" ? `TJM ${c.dailyRate}€, ${c.daysPerWeek ?? c.daysPerMonth ?? "?"}j` :
+        const billing = c.billing === "tjm" ? `TJM ${c.dailyRate}€, ${c.daysPerWeek ?? c.daysPerMonth ?? "?"}j/sem` :
                         c.billing === "forfait" ? `Forfait ${c.monthlyAmount}€/mois` :
                         `Mission ${c.totalAmount}€`;
         const active = c.isActive === false ? " (inactif)" : "";
-        parts.push(`  - ${c.name}${c.companyName ? ` (${c.companyName})` : ""} : ${billing}${active}`);
+        parts.push(`  - ${c.name}${c.companyName ? ` (${c.companyName})` : ""} [id: ${c.id}] : ${billing}${active}`);
       }
     }
 
@@ -96,23 +151,45 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Use non-streaming for reliability, then return the full response
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 1024,
       system: SYSTEM_PROMPT + contextBlock,
+      tools: TOOLS,
       messages: messages.map((m) => ({
         role: m.role as "user" | "assistant",
         content: m.content,
       })),
     });
 
-    const text = response.content
-      .filter((block): block is Anthropic.TextBlock => block.type === "text")
-      .map((block) => block.text)
-      .join("");
+    // Extract text and tool calls
+    const textParts: string[] = [];
+    const actions: Array<{ type: string; data: Record<string, unknown> }> = [];
 
-    return Response.json({ text });
+    for (const block of response.content) {
+      if (block.type === "text") {
+        textParts.push(block.text);
+      } else if (block.type === "tool_use") {
+        const input = block.input as Record<string, unknown>;
+        actions.push({ type: block.name, data: input });
+
+        // Generate confirmation text for each action
+        if (block.name === "create_invoice") {
+          const total = (input.quantity as number) * (input.unitPrice as number);
+          textParts.push(`\n\nFacture créée en brouillon pour **${input.clientName}** : ${input.quantity} ${input.unit ?? "jour"}${(input.quantity as number) > 1 ? "s" : ""} x ${input.unitPrice}€ = **${total.toLocaleString("fr-FR")}€ HT**`);
+        } else if (block.name === "create_devis") {
+          const total = (input.quantity as number) * (input.unitPrice as number);
+          textParts.push(`\n\nDevis créé en brouillon pour **${input.clientName}** : ${input.quantity} ${input.unit ?? "jour"}${(input.quantity as number) > 1 ? "s" : ""} x ${input.unitPrice}€ = **${total.toLocaleString("fr-FR")}€ HT**`);
+        } else if (block.name === "navigate") {
+          textParts.push(`\n\nRedirection vers **${input.page}**...`);
+        }
+      }
+    }
+
+    return Response.json({
+      text: textParts.join(""),
+      actions: actions.length > 0 ? actions : undefined,
+    });
   } catch (err) {
     console.error("Assistant API error:", err);
     return Response.json({ error: "Erreur de l'assistant IA" }, { status: 500 });
