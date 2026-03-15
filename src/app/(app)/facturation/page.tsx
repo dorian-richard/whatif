@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { fmt, cn } from "@/lib/utils";
-import { Receipt, FileText, AlertTriangle, Banknote, Check } from "@/components/ui/icons";
+import { Receipt, FileText, AlertTriangle, Banknote, Check, Clock } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 import { DocumentList } from "@/components/invoicing/DocumentList";
 import { DocumentForm } from "@/components/invoicing/DocumentForm";
@@ -118,7 +118,10 @@ export default function FacturationPage() {
     const totalFactures = documents.filter((d) => d.type === "facture" && d.status !== "draft" && d.status !== "canceled").length;
     const facturesPayees = documents.filter((d) => d.type === "facture" && d.status === "paid").length;
     const tauxEncaissement = totalFactures > 0 ? Math.round((facturesPayees / totalFactures) * 100) : 0;
-    return { devisEnAttente, facturesImpayees, caFacture, tauxEncaissement };
+    const brouillons = documents.filter((d) => d.status === "draft");
+    const brouillonsTotal = brouillons.reduce((s, d) => s + d.totalTTC, 0);
+    const brouillonsCount = brouillons.length;
+    return { devisEnAttente, facturesImpayees, caFacture, tauxEncaissement, brouillonsTotal, brouillonsCount };
   }, [documents]);
 
   // Save document (create or update)
@@ -268,11 +271,12 @@ export default function FacturationPage() {
 
       <ProBlur label="Les devis et factures sont réservés au plan Pro">
         {/* KPIs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <KPICard icon={FileText} label="Devis en attente" value={String(kpis.devisEnAttente)} color="#5682F2" />
           <KPICard icon={AlertTriangle} label="Factures impayées" value={`${fmt(kpis.facturesImpayees)} €`} color="#f87171" />
           <KPICard icon={Banknote} label="CA facturé" value={`${fmt(kpis.caFacture)} €`} color="#4ade80" />
           <KPICard icon={Check} label="Taux encaissement" value={`${kpis.tauxEncaissement}%`} color="#f97316" />
+          <KPICard icon={Clock} label={`Brouillons (${kpis.brouillonsCount})`} value={`${fmt(kpis.brouillonsTotal)} €`} color="#8b8b9e" />
         </div>
 
         {/* Year selector + Tabs */}
