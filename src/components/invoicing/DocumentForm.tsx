@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from "react";
 import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, ClientData, ClientSnapshot, IssuerSnapshot, ItemType } from "@/types";
 import { fmt, cn } from "@/lib/utils";
 import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown, Upload, Lock } from "@/components/ui/icons";
+import type jsPDF from "jspdf";
 import { generateInvoicePDF } from "./DocumentPDF";
 
 // Conditions de paiement prédéfinies
@@ -73,6 +74,21 @@ function makeClientSnapshot(client: ClientData): ClientSnapshot {
     email: client.email,
     phone: client.phone,
   };
+}
+
+async function uploadPDFToBlob(pdf: jsPDF, documentId: string): Promise<string | null> {
+  try {
+    const pdfBlob = pdf.output("blob");
+    const formData = new FormData();
+    formData.append("file", pdfBlob, "document.pdf");
+    formData.append("documentId", documentId);
+    const res = await fetch("/api/invoices/pdf", { method: "POST", body: formData });
+    if (res.ok) {
+      const data = await res.json();
+      return data.url as string;
+    }
+  } catch { /* silently fail */ }
+  return null;
 }
 
 interface DocumentFormProps {
@@ -226,9 +242,9 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
     onSave(result);
   }
 
-  function handleDownloadPDF() {
+  function buildPdfDoc(): InvoiceDocument {
     const clientSnap = selectedClient ? makeClientSnapshot(selectedClient) : { name: "Client" };
-    const pdfDoc: InvoiceDocument = {
+    return {
       id: doc?.id ?? "new",
       clientId,
       type,
@@ -246,8 +262,11 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
       notes: notes || undefined,
       items: items.map((item, i) => ({ ...item, totalHT: item.quantity * item.unitPrice, sortOrder: i })),
     };
-    const pdf = generateInvoicePDF(pdfDoc);
-    pdf.save(`${pdfDoc.number || "document"}.pdf`);
+  }
+
+  function handleDownloadPDF() {
+    const pdf = generateInvoicePDF(buildPdfDoc());
+    pdf.save(`${doc?.number || previewNumber || "document"}.pdf`);
   }
 
   function handleDuplicate() {
@@ -305,9 +324,21 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
 
       {/* Locked banner */}
       {isLocked && (
-        <div className="flex items-center gap-2 px-4 py-2.5 bg-[#fbbf24]/10 border border-[#fbbf24]/20 rounded-xl text-sm text-[#b45309]">
-          <Lock className="size-4 shrink-0" />
-          <span>Ce document est valid&eacute; et ne peut plus &ecirc;tre modifi&eacute;. Vous pouvez le dupliquer ou &eacute;mettre un avoir.</span>
+        <div className="flex items-center justify-between gap-2 px-4 py-2.5 bg-[#fbbf24]/10 border border-[#fbbf24]/20 rounded-xl text-sm text-[#b45309]">
+          <div className="flex items-center gap-2">
+            <Lock className="size-4 shrink-0" />
+            <span>Document valid&eacute; &mdash; modification impossible. Dupliquer ou &eacute;mettre un avoir.</span>
+          </div>
+          {doc?.pdfUrl && (
+            <a
+              href={doc.pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 text-xs font-medium text-[#5682F2] hover:underline"
+            >
+              Voir PDF archiv&eacute;
+            </a>
+          )}
         </div>
       )}
 
@@ -615,10 +646,13 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
         )}
         {!isNew && doc?.status === "draft" && onStatusChange && (
           <button
-            onClick={() => {
-              if (window.confirm("Une fois validé, ce document ne pourra plus être modifié. Continuer ?")) {
-                onStatusChange(doc.id, "sent");
-              }
+            onClick={async () => {
+              if (!window.confirm("Une fois validé, ce document ne pourra plus être modifié. Continuer ?")) return;
+              // Generate and upload PDF to blob storage
+              const pdfDoc = buildPdfDoc();
+              const pdf = generateInvoicePDF(pdfDoc);
+              await uploadPDFToBlob(pdf, doc.id);
+              onStatusChange(doc.id, "sent");
             }}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#5682F2]/10 text-[#5682F2] text-sm font-medium hover:bg-[#5682F2]/20 transition-colors"
           >

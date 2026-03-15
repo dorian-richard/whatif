@@ -202,6 +202,7 @@ export interface InvoiceDocument {
   notes?: string;
   sourceDevisId?: string;
   prospectId?: string;
+  pdfUrl?: string;
   items: DocumentItem[];
 }
 

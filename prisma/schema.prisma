@@ -327,6 +327,7 @@ model Document {
 
   notes           String?
   sourceDevisId   String?
+  pdfUrl          String?
 
   items           DocumentItem[]
 

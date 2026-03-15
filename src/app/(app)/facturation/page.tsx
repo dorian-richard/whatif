@@ -64,6 +64,7 @@ export default function FacturationPage() {
           notes: d.notes as string | undefined,
           sourceDevisId: d.sourceDevisId as string | undefined,
           prospectId: d.prospectId as string | undefined,
+          pdfUrl: d.pdfUrl as string | undefined,
           items: ((d.items as Record<string, unknown>[]) ?? []).map((item) => ({
             id: item.id as string,
             description: item.description as string,
@@ -376,6 +377,7 @@ function mapApiDoc(d: Record<string, unknown>): InvoiceDocument {
     notes: d.notes as string | undefined,
     sourceDevisId: d.sourceDevisId as string | undefined,
     prospectId: d.prospectId as string | undefined,
+    pdfUrl: d.pdfUrl as string | undefined,
     items: ((d.items as Record<string, unknown>[]) ?? []).map((item) => ({
       id: item.id as string,
       description: item.description as string,
