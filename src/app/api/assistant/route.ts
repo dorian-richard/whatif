@@ -2,6 +2,9 @@ import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
 
+// Allow up to 60s for AI responses
+export const maxDuration = 60;
+
 const anthropic = new Anthropic();
 
 const SYSTEM_PROMPT = `Tu es l'assistant IA de Freelens, le copilote financier des freelances en France.
@@ -28,19 +31,26 @@ export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   // Feature restricted to specific users
   const ALLOWED_EMAILS = ["dorich@icloud.com"];
   if (!ALLOWED_EMAILS.includes(user.email ?? "")) {
-    return new Response(JSON.stringify({ error: "Feature not available" }), { status: 403, headers: { "Content-Type": "application/json" } });
+    return Response.json({ error: "Feature not available" }, { status: 403 });
   }
 
-  const { messages, context } = await request.json();
+  let body: { messages?: Array<{ role: string; content: string }>; context?: Record<string, unknown> };
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Invalid JSON" }, { status: 400 });
+  }
 
-  if (!messages || !Array.isArray(messages)) {
-    return new Response(JSON.stringify({ error: "Missing messages" }), { status: 400, headers: { "Content-Type": "application/json" } });
+  const { messages, context } = body;
+
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    return Response.json({ error: "Missing messages" }, { status: 400 });
   }
 
   // Build context block from user's profile data
@@ -59,9 +69,10 @@ export async function POST(request: NextRequest) {
     if (context.nbParts) parts.push(`Parts fiscales : ${context.nbParts}`);
     if (context.chargesPro) parts.push(`Charges pro mensuelles : ${context.chargesPro}€`);
 
-    if (context.clients?.length) {
-      parts.push(`\nClients (${context.clients.length}) :`);
-      for (const c of context.clients) {
+    const clients = context.clients as Array<Record<string, unknown>> | undefined;
+    if (clients?.length) {
+      parts.push(`\nClients (${clients.length}) :`);
+      for (const c of clients) {
         const billing = c.billing === "tjm" ? `TJM ${c.dailyRate}€, ${c.daysPerWeek ?? c.daysPerMonth ?? "?"}j` :
                         c.billing === "forfait" ? `Forfait ${c.monthlyAmount}€/mois` :
                         `Mission ${c.totalAmount}€`;
@@ -73,8 +84,9 @@ export async function POST(request: NextRequest) {
     if (context.caAnnuel) parts.push(`\nCA annuel estimé : ${context.caAnnuel}€`);
     if (context.netAnnuel) parts.push(`Net annuel estimé : ${context.netAnnuel}€`);
 
-    if (context.invoices) {
-      parts.push(`\nFactures : ${context.invoices.total} au total, ${context.invoices.unpaid} impayées (${context.invoices.unpaidAmount}€), ${context.invoices.drafts} brouillons`);
+    const invoices = context.invoices as Record<string, unknown> | undefined;
+    if (invoices) {
+      parts.push(`\nFactures : ${invoices.total} au total, ${invoices.unpaid} impayées (${invoices.unpaidAmount}€), ${invoices.drafts} brouillons`);
     }
 
     if (parts.length > 0) {
@@ -82,40 +94,26 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const stream = await anthropic.messages.stream({
-    model: "claude-sonnet-4-6",
-    max_tokens: 1024,
-    system: SYSTEM_PROMPT + contextBlock,
-    messages: messages.map((m: { role: string; content: string }) => ({
-      role: m.role as "user" | "assistant",
-      content: m.content,
-    })),
-  });
+  try {
+    // Use non-streaming for reliability, then return the full response
+    const response = await anthropic.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1024,
+      system: SYSTEM_PROMPT + contextBlock,
+      messages: messages.map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      })),
+    });
 
-  // Stream response as SSE
-  const encoder = new TextEncoder();
-  const readable = new ReadableStream({
-    async start(controller) {
-      try {
-        for await (const event of stream) {
-          if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`));
-          }
-        }
-        controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-        controller.close();
-      } catch (err) {
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "Stream error" })}\n\n`));
-        controller.close();
-      }
-    },
-  });
+    const text = response.content
+      .filter((block): block is Anthropic.TextBlock => block.type === "text")
+      .map((block) => block.text)
+      .join("");
 
-  return new Response(readable, {
-    headers: {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-    },
-  });
+    return Response.json({ text });
+  } catch (err) {
+    console.error("Assistant API error:", err);
+    return Response.json({ error: "Erreur de l'assistant IA" }, { status: 500 });
+  }
 }
