@@ -6,6 +6,7 @@ import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { Sparkles, Send, X, Bot } from "@/components/ui/icons";
+import ReactMarkdown from "react-markdown";
 
 const ALLOWED_EMAILS = ["dorich@icloud.com"];
 
@@ -221,13 +222,15 @@ export function AssistantChat() {
                 )}
                 <div
                   className={cn(
-                    "max-w-[85%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap",
+                    "max-w-[85%] rounded-2xl px-3 py-2 text-sm",
                     msg.role === "user"
-                      ? "bg-primary text-white rounded-br-md"
-                      : "bg-muted/50 text-foreground rounded-bl-md"
+                      ? "bg-primary text-white rounded-br-md whitespace-pre-wrap"
+                      : "bg-muted/50 text-foreground rounded-bl-md prose prose-sm prose-neutral dark:prose-invert max-w-none [&_table]:text-xs [&_th]:px-2 [&_th]:py-1 [&_td]:px-2 [&_td]:py-1 [&_table]:border-collapse [&_th]:border [&_th]:border-border [&_td]:border [&_td]:border-border [&_blockquote]:border-l-primary/40 [&_h2]:text-sm [&_h2]:mt-3 [&_h2]:mb-1 [&_h1]:text-base [&_h1]:mt-2 [&_h1]:mb-1 [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_hr]:my-2"
                   )}
                 >
-                  {msg.content || (streaming && i === messages.length - 1 && (
+                  {msg.content ? (
+                    msg.role === "user" ? msg.content : <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  ) : (streaming && i === messages.length - 1 && (
                     <span className="inline-flex gap-1">
                       <span className="size-1.5 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:0ms]" />
                       <span className="size-1.5 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:150ms]" />
