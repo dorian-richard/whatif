@@ -2,7 +2,8 @@
 
 import type { InvoiceDocument, DocumentStatus, DocumentType } from "@/types";
 import { fmt, cn } from "@/lib/utils";
-import { FileText, AlertTriangle, Check, Clock, X, CircleMinus, Copy } from "@/components/ui/icons";
+import { FileText, AlertTriangle, Check, Clock, X, CircleMinus, Copy, Download } from "@/components/ui/icons";
+import { generateInvoicePDF } from "./DocumentPDF";
 
 const STATUS_CONFIG: Record<DocumentStatus, { label: string; color: string; bg: string }> = {
   draft: { label: "Brouillon", color: "#8b8b9e", bg: "bg-[#8b8b9e]/12" },
@@ -85,6 +86,21 @@ export function DocumentList({ documents, filter, onSelect, onDelete, onDuplicat
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (doc.pdfUrl) {
+                    window.open(doc.pdfUrl, "_blank");
+                  } else {
+                    const pdf = generateInvoicePDF(doc);
+                    pdf.save(`${doc.number || "document"}.pdf`);
+                  }
+                }}
+                className="text-muted-foreground/40 hover:text-[#5682F2] transition-colors p-1"
+                title="Télécharger PDF"
+              >
+                <Download className="size-3.5" />
+              </button>
               {onDuplicate && (
                 <button
                   onClick={(e) => { e.stopPropagation(); onDuplicate(doc); }}
