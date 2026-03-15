@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban, Building2, Receipt, HandCoins, Users, Gauge } from "@/components/ui/icons";
+import { LayoutDashboard, SlidersHorizontal, ClipboardList, Target, BarChart3, CalendarDays, Sun, Moon, Scale, Briefcase, Landmark, BadgePercent, UserRound, CreditCard, Wallet, TrendingUp, Kanban, Building2, Receipt, HandCoins, Users, Gauge, Zap } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getUpcomingDeadlines } from "@/lib/fiscal-deadlines";
@@ -18,6 +18,7 @@ const NAV_SECTIONS: NavSection[] = [
     label: null,
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/journee", label: "Ma journée", icon: Zap, pro: true },
       { href: "/radar", label: "Diagnostic", icon: Gauge, pro: true },
       { href: "/clients", label: "Mes clients", icon: Users },
     ],
@@ -65,6 +66,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: null,
     items: [
+      { href: "/journee", label: "Ma journée", icon: Zap, pro: true },
       { href: "/radar", label: "Diagnostic", icon: Gauge, pro: true },
       { href: "/clients", label: "Mes clients", icon: Users },
     ],
