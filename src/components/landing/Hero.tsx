@@ -34,7 +34,7 @@ export function Hero() {
               href="/signup"
               className="px-6 py-3 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-base font-semibold hover:opacity-90 transition-opacity fn-glow"
             >
-              Essai gratuit 14 jours &rarr;
+              Essai gratuit 7 jours &rarr;
             </Link>
             <a
               href="#simulation"
@@ -44,7 +44,7 @@ export function Hero() {
             </a>
           </div>
           <p className="text-sm text-muted-foreground/60 mb-12">
-            14 jours d&apos;essai Pro gratuit &middot; Sans carte bancaire &middot; Annulation libre
+            7 jours d&apos;essai Pro gratuit &middot; Sans carte bancaire &middot; Annulation libre
           </p>
         </AnimateOnScroll>
 

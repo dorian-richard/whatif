@@ -73,7 +73,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
             <span className="fn-gradient-text">transparent</span>
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Essai Pro gratuit pendant 14 jours. Sans carte bancaire.
+            Essai Pro gratuit pendant 7 jours. Sans carte bancaire.
           </p>
 
           {/* Toggle mensuel/annuel */}
@@ -144,7 +144,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
           {/* Pro */}
           <div className="relative rounded-2xl p-6 border bg-gradient-to-b from-[#5682F2]/15 to-card dark:from-[#5682F2]/10 dark:to-transparent border-[#5682F2]/40 dark:border-[#5682F2]/30 fn-glow transition-all duration-300">
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white text-xs font-semibold px-4 py-1 rounded-full">
-              14 jours gratuits
+              7 jours gratuits
             </span>
             <h3 className="text-lg font-bold text-foreground">Pro</h3>
             <p className="text-sm text-muted-foreground/60 mb-4">Pour les freelances sérieux</p>
@@ -171,7 +171,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
               href={proHref}
               className="block text-center py-3 rounded-full text-sm font-semibold transition-all bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white hover:opacity-90"
             >
-              Essai gratuit 14 jours
+              Essai gratuit 7 jours
             </Link>
             <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
               Sans carte bancaire

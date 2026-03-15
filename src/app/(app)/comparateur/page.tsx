@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { getAnnualCA } from "@/lib/simulation-engine";
 import { ProBlur } from "@/components/ProBlur";
-import { BUSINESS_STATUS_CONFIG, PFU_RATE, MICRO_PLAFOND } from "@/lib/constants";
+import { BUSINESS_STATUS_CONFIG, PFU_RATE, MICRO_PLAFOND, ABATTEMENT_FRAIS_PRO, PUMA_RATE, PUMA_SEUIL_ACTIVITE } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import type { BusinessStatus, RemunerationType } from "@/types";
 import {
@@ -80,41 +80,50 @@ function computeForStatus(
       impots = annualCA * ir;
       netAnnual = annualCA - impots;
     } else if (status === "sasu_ir" && remunerationType === "mixte") {
-      // SASU IR mixte : partie salaire avec charges, reste sans charges
+      // SASU IR mixte : partie salaire avec charges + abattement 10%, reste sans charges
       const salaryCost = annualCA * (mixtePartSalaire / 100);
       chargesSociales = salaryCost * urssaf;
       const salaryNet = salaryCost - chargesSociales;
       const remaining = annualCA - salaryCost;
-      impots = (salaryNet + remaining) * ir;
+      impots = (salaryNet * (1 - ABATTEMENT_FRAIS_PRO) + remaining) * ir;
       netAnnual = salaryNet + remaining - impots;
     } else {
-      // Salaire classique : URSSAF puis IR
+      // Salaire classique : URSSAF puis IR (abattement 10% frais pro)
       chargesSociales = annualCA * urssaf;
       const afterUrssaf = annualCA - chargesSociales;
-      impots = afterUrssaf * ir;
+      impots = afterUrssaf * (1 - ABATTEMENT_FRAIS_PRO) * ir;
       netAnnual = afterUrssaf - impots;
     }
   } else {
     // IS structures (EURL IS, SASU IS)
     const isSASU = status === "sasu_is";
 
+    // Taxe PUMa : si revenus d'activité < 20% PASS → 6.5% sur dividendes
+    const computePUMa = (revenuActivite: number, revenuCapital: number) => {
+      if (revenuActivite >= PUMA_SEUIL_ACTIVITE || revenuCapital <= 0) return 0;
+      return PUMA_RATE * revenuCapital * (1 - revenuActivite / PUMA_SEUIL_ACTIVITE);
+    };
+
     if (remunerationType === "salaire") {
       chargesSociales = annualCA * urssaf;
       const afterUrssaf = annualCA - chargesSociales;
-      impots = afterUrssaf * ir;
+      // Abattement 10% frais pro sur revenu salarié (art. 62 / assimilé-salarié)
+      impots = afterUrssaf * (1 - ABATTEMENT_FRAIS_PRO) * ir;
       netAnnual = afterUrssaf - impots;
     } else if (remunerationType === "dividendes") {
       const isAmount = annualCA * is;
       const afterIS = annualCA - isAmount;
+      // Taxe PUMa : 0 salaire → taxe maximale
+      const puma = computePUMa(0, afterIS);
       if (isSASU) {
         // PFU 30% flat
         const pfuAmount = afterIS * PFU_RATE;
-        chargesSociales = afterIS * 0.172; // CSG/CRDS part
-        impots = isAmount + afterIS * 0.128; // IS + IR part of PFU
-        netAnnual = afterIS - pfuAmount;
+        chargesSociales = afterIS * 0.186 + puma; // CSG/CRDS + PUMa
+        impots = isAmount + afterIS * 0.128 /* IR part of PFU */; // IS + IR part of PFU
+        netAnnual = afterIS - pfuAmount - puma;
       } else {
         // EURL: TNS sur dividendes + IR
-        chargesSociales = afterIS * urssaf;
+        chargesSociales = afterIS * urssaf + puma;
         const afterCharges = afterIS - chargesSociales;
         impots = isAmount + afterCharges * ir;
         netAnnual = afterCharges - afterCharges * ir;
@@ -124,7 +133,8 @@ function computeForStatus(
       const salaryCost = annualCA * (mixtePartSalaire / 100);
       const salaryCharges = salaryCost * urssaf;
       const salaryNet = salaryCost - salaryCharges;
-      const salaryIR = salaryNet * ir;
+      // Abattement 10% frais pro sur la part salaire
+      const salaryIR = salaryNet * (1 - ABATTEMENT_FRAIS_PRO) * ir;
 
       const remaining = Math.max(0, annualCA - salaryCost);
       const isAmount = remaining * is;
@@ -135,8 +145,8 @@ function computeForStatus(
       let divNet = 0;
 
       if (isSASU) {
-        divCharges = afterIS * 0.172;
-        divIR = afterIS * 0.128;
+        divCharges = afterIS * 0.186;
+        divIR = afterIS * 0.128 /* IR part of PFU */;
         divNet = afterIS * (1 - PFU_RATE);
       } else {
         divCharges = afterIS * urssaf;
@@ -145,9 +155,11 @@ function computeForStatus(
         divNet = afterDivCharges - divIR;
       }
 
-      chargesSociales = salaryCharges + divCharges;
+      // Taxe PUMa si salaire insuffisant
+      const puma = computePUMa(salaryNet, afterIS);
+      chargesSociales = salaryCharges + divCharges + puma;
       impots = salaryIR + isAmount + divIR;
-      netAnnual = (salaryNet - salaryIR) + divNet;
+      netAnnual = (salaryNet - salaryIR) + divNet - puma;
     }
   }
 

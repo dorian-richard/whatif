@@ -134,7 +134,7 @@ export default function OGImage() {
             color: "white",
           }}
         >
-          Essai gratuit 14 jours →
+          Essai gratuit 7 jours →
         </div>
 
         {/* URL */}

@@ -28,7 +28,7 @@ const QUESTIONS = [
   },
   {
     q: "Puis-je \u00eatre rembours\u00e9 ?",
-    a: "Tu b\u00e9n\u00e9ficies d\u2019un essai gratuit de 14 jours sans carte bancaire. Ensuite, tu peux annuler ton abonnement \u00e0 tout moment depuis tes param\u00e8tres. L\u2019annulation prend effet \u00e0 la fin de la p\u00e9riode en cours.",
+    a: "Tu b\u00e9n\u00e9ficies d\u2019un essai gratuit de 7 jours sans carte bancaire. Ensuite, tu peux annuler ton abonnement \u00e0 tout moment depuis tes param\u00e8tres. L\u2019annulation prend effet \u00e0 la fin de la p\u00e9riode en cours.",
   },
 ];
 

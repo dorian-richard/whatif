@@ -1,5 +1,5 @@
 import type { ClientData, SimulationParams, ProjectionResult, FreelanceProfile, BusinessStatus, RemunerationType } from "@/types";
-import { SEASONALITY, BUSINESS_STATUS_CONFIG, PFU_RATE } from "./constants";
+import { SEASONALITY, BUSINESS_STATUS_CONFIG, PFU_RATE, ABATTEMENT_FRAIS_PRO, PUMA_RATE, PUMA_SEUIL_ACTIVITE } from "./constants";
 
 /**
  * Calcule les jours ouvres (lun-ven) pour chaque mois de l'annee donnee.
@@ -234,11 +234,22 @@ export function computeNetFromCA(
   // Structures IR (pas d'IS) : URSSAF puis IR progressif
   if (isRate === 0) {
     const afterUrssaf = caAfterChargesPro * (1 - urssafRate);
-    const ir = irOn(afterUrssaf);
+    // Abattement 10% frais pro sur revenus salariés (art. 62, assimilé-salarié, portage)
+    // Ne s'applique pas à l'EI (BIC/BNC)
+    const hasSalaryAbatement = profile.businessStatus !== "ei";
+    const taxableIncome = hasSalaryAbatement ? afterUrssaf * (1 - ABATTEMENT_FRAIS_PRO) : afterUrssaf;
+    const ir = irOn(taxableIncome);
     return afterUrssaf - ir;
   }
 
   // --- Structures IS (eurl_is, sasu_is) ---
+
+  // Taxe PUMa : cotisation subsidiaire maladie si revenus d'activité < 20% PASS
+  const computePUMa = (revenuActivite: number, revenuCapital: number) => {
+    if (revenuActivite >= PUMA_SEUIL_ACTIVITE || revenuCapital <= 0) return 0;
+    return PUMA_RATE * revenuCapital * (1 - revenuActivite / PUMA_SEUIL_ACTIVITE);
+  };
+
   const remunerationType = profile.remunerationType ?? "salaire";
   const isSASU = profile.businessStatus === "sasu_is";
   const isEURL = profile.businessStatus === "eurl_is";
@@ -267,7 +278,8 @@ export function computeNetFromCA(
   // 100% Salaire : tout en remuneration, deductible = pas d'IS
   if (remunerationType === "salaire") {
     const afterUrssaf = caAfterChargesPro * (1 - urssafRate);
-    const ir = irOn(afterUrssaf);
+    // Abattement 10% frais pro sur revenu salarié (art. 62 EURL / assimilé-salarié SASU)
+    const ir = irOn(afterUrssaf * (1 - ABATTEMENT_FRAIS_PRO));
     return afterUrssaf - ir;
   }
 
@@ -275,7 +287,9 @@ export function computeNetFromCA(
   if (remunerationType === "dividendes") {
     const isAmount = computeIS(caAfterChargesPro);
     const afterIS = caAfterChargesPro - isAmount;
-    return netFromDividends(afterIS);
+    // Taxe PUMa : pas de revenu d'activité → taxe maximale sur dividendes
+    const puma = computePUMa(0, afterIS);
+    return netFromDividends(afterIS) - puma;
   }
 
   // Mixte : repartition salaire/dividendes selon pourcentage ou monthlySalary
@@ -295,7 +309,8 @@ export function computeNetFromCA(
   }
 
   const salaryNet = salaryCost * (1 - urssafRate);
-  const irSalary = irOn(salaryNet);
+  // Abattement 10% frais pro sur la part salaire
+  const irSalary = irOn(salaryNet * (1 - ABATTEMENT_FRAIS_PRO));
   const netSalary = salaryNet - irSalary;
 
   // Benefice restant → IS progressif → dividendes
@@ -305,7 +320,10 @@ export function computeNetFromCA(
 
   const netDividends = netFromDividends(afterIS, salaryNet);
 
-  return netSalary + netDividends;
+  // Taxe PUMa si le salaire est insuffisant (< 20% PASS)
+  const puma = computePUMa(salaryNet, afterIS);
+
+  return netSalary + netDividends - puma;
 }
 
 /**

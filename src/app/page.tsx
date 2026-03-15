@@ -170,7 +170,7 @@ const jsonLd = [
         name: "Puis-je être remboursé ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Tu bénéficies d\u2019un essai gratuit de 14 jours sans carte bancaire. Ensuite, tu peux annuler ton abonnement à tout moment depuis tes paramètres. L\u2019annulation prend effet à la fin de la période en cours.",
+          text: "Tu bénéficies d\u2019un essai gratuit de 7 jours sans carte bancaire. Ensuite, tu peux annuler ton abonnement à tout moment depuis tes paramètres. L\u2019annulation prend effet à la fin de la période en cours.",
         },
       },
     ],

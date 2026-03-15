@@ -26,7 +26,7 @@ export function FinalCTA() {
             href="/signup"
             className="px-10 py-4 bg-gradient-to-r from-[#5682F2] to-[#F4BE7E] text-white rounded-full text-lg font-bold hover:opacity-90 transition-opacity fn-glow-gold"
           >
-            Essai gratuit 14 jours &rarr;
+            Essai gratuit 7 jours &rarr;
           </Link>
         </div>
         <p className="text-sm text-muted-foreground/60">

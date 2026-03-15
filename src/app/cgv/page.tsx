@@ -47,7 +47,7 @@ export default function CGVPage() {
           <section className="space-y-3">
             <h2 className="text-lg font-semibold text-foreground">4. Essai gratuit</h2>
             <p>
-              Un essai gratuit de 14 jours est propos&eacute; sans n&eacute;cessit&eacute; de renseigner un moyen de paiement.
+              Un essai gratuit de 7 jours est propos&eacute; sans n&eacute;cessit&eacute; de renseigner un moyen de paiement.
               &Agrave; l&apos;issue de l&apos;essai, l&apos;utilisateur peut souscrire au plan Pro ou continuer avec le plan Free.
             </p>
           </section>
@@ -80,7 +80,7 @@ export default function CGVPage() {
             <p>
               Conform&eacute;ment &agrave; l&apos;article L221-28 du Code de la consommation, le droit de r&eacute;tractation
               ne s&apos;applique pas aux services pleinement ex&eacute;cut&eacute;s avant la fin du d&eacute;lai de r&eacute;tractation
-              avec l&apos;accord du consommateur. L&apos;essai gratuit de 14 jours permet de tester le service sans engagement.
+              avec l&apos;accord du consommateur. L&apos;essai gratuit de 7 jours permet de tester le service sans engagement.
             </p>
           </section>
 

@@ -161,7 +161,7 @@ export default function SimulateurPortageSalarialPage() {
           >
             Simuler mon salaire en portage &rarr;
           </Link>
-          <p className="text-sm text-muted-foreground/60">Sans carte bancaire &middot; Essai gratuit 14 jours</p>
+          <p className="text-sm text-muted-foreground/60">Sans carte bancaire &middot; Essai gratuit 7 jours</p>
         </div>
 
         <div className="text-xs text-muted-foreground/40 border-t border-border pt-6 space-y-2">

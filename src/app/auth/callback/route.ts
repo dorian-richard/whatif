@@ -20,7 +20,7 @@ export async function GET(request: Request) {
           create: {
             id: user.id,
             email: user.email!,
-            trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+            trialEndsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           },
         }).catch((err) => console.error("Failed to upsert user:", err));
       }

@@ -1,9 +1,12 @@
 import type { SimulationParams } from "@/types";
 
 /* ── Constantes réglementaires ── */
-export const PFU_RATE = 0.30; // 12.8% IR + 17.2% CSG/CRDS
+export const PFU_RATE = 0.314; // 12.8% IR + 18.6% prélèvements sociaux (2025+)
+export const ABATTEMENT_FRAIS_PRO = 0.10; // 10% abattement forfaitaire frais professionnels sur salaires
 export const MICRO_PLAFOND = 83600; // Plafond micro-entreprise BNC 2026
 export const PLAFOND_SS = 48060; // Plafond annuel Sécurité Sociale 2026
+export const PUMA_RATE = 0.065; // Cotisation subsidiaire maladie (taxe PUMa) : 6.5%
+export const PUMA_SEUIL_ACTIVITE = PLAFOND_SS * 0.20; // 20% du PASS — seuil de déclenchement PUMa
 export const CHARGES_SALARIALES = 0.23; // Taux moyen charges salariales CDI
 
 export const MONTHS_SHORT = [
@@ -137,10 +140,11 @@ export const BUSINESS_STATUS_CONFIG: Record<
     desc: "Gérant TNS ~45% · IR progressif · Responsabilité limitée",
     regime: "TNS (gérant majoritaire)",
     details:
-      "Gérant majoritaire TNS, cotisations ~45% sur la rémunération. IR au barème progressif. Responsabilité limitée aux apports. Mêmes charges que l'EI mais avec structure sociétaire et protection du patrimoine personnel. Nécessite capital social et statuts.",
+      "Gérant majoritaire TNS, cotisations ~45% sur la rémunération. IR au barème progressif avec abattement 10% frais pro. Responsabilité limitée aux apports. Cotise pour la retraite au régime général à 100%.",
     avantages: [
       "Responsabilité limitée aux apports",
-      "Mêmes cotisations TNS que l'EI (~45%)",
+      "Cotisations TNS (~45%) avec retraite complète",
+      "Retraite régime général + complémentaire",
       "Charges professionnelles déductibles",
       "Possibilité de passer à l'IS plus tard",
     ],
