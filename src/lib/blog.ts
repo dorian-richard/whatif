@@ -848,6 +848,466 @@ export const BLOG_POSTS: BlogPost[] = [
       { label: "Devenir freelance", href: "/blog/devenir-freelance-guide-2026" },
     ],
   },
+
+  // ─── Article 7 : Optimiser sa rémunération en société ───
+  {
+    slug: "optimiser-remuneration-eurl-sasu-2026",
+    title: "EURL ou SASU : comment optimiser sa rémunération en 2026 ?",
+    description:
+      "Salaire, dividendes ou mix : découvre comment optimiser ta rémunération en EURL IS ou SASU IS en 2026. Taxe PUMa, abattement 10%, IS progressif — exemples chiffrés.",
+    date: "2026-03-15",
+    readingTime: "14 min",
+    keywords: [
+      "optimiser rémunération eurl",
+      "salaire ou dividendes sasu",
+      "taxe puma freelance",
+      "mix salaire dividendes",
+      "rémunération dirigeant 2026",
+    ],
+    sections: [
+      {
+        title: "Le vrai enjeu : salaire, dividendes ou les deux ?",
+        content: `<p>Quand tu passes en société (EURL IS ou SASU IS), tu ne "gagnes" plus directement ton chiffre d'affaires. <strong>Tu choisis comment te rémunérer</strong> : en salaire, en dividendes, ou en combinant les deux.</p>
+<p>Ce choix a un impact massif sur ton revenu net. Sur 100 000€ de CA en SASU IS, la différence entre full salaire et full dividendes peut dépasser <strong>8 000€ par an</strong>. Mais le full dividendes cache des pièges que beaucoup de freelances découvrent trop tard.</p>
+<p>Voici comment fonctionne chaque mode de rémunération, avec les vrais chiffres 2026.</p>`,
+      },
+      {
+        title: "Mode 1 : 100% salaire — la sécurité maximale",
+        content: `<p>En mode full salaire, tout le CA passe en rémunération du dirigeant. L'avantage : <strong>pas d'IS à payer</strong> (le salaire est une charge déductible), une couverture sociale complète, et des trimestres de retraite validés.</p>
+
+<p><strong>En EURL IS (gérant TNS) :</strong></p>
+<ul>
+<li>Cotisations sociales : ~45% sur la rémunération</li>
+<li>Abattement 10% pour frais professionnels sur l'assiette IR</li>
+<li>Retraite au régime général + complémentaire</li>
+<li>Pour 120 000€ de CA : environ 66 000€ net après charges, puis IR</li>
+</ul>
+
+<p><strong>En SASU IS (président assimilé-salarié) :</strong></p>
+<ul>
+<li>Charges patronales + salariales : ~65-70% du net versé</li>
+<li>Abattement 10% frais pro sur l'assiette IR</li>
+<li>Régime général de la Sécurité sociale (meilleure couverture)</li>
+<li>Coût total bien plus élevé qu'en EURL, mais protection sociale supérieure</li>
+</ul>
+
+<p>Le full salaire est la stratégie la plus simple et la plus sûre. Idéal si tu veux maximiser ta retraite et ne pas te prendre la tête.</p>`,
+      },
+      {
+        title: "Mode 2 : 100% dividendes — le piège du PFU",
+        content: `<p>La tentation du full dividendes est forte : pas de charges sociales lourdes, juste le PFU (prélèvement forfaitaire unique) à <strong>31,4%</strong> en 2026 (12,8% d'IR + 18,6% de prélèvements sociaux). Simple, rapide.</p>
+
+<p>Mais il y a <strong>trois pièges majeurs</strong> :</p>
+
+<p><strong>1. L'IS avant le PFU</strong></p>
+<p>Les dividendes sont versés <em>après</em> paiement de l'IS. Sur 100 000€ de bénéfice : 15% sur les premiers 42 500€ + 25% au-delà = 20 750€ d'IS. Il te reste 79 250€, puis le PFU de 31,4% s'applique sur ce montant.</p>
+
+<p><strong>2. La taxe PUMa</strong></p>
+<p>Si tes revenus d'activité (salaire) sont inférieurs à 20% du plafond de la Sécurité sociale (~9 612€ en 2026), tu paies la <strong>cotisation subsidiaire maladie de 6,5%</strong> sur tes revenus du capital. En full dividendes avec zéro salaire, c'est le taux maximum.</p>
+
+<p><strong>3. Zéro protection sociale</strong></p>
+<p>Pas de salaire = pas de trimestres retraite, pas de couverture prévoyance, pas d'indemnités journalières. Tu dois financer une mutuelle et une prévoyance privées (200 à 400€/mois).</p>
+
+<p>Au final, le full dividendes n'est presque jamais optimal une fois la PUMa et l'absence de couverture sociale prises en compte.</p>`,
+      },
+      {
+        title: "Mode 3 : le mix salaire + dividendes — l'optimum",
+        content: `<p>La stratégie la plus efficace en société est le <strong>mix salaire/dividendes</strong>. L'idée : te verser suffisamment de salaire pour valider tes trimestres de retraite et échapper à la PUMa, puis sortir le reste en dividendes.</p>
+
+<p><strong>Le seuil PUMa à retenir :</strong> 20% du PASS = ~9 612€/an de revenus d'activité. En dessous, la taxe PUMa s'applique. Donc un salaire net d'au moins 10 000€/an est un minimum.</p>
+
+<p><strong>Exemple chiffré en SASU IS à 120 000€ de CA :</strong></p>
+<ul>
+<li>Salaire brut : 20 000€ (charges ~65% → net ~12 000€, au-dessus du seuil PUMa)</li>
+<li>Bénéfice restant : ~88 000€ → IS = ~17 375€ → dividendes = ~70 625€</li>
+<li>PFU 31,4% sur dividendes : ~22 176€</li>
+<li>Net total : ~12 000€ (salaire) + 48 449€ (dividendes après PFU) = ~60 449€</li>
+<li>+ pas de PUMa, trimestres retraite validés, couverture sociale de base</li>
+</ul>
+
+<p><strong>En EURL IS</strong>, c'est encore plus intéressant : les dividendes au-delà de 10% du capital social sont soumis aux cotisations TNS (pas au PFU). Avec un capital social de 1 000€, c'est quasi tout qui passe en TNS — ce qui finance ta retraite mais coûte plus cher en charges.</p>
+
+<p>L'optimum dépend de ton CA, de ta situation familiale (nombre de parts fiscales) et de tes priorités (retraite vs net immédiat). C'est exactement ce que simule <a href="/comparateur">le comparateur Freelens</a>.</p>`,
+      },
+      {
+        title: "L'abattement 10% : le détail qui change tout",
+        content: `<p>Quand tu te verses un salaire en société (EURL IS ou SASU IS), ton revenu imposable bénéficie d'un <strong>abattement forfaitaire de 10%</strong> pour frais professionnels. Cet abattement s'applique avant le calcul de l'IR.</p>
+
+<p><strong>Exemple :</strong> tu te verses 60 000€ net de salaire. L'assiette imposable n'est pas 60 000€ mais <strong>54 000€</strong> (après abattement de 10%). Sur une tranche à 30%, ça représente <strong>1 800€ d'impôt en moins</strong>.</p>
+
+<p>Cet abattement s'applique à :</p>
+<ul>
+<li>La rémunération du gérant majoritaire EURL (article 62 du CGI)</li>
+<li>Le salaire du président de SASU (assimilé-salarié)</li>
+<li>Le salaire en portage salarial</li>
+</ul>
+
+<p>Il ne s'applique <strong>pas</strong> à :</p>
+<ul>
+<li>L'EI classique (revenus BIC/BNC, pas des salaires)</li>
+<li>La micro-entreprise (qui a son propre abattement de 34%)</li>
+<li>Les dividendes (taxés au PFU ou au barème, pas d'abattement)</li>
+</ul>
+
+<p>Beaucoup de simulateurs en ligne oublient cet abattement. Freelens l'intègre depuis mars 2026.</p>`,
+      },
+      {
+        title: "Checklist : quelle stratégie pour toi ?",
+        content: `<p>Voici un arbre de décision simplifié :</p>
+
+<ul>
+<li><strong>CA &lt; 83 600€ et peu de charges</strong> → reste en micro-entreprise, c'est imbattable en simplicité</li>
+<li><strong>CA &gt; 83 600€, pas envie de société</strong> → EI classique au réel</li>
+<li><strong>CA &gt; 80 000€, priorité retraite et simplicité</strong> → EURL IR, full salaire TNS</li>
+<li><strong>CA &gt; 80 000€, veut optimiser le net</strong> → EURL IS ou SASU IS en mode mixte</li>
+<li><strong>Besoin de régime général et couverture max</strong> → SASU IS avec part salaire significative</li>
+<li><strong>Zéro admin, CDI et chômage</strong> → portage salarial (mais cher)</li>
+</ul>
+
+<p>Dans tous les cas, <strong>ne fais pas de full dividendes</strong> sans avoir mesuré l'impact de la PUMa et l'absence de protection sociale. Simule les différents scénarios sur <a href="/comparateur">le comparateur de statuts</a>.</p>`,
+      },
+    ],
+    cta: { text: "Simuler mon mix optimal", href: "/signup", sub: "Gratuit — comparateur de statuts inclus" },
+    relatedLinks: [
+      { label: "Comparateur SASU vs EURL", href: "/comparateur-sasu-eurl" },
+      { label: "Charges freelance 2026", href: "/blog/charges-freelance-2026-urssaf-impots" },
+      { label: "Quel statut freelance choisir", href: "/blog/micro-entreprise-vs-sasu-vs-eurl-2026" },
+      { label: "Simulateur de revenus", href: "/simulateur-revenus-freelance" },
+    ],
+  },
+
+  // ─── Article 8 : Freelance premier client ───
+  {
+    slug: "trouver-premier-client-freelance",
+    title: "Comment trouver son premier client en freelance (sans réseau)",
+    description:
+      "Trouver son premier client freelance quand on part de zéro : plateformes, prospection, positionnement, tarif de lancement. Méthode pas à pas.",
+    date: "2026-03-15",
+    readingTime: "11 min",
+    keywords: [
+      "trouver client freelance",
+      "premier client freelance",
+      "prospection freelance",
+      "plateforme freelance france",
+      "démarrer freelance sans réseau",
+    ],
+    sections: [
+      {
+        title: "Le mythe du réseau indispensable",
+        content: `<p>Le premier réflexe quand on se lance en freelance : paniquer parce qu'on "n'a pas de réseau". C'est la raison n°1 pour laquelle des freelances compétents restent salariés.</p>
+<p>La réalité : <strong>ton premier client ne viendra probablement pas de ton réseau</strong>. Il viendra d'un effort délibéré de prospection, d'une plateforme, ou d'un ancien collègue que tu n'avais pas imaginé comme client. Voici comment trouver ce premier client, même en partant de zéro.</p>`,
+      },
+      {
+        title: "Étape 1 : Définir une offre claire avant de prospecter",
+        content: `<p>Avant de chercher des clients, tu dois pouvoir répondre à cette question en une phrase : <strong>"J'aide [qui] à [faire quoi] grâce à [quoi]"</strong>.</p>
+
+<p>Exemples concrets :</p>
+<ul>
+<li>"J'aide les startups SaaS à scaler leur infra cloud grâce au DevOps et à Kubernetes."</li>
+<li>"J'aide les PME industrielles à digitaliser leurs process métier avec des apps sur mesure."</li>
+<li>"J'aide les e-commerçants à augmenter leur taux de conversion en optimisant leur UX."</li>
+</ul>
+
+<p>Ce positionnement fait 80% du travail. Un freelance qui dit "je fais du dev web" n'a aucune traction. Un freelance qui dit "j'aide les SaaS à réduire leurs coûts AWS de 30%" a une proposition de valeur.</p>
+
+<p><strong>Règle d'or :</strong> mieux vaut un positionnement trop étroit qu'un positionnement trop large. Tu pourras toujours élargir plus tard.</p>`,
+      },
+      {
+        title: "Étape 2 : Les canaux qui marchent pour le premier client",
+        content: `<p>Par ordre d'efficacité pour un freelance qui démarre :</p>
+
+<p><strong>1. Ton cercle élargi (pas ton "réseau")</strong></p>
+<p>Poste sur LinkedIn que tu te lances. Pas un post corporate — un post honnête. "Je quitte [entreprise], je me lance en freelance sur [domaine], je cherche ma première mission." Le taux de réponse est surprenant. D'anciens collègues, managers, clients internes pensent à toi.</p>
+
+<p><strong>2. Les plateformes spécialisées</strong></p>
+<ul>
+<li><strong>Malt</strong> : la référence en France. Soigne ton profil, ajoute un portfolio, demande des recommandations à d'anciens collègues.</li>
+<li><strong>Crème de la Crème</strong> : missions plus grosses, sélectif à l'entrée.</li>
+<li><strong>Comet</strong> : tech et data, bons TJM, process rapide.</li>
+<li><strong>LeHibou</strong> : ESN déguisée mais utile pour une première mission.</li>
+</ul>
+
+<p><strong>3. La prospection directe</strong></p>
+<p>Identifie 20 entreprises qui correspondent à ton positionnement. Trouve le bon interlocuteur sur LinkedIn. Envoie un message court et spécifique (pas un template générique). Taux de réponse attendu : 5 à 10%, soit 1 à 2 conversations pour 20 messages.</p>
+
+<p><strong>4. Les communautés</strong></p>
+<p>Slack/Discord de ta techno (Laravel France, React Paris, DevOps FR...). Pas pour spammer, mais pour aider, être visible, et récupérer des missions qui circulent.</p>`,
+      },
+      {
+        title: "Étape 3 : Fixer son premier tarif",
+        content: `<p>Le premier tarif est le plus difficile à fixer. Deux erreurs courantes :</p>
+<ul>
+<li><strong>Trop bas</strong> "pour être sûr d'avoir le client" → tu attires les mauvais clients et tu t'épuises</li>
+<li><strong>Trop haut</strong> sans portfolio → tu n'as aucune crédibilité pour justifier le tarif</li>
+</ul>
+
+<p><strong>Méthode simple :</strong></p>
+<ol>
+<li>Regarde les TJM sur Malt pour ton profil et ton expérience</li>
+<li>Prends le TJM médian du marché</li>
+<li>Applique une décote de 10 à 15% pour ta première mission (pas plus)</li>
+<li>Prévois de remonter au tarif marché dès la mission suivante</li>
+</ol>
+
+<p>Pour un développeur avec 3 à 5 ans d'expérience en 2026, les fourchettes TJM en France :</p>
+<ul>
+<li>Développeur web fullstack : 400 à 550€/jour</li>
+<li>DevOps / Cloud : 500 à 700€/jour</li>
+<li>Data engineer : 500 à 650€/jour</li>
+<li>Product designer : 400 à 600€/jour</li>
+</ul>
+
+<p>Calcule ton seuil de rentabilité avec le <a href="/simulateur-revenus-freelance">simulateur Freelens</a> pour savoir en dessous de quel TJM tu perds de l'argent par rapport au salariat.</p>`,
+      },
+      {
+        title: "Étape 4 : Closer la mission",
+        content: `<p>Tu as un appel avec un prospect. Voici le framework :</p>
+
+<ol>
+<li><strong>Comprendre le besoin</strong> (70% de l'appel) : pose des questions, écoute, reformule. "Si je comprends bien, votre problème c'est [X] et l'impact c'est [Y] ?"</li>
+<li><strong>Valider le fit</strong> : "J'ai fait exactement ça chez [client/employeur précédent], voici comment je m'y suis pris."</li>
+<li><strong>Proposer un cadre</strong> : TJM ou forfait, durée estimée, prochaine étape.</li>
+<li><strong>Envoyer un devis dans les 24h</strong> : un devis envoyé 3 jours après l'appel a 3x moins de chances d'être signé.</li>
+</ol>
+
+<p><strong>Astuce :</strong> pour une première mission, propose un démarrage rapide (sous 1 à 2 semaines). La disponibilité immédiate est un argument massif pour un freelance débutant face à un senior booké 2 mois à l'avance.</p>`,
+      },
+      {
+        title: "Les erreurs qui tuent le lancement",
+        content: `<p>En accompagnant des freelances qui démarrent, les mêmes erreurs reviennent :</p>
+
+<ul>
+<li><strong>Attendre que tout soit parfait</strong> : site web, logo, cartes de visite... Rien de tout ça ne génère des clients. Un profil LinkedIn bien fait et Malt suffisent.</li>
+<li><strong>Dire oui à tout</strong> : une mission hors de ton domaine avec un client difficile va te cramer. Mieux vaut attendre une bonne mission que d'accepter une mauvaise.</li>
+<li><strong>Ne pas facturer d'acompte</strong> : 30% à la signature du devis, surtout avec un nouveau client. Non négociable.</li>
+<li><strong>Négliger l'admin</strong> : ouvrir ton statut (micro ou société) AVANT de signer, ouvrir un compte bancaire pro, préparer un modèle de devis. <a href="/signup">Freelens gère le devis et la facturation</a> si tu veux gagner du temps.</li>
+<li><strong>Ne pas relancer</strong> : un prospect qui ne répond pas n'est pas un "non". Relance à J+3 et J+7. 40% des missions se signent après une relance.</li>
+</ul>`,
+      },
+    ],
+    cta: { text: "Calculer mon TJM minimum", href: "/signup", sub: "Simulateur de revenus freelance gratuit" },
+    relatedLinks: [
+      { label: "Combien facturer en freelance", href: "/blog/combien-facturer-freelance-2026-tjm" },
+      { label: "Devenir freelance : le guide", href: "/blog/devenir-freelance-guide-2026" },
+      { label: "Simulateur TJM freelance", href: "/tjm-freelance" },
+      { label: "Diversifier ses revenus", href: "/blog/diversifier-revenus-freelance" },
+    ],
+  },
+
+  // ─── Article 9 : Retraite freelance ───
+  {
+    slug: "retraite-freelance-2026-combien-cotiser",
+    title: "Retraite freelance en 2026 : combien tu cotises vraiment (et combien tu toucheras)",
+    description:
+      "Retraite en freelance : trimestres validés, montant des pensions, différences micro/EURL/SASU. Comment anticiper et compléter ta retraite.",
+    date: "2026-03-15",
+    readingTime: "13 min",
+    keywords: [
+      "retraite freelance",
+      "cotisation retraite auto-entrepreneur",
+      "trimestres freelance",
+      "retraite TNS indépendant",
+      "pension freelance simulation",
+    ],
+    sections: [
+      {
+        title: "Le tabou de la retraite en freelance",
+        content: `<p>Quand on se lance en freelance, on pense au TJM, aux charges, à la trésorerie. La retraite ? "J'ai le temps." Sauf que <strong>chaque année où tu cotises peu, c'est une année de pension en moins</strong>. Et les rattrapages n'existent pas.</p>
+<p>En France, la retraite dépend de deux choses : le <strong>nombre de trimestres validés</strong> (durée) et le <strong>revenu moyen</strong> sur les 25 meilleures années (montant). En freelance, les deux sont souvent inférieurs au salariat.</p>
+<p>Voici ce que chaque statut te rapporte vraiment, et comment anticiper.</p>`,
+      },
+      {
+        title: "Trimestres validés selon ton statut",
+        content: `<p>Pour valider 4 trimestres par an (le maximum), il faut un revenu soumis à cotisations d'au moins <strong>6 990€ en 2026</strong> (150 × SMIC horaire × 4).</p>
+
+<p><strong>Micro-entreprise :</strong></p>
+<p>Les cotisations sont calculées sur le CA. Pour valider 4 trimestres en BNC, il faut un CA annuel d'environ <strong>10 000€ minimum</strong>. En dessous, tu valides moins de trimestres. Les cotisations retraite en micro sont faibles : ta pension sera basse même avec tous tes trimestres.</p>
+
+<p><strong>EI / EURL IR (TNS) :</strong></p>
+<p>Cotisations calculées sur le bénéfice. Tu cotises au régime de base (CNAVPL ou CNAV selon l'activité) et à une complémentaire. Avec un bénéfice de 40 000€+, tu valides facilement 4 trimestres et ta pension est correcte.</p>
+
+<p><strong>SASU IS (assimilé-salarié) :</strong></p>
+<p>Si tu te verses un salaire, tu cotises exactement comme un salarié : régime général, AGIRC-ARRCO. C'est le statut qui rapporte <strong>le plus de droits à la retraite</strong> par euro cotisé. Mais en full dividendes : zéro trimestre.</p>
+
+<p><strong>Portage salarial :</strong></p>
+<p>Même régime que le salariat classique. Retraite complète tant que tu travailles.</p>`,
+      },
+      {
+        title: "Combien tu toucheras : exemples chiffrés",
+        content: `<p>Estimation grossière pour un freelance ayant cotisé 25 ans avec un revenu moyen :</p>
+
+<table>
+<thead><tr><th>Statut</th><th>Revenu moyen</th><th>Pension estimée/mois</th><th>Taux de remplacement</th></tr></thead>
+<tbody>
+<tr><td>Micro (40k CA)</td><td>~30 000€</td><td>~800€</td><td>~32%</td></tr>
+<tr><td>EI / EURL IR (80k)</td><td>~44 000€</td><td>~1 400€</td><td>~38%</td></tr>
+<tr><td>SASU IS salaire (60k brut)</td><td>~46 000€</td><td>~1 800€</td><td>~47%</td></tr>
+<tr><td>Portage (80k CA)</td><td>~40 000€</td><td>~1 600€</td><td>~48%</td></tr>
+</tbody>
+</table>
+
+<p><em>Ces chiffres sont indicatifs et supposent une carrière complète (43 ans de cotisation pour la génération 1965+). La réalité dépend de ta carrière mixte salariat/freelance.</em></p>
+
+<p>Le constat est clair : en micro-entreprise, la pension est <strong>insuffisante pour vivre</strong>. En TNS (EURL IR), elle est correcte. En SASU avec salaire, elle se rapproche du salariat.</p>`,
+      },
+      {
+        title: "Comment compléter ta retraite freelance",
+        content: `<p>Quel que soit ton statut, la retraite obligatoire ne suffira probablement pas. Voici les compléments les plus courants :</p>
+
+<p><strong>1. Le PER (Plan d'Épargne Retraite)</strong></p>
+<p>Les versements sont déductibles du revenu imposable (dans la limite de 10% du bénéfice). Un freelance à 80 000€ de bénéfice peut déduire jusqu'à 8 000€/an. Effet fiscal immédiat + capitalisation long terme. C'est le levier n°1.</p>
+
+<p><strong>2. L'assurance-vie</strong></p>
+<p>Plus souple que le PER (déblocage à tout moment après 8 ans). Pas de déduction fiscale à l'entrée, mais fiscalité douce à la sortie. Idéal en complément du PER.</p>
+
+<p><strong>3. L'investissement immobilier</strong></p>
+<p>Acheter sa résidence principale supprime le poste de dépense logement à la retraite. L'investissement locatif génère des revenus complémentaires. Accessible via une SCI pour les freelances en société.</p>
+
+<p><strong>4. La capitalisation en société</strong></p>
+<p>En EURL IS ou SASU IS, tu peux laisser des bénéfices dans la société (IS à 15% sur les premiers 42 500€) et les investir. À la retraite, tu liquides la société ou tu te verses les réserves progressivement.</p>`,
+      },
+      {
+        title: "Le piège du full dividendes pour la retraite",
+        content: `<p>Attention au full dividendes en SASU IS : <strong>les dividendes ne génèrent aucun droit à la retraite</strong>. Zéro trimestre, zéro point AGIRC-ARRCO.</p>
+
+<p>Concrètement, un freelance en SASU IS à 150 000€ de CA qui se verse zéro salaire pendant 10 ans :</p>
+<ul>
+<li>0 trimestre validé sur cette période</li>
+<li>Pension amputée de 10 ans de cotisations</li>
+<li>Soumis à la taxe PUMa (6,5% sur les dividendes)</li>
+<li>Pas de couverture prévoyance ni indemnités journalières</li>
+</ul>
+
+<p>L'économie de charges à court terme coûte <strong>très cher à long terme</strong>. Un minimum de salaire (~20 000€ brut/an) permet de valider 4 trimestres, échapper à la PUMa, et maintenir une couverture sociale de base.</p>
+
+<p>Simule l'impact sur ta retraite avec le <a href="/simulateur-retraite-independant">simulateur retraite Freelens</a>.</p>`,
+      },
+    ],
+    cta: { text: "Simuler ma retraite freelance", href: "/signup", sub: "Gratuit — estimation personnalisée" },
+    relatedLinks: [
+      { label: "Simulateur retraite indépendant", href: "/simulateur-retraite-independant" },
+      { label: "Optimiser sa rémunération", href: "/blog/optimiser-remuneration-eurl-sasu-2026" },
+      { label: "Charges freelance 2026", href: "/blog/charges-freelance-2026-urssaf-impots" },
+      { label: "Comparateur de statuts", href: "/comparateur-statuts-freelance" },
+    ],
+  },
+
+  // ─── Article 10 : TVA freelance ───
+  {
+    slug: "tva-freelance-2026-guide-complet",
+    title: "TVA freelance en 2026 : franchise, déclaration et seuils expliqués",
+    description:
+      "Tout sur la TVA en freelance : franchise en base, seuils 2026, déclaration mensuelle/trimestrielle, TVA intracommunautaire. Guide pratique.",
+    date: "2026-03-15",
+    readingTime: "10 min",
+    keywords: [
+      "tva freelance",
+      "franchise tva auto-entrepreneur",
+      "seuil tva 2026",
+      "déclaration tva freelance",
+      "tva intracommunautaire freelance",
+    ],
+    sections: [
+      {
+        title: "TVA en freelance : tu es concerné ou pas ?",
+        content: `<p>Beaucoup de freelances pensent ne pas être concernés par la TVA. C'est vrai... jusqu'à un certain seuil. Et quand tu le dépasses, <strong>les obligations arrivent vite</strong>.</p>
+<p>En France en 2026, la <strong>franchise en base de TVA</strong> s'applique si ton CA annuel ne dépasse pas :</p>
+<ul>
+<li><strong>37 500€</strong> pour les prestations de services (BNC)</li>
+<li><strong>85 000€</strong> pour les activités de vente (BIC)</li>
+</ul>
+<p>En dessous de ces seuils, tu factures HT = TTC (pas de TVA collectée, pas de TVA déductible). Tu dois mentionner "TVA non applicable, article 293 B du CGI" sur tes factures.</p>
+<p>Au-delà, tu deviens redevable de la TVA : tu la collectes sur tes factures et tu la reverses à l'État.</p>`,
+      },
+      {
+        title: "Dépasser le seuil : ce qui se passe concrètement",
+        content: `<p>Quand tu dépasses le seuil de franchise, voici la marche à suivre :</p>
+
+<ol>
+<li><strong>Demander un numéro de TVA intracommunautaire</strong> auprès de ton SIE (Service des Impôts des Entreprises)</li>
+<li><strong>Commencer à facturer la TVA</strong> : tes factures passent de "500€ HT" à "500€ HT + 100€ TVA = 600€ TTC" (taux normal 20%)</li>
+<li><strong>Déclarer et reverser la TVA</strong> : mensuellement ou trimestriellement selon ton régime</li>
+</ol>
+
+<p><strong>Le seuil majoré :</strong> si tu dépasses 37 500€ mais restes sous 41 250€, tu gardes la franchise pour l'année en cours. Au-delà de 41 250€, la TVA s'applique dès le 1er jour du mois de dépassement.</p>
+
+<p><strong>Impact sur tes prix :</strong> si tes clients sont des entreprises (B2B), la TVA est neutre — ils la déduisent. Si tes clients sont des particuliers (B2C), tes prix augmentent de 20%. En freelance tech, 95% des clients sont B2B donc l'impact est nul.</p>`,
+      },
+      {
+        title: "TVA collectée, TVA déductible : comment ça marche",
+        content: `<p>Une fois redevable, tu joues les intermédiaires entre tes clients et l'État :</p>
+
+<p><strong>TVA collectée</strong> = TVA facturée à tes clients (20% en général)</p>
+<p><strong>TVA déductible</strong> = TVA payée sur tes achats pro (matériel, logiciels, coworking...)</p>
+<p><strong>TVA à reverser</strong> = collectée − déductible</p>
+
+<p><strong>Exemple mensuel :</strong></p>
+<ul>
+<li>Tu factures 10 000€ HT → TVA collectée = 2 000€</li>
+<li>Tu achètes un MacBook 1 500€ HT → TVA déductible = 300€</li>
+<li>Abonnement coworking 400€ HT → TVA déductible = 80€</li>
+<li>TVA à reverser = 2 000€ − 380€ = <strong>1 620€</strong></li>
+</ul>
+
+<p>C'est pourquoi la TVA n'est pas une "charge" : tu ne fais que la collecter et la reverser. Mais il faut <strong>provisionner la TVA collectée</strong> sur un compte séparé pour ne pas la dépenser par erreur. C'est la cause n°1 de problèmes de trésorerie chez les freelances.</p>
+
+<p>Le <a href="/calcul-tva-freelance">calculateur TVA Freelens</a> t'aide à estimer tes montants mensuels.</p>`,
+      },
+      {
+        title: "Régimes de déclaration : réel simplifié ou réel normal",
+        content: `<p>Deux régimes possibles :</p>
+
+<p><strong>Régime réel simplifié</strong> (CA &lt; 254 000€ en services) :</p>
+<ul>
+<li>2 acomptes semestriels (juillet et décembre)</li>
+<li>1 déclaration annuelle de régularisation (CA12)</li>
+<li>Plus simple mais moins de visibilité sur ta tréso</li>
+</ul>
+
+<p><strong>Régime réel normal</strong> (CA &gt; 254 000€ ou sur option) :</p>
+<ul>
+<li>Déclaration mensuelle (CA3)</li>
+<li>Plus de travail mais meilleur suivi</li>
+<li>Obligatoire au-dessus du seuil</li>
+</ul>
+
+<p><strong>Conseil :</strong> même en dessous du seuil, opte pour le réel normal si ton CA est régulier. La déclaration mensuelle prend 10 minutes et t'évite les mauvaises surprises des régularisations annuelles.</p>`,
+      },
+      {
+        title: "TVA et clients étrangers : les règles intracommunautaires",
+        content: `<p>Si tu travailles avec des clients dans l'UE ou hors UE, les règles changent :</p>
+
+<p><strong>Client entreprise dans l'UE (B2B) :</strong></p>
+<ul>
+<li>TVA à 0% (autoliquidation par le client)</li>
+<li>Mention obligatoire : "Autoliquidation — article 283-2 du CGI"</li>
+<li>Tu dois avoir un numéro de TVA intracommunautaire</li>
+<li>Déclaration Européenne de Services (DES) obligatoire</li>
+</ul>
+
+<p><strong>Client particulier dans l'UE (B2C) :</strong></p>
+<ul>
+<li>TVA française applicable (20%)</li>
+<li>Sauf si tu dépasses 10 000€ de ventes B2C intra-UE → TVA du pays du client (guichet unique OSS)</li>
+</ul>
+
+<p><strong>Client hors UE :</strong></p>
+<ul>
+<li>Prestation de service : pas de TVA (exonération export)</li>
+<li>Mention : "Exonération de TVA — article 259-1° du CGI"</li>
+</ul>
+
+<p>En pratique, la majorité des freelances tech facturent en B2B France ou UE. La règle simple : <strong>B2B intra-UE = pas de TVA, B2B France = TVA 20%</strong>.</p>`,
+      },
+    ],
+    cta: { text: "Calculer ma TVA freelance", href: "/signup", sub: "Outil gratuit — estimation mensuelle" },
+    relatedLinks: [
+      { label: "Calculateur TVA freelance", href: "/calcul-tva-freelance" },
+      { label: "Charges freelance 2026", href: "/blog/charges-freelance-2026-urssaf-impots" },
+      { label: "Devenir freelance", href: "/blog/devenir-freelance-guide-2026" },
+      { label: "Gérer sa trésorerie", href: "/blog/tresorerie-freelance-guide-gestion" },
+    ],
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
