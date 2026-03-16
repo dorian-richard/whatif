@@ -20,12 +20,12 @@ interface Message {
 }
 
 const SUGGESTIONS = [
-  { label: "Analyse financiere", prompt: "Fais une analyse complète de ma situation financière : revenus, charges, net, optimisations possibles." },
-  { label: "Optimiser ma fiscalite", prompt: "Comment puis-je optimiser ma fiscalité avec mon statut actuel ? Compare IR vs IS, dividendes vs salaire." },
-  { label: "Comparer les statuts", prompt: "Compare micro-entreprise, EURL et SASU pour mon niveau de CA. Quel statut est le plus avantageux ?" },
-  { label: "Fixer mon TJM", prompt: "Quel TJM devrais-je viser pour atteindre un net confortable ? Détaille le calcul." },
-  { label: "Creer une facture", prompt: "Crée une facture pour mon dernier client en date, pour le mois en cours." },
-  { label: "Bilan mensuel", prompt: "Fais le bilan de mon mois : CA réalisé, factures en attente, trésorerie, actions à mener." },
+  { label: "Combien je gagne vraiment ?", prompt: "Avec mon CA actuel, combien il me reste net après charges et impôts ? Détaille le calcul étape par étape." },
+  { label: "Quel statut choisir ?", prompt: "Avec mon niveau de CA, est-ce que je devrais rester en micro ou passer en EURL/SASU ? Compare les 3 en chiffres concrets." },
+  { label: "Mon TJM est-il bon ?", prompt: "Est-ce que mon TJM actuel est cohérent avec le marché et mes objectifs de revenu ? Que devrais-je viser ?" },
+  { label: "Facture ce mois-ci", prompt: "Crée la facture pour mon client principal, pour le mois en cours." },
+  { label: "Combien mettre de cote ?", prompt: "Combien je dois provisionner chaque mois pour les charges, impôts et cotisations ? Donne-moi les montants exacts." },
+  { label: "Augmenter mon tarif", prompt: "Comment justifier une augmentation de TJM auprès de mon client ? Donne-moi des arguments et un exemple de message." },
 ];
 
 export default function AssistantPage() {
