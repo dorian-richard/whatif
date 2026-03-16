@@ -32,6 +32,7 @@ const SUGGESTIONS = [
   { label: "Facture ce mois-ci", prompt: "Crée la facture pour mon client principal, pour le mois en cours." },
   { label: "Combien mettre de cote ?", prompt: "Combien je dois provisionner chaque mois pour les charges, impôts et cotisations ? Donne-moi les montants exacts." },
   { label: "Augmenter mon tarif", prompt: "Comment justifier une augmentation de TJM auprès de mon client ? Donne-moi des arguments et un exemple de message." },
+  { label: "Combien me verser ce mois ?", prompt: "Combien je peux me verser ce mois-ci en restant confortable ? Prends en compte mes charges, impôts et provisions à venir." },
 ];
 
 export default function AssistantPage() {
