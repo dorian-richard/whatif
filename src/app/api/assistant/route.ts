@@ -2,7 +2,6 @@ import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
 
-// Allow up to 60s for AI responses
 export const maxDuration = 60;
 
 const anthropic = new Anthropic();
@@ -43,7 +42,7 @@ const TOOLS: Anthropic.Tool[] = [
   },
   {
     name: "navigate",
-    description: "Navigue vers une page de l'application Freelens. Utilise cette fonction quand l'utilisateur demande d'aller quelque part ou de voir quelque chose.",
+    description: "Navigue vers une page de l'application Freelens.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -84,12 +83,47 @@ Règles :
 - N'utilise JAMAIS d'emojis ou d'icônes dans tes réponses
 - Sois bref : 2-4 paragraphes max sauf si l'utilisateur demande une analyse détaillée`;
 
+function buildContextBlock(context: Record<string, unknown>): string {
+  const parts: string[] = [];
+
+  if (context.businessStatus) parts.push(`Statut juridique : ${context.businessStatus}`);
+  if (context.role) parts.push(`Métier : ${context.role}`);
+  if (context.companyName) parts.push(`Entreprise : ${context.companyName}`);
+  if (context.monthlyExpenses) parts.push(`Charges fixes mensuelles : ${context.monthlyExpenses}€`);
+  if (context.savings) parts.push(`Épargne : ${context.savings}€`);
+  if (context.workDaysPerWeek) parts.push(`Jours travaillés/semaine : ${context.workDaysPerWeek}`);
+  if (context.age) parts.push(`Âge : ${context.age} ans`);
+  if (context.monthlySalary) parts.push(`Salaire mensuel (SASU/EURL) : ${context.monthlySalary}€`);
+  if (context.nbParts) parts.push(`Parts fiscales : ${context.nbParts}`);
+  if (context.chargesPro) parts.push(`Charges pro mensuelles : ${context.chargesPro}€`);
+
+  const clients = context.clients as Array<Record<string, unknown>> | undefined;
+  if (clients?.length) {
+    parts.push(`\nClients (${clients.length}) :`);
+    for (const c of clients) {
+      const billing = c.billing === "tjm" ? `TJM ${c.dailyRate}€, ${c.daysPerWeek ?? c.daysPerMonth ?? "?"}j/sem` :
+                      c.billing === "forfait" ? `Forfait ${c.monthlyAmount}€/mois` :
+                      `Mission ${c.totalAmount}€`;
+      const active = c.isActive === false ? " (inactif)" : "";
+      parts.push(`  - ${c.name}${c.companyName ? ` (${c.companyName})` : ""} [id: ${c.id}] : ${billing}${active}`);
+    }
+  }
+
+  if (context.caAnnuel) parts.push(`\nCA annuel estimé : ${context.caAnnuel}€`);
+  if (context.netAnnuel) parts.push(`Net annuel estimé : ${context.netAnnuel}€`);
+
+  const invoices = context.invoices as Record<string, unknown> | undefined;
+  if (invoices) {
+    parts.push(`\nFactures : ${invoices.total} au total, ${invoices.unpaid} impayées (${invoices.unpaidAmount}€), ${invoices.drafts} brouillons`);
+  }
+
+  return parts.length > 0 ? `\n\n<user_context>\n${parts.join("\n")}\n</user_context>` : "";
+}
+
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const ALLOWED_EMAILS = ["dorich@icloud.com"];
   if (!ALLOWED_EMAILS.includes(user.email ?? "")) {
@@ -97,98 +131,94 @@ export async function POST(request: NextRequest) {
   }
 
   let body: { messages?: Array<{ role: string; content: string }>; context?: Record<string, unknown> };
-  try {
-    body = await request.json();
-  } catch {
-    return Response.json({ error: "Invalid JSON" }, { status: 400 });
-  }
+  try { body = await request.json(); } catch { return Response.json({ error: "Invalid JSON" }, { status: 400 }); }
 
   const { messages, context } = body;
-
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return Response.json({ error: "Missing messages" }, { status: 400 });
   }
 
-  // Build context block
-  let contextBlock = "";
-  if (context) {
-    const parts: string[] = [];
-
-    if (context.businessStatus) parts.push(`Statut juridique : ${context.businessStatus}`);
-    if (context.role) parts.push(`Métier : ${context.role}`);
-    if (context.companyName) parts.push(`Entreprise : ${context.companyName}`);
-    if (context.monthlyExpenses) parts.push(`Charges fixes mensuelles : ${context.monthlyExpenses}€`);
-    if (context.savings) parts.push(`Épargne : ${context.savings}€`);
-    if (context.workDaysPerWeek) parts.push(`Jours travaillés/semaine : ${context.workDaysPerWeek}`);
-    if (context.age) parts.push(`Âge : ${context.age} ans`);
-    if (context.monthlySalary) parts.push(`Salaire mensuel (SASU/EURL) : ${context.monthlySalary}€`);
-    if (context.nbParts) parts.push(`Parts fiscales : ${context.nbParts}`);
-    if (context.chargesPro) parts.push(`Charges pro mensuelles : ${context.chargesPro}€`);
-
-    const clients = context.clients as Array<Record<string, unknown>> | undefined;
-    if (clients?.length) {
-      parts.push(`\nClients (${clients.length}) :`);
-      for (const c of clients) {
-        const billing = c.billing === "tjm" ? `TJM ${c.dailyRate}€, ${c.daysPerWeek ?? c.daysPerMonth ?? "?"}j/sem` :
-                        c.billing === "forfait" ? `Forfait ${c.monthlyAmount}€/mois` :
-                        `Mission ${c.totalAmount}€`;
-        const active = c.isActive === false ? " (inactif)" : "";
-        parts.push(`  - ${c.name}${c.companyName ? ` (${c.companyName})` : ""} [id: ${c.id}] : ${billing}${active}`);
-      }
-    }
-
-    if (context.caAnnuel) parts.push(`\nCA annuel estimé : ${context.caAnnuel}€`);
-    if (context.netAnnuel) parts.push(`Net annuel estimé : ${context.netAnnuel}€`);
-
-    const invoices = context.invoices as Record<string, unknown> | undefined;
-    if (invoices) {
-      parts.push(`\nFactures : ${invoices.total} au total, ${invoices.unpaid} impayées (${invoices.unpaidAmount}€), ${invoices.drafts} brouillons`);
-    }
-
-    if (parts.length > 0) {
-      contextBlock = `\n\n<user_context>\n${parts.join("\n")}\n</user_context>`;
-    }
-  }
+  const contextBlock = context ? buildContextBlock(context) : "";
+  const systemPrompt = SYSTEM_PROMPT + contextBlock;
+  const apiMessages = messages.map((m) => ({
+    role: m.role as "user" | "assistant",
+    content: m.content,
+  }));
 
   try {
-    const response = await anthropic.messages.create({
+    // Step 1: Check for tool use (non-streaming)
+    const firstResponse = await anthropic.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 1024,
-      system: SYSTEM_PROMPT + contextBlock,
+      system: systemPrompt,
       tools: TOOLS,
-      messages: messages.map((m) => ({
-        role: m.role as "user" | "assistant",
-        content: m.content,
-      })),
+      messages: apiMessages,
     });
 
-    // Extract text and tool calls
-    const textParts: string[] = [];
+    // Check if there are tool calls
+    const toolBlocks = firstResponse.content.filter(b => b.type === "tool_use");
     const actions: Array<{ type: string; data: Record<string, unknown> }> = [];
 
-    for (const block of response.content) {
-      if (block.type === "text") {
-        textParts.push(block.text);
-      } else if (block.type === "tool_use") {
-        const input = block.input as Record<string, unknown>;
-        actions.push({ type: block.name, data: input });
-
-        // Generate confirmation text for each action
-        if (block.name === "create_invoice") {
-          const total = (input.quantity as number) * (input.unitPrice as number);
-          textParts.push(`\n\nFacture créée en brouillon pour **${input.clientName}** : ${input.quantity} ${input.unit ?? "jour"}${(input.quantity as number) > 1 ? "s" : ""} x ${input.unitPrice}€ = **${total.toLocaleString("fr-FR")}€ HT**`);
-        } else if (block.name === "create_devis") {
-          const total = (input.quantity as number) * (input.unitPrice as number);
-          textParts.push(`\n\nDevis créé en brouillon pour **${input.clientName}** : ${input.quantity} ${input.unit ?? "jour"}${(input.quantity as number) > 1 ? "s" : ""} x ${input.unitPrice}€ = **${total.toLocaleString("fr-FR")}€ HT**`);
-        } else if (block.name === "navigate") {
-          textParts.push(`\n\nRedirection vers **${input.page}**...`);
+    if (toolBlocks.length > 0) {
+      for (const block of toolBlocks) {
+        if (block.type === "tool_use") {
+          actions.push({ type: block.name, data: block.input as Record<string, unknown> });
         }
       }
+
+      // Get text from this response too
+      const text = firstResponse.content
+        .filter((b): b is Anthropic.TextBlock => b.type === "text")
+        .map(b => b.text)
+        .join("");
+
+      // Build confirmation text for actions
+      let actionText = "";
+      for (const a of actions) {
+        if (a.type === "create_invoice" || a.type === "create_devis") {
+          const total = (a.data.quantity as number) * (a.data.unitPrice as number);
+          const docType = a.type === "create_devis" ? "Devis" : "Facture";
+          actionText += `\n\n**${docType} créé en brouillon** pour **${a.data.clientName}** : ${a.data.quantity} ${a.data.unit ?? "jour"}(s) x ${a.data.unitPrice}€ = **${total.toLocaleString("fr-FR")}€ HT**`;
+        } else if (a.type === "navigate") {
+          actionText += `\n\nRedirection vers **${a.data.page}**...`;
+        }
+      }
+
+      return Response.json({ text: (text + actionText).trim(), actions });
     }
 
-    return Response.json({
-      text: textParts.join(""),
-      actions: actions.length > 0 ? actions : undefined,
+    // Step 2: No tools — stream the response
+    const stream = await anthropic.messages.stream({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1024,
+      system: systemPrompt,
+      messages: apiMessages,
+    });
+
+    const encoder = new TextEncoder();
+    const readable = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const event of stream) {
+            if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ t: event.delta.text })}\n\n`));
+            }
+          }
+          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+          controller.close();
+        } catch {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "Stream error" })}\n\n`));
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(readable, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
     });
   } catch (err) {
     console.error("Assistant API error:", err);
