@@ -68,6 +68,7 @@ import {
   MessageCircle,
   Send,
   Bot,
+  Trash2,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -196,4 +197,5 @@ export {
   MessageCircle,
   Send,
   Bot,
+  Trash2,
 };

@@ -6,7 +6,7 @@ import { useProfileStore } from "@/stores/useProfileStore";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { Send, Bot } from "@/components/ui/icons";
+import { Send, Bot, Plus, MessageCircle, Trash2 } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -17,6 +17,12 @@ const ALLOWED_EMAILS = ["dorich@icloud.com"];
 interface Message {
   role: "user" | "assistant";
   content: string;
+}
+
+interface ConversationSummary {
+  id: string;
+  title: string;
+  updatedAt: string;
 }
 
 const SUGGESTIONS = [
@@ -34,6 +40,9 @@ export default function AssistantPage() {
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const [allowed, setAllowed] = useState(false);
+  const [conversations, setConversations] = useState<ConversationSummary[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [showSidebar, setShowSidebar] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -44,10 +53,77 @@ export default function AssistantPage() {
     async function check() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (user?.email && ALLOWED_EMAILS.includes(user.email)) setAllowed(true);
+      if (user?.email && ALLOWED_EMAILS.includes(user.email)) {
+        setAllowed(true);
+        loadConversations();
+      }
     }
     check();
   }, []);
+
+  async function loadConversations() {
+    const res = await fetch("/api/conversations");
+    if (res.ok) {
+      const data = await res.json();
+      setConversations(data);
+    }
+  }
+
+  async function loadMessages(conversationId: string) {
+    const res = await fetch(`/api/conversations/messages?conversationId=${conversationId}`);
+    if (res.ok) {
+      const data = await res.json();
+      setMessages(data.map((m: { role: string; content: string }) => ({ role: m.role as "user" | "assistant", content: m.content })));
+      setActiveConversationId(conversationId);
+    }
+  }
+
+  async function createConversation(title: string): Promise<string | null> {
+    const res = await fetch("/api/conversations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      await loadConversations();
+      return data.id;
+    }
+    return null;
+  }
+
+  async function saveMessages(conversationId: string, msgs: Message[]) {
+    await fetch("/api/conversations/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ conversationId, messages: msgs }),
+    });
+  }
+
+  async function deleteConversation(id: string) {
+    await fetch("/api/conversations", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (activeConversationId === id) {
+      setActiveConversationId(null);
+      setMessages([]);
+    }
+    await loadConversations();
+  }
+
+  function handleNewConversation() {
+    setActiveConversationId(null);
+    setMessages([]);
+    setShowSidebar(false);
+    inputRef.current?.focus();
+  }
+
+  async function handleSelectConversation(id: string) {
+    await loadMessages(id);
+    setShowSidebar(false);
+  }
 
   const scrollToBottom = useCallback(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -120,6 +196,16 @@ export default function AssistantPage() {
     setInput("");
     setStreaming(true);
 
+    // Create conversation if new
+    let convId = activeConversationId;
+    if (!convId) {
+      const title = msg.length > 50 ? msg.slice(0, 50) + "..." : msg;
+      convId = await createConversation(title);
+      if (convId) setActiveConversationId(convId);
+    }
+
+    let assistantContent = "";
+
     try {
       const res = await fetch("/api/assistant", {
         method: "POST",
@@ -129,15 +215,16 @@ export default function AssistantPage() {
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: "Erreur" }));
-        setMessages(prev => { const u = [...prev]; u[u.length - 1] = { role: "assistant", content: `Erreur : ${err.error}` }; return u; });
+        assistantContent = `Erreur : ${err.error}`;
+        setMessages(prev => { const u = [...prev]; u[u.length - 1] = { role: "assistant", content: assistantContent }; return u; });
         setStreaming(false);
+        if (convId) saveMessages(convId, [userMessage, { role: "assistant", content: assistantContent }]);
         return;
       }
 
       const contentType = res.headers.get("content-type") ?? "";
 
       if (contentType.includes("text/event-stream")) {
-        // Streaming response
         const reader = res.body?.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
@@ -155,9 +242,10 @@ export default function AssistantPage() {
               try {
                 const parsed = JSON.parse(line);
                 if (parsed.t) {
+                  assistantContent += parsed.t;
                   setMessages(prev => {
                     const u = [...prev];
-                    u[u.length - 1] = { role: "assistant", content: u[u.length - 1].content + parsed.t };
+                    u[u.length - 1] = { role: "assistant", content: assistantContent };
                     return u;
                   });
                 }
@@ -166,15 +254,22 @@ export default function AssistantPage() {
           }
         }
       } else {
-        // JSON response (tool use)
         const data = await res.json();
-        setMessages(prev => { const u = [...prev]; u[u.length - 1] = { role: "assistant", content: data.text ?? "OK" }; return u; });
+        assistantContent = data.text ?? "OK";
+        setMessages(prev => { const u = [...prev]; u[u.length - 1] = { role: "assistant", content: assistantContent }; return u; });
         if (data.actions) {
           for (const action of data.actions) handleAction(action);
         }
       }
     } catch {
-      setMessages(prev => { const u = [...prev]; u[u.length - 1] = { role: "assistant", content: "Erreur de connexion. Réessaie." }; return u; });
+      assistantContent = "Erreur de connexion. Réessaie.";
+      setMessages(prev => { const u = [...prev]; u[u.length - 1] = { role: "assistant", content: assistantContent }; return u; });
+    }
+
+    // Save both messages to DB
+    if (convId && assistantContent) {
+      saveMessages(convId, [userMessage, { role: "assistant", content: assistantContent }]);
+      loadConversations();
     }
 
     setStreaming(false);
@@ -187,99 +282,173 @@ export default function AssistantPage() {
   const proseClasses = "prose prose-sm dark:prose-invert max-w-none [&_h1]:text-lg [&_h1]:font-bold [&_h1]:mt-4 [&_h1]:mb-2 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-5 [&_h2]:mb-2 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1.5 [&_p]:text-sm [&_p]:leading-relaxed [&_p]:my-2.5 [&_ul]:my-2 [&_ol]:my-2 [&_li]:text-sm [&_li]:leading-relaxed [&_li]:my-0.5 [&_table]:text-xs [&_table]:my-4 [&_table]:w-full [&_th]:px-3 [&_th]:py-2 [&_th]:bg-muted/60 [&_th]:text-left [&_th]:font-semibold [&_td]:px-3 [&_td]:py-2 [&_table]:border-collapse [&_th]:border [&_th]:border-border [&_td]:border [&_td]:border-border [&_blockquote]:border-l-2 [&_blockquote]:border-l-primary/40 [&_blockquote]:pl-4 [&_blockquote]:text-sm [&_blockquote]:my-3 [&_blockquote]:text-muted-foreground [&_hr]:my-5 [&_hr]:border-border [&_strong]:text-foreground [&_code]:text-xs [&_code]:bg-muted/60 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md";
 
   return (
-    <div className="fixed inset-0 md:left-[220px] flex flex-col bg-background">
-      <ProBlur label="L'assistant IA est réservé au plan Pro">
-        <div className="flex-1 flex flex-col min-h-0">
-          {/* Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 md:px-12 lg:px-20 py-6 space-y-5">
-            {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full space-y-6">
-                <div className="size-14 rounded-2xl bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] flex items-center justify-center">
-                  <Bot className="size-7 text-white" />
+    <div className="fixed inset-0 md:left-[220px] flex bg-background">
+      {/* Conversation sidebar */}
+      <div className={cn(
+        "absolute inset-y-0 left-0 z-20 w-64 bg-card border-r border-border flex flex-col transition-transform md:relative md:translate-x-0",
+        showSidebar ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div className="flex items-center gap-2 px-3 py-3 border-b border-border shrink-0">
+          <button
+            onClick={handleNewConversation}
+            className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-primary text-white text-xs font-medium hover:bg-primary/90 transition-colors"
+          >
+            <Plus className="size-3.5" />
+            Nouvelle conversation
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto py-1">
+          {conversations.map((c) => (
+            <div
+              key={c.id}
+              className={cn(
+                "group flex items-center gap-2 px-3 py-2.5 cursor-pointer hover:bg-muted/50 transition-colors",
+                activeConversationId === c.id && "bg-muted/60"
+              )}
+              onClick={() => handleSelectConversation(c.id)}
+            >
+              <MessageCircle className="size-3.5 text-muted-foreground shrink-0" />
+              <span className="text-xs text-foreground truncate flex-1">{c.title}</span>
+              <button
+                onClick={(e) => { e.stopPropagation(); deleteConversation(c.id); }}
+                className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all shrink-0"
+              >
+                <Trash2 className="size-3" />
+              </button>
+            </div>
+          ))}
+          {conversations.length === 0 && (
+            <p className="text-xs text-muted-foreground text-center py-8 px-4">
+              Tes conversations apparaitront ici
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Overlay for mobile sidebar */}
+      {showSidebar && (
+        <div className="fixed inset-0 bg-black/30 z-10 md:hidden" onClick={() => setShowSidebar(false)} />
+      )}
+
+      {/* Main chat area */}
+      <div className="flex-1 flex flex-col min-h-0 min-w-0">
+        {/* Top bar */}
+        <div className="flex items-center gap-3 px-4 py-2 border-b border-border shrink-0">
+          <button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="md:hidden text-muted-foreground hover:text-foreground"
+          >
+            <MessageCircle className="size-4" />
+          </button>
+          <button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="hidden md:block text-muted-foreground hover:text-foreground"
+          >
+            <MessageCircle className="size-4" />
+          </button>
+          <span className="text-sm font-medium text-foreground">Facto</span>
+          <button
+            onClick={handleNewConversation}
+            className="ml-auto text-muted-foreground hover:text-foreground"
+            title="Nouvelle conversation"
+          >
+            <Plus className="size-4" />
+          </button>
+        </div>
+
+        <ProBlur label="L'assistant IA est réservé au plan Pro">
+          <div className="flex-1 flex flex-col min-h-0">
+            {/* Messages */}
+            <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 md:px-12 lg:px-20 py-6 space-y-5">
+              {messages.length === 0 && (
+                <div className="flex flex-col items-center justify-center h-full space-y-6">
+                  <div className="size-14 rounded-2xl bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] flex items-center justify-center">
+                    <Bot className="size-7 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-semibold text-foreground mb-1">Facto</p>
+                    <p className="text-sm text-muted-foreground max-w-md">
+                      Ton copilote financier. Je connais ton statut, tes clients et tes factures.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full max-w-2xl">
+                    {SUGGESTIONS.map((s) => (
+                      <button
+                        key={s.label}
+                        onClick={() => handleSend(s.prompt)}
+                        className="text-left px-3 py-3 rounded-xl bg-muted/30 border border-border text-xs font-medium text-foreground hover:bg-muted/50 transition-colors"
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-lg font-semibold text-foreground mb-1">Ton copilote financier</p>
-                  <p className="text-sm text-muted-foreground max-w-md">
-                    Je connais ton statut, tes clients et tes factures. Demande-moi une analyse, un conseil ou une action.
-                  </p>
+              )}
+
+              {messages.map((msg, i) => (
+                <div key={i} className={cn("max-w-4xl mx-auto w-full flex gap-3", msg.role === "user" && "justify-end")}>
+                  {msg.role === "assistant" && (
+                    <div className="size-7 rounded-lg bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] flex items-center justify-center shrink-0 mt-1">
+                      <Bot className="size-3.5 text-white" />
+                    </div>
+                  )}
+                  <div
+                    className={cn(
+                      "rounded-2xl",
+                      msg.role === "user"
+                        ? "max-w-[70%] bg-primary text-white rounded-br-md text-sm whitespace-pre-wrap px-4 py-2.5"
+                        : "max-w-[90%] bg-muted/30 text-foreground rounded-bl-md px-5 py-4"
+                    )}
+                  >
+                    {msg.content ? (
+                      msg.role === "user" ? msg.content : (
+                        <div className={proseClasses}>
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                        </div>
+                      )
+                    ) : (streaming && i === messages.length - 1 && (
+                      <span className="inline-flex gap-1 py-1">
+                        <span className="size-2 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:0ms]" />
+                        <span className="size-2 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:150ms]" />
+                        <span className="size-2 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:300ms]" />
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full max-w-2xl">
-                  {SUGGESTIONS.map((s) => (
-                    <button
-                      key={s.label}
-                      onClick={() => handleSend(s.prompt)}
-                      className="text-left px-3 py-3 rounded-xl bg-muted/30 border border-border text-xs font-medium text-foreground hover:bg-muted/50 transition-colors"
-                    >
-                      {s.label}
-                    </button>
-                  ))}
+              ))}
+            </div>
+
+            {/* Input — fixed bottom */}
+            {allowed && (
+              <div className="border-t border-border bg-background px-6 md:px-12 lg:px-20 py-3 shrink-0">
+                <div className="max-w-4xl mx-auto flex items-end gap-3">
+                  <textarea
+                    ref={inputRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Demande a Facto..."
+                    rows={1}
+                    className="flex-1 resize-none px-4 py-3 bg-muted/40 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40 max-h-32"
+                  />
+                  <button
+                    onClick={() => handleSend()}
+                    disabled={!input.trim() || streaming}
+                    className={cn(
+                      "size-11 rounded-xl flex items-center justify-center transition-all shrink-0",
+                      input.trim() && !streaming
+                        ? "bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] text-white hover:opacity-90"
+                        : "bg-muted/50 text-muted-foreground/40"
+                    )}
+                  >
+                    <Send className="size-4" />
+                  </button>
                 </div>
               </div>
             )}
-
-            {messages.map((msg, i) => (
-              <div key={i} className={cn("max-w-4xl mx-auto w-full flex gap-3", msg.role === "user" && "justify-end")}>
-                {msg.role === "assistant" && (
-                  <div className="size-7 rounded-lg bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] flex items-center justify-center shrink-0 mt-1">
-                    <Bot className="size-3.5 text-white" />
-                  </div>
-                )}
-                <div
-                  className={cn(
-                    "rounded-2xl",
-                    msg.role === "user"
-                      ? "max-w-[70%] bg-primary text-white rounded-br-md text-sm whitespace-pre-wrap px-4 py-2.5"
-                      : "max-w-[90%] bg-muted/30 text-foreground rounded-bl-md px-5 py-4"
-                  )}
-                >
-                  {msg.content ? (
-                    msg.role === "user" ? msg.content : (
-                      <div className={proseClasses}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
-                      </div>
-                    )
-                  ) : (streaming && i === messages.length - 1 && (
-                    <span className="inline-flex gap-1 py-1">
-                      <span className="size-2 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:0ms]" />
-                      <span className="size-2 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:150ms]" />
-                      <span className="size-2 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:300ms]" />
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
           </div>
-
-          {/* Input — fixed bottom */}
-          {allowed && (
-            <div className="border-t border-border bg-background px-6 md:px-12 lg:px-20 py-3 shrink-0">
-              <div className="max-w-4xl mx-auto flex items-end gap-3">
-                <textarea
-                  ref={inputRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Pose ta question ou demande une action..."
-                  rows={1}
-                  className="flex-1 resize-none px-4 py-3 bg-muted/40 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40 max-h-32"
-                />
-                <button
-                  onClick={() => handleSend()}
-                  disabled={!input.trim() || streaming}
-                  className={cn(
-                    "size-11 rounded-xl flex items-center justify-center transition-all shrink-0",
-                    input.trim() && !streaming
-                      ? "bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] text-white hover:opacity-90"
-                      : "bg-muted/50 text-muted-foreground/40"
-                  )}
-                >
-                  <Send className="size-4" />
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </ProBlur>
+        </ProBlur>
+      </div>
     </div>
   );
 }
