@@ -6,7 +6,7 @@ import { useProfileStore } from "@/stores/useProfileStore";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { Send, Bot, Plus, MessageCircle, Trash2 } from "@/components/ui/icons";
+import { Send, Bot, Plus, MessageCircle, Trash2, PanelLeftOpen, PanelLeftClose } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -339,7 +339,7 @@ export default function AssistantPage() {
             className="text-muted-foreground hover:text-foreground transition-colors"
             title={showSidebar ? "Masquer les conversations" : "Afficher les conversations"}
           >
-            <MessageCircle className="size-4" />
+            {showSidebar ? <PanelLeftClose className="size-4" /> : <PanelLeftOpen className="size-4" />}
           </button>
           <span className="text-sm font-medium text-foreground">Facto</span>
           <button

@@ -69,6 +69,8 @@ import {
   Send,
   Bot,
   Trash2,
+  PanelLeftOpen,
+  PanelLeftClose,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -198,4 +200,6 @@ export {
   Send,
   Bot,
   Trash2,
+  PanelLeftOpen,
+  PanelLeftClose,
 };
