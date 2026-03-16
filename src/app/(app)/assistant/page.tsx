@@ -6,7 +6,7 @@ import { useProfileStore } from "@/stores/useProfileStore";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { Sparkles, Send, Bot } from "@/components/ui/icons";
+import { Send, Bot } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -187,19 +187,13 @@ export default function AssistantPage() {
   const proseClasses = "prose prose-sm dark:prose-invert max-w-none [&_h1]:text-lg [&_h1]:font-bold [&_h1]:mt-4 [&_h1]:mb-2 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-5 [&_h2]:mb-2 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1.5 [&_p]:text-sm [&_p]:leading-relaxed [&_p]:my-2.5 [&_ul]:my-2 [&_ol]:my-2 [&_li]:text-sm [&_li]:leading-relaxed [&_li]:my-0.5 [&_table]:text-xs [&_table]:my-4 [&_table]:w-full [&_th]:px-3 [&_th]:py-2 [&_th]:bg-muted/60 [&_th]:text-left [&_th]:font-semibold [&_td]:px-3 [&_td]:py-2 [&_table]:border-collapse [&_th]:border [&_th]:border-border [&_td]:border [&_td]:border-border [&_blockquote]:border-l-2 [&_blockquote]:border-l-primary/40 [&_blockquote]:pl-4 [&_blockquote]:text-sm [&_blockquote]:my-3 [&_blockquote]:text-muted-foreground [&_hr]:my-5 [&_hr]:border-border [&_strong]:text-foreground [&_code]:text-xs [&_code]:bg-muted/60 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md";
 
   return (
-    <div className="flex flex-col h-[calc(100vh-40px)] md:h-screen max-w-4xl mx-auto px-4 md:px-6 pb-4">
-      {/* Compact header */}
-      <div className="flex items-center gap-2 py-3 shrink-0">
-        <Sparkles className="size-5 text-[#5682F2]" />
-        <h1 className="text-lg font-bold text-foreground">Assistant IA</h1>
-      </div>
-
+    <div className="fixed inset-0 md:left-[220px] flex flex-col bg-background">
       <ProBlur label="L'assistant IA est réservé au plan Pro">
-        <div className="flex-1 flex flex-col bg-card rounded-2xl border border-border overflow-hidden min-h-0">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 md:px-6 py-4 space-y-5">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 md:px-12 lg:px-20 py-6 space-y-5">
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full space-y-8 py-8">
+              <div className="flex flex-col items-center justify-center h-full space-y-6">
                 <div className="size-14 rounded-2xl bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] flex items-center justify-center">
                   <Bot className="size-7 text-white" />
                 </div>
@@ -224,7 +218,7 @@ export default function AssistantPage() {
             )}
 
             {messages.map((msg, i) => (
-              <div key={i} className={cn("flex gap-3", msg.role === "user" && "justify-end")}>
+              <div key={i} className={cn("max-w-4xl mx-auto w-full flex gap-3", msg.role === "user" && "justify-end")}>
                 {msg.role === "assistant" && (
                   <div className="size-7 rounded-lg bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] flex items-center justify-center shrink-0 mt-1">
                     <Bot className="size-3.5 text-white" />
@@ -256,10 +250,10 @@ export default function AssistantPage() {
             ))}
           </div>
 
-          {/* Input */}
+          {/* Input — fixed bottom */}
           {allowed && (
-            <div className="border-t border-border px-4 py-3 shrink-0">
-              <div className="flex items-end gap-3">
+            <div className="border-t border-border bg-background px-6 md:px-12 lg:px-20 py-3 shrink-0">
+              <div className="max-w-4xl mx-auto flex items-end gap-3">
                 <textarea
                   ref={inputRef}
                   value={input}
