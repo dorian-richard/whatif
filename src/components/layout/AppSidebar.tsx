@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -149,8 +150,9 @@ export function AppSidebar() {
       {/* Desktop sidebar */}
       <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-[220px] flex-col bg-sidebar border-r border-border z-20">
         {/* Logo */}
-        <button
-          onClick={() => router.push("/dashboard")}
+        <Link
+          href="/dashboard"
+          prefetch={true}
           className="flex items-center gap-2.5 px-5 h-16 shrink-0"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -158,7 +160,7 @@ export function AppSidebar() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-light.webp" alt="Freelens" className="h-9 w-auto opacity-80 block dark:hidden" />
           <span className="text-lg font-bold text-foreground">Freelens</span>
-        </button>
+        </Link>
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-2 overflow-y-auto">
@@ -175,9 +177,10 @@ export function AppSidebar() {
                   const showCalBadge = item.href === "/calendrier" && hasUpcoming;
                   const showNew = (item.href === "/facturation" || item.href === "/journee" || item.href === "/assistant") && showNewBadge;
                   return (
-                    <button
+                    <Link
                       key={item.href}
-                      onClick={() => router.push(item.href)}
+                      href={item.href}
+                      prefetch={true}
                       className={cn(
                         "flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] active:scale-[0.97]",
                         isActive
@@ -199,7 +202,7 @@ export function AppSidebar() {
                       ) : item.pro && !isPro ? (
                         <span className="ml-auto text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">Pro</span>
                       ) : null}
-                    </button>
+                    </Link>
                   );
                 })}
               </div>
@@ -218,8 +221,9 @@ export function AppSidebar() {
                 : isPro ? "Pro" : "Free"}
             </div>
           </div>
-          <button
-            onClick={() => router.push("/settings")}
+          <Link
+            href="/settings"
+            prefetch={true}
             className={cn(
               "flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150",
               pathname === "/settings"
@@ -229,7 +233,7 @@ export function AppSidebar() {
           >
             <UserRound className="size-[18px]" />
             <span>Mon profil</span>
-          </button>
+          </Link>
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-150"
@@ -282,12 +286,11 @@ export function AppSidebar() {
                   const showCalBadge = item.href === "/calendrier" && hasUpcoming;
                   const showNew = (item.href === "/facturation" || item.href === "/journee" || item.href === "/assistant") && showNewBadge;
                   return (
-                    <button
+                    <Link
                       key={item.href}
-                      onClick={() => {
-                        router.push(item.href);
-                        setMobileMenuOpen(false);
-                      }}
+                      href={item.href}
+                      prefetch={true}
+                      onClick={() => setMobileMenuOpen(false)}
                       className={cn(
                         "flex flex-col items-center gap-1 py-3 rounded-xl transition-colors",
                         isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"
@@ -305,7 +308,7 @@ export function AppSidebar() {
                         ) : null}
                       </span>
                       <span className="text-[10px] font-medium">{item.label}</span>
-                    </button>
+                    </Link>
                   );
                 })}
               </div>
@@ -340,9 +343,10 @@ export function AppSidebar() {
         {NAV_MOBILE_TABS.map((item) => {
           const isActive = pathname === item.href;
           return (
-            <button
+            <Link
               key={item.href}
-              onClick={() => router.push(item.href)}
+              href={item.href}
+              prefetch={true}
               className={cn(
                 "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors",
                 isActive ? "text-primary" : "text-muted-foreground/60"
@@ -350,7 +354,7 @@ export function AppSidebar() {
             >
               <item.icon className="size-5" />
               <span className="text-[10px] font-medium">{item.label}</span>
-            </button>
+            </Link>
           );
         })}
         {/* Plus button */}
