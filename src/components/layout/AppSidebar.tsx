@@ -179,7 +179,7 @@ export function AppSidebar() {
                       key={item.href}
                       onClick={() => router.push(item.href)}
                       className={cn(
-                        "flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150",
+                        "flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] active:scale-[0.97]",
                         isActive
                           ? "bg-primary/15 text-primary"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted"

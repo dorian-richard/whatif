@@ -120,7 +120,76 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* ========= APPLE-STYLE EFFECTS ========= */
+
+/* Smooth transitions on all interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Card hover lift — subtle Apple-style depth */
+.bg-card {
+  transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1),
+              box-shadow 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.bg-card:hover {
+  transform: translateY(-1px);
+}
+
+/* Button press feedback */
+button:active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+/* Smooth scrollbars — thin & minimal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  opacity: 0.3;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  opacity: 0.5;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(139, 139, 158, 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 139, 158, 0.5);
+}
+
+/* Focus ring — Apple blue ring */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(86, 130, 242, 0.35);
+  border-radius: inherit;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(86, 130, 242, 0.25);
+}
+
+.dark ::selection {
+  background: rgba(86, 130, 242, 0.35);
 }
 
 /* ========= LIGHT MODE ENHANCEMENTS ========= */
