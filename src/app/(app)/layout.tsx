@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { ProfileSync } from "@/components/ProfileSync";
 import { TrialBanner } from "@/components/TrialBanner";
-import { PageTransition } from "@/components/ui/PageTransition";
-
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
@@ -21,9 +19,7 @@ export default function AppLayout({
         <TrialBanner />
       </div>
       <main className="md:ml-[220px] min-h-screen pt-8 md:pt-10 pb-20 md:pb-0">
-        <PageTransition>
-          {children}
-        </PageTransition>
+        {children}
       </main>
     </div>
   );
