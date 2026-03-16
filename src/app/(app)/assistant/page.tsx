@@ -288,15 +288,6 @@ export default function AssistantPage() {
         "absolute inset-y-0 left-0 z-20 w-64 bg-card border-r border-border flex flex-col transition-transform md:relative md:translate-x-0",
         showSidebar ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="flex items-center gap-2 px-3 py-3 border-b border-border shrink-0">
-          <button
-            onClick={handleNewConversation}
-            className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-primary text-white text-xs font-medium hover:bg-primary/90 transition-colors"
-          >
-            <Plus className="size-3.5" />
-            Nouvelle conversation
-          </button>
-        </div>
         <div className="flex-1 overflow-y-auto py-1">
           {conversations.map((c) => (
             <div
@@ -323,6 +314,15 @@ export default function AssistantPage() {
             </p>
           )}
         </div>
+        <div className="px-3 py-3 border-t border-border shrink-0">
+          <button
+            onClick={handleNewConversation}
+            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg bg-primary text-white text-xs font-medium hover:bg-primary/90 transition-colors justify-center"
+          >
+            <Plus className="size-3.5" />
+            Nouvelle conversation
+          </button>
+        </div>
       </div>
 
       {/* Overlay for mobile sidebar */}
@@ -346,7 +346,7 @@ export default function AssistantPage() {
           >
             <MessageCircle className="size-4" />
           </button>
-          <span className="text-sm font-medium text-foreground">Facto</span>
+          <span className="text-sm font-medium text-foreground">Assistant IA</span>
           <button
             onClick={handleNewConversation}
             className="ml-auto text-muted-foreground hover:text-foreground"

@@ -18,7 +18,7 @@ const NAV_SECTIONS: NavSection[] = [
     label: null,
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/assistant", label: "Facto", icon: Sparkles, pro: true },
+      { href: "/assistant", label: "Assistant IA", icon: Sparkles, pro: true },
       { href: "/journee", label: "Ma journée", icon: Zap, pro: true },
       { href: "/radar", label: "Diagnostic", icon: Gauge, pro: true },
       { href: "/clients", label: "Mes clients", icon: Users },
@@ -67,7 +67,7 @@ const NAV_MOBILE_SECTIONS: NavSection[] = [
   {
     label: null,
     items: [
-      { href: "/assistant", label: "Facto", icon: Sparkles, pro: true },
+      { href: "/assistant", label: "Assistant IA", icon: Sparkles, pro: true },
       { href: "/journee", label: "Ma journée", icon: Zap, pro: true },
       { href: "/radar", label: "Diagnostic", icon: Gauge, pro: true },
       { href: "/clients", label: "Mes clients", icon: Users },
