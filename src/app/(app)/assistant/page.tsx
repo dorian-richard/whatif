@@ -42,7 +42,7 @@ export default function AssistantPage() {
   const [allowed, setAllowed] = useState(false);
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -285,8 +285,8 @@ export default function AssistantPage() {
     <div className="fixed inset-0 md:left-[220px] flex bg-background">
       {/* Conversation sidebar */}
       <div className={cn(
-        "absolute inset-y-0 left-0 z-20 w-64 bg-card border-r border-border flex flex-col transition-transform md:relative md:translate-x-0",
-        showSidebar ? "translate-x-0" : "-translate-x-full"
+        "absolute md:relative inset-y-0 left-0 z-20 w-64 bg-card border-r border-border flex flex-col transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]",
+        showSidebar ? "translate-x-0 opacity-100" : "-translate-x-full md:-translate-x-0 md:w-0 md:min-w-0 md:overflow-hidden md:border-0 md:opacity-0"
       )}>
         <div className="flex-1 overflow-y-auto py-1">
           {conversations.map((c) => (
@@ -336,20 +336,15 @@ export default function AssistantPage() {
         <div className="flex items-center gap-3 px-4 py-2 border-b border-border shrink-0">
           <button
             onClick={() => setShowSidebar(!showSidebar)}
-            className="md:hidden text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            title={showSidebar ? "Masquer les conversations" : "Afficher les conversations"}
           >
             <MessageCircle className="size-4" />
           </button>
-          <button
-            onClick={() => setShowSidebar(!showSidebar)}
-            className="hidden md:block text-muted-foreground hover:text-foreground"
-          >
-            <MessageCircle className="size-4" />
-          </button>
-          <span className="text-sm font-medium text-foreground">Assistant IA</span>
+          <span className="text-sm font-medium text-foreground">Facto</span>
           <button
             onClick={handleNewConversation}
-            className="ml-auto text-muted-foreground hover:text-foreground"
+            className="ml-auto text-muted-foreground hover:text-foreground transition-colors"
             title="Nouvelle conversation"
           >
             <Plus className="size-4" />
