@@ -192,7 +192,7 @@ export default function BenchmarkPage() {
               />
             </div>
             <div className="flex-1">
-              <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">
+              <div className="text-xs text-muted-foreground/80 uppercase tracking-wider">
                 Ton TJM moyen
               </div>
               <div className="text-3xl font-bold text-foreground">
@@ -210,7 +210,7 @@ export default function BenchmarkPage() {
               >
                 {userPctLabel.label}
               </div>
-              <div className="text-xs text-muted-foreground/60">
+              <div className="text-xs text-muted-foreground/80">
                 M&eacute;diane march&eacute; : {adjustedRange.median} &euro;
               </div>
             </div>
@@ -235,7 +235,7 @@ export default function BenchmarkPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Seniority */}
           <div className="bg-card rounded-2xl border border-border p-5">
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-3">
               S&eacute;niorit&eacute;
             </div>
             <div className="flex gap-2 flex-wrap">
@@ -270,7 +270,7 @@ export default function BenchmarkPage() {
 
           {/* Location */}
           <div className="bg-card rounded-2xl border border-border p-5">
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-3">
               Localisation
             </div>
             <div className="flex gap-2 flex-wrap">
@@ -302,7 +302,7 @@ export default function BenchmarkPage() {
 
         {/* Metier selector by category */}
         <div className="bg-card rounded-2xl border border-border p-5">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-4">
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-4">
             M&eacute;tier
           </div>
           <div className="space-y-4">
@@ -361,13 +361,13 @@ export default function BenchmarkPage() {
           </div>
           <div>
             <h2 className="text-lg font-bold text-foreground">{metier.label}</h2>
-            <p className="text-xs text-muted-foreground/60">
+            <p className="text-xs text-muted-foreground/80">
               {SENIORITY_CONFIG[selectedSeniority].label} &middot;{" "}
               {LOCATIONS[selectedLocation].label}
             </p>
           </div>
           <div className="ml-auto text-right">
-            <div className="text-xs text-muted-foreground/60">TJM m&eacute;dian</div>
+            <div className="text-xs text-muted-foreground/80">TJM m&eacute;dian</div>
             <div
               className="text-2xl font-bold"
               style={{ color: CATEGORY_COLORS[metier.category] }}
@@ -379,7 +379,7 @@ export default function BenchmarkPage() {
 
         {/* Range visualization */}
         <div className="mb-2">
-          <div className="flex justify-between text-xs text-muted-foreground/60 mb-2">
+          <div className="flex justify-between text-xs text-muted-foreground/80 mb-2">
             <span>{adjustedRange.min} &euro;</span>
             <span>M&eacute;diane : {adjustedRange.median} &euro;</span>
             <span>{adjustedRange.max} &euro;</span>
@@ -431,19 +431,19 @@ export default function BenchmarkPage() {
         {/* Range details row */}
         <div className="grid grid-cols-3 gap-4 mt-4">
           <div className="text-center p-3 rounded-xl bg-muted/30">
-            <div className="text-xs text-muted-foreground/60 mb-1">Plancher</div>
+            <div className="text-xs text-muted-foreground/80 mb-1">Plancher</div>
             <div className="text-lg font-bold text-foreground">
               {adjustedRange.min} &euro;
             </div>
           </div>
           <div className="text-center p-3 rounded-xl bg-primary/8 border border-primary/15">
-            <div className="text-xs text-muted-foreground/60 mb-1">M&eacute;diane</div>
+            <div className="text-xs text-muted-foreground/80 mb-1">M&eacute;diane</div>
             <div className="text-lg font-bold text-primary">
               {adjustedRange.median} &euro;
             </div>
           </div>
           <div className="text-center p-3 rounded-xl bg-muted/30">
-            <div className="text-xs text-muted-foreground/60 mb-1">Plafond</div>
+            <div className="text-xs text-muted-foreground/80 mb-1">Plafond</div>
             <div className="text-lg font-bold text-foreground">
               {adjustedRange.max} &euro;
             </div>
@@ -452,7 +452,7 @@ export default function BenchmarkPage() {
 
         {/* Seniority comparison for this metier */}
         <div className="mt-6">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-3">
             &Eacute;volution par s&eacute;niorit&eacute;
           </div>
           <div className="space-y-2">
@@ -505,7 +505,7 @@ export default function BenchmarkPage() {
             <h3 className="text-base font-bold text-foreground">
               Classement des m&eacute;tiers
             </h3>
-            <p className="text-xs text-muted-foreground/60">
+            <p className="text-xs text-muted-foreground/80">
               {SENIORITY_CONFIG[selectedSeniority].label} &middot;{" "}
               {LOCATIONS[selectedLocation].label} &middot; Tri&eacute; par TJM
               m&eacute;dian
@@ -533,7 +533,7 @@ export default function BenchmarkPage() {
                 )}
               >
                 {/* Rank */}
-                <div className="w-6 text-center text-xs font-bold text-muted-foreground/60">
+                <div className="w-6 text-center text-xs font-bold text-muted-foreground/80">
                   {i + 1}
                 </div>
 
@@ -579,7 +579,7 @@ export default function BenchmarkPage() {
                   <span className="text-sm font-bold text-foreground">
                     {m.adjusted.median} &euro;
                   </span>
-                  <span className="text-xs text-muted-foreground/60 ml-1">
+                  <span className="text-xs text-muted-foreground/80 ml-1">
                     ({m.adjusted.min}-{m.adjusted.max})
                   </span>
                 </div>
@@ -590,7 +590,7 @@ export default function BenchmarkPage() {
       </div>
 
       {/* Sources & disclaimer */}
-      <div className="text-center text-xs text-muted-foreground/60 pb-8 space-y-1">
+      <div className="text-center text-xs text-muted-foreground/80 pb-8 space-y-1">
         <p>
           Sources : Barom&egrave;tre Silkhom 2025 (20 000+ placements IT),
           Embarq 2025. Multiplicateurs g&eacute;ographiques

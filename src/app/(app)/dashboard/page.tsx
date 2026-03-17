@@ -217,7 +217,7 @@ export default function DashboardPage() {
               <div key={i} className="flex items-center gap-2 text-sm">
                 <div className="size-2 rounded-full shrink-0" style={{ backgroundColor: DEADLINE_CATS[d.category].color }} />
                 <span className="text-foreground font-medium">{d.label}</span>
-                <span className="text-muted-foreground/60 text-xs">
+                <span className="text-muted-foreground/80 text-xs">
                   {d.date.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
                 </span>
                 {d.estimateAmount && (
@@ -251,7 +251,7 @@ export default function DashboardPage() {
                   <MeteoIcon className={cn("size-9", meteoConfig.color)} />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider mb-0.5">Météo business</p>
+                  <p className="text-xs font-medium text-muted-foreground/80 uppercase tracking-wider mb-0.5">Météo business</p>
                   <h2 className="text-2xl font-bold text-foreground">{meteoConfig.label}</h2>
                   <p className="text-sm text-muted-foreground">Score santé : <strong className={meteoConfig.color}>{healthScore}/100</strong></p>
                 </div>
@@ -345,11 +345,11 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-2 mb-2">
                     <div className={cn("size-7 rounded-lg flex items-center justify-center", kpi.iconBg)}>{kpi.icon}</div>
                     <Tooltip content={kpi.tip}>
-                      <span className="text-[11px] text-muted-foreground/60 font-medium uppercase tracking-wider cursor-help">{kpi.label}</span>
+                      <span className="text-[11px] text-muted-foreground/80 font-medium uppercase tracking-wider cursor-help">{kpi.label}</span>
                     </Tooltip>
                   </div>
                   <div className="text-xl font-bold text-foreground">{kpi.value}</div>
-                  <div className="text-[11px] text-muted-foreground/60 mt-0.5">{kpi.sub}</div>
+                  <div className="text-[11px] text-muted-foreground/80 mt-0.5">{kpi.sub}</div>
                 </div>
               ))}
             </div>
@@ -479,7 +479,7 @@ function DashboardFinanceCards({
               <div className={cn("text-2xl font-bold", netMonthly - expenses > 0 ? "text-foreground" : "text-[#f87171]")}>
                 {fmt(Math.round(netMonthly - expenses))}&euro;
               </div>
-              <div className="text-[11px] text-muted-foreground/60 mt-1">
+              <div className="text-[11px] text-muted-foreground/80 mt-1">
                 {statusConfig.label}{isIS && remunerationType ? ` \u00B7 ${isDividendes ? "Dividendes" : isMixte ? "Mixte" : "Salaire"}` : ""}
               </div>
             </div>
@@ -497,7 +497,7 @@ function DashboardFinanceCards({
               <div className={cn("text-2xl font-bold", netAfterExpenses > 0 ? "text-foreground" : "text-[#f87171]")}>
                 {fmt(Math.round(netAfterExpenses))}&euro;
               </div>
-              <div className="text-[11px] text-muted-foreground/60 mt-1">
+              <div className="text-[11px] text-muted-foreground/80 mt-1">
                 Net fiscal {fmt(Math.round(netAfterAll))}&euro; &minus; charges {fmt(expenses * 12)}&euro;
               </div>
             </div>
@@ -517,7 +517,7 @@ function DashboardFinanceCards({
                 "text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors",
                 includeRem
                   ? "bg-muted text-foreground border-border"
-                  : "bg-muted text-muted-foreground/60 border-border"
+                  : "bg-muted text-muted-foreground/80 border-border"
               )}
             >
               {includeRem
@@ -528,7 +528,7 @@ function DashboardFinanceCards({
           <div className={cn("text-2xl font-bold", treasuryValue >= 0 ? "text-foreground" : "text-[#f87171]")}>
             {fmt(Math.round(treasuryValue))}&euro;
           </div>
-          <div className="text-[11px] text-muted-foreground/60 mt-1">
+          <div className="text-[11px] text-muted-foreground/80 mt-1">
             {fmt(savings)}&euro; {netAfterExpenses >= 0 ? "+" : "\u2212"} {fmt(Math.abs(Math.round(netAfterExpenses)))}&euro; net{includeRem && monthlySalary > 0 ? ` \u2212 ${fmt(annualSalary)}\u20AC rem.` : ""}
           </div>
           {includeRem && monthlySalary === 0 && (
@@ -557,15 +557,15 @@ function DashboardFinanceCards({
             )}
             <div className="flex flex-wrap gap-2 ml-auto">
               <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
-                <span className="text-[11px] text-muted-foreground/60">Prudent</span>
+                <span className="text-[11px] text-muted-foreground/80">Prudent</span>
                 <span className="text-sm font-bold text-foreground">{fmt(remPrudent)}&euro;</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
-                <span className="text-[11px] text-muted-foreground/60">Confort</span>
+                <span className="text-[11px] text-muted-foreground/80">Confort</span>
                 <span className="text-sm font-bold text-foreground">{fmt(remConfort)}&euro;</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
-                <span className="text-[11px] text-muted-foreground/60">Max</span>
+                <span className="text-[11px] text-muted-foreground/80">Max</span>
                 <span className="text-sm font-bold text-foreground">{fmt(remMax)}&euro;</span>
               </div>
             </div>
@@ -590,7 +590,7 @@ function DashboardChart({ projection, expenses, netRate, clients, profile }: { p
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <div className="flex items-center gap-3">
           <h3 className="text-sm font-bold text-foreground">Projection mensuelle</h3>
-          <div className="flex items-center gap-2.5 text-[10px] text-muted-foreground/60">
+          <div className="flex items-center gap-2.5 text-[10px] text-muted-foreground/80">
             <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-foreground/70" /> CA</span>
             <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-foreground/30" /> Resultat</span>
             <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#5682F2]" /> Net</span>
@@ -616,7 +616,7 @@ function DashboardChart({ projection, expenses, netRate, clients, profile }: { p
               )}>
                 Net {fmt(Math.round(netRevenue))}&euro;
               </span>
-              <span className="text-[10px] text-muted-foreground/60">{JOURS_OUVRES[hoveredMonth]}j</span>
+              <span className="text-[10px] text-muted-foreground/80">{JOURS_OUVRES[hoveredMonth]}j</span>
               {hoveredClientBreakdown.length > 1 && (
                 <div className="flex items-center gap-2 ml-1">
                   {hoveredClientBreakdown.map((c, i) => (
@@ -679,7 +679,7 @@ function DashboardChart({ projection, expenses, netRate, clients, profile }: { p
               </div>
               <span className={cn(
                 "text-[9px] transition-colors",
-                isHovered ? "text-foreground font-semibold" : "text-muted-foreground/60"
+                isHovered ? "text-foreground font-semibold" : "text-muted-foreground/80"
               )}>{m}</span>
             </div>
           );

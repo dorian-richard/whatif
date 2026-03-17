@@ -375,7 +375,7 @@ function KPICard({ icon: Icon, label, value, color }: { icon: typeof Check; labe
     <div className="bg-card rounded-2xl border border-border p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon className="size-4" style={{ color }} />
-        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">{label}</span>
+        <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">{label}</span>
       </div>
       <div className="text-xl font-bold text-foreground">{value}</div>
     </div>

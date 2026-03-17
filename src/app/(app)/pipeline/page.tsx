@@ -366,7 +366,7 @@ export default function PipelinePage() {
   // Auto-compute CA from billing fields
   const computedCA = form.billing ? computeCAFromForm(form) : 0;
 
-  const inputCls = "px-3 py-2.5 rounded-xl border border-border bg-background text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/30 w-full";
+  const inputCls = "px-3 py-2.5 rounded-xl border border-border bg-background text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-1 focus:ring-primary/30 w-full";
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
@@ -389,28 +389,28 @@ export default function PipelinePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <Target className="size-4 text-[#5682F2]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Pipeline total</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Pipeline total</span>
             </div>
             <div className="text-xl font-bold text-foreground">{fmt(Math.round(totalPipeline))}&euro;</div>
           </div>
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="size-4 text-[#a78bfa]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Pondéré</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Pondéré</span>
             </div>
             <div className="text-xl font-bold text-[#a78bfa]">{fmt(Math.round(weightedPipeline))}&euro;</div>
           </div>
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <Users className="size-4 text-[#F4BE7E]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">En cours</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">En cours</span>
             </div>
             <div className="text-xl font-bold text-foreground">{activeCount}</div>
           </div>
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <BarChart3 className="size-4 text-[#4ade80]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Conversion</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Conversion</span>
             </div>
             <div className="text-xl font-bold text-foreground">{conversionRate.toFixed(0)}%</div>
           </div>
@@ -418,9 +418,9 @@ export default function PipelinePage() {
 
         {prospects.length === 0 ? (
           <div className="bg-card rounded-2xl border border-border p-8 text-center">
-            <Target className="size-8 text-muted-foreground/40 mx-auto mb-3" />
+            <Target className="size-8 text-muted-foreground/80 mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">Aucun prospect pour l&apos;instant.</p>
-            <p className="text-xs text-muted-foreground/60 mt-1">Clique sur &quot;Prospect&quot; pour en ajouter un.</p>
+            <p className="text-xs text-muted-foreground/80 mt-1">Clique sur &quot;Prospect&quot; pour en ajouter un.</p>
           </div>
         ) : (
           <>
@@ -444,10 +444,10 @@ export default function PipelinePage() {
                     <div className="flex items-center gap-2 mb-3 px-1">
                       <div className="size-2.5 rounded-full" style={{ backgroundColor: cfg.color }} />
                       <span className="text-xs font-bold text-foreground">{cfg.label}</span>
-                      <span className="text-[10px] text-muted-foreground/60 ml-auto">{stageProspects.length}</span>
+                      <span className="text-[10px] text-muted-foreground/80 ml-auto">{stageProspects.length}</span>
                     </div>
                     {stageTotal > 0 && (
-                      <div className="text-[10px] text-muted-foreground/60 px-1 mb-2">
+                      <div className="text-[10px] text-muted-foreground/80 px-1 mb-2">
                         {fmt(Math.round(stageTotal))}&euro;/mois
                       </div>
                     )}
@@ -464,10 +464,10 @@ export default function PipelinePage() {
                             <div className="min-w-0">
                               <span className="text-sm font-medium text-foreground truncate block">{p.name}</span>
                               {p.company && (
-                                <span className="text-[10px] text-muted-foreground/60 truncate block">{p.company}</span>
+                                <span className="text-[10px] text-muted-foreground/80 truncate block">{p.company}</span>
                               )}
                               {p.contactName && (
-                                <span className="text-[10px] text-muted-foreground/60 truncate block">{p.contactName}</span>
+                                <span className="text-[10px] text-muted-foreground/80 truncate block">{p.contactName}</span>
                               )}
                             </div>
                             <span className={cn("px-1.5 py-0.5 rounded-full text-[9px] font-bold shrink-0", cfg.bg)} style={{ color: cfg.color }}>
@@ -478,7 +478,7 @@ export default function PipelinePage() {
                             {fmt(Math.round(p.estimatedCA))}&euro;/mois
                           </div>
                           {p.billing && (
-                            <div className="text-[10px] text-muted-foreground/60 mt-0.5">
+                            <div className="text-[10px] text-muted-foreground/80 mt-0.5">
                               {p.billing === "tjm" && p.dailyRate ? `TJM : ${fmt(Math.round(p.dailyRate))}\u20AC` + (p.daysPerWeek ? ` \u00B7 ${p.daysPerWeek}j/sem` : "") : null}
                               {p.billing === "forfait" ? "Forfait" : null}
                               {p.billing === "mission" ? `Mission${p.startMonth != null && p.endMonth != null ? ` (${MONTHS_SHORT[p.startMonth]}\u2013${MONTHS_SHORT[p.endMonth]})` : ""}` : null}
@@ -490,12 +490,12 @@ export default function PipelinePage() {
                             </span>
                           )}
                           {p.expectedClose && (
-                            <div className="text-[10px] text-muted-foreground/60 mt-1">
+                            <div className="text-[10px] text-muted-foreground/80 mt-1">
                               Closing : {new Date(p.expectedClose).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
                             </div>
                           )}
                           {p.notes && (
-                            <div className="text-[10px] text-muted-foreground/60 mt-1 truncate">{p.notes}</div>
+                            <div className="text-[10px] text-muted-foreground/80 mt-1 truncate">{p.notes}</div>
                           )}
                           <div className="flex items-center gap-1 mt-2 flex-wrap">
                             <button
@@ -550,7 +550,7 @@ export default function PipelinePage() {
                     <div className="flex items-center gap-2 mb-2 px-1">
                       <div className="size-2.5 rounded-full" style={{ backgroundColor: cfg.color }} />
                       <span className="text-xs font-bold text-foreground">{cfg.label}</span>
-                      <span className="text-[10px] text-muted-foreground/60 ml-auto">{stageProspects.length}</span>
+                      <span className="text-[10px] text-muted-foreground/80 ml-auto">{stageProspects.length}</span>
                     </div>
                     <div className="space-y-2">
                       {stageProspects.map((p) => {
@@ -567,10 +567,10 @@ export default function PipelinePage() {
                               <div className="min-w-0">
                                 <span className="text-sm font-medium text-foreground block">{p.name}</span>
                                 {p.company && (
-                                  <span className="text-[11px] text-muted-foreground/60 block">{p.company}</span>
+                                  <span className="text-[11px] text-muted-foreground/80 block">{p.company}</span>
                                 )}
                                 {p.contactName && (
-                                  <span className="text-[11px] text-muted-foreground/60 block">{p.contactName}</span>
+                                  <span className="text-[11px] text-muted-foreground/80 block">{p.contactName}</span>
                                 )}
                               </div>
                               <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold", cfg.bg)} style={{ color: cfg.color }}>
@@ -581,7 +581,7 @@ export default function PipelinePage() {
                               {fmt(Math.round(p.estimatedCA))}&euro;/mois
                             </div>
                             {p.billing && (
-                              <div className="text-[11px] text-muted-foreground/60 mb-1">
+                              <div className="text-[11px] text-muted-foreground/80 mb-1">
                                 {p.billing === "tjm" && p.dailyRate ? `TJM : ${fmt(Math.round(p.dailyRate))}\u20AC` + (p.daysPerWeek ? ` \u00B7 ${p.daysPerWeek}j/sem` : "") : null}
                                 {p.billing === "forfait" ? "Forfait" : null}
                                 {p.billing === "mission" ? `Mission${p.startMonth != null && p.endMonth != null ? ` (${MONTHS_SHORT[p.startMonth]}\u2013${MONTHS_SHORT[p.endMonth]})` : ""}` : null}
@@ -644,7 +644,7 @@ export default function PipelinePage() {
                 <summary className="flex items-center gap-2 cursor-pointer py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
                   <div className="size-2.5 rounded-full bg-[#f87171]" />
                   <span className="font-medium">Perdu</span>
-                  <span className="text-xs text-muted-foreground/60">{byStage.perdu.length}</span>
+                  <span className="text-xs text-muted-foreground/80">{byStage.perdu.length}</span>
                 </summary>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
                   {byStage.perdu.map((p) => (
@@ -652,10 +652,10 @@ export default function PipelinePage() {
                       <div className="flex items-center justify-between mb-1">
                         <div className="min-w-0">
                           <span className="text-sm font-medium text-foreground truncate block">{p.name}</span>
-                          {p.company && <span className="text-[10px] text-muted-foreground/60 block">{p.company}</span>}
-                          {p.contactName && <span className="text-[10px] text-muted-foreground/60 block">{p.contactName}</span>}
+                          {p.company && <span className="text-[10px] text-muted-foreground/80 block">{p.company}</span>}
+                          {p.contactName && <span className="text-[10px] text-muted-foreground/80 block">{p.contactName}</span>}
                         </div>
-                        <span className="text-xs text-muted-foreground/60">{fmt(Math.round(p.estimatedCA))}&euro;/mois</span>
+                        <span className="text-xs text-muted-foreground/80">{fmt(Math.round(p.estimatedCA))}&euro;/mois</span>
                       </div>
                       <div className="flex items-center gap-1 mt-1">
                         <button onClick={() => handleStageChange(p.id, "lead")} className="text-[10px] font-medium text-muted-foreground hover:text-foreground transition-colors">Relancer</button>
@@ -687,7 +687,7 @@ export default function PipelinePage() {
 
             {/* Section: Infos générales */}
             <div className="mb-5">
-              <h3 className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium mb-2">Informations</h3>
+              <h3 className="text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium mb-2">Informations</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input type="text" placeholder="Nom du prospect *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
                 <input type="text" placeholder="Entreprise" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputCls} />
@@ -696,7 +696,7 @@ export default function PipelinePage() {
 
             {/* Section: Contact */}
             <div className="mb-5">
-              <h3 className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium mb-2">Contact</h3>
+              <h3 className="text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium mb-2">Contact</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input type="text" placeholder="Nom du contact" value={form.contactName} onChange={(e) => setForm({ ...form, contactName: e.target.value })} className={inputCls} />
                 <input type="email" placeholder="Email" value={form.contactEmail} onChange={(e) => setForm({ ...form, contactEmail: e.target.value })} className={inputCls} />
@@ -706,7 +706,7 @@ export default function PipelinePage() {
 
             {/* Section: Facturation */}
             <div className="mb-5">
-              <h3 className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium mb-2">Facturation</h3>
+              <h3 className="text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium mb-2">Facturation</h3>
               <div className="space-y-3">
                 {/* Billing type picker */}
                 <div className="flex gap-2">
@@ -858,7 +858,7 @@ export default function PipelinePage() {
 
             {/* Section: Pipeline */}
             <div className="mb-5">
-              <h3 className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium mb-2">Pipeline</h3>
+              <h3 className="text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium mb-2">Pipeline</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <select value={form.stage} onChange={(e) => setForm({ ...form, stage: e.target.value as ProspectStage })} className={inputCls}>
                   {STAGES.map((s) => (
@@ -877,7 +877,7 @@ export default function PipelinePage() {
 
             {/* Section: Notes */}
             <div className="mb-5">
-              <h3 className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium mb-2">Notes</h3>
+              <h3 className="text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium mb-2">Notes</h3>
               <textarea
                 placeholder="Notes, contexte, besoins..."
                 value={form.notes}

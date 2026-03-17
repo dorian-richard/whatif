@@ -65,7 +65,7 @@ export default function TresoreriePage() {
         <p className="text-muted-foreground">
           Projette ta tr&eacute;sorerie sur 12 mois : entr&eacute;es, sorties et solde pr&eacute;visionnel.
           {hasISStatus && remLabel && (
-            <span className="text-xs text-muted-foreground/60 ml-1">&middot; R&eacute;mun&eacute;ration : {remLabel}{profile.remunerationType === "mixte" && profile.mixtePartSalaire ? ` (${profile.mixtePartSalaire}% salaire)` : ""}</span>
+            <span className="text-xs text-muted-foreground/80 ml-1">&middot; R&eacute;mun&eacute;ration : {remLabel}{profile.remunerationType === "mixte" && profile.mixtePartSalaire ? ` (${profile.mixtePartSalaire}% salaire)` : ""}</span>
           )}
         </p>
       </div>
@@ -86,7 +86,7 @@ export default function TresoreriePage() {
             onChange={(e) => setThreshold(Number(e.target.value))}
             className="w-full accent-[#5682F2]"
           />
-          <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
+          <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1">
             <span>0&euro;</span>
             <span>{fmt(Math.max(30000, monthlyExpenses * 6))}&euro;</span>
           </div>
@@ -97,14 +97,14 @@ export default function TresoreriePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <PiggyBank className="size-4 text-[#5682F2]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Solde actuel</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Solde actuel</span>
             </div>
             <div className="text-xl font-bold text-foreground">{fmt(Math.round(savings))}&euro;</div>
           </div>
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="size-4 text-[#4ade80]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Solde min</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Solde min</span>
             </div>
             <div className={cn("text-xl font-bold", minBalance >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
               {fmt(Math.round(minBalance))}&euro;
@@ -113,7 +113,7 @@ export default function TresoreriePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <CalendarDays className="size-4 text-[#F4BE7E]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Mois critique</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Mois critique</span>
             </div>
             <div className={cn("text-xl font-bold", criticalMonth ? "text-[#f87171]" : "text-[#4ade80]")}>
               {criticalMonth ? criticalMonth.label : "Aucun"}
@@ -122,7 +122,7 @@ export default function TresoreriePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <Shield className="size-4 text-[#a78bfa]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Marge</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Marge</span>
             </div>
             <div className="text-xl font-bold text-foreground">{safeMonths}/12 mois</div>
           </div>
@@ -146,7 +146,7 @@ export default function TresoreriePage() {
         <div className="bg-card rounded-2xl border border-border p-4 md:p-6">
           <div className="flex flex-wrap items-center gap-4 mb-4">
             <h3 className="text-sm font-bold text-foreground">Projection 12 mois</h3>
-            <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
+            <div className="flex items-center gap-3 text-[10px] text-muted-foreground/80">
               <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#4ade80]" /> Entr&eacute;es</span>
               <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#f87171]" /> Sorties</span>
               <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-1 rounded-sm bg-[#5682F2]" /> Solde</span>
@@ -235,7 +235,7 @@ export default function TresoreriePage() {
                         style={{ height: `${Math.max(2, balPct)}%` }}
                       />
                     </div>
-                    <span className={cn("text-[9px]", isHovered ? "text-foreground font-medium" : "text-muted-foreground/60")}>{m.label}</span>
+                    <span className={cn("text-[9px]", isHovered ? "text-foreground font-medium" : "text-muted-foreground/80")}>{m.label}</span>
                   </div>
                 );
               })}
@@ -249,18 +249,18 @@ export default function TresoreriePage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Mois</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Entr&eacute;es</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">URSSAF</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">IR</th>
-                  {hasIS && <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">IS</th>}
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">
+                  <th className="text-left px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Mois</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Entr&eacute;es</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">URSSAF</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">IR</th>
+                  {hasIS && <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">IS</th>}
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">
                     <div className="flex items-center justify-end gap-1.5">
                       Charges
                       {hasOverrides && (
                         <button
                           onClick={() => setExpenseOverrides({})}
-                          className="text-muted-foreground/40 hover:text-foreground transition-colors"
+                          className="text-muted-foreground/80 hover:text-foreground transition-colors"
                           title="Réinitialiser les ajustements"
                         >
                           <RefreshCw className="size-3" />
@@ -268,8 +268,8 @@ export default function TresoreriePage() {
                       )}
                     </div>
                   </th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Net</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Solde</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Net</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Solde</th>
                 </tr>
               </thead>
               <tbody>
@@ -364,14 +364,14 @@ export default function TresoreriePage() {
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-muted-foreground/60">Entr&eacute;es</span>
+                    <span className="text-muted-foreground/80">Entr&eacute;es</span>
                     <span className="ml-1 font-medium text-[#4ade80]">{fmt(Math.round(m.income))}&euro;</span>
                   </div>
                   <div
                     className="cursor-pointer"
                     onDoubleClick={() => !isEditing && setEditingMonth(m.month)}
                   >
-                    <span className="text-muted-foreground/60">Charges</span>
+                    <span className="text-muted-foreground/80">Charges</span>
                     {isEditing ? (
                       <input
                         ref={inputRef}
@@ -397,13 +397,13 @@ export default function TresoreriePage() {
                     )}
                   </div>
                   <div>
-                    <span className="text-muted-foreground/60">Net</span>
+                    <span className="text-muted-foreground/80">Net</span>
                     <span className={cn("ml-1 font-medium", m.netFlow >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
                       {m.netFlow >= 0 ? "+" : ""}{fmt(Math.round(m.netFlow))}&euro;
                     </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground/60">Sorties</span>
+                    <span className="text-muted-foreground/80">Sorties</span>
                     <span className="ml-1 font-medium text-[#f87171]">{fmt(Math.round(m.totalOut))}&euro;</span>
                   </div>
                 </div>

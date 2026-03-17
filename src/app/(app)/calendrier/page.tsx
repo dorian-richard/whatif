@@ -251,7 +251,7 @@ export default function CalendrierPage() {
                   )}
                 </div>
                 {monthlyCA[i] > 0 && (
-                  <div className="text-xs text-muted-foreground/60">
+                  <div className="text-xs text-muted-foreground/80">
                     CA estim&eacute; : {fmt(monthlyCA[i])} &euro; HT
                   </div>
                 )}
@@ -259,7 +259,7 @@ export default function CalendrierPage() {
 
               {/* Deadlines */}
               {deadlines.length === 0 ? (
-                <div className="text-xs text-muted-foreground/60 italic">Aucune &eacute;ch&eacute;ance</div>
+                <div className="text-xs text-muted-foreground/80 italic">Aucune &eacute;ch&eacute;ance</div>
               ) : (
                 <div className="space-y-2">
                   {deadlines.map((d, j) => {
@@ -276,7 +276,7 @@ export default function CalendrierPage() {
                         <div className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: catCfg.color }} />
                         <div className="flex-1 min-w-0">
                           <div className="text-sm text-foreground truncate">{d.label}</div>
-                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground/60">
+                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground/80">
                             <span>{d.day} {MONTHS_SHORT[i]}</span>
                             {d.note && (
                               <>
@@ -317,7 +317,7 @@ export default function CalendrierPage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="text-center text-xs text-muted-foreground/60 pb-8">
+      <div className="text-center text-xs text-muted-foreground/80 pb-8">
         Dates indicatives bas&eacute;es sur le calendrier fiscal standard.
         Les montants estim&eacute;s sont calcul&eacute;s &agrave; partir de ton CA actuel et des taux moyens.
         Consulte ton expert-comptable pour les dates exactes.
@@ -346,7 +346,7 @@ function SummaryCard({
     <div className="bg-card rounded-2xl border border-border p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon className="size-4" style={{ color }} />
-        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">{label}</span>
+        <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">{label}</span>
       </div>
       <div className="text-xl font-bold text-foreground">
         {isCount ? value : <>{fmt(value)} &euro;</>}

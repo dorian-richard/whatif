@@ -165,14 +165,14 @@ export function EarningsCounter() {
           </div>
           <div className="text-3xl font-bold text-[#5682F2] tabular-nums">
             {fmt(Math.round(animatedValue))}&euro;
-            <span className="text-sm font-normal text-muted-foreground/60 ml-2">net</span>
+            <span className="text-sm font-normal text-muted-foreground/80 ml-2">net</span>
           </div>
-          <div className="flex items-center gap-3 text-[11px] text-muted-foreground/60 mt-1.5">
+          <div className="flex items-center gap-3 text-[11px] text-muted-foreground/80 mt-1.5">
             <span>{fmt(Math.round(targetCA))}&euro; CA HT</span>
             <span>&middot;</span>
             <span className="text-[#f87171]/70">{fmt(Math.round(targetTax))}&euro; charges &amp; impôts</span>
           </div>
-          <div className="text-[11px] text-muted-foreground/60 mt-0.5">
+          <div className="text-[11px] text-muted-foreground/80 mt-0.5">
             {earnings.daysSoFar}/{earnings.daysInMonth} jours ouvrés &middot; {fmt(Math.round(earnings.daily))}&euro;/jour net
           </div>
 
@@ -183,7 +183,7 @@ export function EarningsCounter() {
                 <span className="text-[11px] font-semibold text-muted-foreground/80 capitalize">
                   Progression {earnings.monthLabel}
                 </span>
-                <span className="text-[11px] text-muted-foreground/60 tabular-nums">
+                <span className="text-[11px] text-muted-foreground/80 tabular-nums">
                   {fmt(Math.round(earnings.monthCA))}&euro; / {fmt(Math.round(earnings.monthCATarget))}&euro; CA
                   <span className="ml-1.5 font-semibold text-foreground">{Math.round(earnings.progressPct * 100)}%</span>
                 </span>
@@ -224,7 +224,7 @@ export function EarningsCounter() {
               {earnings.clientBreakdown.length > 1 && (
                 <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
                   {earnings.clientBreakdown.map((c, i) => (
-                    <div key={i} className="flex items-center gap-1 text-[10px] text-muted-foreground/60">
+                    <div key={i} className="flex items-center gap-1 text-[10px] text-muted-foreground/80">
                       <div className="size-1.5 rounded-full" style={{ backgroundColor: c.color }} />
                       <span>{c.name}</span>
                       <span className="font-semibold text-foreground/80">{c.pct.toFixed(0)}%</span>

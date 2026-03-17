@@ -432,7 +432,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                     <label className="text-xs text-muted-foreground/70">Période du contrat</label>
                     <button
                       onClick={() => onUpdate({ startMonth: undefined, endMonth: undefined, startYear: undefined, endYear: undefined })}
-                      className="text-[10px] text-muted-foreground/50 hover:text-foreground transition-colors"
+                      className="text-[10px] text-muted-foreground/70 hover:text-foreground transition-colors"
                     >
                       Retirer
                     </button>
@@ -493,7 +493,7 @@ export function ClientForm({ client, onUpdate, onRemove, isOnly }: ClientFormPro
                     const y = new Date().getFullYear();
                     onUpdate({ startMonth: m, endMonth: 11, startYear: y, endYear: y });
                   }}
-                  className="text-xs text-muted-foreground/50 hover:text-foreground transition-colors"
+                  className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
                 >
                   + Définir une période (optionnel)
                 </button>

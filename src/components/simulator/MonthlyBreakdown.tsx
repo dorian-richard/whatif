@@ -37,7 +37,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
     <div className="bg-card rounded-2xl p-6 border border-border overflow-x-auto">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-bold text-foreground">Mensuel</h3>
-        <div className="flex gap-3 text-xs text-muted-foreground/60">
+        <div className="flex gap-3 text-xs text-muted-foreground/80">
           <span>
             Net total :{" "}
             <strong className={totalNet >= 0 ? "text-foreground" : "text-[#f87171]"}>
@@ -48,7 +48,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
       </div>
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-[10px] text-muted-foreground/60 uppercase tracking-wider border-b border-border">
+          <tr className="text-[10px] text-muted-foreground/80 uppercase tracking-wider border-b border-border">
             <th className="text-left py-2.5 pr-4 font-semibold">Mois</th>
             <th className="text-center py-2.5 px-2 font-semibold">Jours</th>
             <th className="text-right py-2.5 px-3 font-semibold">Actuel</th>
@@ -90,7 +90,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
                 onMouseLeave={() => setHoveredRow(null)}
               >
                 <td className="py-2.5 pr-4 font-semibold text-muted-foreground text-xs">{m}</td>
-                <td className="text-center py-2.5 px-2 text-muted-foreground/60 tabular-nums text-xs leading-tight">
+                <td className="text-center py-2.5 px-2 text-muted-foreground/80 tabular-nums text-xs leading-tight">
                   {(() => {
                     const vac = profile.vacationDaysPerMonth?.[i] ?? 0;
                     const eff = JOURS_OUVRES[i] - vac;
@@ -104,7 +104,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
                     );
                   })()}
                 </td>
-                <td className="text-right py-2.5 px-3 text-muted-foreground/60 tabular-nums relative">
+                <td className="text-right py-2.5 px-3 text-muted-foreground/80 tabular-nums relative">
                   {fmt(projection.before[i])}&euro;
                   {/* Client breakdown tooltip */}
                   {isHovered && clientCAs.length > 1 && (
@@ -126,7 +126,7 @@ export function MonthlyBreakdown({ projection, clients, profile, sim }: MonthlyB
                 <td
                   className={cn(
                     "text-right py-2.5 px-3 font-bold tabular-nums",
-                    Math.abs(diff) < 0.5 ? "text-muted-foreground/60" : diff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"
+                    Math.abs(diff) < 0.5 ? "text-muted-foreground/80" : diff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"
                   )}
                 >
                   {Math.abs(diff) < 0.5 ? "-" : `${diff >= 0 ? "+" : ""}${fmt(diff)}\u20AC`}

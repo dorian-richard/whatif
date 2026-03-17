@@ -190,7 +190,7 @@ export default function RetraitePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* Age */}
         <div className="bg-card rounded-2xl border border-border p-5">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Ton &acirc;ge</div>
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Ton &acirc;ge</div>
           <div className="text-2xl font-bold text-foreground mb-3">{age} ans</div>
           <input
             type="range"
@@ -205,14 +205,14 @@ export default function RetraitePage() {
             }}
             className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
           />
-          <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
+          <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1">
             <span>20</span><span>65</span>
           </div>
         </div>
 
         {/* Retirement age */}
         <div className="bg-card rounded-2xl border border-border p-5">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">&Acirc;ge de d&eacute;part</div>
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">&Acirc;ge de d&eacute;part</div>
           <div className="text-2xl font-bold text-[#F4BE7E] mb-3">{retirementAge} ans</div>
           <input
             type="range"
@@ -222,14 +222,14 @@ export default function RetraitePage() {
             onChange={(e) => setRetirementAge(Number(e.target.value))}
             className="w-full accent-[#F4BE7E] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F4BE7E] [&::-webkit-slider-thumb]:shadow-lg"
           />
-          <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
+          <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1">
             <span>62</span><span>70</span>
           </div>
         </div>
 
         {/* CA */}
         <div className="bg-card rounded-2xl border border-border p-5">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">CA annuel</div>
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">CA annuel</div>
           <div className="text-2xl font-bold text-foreground mb-3">{fmt(annualCA)} &euro;</div>
           <input
             type="range"
@@ -240,14 +240,14 @@ export default function RetraitePage() {
             onChange={(e) => setCaOverride(Number(e.target.value))}
             className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
           />
-          <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
+          <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1">
             <span>10k</span><span>{fmt(sliderMax / 1000)}k</span>
           </div>
         </div>
 
         {/* Years contributed */}
         <div className="bg-card rounded-2xl border border-border p-5">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Ann&eacute;es d&eacute;j&agrave; cotis&eacute;es</div>
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Ann&eacute;es d&eacute;j&agrave; cotis&eacute;es</div>
           <div className="text-2xl font-bold text-foreground mb-3">{yearsContributed} ans</div>
           <input
             type="range"
@@ -257,7 +257,7 @@ export default function RetraitePage() {
             onChange={(e) => setYearsContributed(Number(e.target.value))}
             className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
           />
-          <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
+          <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1">
             <span>0</span><span>{Math.max(0, age - 18)}</span>
           </div>
         </div>
@@ -286,7 +286,7 @@ export default function RetraitePage() {
             />
           </div>
         </div>
-        <div className="flex items-center justify-between text-xs text-muted-foreground/60">
+        <div className="flex items-center justify-between text-xs text-muted-foreground/80">
           <span>Taux plein estim&eacute; : {tauxPleinPct}%</span>
           <span>Retraite &agrave; {retirementAge} ans ({yearsLeft} ans restants)</span>
         </div>
@@ -298,7 +298,7 @@ export default function RetraitePage() {
           <Landmark className="size-6 text-[#8b5cf6]" />
         </div>
         <div className="flex-1">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Pension estim&eacute;e (meilleur statut freelance)</div>
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Pension estim&eacute;e (meilleur statut freelance)</div>
           <div className="text-xl font-bold" style={{ color: bestFreelance.color }}>
             {fmt(bestFreelance.pensionMensuelle)} &euro;/mois
             <span className="text-sm font-normal text-muted-foreground ml-2">
@@ -386,14 +386,14 @@ export default function RetraitePage() {
               </div>
 
               <h3 className="text-base font-bold text-foreground mb-1">{r.label}</h3>
-              <p className="text-xs text-muted-foreground/60 mb-4">
+              <p className="text-xs text-muted-foreground/80 mb-4">
                 {isCDI ? "Regime general (salarie)" : BUSINESS_STATUS_CONFIG[r.key as BusinessStatus].regime}
               </p>
 
               {/* Pension */}
               <div className="text-2xl font-bold mb-4" style={{ color: r.color }}>
                 {fmt(r.pensionMensuelle)} &euro;
-                <span className="text-sm font-normal text-muted-foreground/60">/mois</span>
+                <span className="text-sm font-normal text-muted-foreground/80">/mois</span>
               </div>
 
               {/* Details */}
@@ -465,23 +465,23 @@ export default function RetraitePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div className="p-4 bg-muted/30 rounded-xl border border-border">
-                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">&Eacute;cart de pension mensuel</div>
+                <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">&Eacute;cart de pension mensuel</div>
                 <div className="text-xl font-bold text-[#f87171]">{fmt(monthlyGap)} &euro;/mois</div>
-                <div className="text-[10px] text-muted-foreground/60 mt-1">CDI {fmt(cdiResult.pensionMensuelle)}&euro; vs {bestResult.label} {fmt(bestResult.pensionMensuelle)}&euro;</div>
+                <div className="text-[10px] text-muted-foreground/80 mt-1">CDI {fmt(cdiResult.pensionMensuelle)}&euro; vs {bestResult.label} {fmt(bestResult.pensionMensuelle)}&euro;</div>
               </div>
               <div className="p-4 bg-muted/30 rounded-xl border border-border">
-                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Capital n&eacute;cessaire</div>
+                <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Capital n&eacute;cessaire</div>
                 <div className="text-xl font-bold text-[#F4BE7E]">{fmt(totalGapNeeded)} &euro;</div>
-                <div className="text-[10px] text-muted-foreground/60 mt-1">Pour {yearsInRetirement} ans de retraite</div>
+                <div className="text-[10px] text-muted-foreground/80 mt-1">Pour {yearsInRetirement} ans de retraite</div>
               </div>
               <div className="p-4 bg-[#a78bfa]/10 rounded-xl border border-[#a78bfa]/20">
-                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">&Eacute;pargne mensuelle &agrave; placer</div>
+                <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">&Eacute;pargne mensuelle &agrave; placer</div>
                 <div className="text-xl font-bold text-[#a78bfa]">{fmt(monthlyContribution)} &euro;/mois</div>
-                <div className="text-[10px] text-muted-foreground/60 mt-1">PER/Assurance vie &agrave; 4%/an pendant {yearsLeft} ans</div>
+                <div className="text-[10px] text-muted-foreground/80 mt-1">PER/Assurance vie &agrave; 4%/an pendant {yearsLeft} ans</div>
               </div>
             </div>
 
-            <p className="text-[10px] text-muted-foreground/60">
+            <p className="text-[10px] text-muted-foreground/80">
               En &eacute;pargnant {fmt(monthlyContribution)}&euro;/mois sur un PER ou une assurance vie avec un rendement moyen de 4%/an,
               tu accumules {fmt(totalGapNeeded)}&euro; en {yearsLeft} ans pour combler l&apos;&eacute;cart de pension avec un CDI &eacute;quivalent.
             </p>
@@ -528,7 +528,7 @@ export default function RetraitePage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="text-center text-xs text-muted-foreground/60 pb-8">
+      <div className="text-center text-xs text-muted-foreground/80 pb-8">
         Estimation indicative bas&eacute;e sur les taux 2025 (SMIC, plafond SS, seuils trimestres).
         La pension r&eacute;elle d&eacute;pend de l&apos;ensemble de ta carri&egrave;re, des r&eacute;gimes compl&eacute;mentaires et des r&eacute;formes futures.
         Consulte un conseiller retraite pour un bilan personnalis&eacute;.

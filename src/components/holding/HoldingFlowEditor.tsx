@@ -52,7 +52,7 @@ export function HoldingFlowEditor({ integrated = false }: { integrated?: boolean
 
       {/* Existing flows */}
       {flows.length === 0 && !adding && (
-        <p className="text-xs text-muted-foreground/60">
+        <p className="text-xs text-muted-foreground/80">
           Aucun flux. Ajoutez des dividendes, frais de gestion ou salaires entre vos entités.
         </p>
       )}

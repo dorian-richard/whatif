@@ -162,11 +162,11 @@ export function Facto() {
               {/* Fake input */}
               <div className="border-t border-border px-4 py-3">
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 px-3 py-2 bg-muted/40 border border-border rounded-xl text-xs text-muted-foreground/50">
+                  <div className="flex-1 px-3 py-2 bg-muted/40 border border-border rounded-xl text-xs text-muted-foreground/70">
                     Demande a Facto...
                   </div>
                   <div className="size-8 rounded-xl bg-muted/50 flex items-center justify-center">
-                    <Send className="size-3.5 text-muted-foreground/40" />
+                    <Send className="size-3.5 text-muted-foreground/80" />
                   </div>
                 </div>
               </div>
@@ -212,7 +212,7 @@ export function Facto() {
 
         {/* Disclaimer */}
         <AnimateOnScroll delay={0.4}>
-          <p className="text-center text-xs text-muted-foreground/60 mt-10">
+          <p className="text-center text-xs text-muted-foreground/80 mt-10">
             Facto est un outil d&apos;aide a la decision. Il ne remplace pas un expert-comptable. Pour toute decision fiscale ou juridique importante, consultez un professionnel.
           </p>
         </AnimateOnScroll>

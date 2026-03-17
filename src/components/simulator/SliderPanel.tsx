@@ -41,14 +41,14 @@ function LabeledSlider({
           </div>
           <span>{label}</span>
           {tooltip && (
-            <span className="text-[10px] text-muted-foreground/60 hidden group-hover:inline" title={tooltip}>?</span>
+            <span className="text-[10px] text-muted-foreground/80 hidden group-hover:inline" title={tooltip}>?</span>
           )}
         </label>
         <span className={cn(
           "text-sm font-bold px-2.5 py-1 rounded-lg transition-colors",
           isModified
             ? "text-[#5682F2] bg-[#5682F2]/15"
-            : "text-muted-foreground/60 bg-muted/50"
+            : "text-muted-foreground/80 bg-muted/50"
         )}>
           {value}{unit}
         </span>
@@ -60,7 +60,7 @@ function LabeledSlider({
         max={max}
         step={step}
       />
-      <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1.5 px-0.5">
+      <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1.5 px-0.5">
         <span>{min}{unit}</span>
         <span>{max}{unit}</span>
       </div>

@@ -328,7 +328,7 @@ export default function JourneePage() {
               <span className="text-xs font-medium uppercase tracking-wider">Revenu du jour</span>
             </div>
             {isWeekend ? (
-              <div className="text-lg font-bold text-muted-foreground/60">Jour off</div>
+              <div className="text-lg font-bold text-muted-foreground/80">Jour off</div>
             ) : (
               <div className="text-2xl font-bold text-foreground">{fmt(todayRevenue)} &euro;</div>
             )}
@@ -498,8 +498,8 @@ export default function JourneePage() {
                     <div className="size-2 rounded-full shrink-0" style={{ backgroundColor: clientColor(e.clientId) }} />
                     <span className="font-medium text-foreground">{clientName(e.clientId)}</span>
                     <span className="text-muted-foreground">{h}h{m > 0 ? String(m).padStart(2, "0") : ""}</span>
-                    {e.description && <span className="text-muted-foreground/60 truncate">&middot; {e.description}</span>}
-                    <button onClick={() => removeEntry(e.id)} className="ml-auto text-muted-foreground/40 hover:text-[#f87171]">
+                    {e.description && <span className="text-muted-foreground/80 truncate">&middot; {e.description}</span>}
+                    <button onClick={() => removeEntry(e.id)} className="ml-auto text-muted-foreground/80 hover:text-[#f87171]">
                       <X className="size-3" />
                     </button>
                   </div>
@@ -521,7 +521,7 @@ export default function JourneePage() {
             </div>
           ) : !showManualForm ? (
             <div className="text-center py-6">
-              <div className="text-sm text-muted-foreground/60 mb-3">Aucune entr&eacute;e aujourd&apos;hui</div>
+              <div className="text-sm text-muted-foreground/80 mb-3">Aucune entr&eacute;e aujourd&apos;hui</div>
               <button
                 onClick={() => setShowManualForm(true)}
                 className="px-4 py-2 bg-[#5682F2] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity inline-flex items-center gap-1.5"
@@ -570,7 +570,7 @@ export default function JourneePage() {
                       <div className="absolute inset-0 border-2 border-dashed border-[#5682F2]/30 rounded-lg" />
                     )}
                   </div>
-                  <div className={cn("text-[10px] mt-1", dayHours > 0 ? "text-foreground font-medium" : "text-muted-foreground/40")}>
+                  <div className={cn("text-[10px] mt-1", dayHours > 0 ? "text-foreground font-medium" : "text-muted-foreground/80")}>
                     {dayHours > 0 ? `${dayHours}h` : "-"}
                   </div>
                 </div>

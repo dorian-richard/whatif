@@ -92,7 +92,7 @@ export function ClientComposition({ clients, lostClientIndex }: ClientCompositio
                   style={{ width: `${pct}%`, backgroundColor: color }}
                 />
               </div>
-              <span className="text-xs text-muted-foreground/60 shrink-0 w-8 text-right tabular-nums">
+              <span className="text-xs text-muted-foreground/80 shrink-0 w-8 text-right tabular-nums">
                 {pct.toFixed(0)}%
               </span>
             </div>
@@ -120,11 +120,11 @@ export function ClientComposition({ clients, lostClientIndex }: ClientCompositio
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>
                 Récurrent : <strong className="text-[#5682F2]">{recurringPct.toFixed(0)}%</strong>{" "}
-                <span className="text-muted-foreground/60">({fmt(recurring)}&euro;)</span>
+                <span className="text-muted-foreground/80">({fmt(recurring)}&euro;)</span>
               </span>
               <span>
                 Ponctuel : <strong className="text-[#F4BE7E]">{(100 - recurringPct).toFixed(0)}%</strong>{" "}
-                <span className="text-muted-foreground/60">({fmt(ponctual)}&euro;)</span>
+                <span className="text-muted-foreground/80">({fmt(ponctual)}&euro;)</span>
               </span>
             </div>
           </div>

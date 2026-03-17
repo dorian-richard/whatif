@@ -176,7 +176,7 @@ export default function PatrimoinePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <Banknote className="size-4 text-[#4ade80]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Surplus mensuel</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Surplus mensuel</span>
             </div>
             <div className={cn("text-xl font-bold", currentSurplus.monthlySurplus >= 0 ? "text-foreground" : "text-[#f87171]")}>
               {currentSurplus.monthlySurplus >= 0 ? fmt(currentSurplus.monthlySurplus) : `-${fmt(Math.abs(currentSurplus.monthlySurplus))}`}&nbsp;&euro;
@@ -186,7 +186,7 @@ export default function PatrimoinePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="size-4 text-[#10b981]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Patrimoine &agrave; 10 ans</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Patrimoine &agrave; 10 ans</span>
             </div>
             <div className="text-xl font-bold text-foreground">{fmt(wealth10)}&nbsp;&euro;</div>
           </div>
@@ -194,7 +194,7 @@ export default function PatrimoinePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <PiggyBank className="size-4 text-[#a78bfa]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Patrimoine &agrave; {horizon >= 20 ? 20 : horizon} ans</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Patrimoine &agrave; {horizon >= 20 ? 20 : horizon} ans</span>
             </div>
             <div className="text-xl font-bold text-foreground">{fmt(wealth20)}&nbsp;&euro;</div>
           </div>
@@ -202,7 +202,7 @@ export default function PatrimoinePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <Shield className="size-4 text-[#F4BE7E]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Ind&eacute;pendance financi&egrave;re</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Ind&eacute;pendance financi&egrave;re</span>
             </div>
             <div className="text-xl font-bold text-foreground">
               {independenceMilestone?.reached
@@ -218,7 +218,7 @@ export default function PatrimoinePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {/* CA */}
           <div className="bg-card rounded-2xl border border-border p-5">
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">CA annuel</div>
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">CA annuel</div>
             <div className="text-2xl font-bold text-foreground mb-3">{fmt(annualCA)}&nbsp;&euro;</div>
             <input
               type="range"
@@ -229,14 +229,14 @@ export default function PatrimoinePage() {
               onChange={(e) => setCaOverride(Number(e.target.value))}
               className={SLIDER_CLASS}
             />
-            <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
+            <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1">
               <span>10k</span><span>{fmtShort(sliderMax)}</span>
             </div>
           </div>
 
           {/* % investi */}
           <div className="bg-card rounded-2xl border border-border p-5">
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Part investie du surplus</div>
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Part investie du surplus</div>
             <div className="text-2xl font-bold text-[#10b981] mb-3">{investmentRate}%</div>
             <input
               type="range"
@@ -247,14 +247,14 @@ export default function PatrimoinePage() {
               onChange={(e) => setInvestmentRate(Number(e.target.value))}
               className="w-full accent-[#10b981] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#10b981] [&::-webkit-slider-thumb]:shadow-lg"
             />
-            <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
+            <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1">
               <span>10%</span><span>90%</span>
             </div>
           </div>
 
           {/* Profil de risque */}
           <div className="bg-card rounded-2xl border border-border p-5">
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Profil de risque</div>
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Profil de risque</div>
             <div className="text-2xl font-bold mb-3" style={{ color: RISK_PROFILES[riskProfile].color }}>
               {RISK_PROFILES[riskProfile].rate * 100}%/an
             </div>
@@ -279,7 +279,7 @@ export default function PatrimoinePage() {
 
           {/* Horizon */}
           <div className="bg-card rounded-2xl border border-border p-5">
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Horizon</div>
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Horizon</div>
             <div className="text-2xl font-bold text-[#F4BE7E] mb-3">{horizon} ans</div>
             <input
               type="range"
@@ -290,7 +290,7 @@ export default function PatrimoinePage() {
               onChange={(e) => setHorizon(Number(e.target.value))}
               className="w-full accent-[#F4BE7E] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F4BE7E] [&::-webkit-slider-thumb]:shadow-lg"
             />
-            <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-1">
+            <div className="flex justify-between text-[10px] text-muted-foreground/80 mt-1">
               <span>5 ans</span><span>30 ans</span>
             </div>
           </div>
@@ -383,7 +383,7 @@ export default function PatrimoinePage() {
               <HandCoins className="size-6 text-[#10b981]" />
             </div>
             <div className="flex-1">
-              <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Meilleur statut pour ton patrimoine</div>
+              <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Meilleur statut pour ton patrimoine</div>
               <div className="text-xl font-bold" style={{ color: bestStatus.color }}>
                 {bestStatus.label}
                 <span className="text-sm font-normal text-muted-foreground ml-2">
@@ -404,7 +404,7 @@ export default function PatrimoinePage() {
           </div>
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-xs text-muted-foreground/60 uppercase tracking-wider">
+              <tr className="border-b border-border text-xs text-muted-foreground/80 uppercase tracking-wider">
                 <th className="text-left px-5 py-3 font-medium">Statut</th>
                 <th className="text-right px-5 py-3 font-medium">Net annuel</th>
                 <th className="text-right px-5 py-3 font-medium">Surplus/mois</th>
@@ -496,21 +496,21 @@ export default function PatrimoinePage() {
                 )}
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
-                    <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Surplus/mois</div>
+                    <div className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Surplus/mois</div>
                     <div className={cn("font-bold", s.monthlySurplus >= 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
                       {s.monthlySurplus >= 0 ? fmt(s.monthlySurplus) : `-${fmt(Math.abs(s.monthlySurplus))}`}&nbsp;&euro;
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Net annuel</div>
+                    <div className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Net annuel</div>
                     <div className="font-bold text-foreground">{fmt(s.annualNet)}&nbsp;&euro;</div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Patrimoine 10 ans</div>
+                    <div className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Patrimoine 10 ans</div>
                     <div className="font-bold text-foreground">{fmt(s.wealth10y)}&nbsp;&euro;</div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Patrimoine 20 ans</div>
+                    <div className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Patrimoine 20 ans</div>
                     <div className="font-bold" style={{ color: s.color }}>{fmt(s.wealth20y)}&nbsp;&euro;</div>
                   </div>
                 </div>
@@ -548,7 +548,7 @@ export default function PatrimoinePage() {
                       }}
                     />
                   </div>
-                  <div className="text-xs text-muted-foreground/60">
+                  <div className="text-xs text-muted-foreground/80">
                     {m.reached ? (
                       <span className="flex items-center gap-1 text-[#4ade80]"><Check className="size-3" /> D&eacute;j&agrave; atteint</span>
                     ) : m.monthsToReach != null ? (
@@ -607,7 +607,7 @@ export default function PatrimoinePage() {
         </div>
 
         {/* ── Disclaimer ── */}
-        <div className="text-center text-xs text-muted-foreground/60 pb-8">
+        <div className="text-center text-xs text-muted-foreground/80 pb-8">
           Simulation indicative bas&eacute;e sur des rendements moyens historiques. Les march&eacute;s financiers comportent des risques
           de perte en capital. Les v&eacute;hicules d&apos;investissement mentionn&eacute;s ne constituent pas un conseil financier.
           Consulte un conseiller en gestion de patrimoine pour un accompagnement personnalis&eacute;.

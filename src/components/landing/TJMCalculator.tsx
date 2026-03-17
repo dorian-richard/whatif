@@ -68,7 +68,7 @@ export function TJMCalculator() {
                   onChange={(e) => setTargetNet(Number(e.target.value))}
                   className="w-full accent-[#5682F2]"
                 />
-                <div className="flex justify-between text-[11px] text-muted-foreground/50 mt-1">
+                <div className="flex justify-between text-[11px] text-muted-foreground/70 mt-1">
                   <span>2 000&euro;</span>
                   <span>10 000&euro;</span>
                 </div>
@@ -126,7 +126,7 @@ export function TJMCalculator() {
                         onChange={(e) => setMixte(Number(e.target.value))}
                         className="w-full accent-[#5682F2]"
                       />
-                      <div className="flex justify-between text-[10px] text-muted-foreground/50 mt-0.5">
+                      <div className="flex justify-between text-[10px] text-muted-foreground/70 mt-0.5">
                         <span>10% salaire</span>
                         <span>90% salaire</span>
                       </div>
@@ -150,7 +150,7 @@ export function TJMCalculator() {
                   onChange={(e) => setDaysPerMonth(Number(e.target.value))}
                   className="w-full accent-[#5682F2]"
                 />
-                <div className="flex justify-between text-[11px] text-muted-foreground/50 mt-1">
+                <div className="flex justify-between text-[11px] text-muted-foreground/70 mt-1">
                   <span>10j</span>
                   <span>23j</span>
                 </div>
@@ -165,11 +165,11 @@ export function TJMCalculator() {
               </div>
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-muted/40 rounded-xl p-3">
-                  <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">CA annuel requis</div>
+                  <div className="text-[11px] text-muted-foreground/80 uppercase tracking-wider">CA annuel requis</div>
                   <div className="text-lg font-bold text-foreground mt-1">{fmt(Math.round(result.requiredCA))}&euro;</div>
                 </div>
                 <div className="bg-muted/40 rounded-xl p-3">
-                  <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">Taux de charges</div>
+                  <div className="text-[11px] text-muted-foreground/80 uppercase tracking-wider">Taux de charges</div>
                   <div className="text-lg font-bold text-foreground mt-1">{Math.round(result.tauxCharges * 100)}%</div>
                 </div>
               </div>
@@ -179,7 +179,7 @@ export function TJMCalculator() {
               >
                 Affiner mon calcul &rarr;
               </Link>
-              <p className="text-[10px] text-muted-foreground/40 mt-4 leading-relaxed">
+              <p className="text-[10px] text-muted-foreground/80 mt-4 leading-relaxed">
                 Estimations bas&eacute;es sur le bar&egrave;me IR 2026 et les taux URSSAF en vigueur. Consultez un expert-comptable pour une analyse personnalis&eacute;e.
               </p>
             </div>

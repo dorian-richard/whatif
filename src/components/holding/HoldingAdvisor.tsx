@@ -71,8 +71,8 @@ export function HoldingAdvisor({ result, entities, flows, profile }: Props) {
 
       {/* Legal disclaimer */}
       <div className="flex items-start gap-1.5 px-1">
-        <Shield className="size-3 text-muted-foreground/40 mt-0.5 shrink-0" />
-        <p className="text-[9px] text-muted-foreground/40 leading-relaxed">
+        <Shield className="size-3 text-muted-foreground/80 mt-0.5 shrink-0" />
+        <p className="text-[9px] text-muted-foreground/80 leading-relaxed">
           Ces conseils sont indicatifs et ne constituent pas un avis juridique ou fiscal. Consultez un expert-comptable pour valider votre structure.
         </p>
       </div>

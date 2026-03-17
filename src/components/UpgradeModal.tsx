@@ -39,7 +39,7 @@ export function UpgradeModal({
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-2xl border border-border p-6 w-full max-w-sm shadow-2xl">
         <div className="flex justify-end">
-          <button onClick={onClose} className="text-muted-foreground/60 hover:text-foreground transition-colors">
+          <button onClick={onClose} className="text-muted-foreground/80 hover:text-foreground transition-colors">
             <X className="size-5" />
           </button>
         </div>

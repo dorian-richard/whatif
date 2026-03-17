@@ -174,7 +174,7 @@ export default function HistoriquePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <Banknote className="size-4 text-[#5682F2]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">CA {currentYear}</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">CA {currentYear}</span>
             </div>
             <div className="text-xl font-bold text-foreground">{fmt(Math.round(thisYearCA))}&euro;</div>
             {lastYearCA > 0 && (
@@ -186,7 +186,7 @@ export default function HistoriquePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="size-4 text-[#F4BE7E]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">TJM moyen</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">TJM moyen</span>
             </div>
             <div className="text-xl font-bold text-foreground">{fmt(Math.round(thisYearTJM))}&euro;</div>
             {lastYearTJM > 0 && (
@@ -198,11 +198,11 @@ export default function HistoriquePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <Users className="size-4 text-[#a78bfa]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Clients moy.</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Clients moy.</span>
             </div>
             <div className="text-xl font-bold text-foreground">{thisYearClients.toFixed(1)}</div>
             {lastYearClients > 0 && (
-              <div className="text-[11px] text-muted-foreground/60 mt-0.5">
+              <div className="text-[11px] text-muted-foreground/80 mt-0.5">
                 {lastYearClients.toFixed(1)} en {currentYear - 1}
               </div>
             )}
@@ -210,7 +210,7 @@ export default function HistoriquePage() {
           <div className="bg-card rounded-xl p-4 border border-border">
             <div className="flex items-center gap-2 mb-1">
               <BarChart3 className="size-4 text-[#f97316]" />
-              <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Encaissement</span>
+              <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Encaissement</span>
             </div>
             <div className="text-xl font-bold text-foreground">{Math.round(thisYearPayRate * 100)}%</div>
           </div>
@@ -238,7 +238,7 @@ export default function HistoriquePage() {
         <div className="bg-card rounded-2xl border border-border p-4 md:p-6">
           <div className="flex flex-wrap items-center gap-4 mb-4">
             <h3 className="text-sm font-bold text-foreground">{metricCfg.label}</h3>
-            <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
+            <div className="flex items-center gap-3 text-[10px] text-muted-foreground/80">
               <span className="flex items-center gap-1">
                 <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: metricCfg.color }} /> {currentYear}
               </span>
@@ -252,7 +252,7 @@ export default function HistoriquePage() {
             <div className="text-center py-12 text-muted-foreground">
               <BarChart3 className="size-8 mx-auto mb-3 opacity-40" />
               <p className="text-sm">Pas encore de données historiques.</p>
-              <p className="text-xs text-muted-foreground/60 mt-1">Les snapshots mensuels se créent automatiquement.</p>
+              <p className="text-xs text-muted-foreground/80 mt-1">Les snapshots mensuels se créent automatiquement.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -281,7 +281,7 @@ export default function HistoriquePage() {
                           title={`${currentYear}: ${metricCfg.format(thisVal)}`}
                         />
                       </div>
-                      <span className={cn("text-[9px]", i === currentMonth ? "text-foreground font-semibold" : "text-muted-foreground/60")}>
+                      <span className={cn("text-[9px]", i === currentMonth ? "text-foreground font-semibold" : "text-muted-foreground/80")}>
                         {m}
                       </span>
                     </div>
@@ -298,10 +298,10 @@ export default function HistoriquePage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Mois</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">{currentYear}</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">{currentYear - 1}</th>
-                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Delta</th>
+                  <th className="text-left px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Mois</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">{currentYear}</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">{currentYear - 1}</th>
+                  <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Delta</th>
                 </tr>
               </thead>
               <tbody>

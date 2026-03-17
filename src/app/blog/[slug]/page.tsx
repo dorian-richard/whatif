@@ -118,11 +118,11 @@ export default async function BlogArticlePage({ params }: Props) {
           >
             {post.cta.text} &rarr;
           </Link>
-          <p className="text-sm text-muted-foreground/60">{post.cta.sub}</p>
+          <p className="text-sm text-muted-foreground/80">{post.cta.sub}</p>
         </div>
 
         {/* Related links */}
-        <div className="text-xs text-muted-foreground/40 border-t border-border pt-6 space-y-2">
+        <div className="text-xs text-muted-foreground/80 border-t border-border pt-6 space-y-2">
           <p>
             Voir aussi :{" "}
             {post.relatedLinks.map((link, i) => (

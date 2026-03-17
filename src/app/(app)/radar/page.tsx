@@ -169,7 +169,7 @@ export default function RadarPage() {
               </div>
               <div className="text-center">
                 <div className="text-4xl font-black text-foreground">{result.globalScore}</div>
-                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">sur 100</div>
+                <div className="text-xs text-muted-foreground/80 uppercase tracking-wider">sur 100</div>
               </div>
               <span className={cn("text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full", meteoConfig.color)} style={{ backgroundColor: `${meteoConfig.accent}15` }}>
                 {meteoConfig.label}
@@ -214,14 +214,14 @@ export default function RadarPage() {
             return (
               <div key={v} className="flex items-center gap-1.5">
                 <div className={cn("size-2.5 rounded-full", cfg.bg, "border", cfg.border)} />
-                <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">{cfg.label}</span>
+                <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">{cfg.label}</span>
               </div>
             );
           })}
         </div>
 
         {/* ── Disclaimer ── */}
-        <div className="text-center text-xs text-muted-foreground/60 pb-8">
+        <div className="text-center text-xs text-muted-foreground/80 pb-8">
           Estimations indicatives basées sur ton profil. Ne constitue pas un conseil fiscal ou financier.
         </div>
       </ProBlur>

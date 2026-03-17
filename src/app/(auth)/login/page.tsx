@@ -80,7 +80,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="ton@email.com"
-                    className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50"
+                    className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/80 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50"
                   />
                 </div>
                 {error && <p className="text-sm text-[#f87171]">{error}</p>}
@@ -96,7 +96,7 @@ export default function LoginPage() {
           )}
         </div>
 
-        <p className="text-center text-xs text-muted-foreground/60 mt-4">
+        <p className="text-center text-xs text-muted-foreground/80 mt-4">
           Pas encore de compte ?{" "}
           <Link href="/signup" className="text-primary hover:underline">Inscription</Link>
         </p>

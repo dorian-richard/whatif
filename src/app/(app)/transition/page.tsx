@@ -297,12 +297,12 @@ export default function TransitionPage() {
             <Briefcase className="size-5 text-primary" />
           </div>
           <div>
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider">
               Mon salaire CDI
             </div>
             <div className="text-2xl font-bold text-foreground">
               {fmt(salaireBrut)} &euro;{" "}
-              <span className="text-sm font-normal text-muted-foreground/60">
+              <span className="text-sm font-normal text-muted-foreground/80">
                 brut/an
               </span>
             </div>
@@ -325,7 +325,7 @@ export default function TransitionPage() {
           onChange={(e) => setSalaireBrut(Number(e.target.value))}
           className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
         />
-        <div className="flex justify-between text-xs text-muted-foreground/60 mt-2">
+        <div className="flex justify-between text-xs text-muted-foreground/80 mt-2">
           <span>20 000 &euro;</span>
           <span>70 000 &euro;</span>
           <span>120 000 &euro;</span>
@@ -336,7 +336,7 @@ export default function TransitionPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Avantages CDI */}
         <div className="bg-card rounded-2xl border border-border p-6">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-4">
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-4">
             Avantages CDI
           </div>
           <div className="space-y-3">
@@ -366,7 +366,7 @@ export default function TransitionPage() {
                     <div className="text-sm font-medium text-foreground">
                       {a.label}
                     </div>
-                    <div className="text-xs text-muted-foreground/60">{a.desc}</div>
+                    <div className="text-xs text-muted-foreground/80">{a.desc}</div>
                   </div>
                   <div className="text-sm font-semibold text-primary shrink-0">
                     +{fmt(val)} &euro;/an
@@ -385,7 +385,7 @@ export default function TransitionPage() {
 
         {/* Coûts freelance */}
         <div className="bg-card rounded-2xl border border-border p-6">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-4">
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-4">
             Co&ucirc;ts freelance &agrave; pr&eacute;voir
           </div>
           <div className="space-y-3">
@@ -412,7 +412,7 @@ export default function TransitionPage() {
           {/* Vacation weeks */}
           <div className="mt-5 pt-4 border-t border-border">
             <div className="flex justify-between mb-2">
-              <span className="text-xs text-muted-foreground/60 uppercase tracking-wider">
+              <span className="text-xs text-muted-foreground/80 uppercase tracking-wider">
                 Vacances
               </span>
               <span className="text-sm font-bold text-foreground">
@@ -432,7 +432,7 @@ export default function TransitionPage() {
 
           {/* Remuneration type */}
           <div className="mt-5 pt-4 border-t border-border">
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-3">
               R&eacute;mun&eacute;ration (SASU IR / EURL IS / SASU IS)
             </div>
             <div className="flex gap-2 mb-3">
@@ -480,14 +480,14 @@ export default function TransitionPage() {
       <div className="bg-gradient-to-r from-[#5682F2]/10 to-[#F4BE7E]/10 rounded-2xl border border-border p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <div className="text-center">
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">
               Package CDI total
             </div>
             <div className="text-2xl font-bold text-primary">
               {fmt(Math.round(cdiPackageMensuel))} &euro;
-              <span className="text-sm font-normal text-muted-foreground/60">/mois</span>
+              <span className="text-sm font-normal text-muted-foreground/80">/mois</span>
             </div>
-            <div className="text-xs text-muted-foreground/60">
+            <div className="text-xs text-muted-foreground/80">
               {fmt(cdiPackageAnnuel)} &euro;/an
             </div>
           </div>
@@ -497,14 +497,14 @@ export default function TransitionPage() {
             </div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">
               Objectif freelance net
             </div>
             <div className="text-2xl font-bold text-[#F4BE7E]">
               {fmt(Math.round(targetFreelanceNet / 12))} &euro;
-              <span className="text-sm font-normal text-muted-foreground/60">/mois</span>
+              <span className="text-sm font-normal text-muted-foreground/80">/mois</span>
             </div>
-            <div className="text-xs text-muted-foreground/60">
+            <div className="text-xs text-muted-foreground/80">
               {fmt(targetFreelanceNet)} &euro;/an (CDI + co&ucirc;ts)
             </div>
           </div>
@@ -520,7 +520,7 @@ export default function TransitionPage() {
           <TrendingUp className="size-6" style={{ color: best.color }} />
         </div>
         <div className="flex-1">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider">
             TJM minimum pour &eacute;galer ton CDI
           </div>
           <div className="text-lg font-bold text-foreground">
@@ -599,7 +599,7 @@ export default function TransitionPage() {
               <h3 className="text-base font-bold text-foreground mb-0.5">
                 {r.label}
               </h3>
-              <p className="text-xs text-muted-foreground/60 mb-4">
+              <p className="text-xs text-muted-foreground/80 mb-4">
                 {BUSINESS_STATUS_CONFIG[r.status].regime}
               </p>
 
@@ -607,7 +607,7 @@ export default function TransitionPage() {
               <div className="mb-4">
                 <div className="text-2xl font-bold" style={{ color: r.color }}>
                   {fmt(r.requiredTJM)} &euro;
-                  <span className="text-sm font-normal text-muted-foreground/60">
+                  <span className="text-sm font-normal text-muted-foreground/80">
                     /jour
                   </span>
                 </div>
@@ -643,7 +643,7 @@ export default function TransitionPage() {
       <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">
               Explorateur TJM
             </div>
             <div className="text-3xl font-bold fn-gradient-text">
@@ -651,7 +651,7 @@ export default function TransitionPage() {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xs text-muted-foreground/60">CA annuel</div>
+            <div className="text-xs text-muted-foreground/80">CA annuel</div>
             <div className="text-lg font-bold text-foreground">
               {fmt(effectiveExplorerTJM * workedDaysPerYear)} &euro;
             </div>
@@ -666,7 +666,7 @@ export default function TransitionPage() {
           onChange={(e) => setExplorerTJM(Number(e.target.value))}
           className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
         />
-        <div className="flex justify-between text-xs text-muted-foreground/60 mt-2 mb-6">
+        <div className="flex justify-between text-xs text-muted-foreground/80 mt-2 mb-6">
           <span>200 &euro;</span>
           <span>850 &euro;</span>
           <span>1 500 &euro;</span>
@@ -755,7 +755,7 @@ export default function TransitionPage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="text-center text-xs text-muted-foreground/60 pb-8">
+      <div className="text-center text-xs text-muted-foreground/80 pb-8">
         Simulation indicative. Les charges salariales (~23%) et avantages sont
         estim&eacute;s. Consulte un expert-comptable pour un conseil
         personnalis&eacute;.

@@ -132,7 +132,7 @@ export default function AcrePage() {
       <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Chiffre d&apos;affaires annuel</div>
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Chiffre d&apos;affaires annuel</div>
             <div className="text-3xl font-bold text-foreground">{fmt(annualCA)} &euro;</div>
           </div>
           {caOverride !== null && (
@@ -150,7 +150,7 @@ export default function AcrePage() {
           onChange={(e) => setCaOverride(Number(e.target.value))}
           className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
         />
-        <div className="flex justify-between text-xs text-muted-foreground/60 mt-2">
+        <div className="flex justify-between text-xs text-muted-foreground/80 mt-2">
           <span>10 000 &euro;</span>
           <span>{fmt(Math.round(sliderMax / 2))} &euro;</span>
           <span>{fmt(sliderMax)} &euro;</span>
@@ -159,7 +159,7 @@ export default function AcrePage() {
 
       {/* Remuneration type */}
       <div className="bg-card rounded-2xl border border-border p-6">
-        <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
+        <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-3">
           Mode de r&eacute;mun&eacute;ration (SASU IR / EURL IS / SASU IS)
         </div>
         <div className="flex gap-2 mb-4">
@@ -197,7 +197,7 @@ export default function AcrePage() {
               onChange={(e) => setLocalMixte(Number(e.target.value))}
               className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
             />
-            <div className="flex justify-between text-xs text-muted-foreground/60 mt-1">
+            <div className="flex justify-between text-xs text-muted-foreground/80 mt-1">
               <span>100% Dividendes</span>
               <span>100% Salaire</span>
             </div>
@@ -211,7 +211,7 @@ export default function AcrePage() {
           <Shield className="size-6 text-[#06b6d4]" />
         </div>
         <div className="flex-1">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider">
             &Eacute;conomie ACRE max sur 12 mois
           </div>
           <div className="text-2xl font-bold text-[#4ade80]">
@@ -246,18 +246,18 @@ export default function AcrePage() {
 
               <div className="mb-4">
                 <h3 className="text-base font-bold text-foreground">{r.label}</h3>
-                <p className="text-xs text-muted-foreground/60 mt-0.5">{r.regime}</p>
+                <p className="text-xs text-muted-foreground/80 mt-0.5">{r.regime}</p>
               </div>
 
               {/* URSSAF rate before/after */}
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 text-center p-3 rounded-xl bg-muted/40 border border-border">
-                  <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-1">Sans ACRE</div>
+                  <div className="text-[10px] text-muted-foreground/80 uppercase tracking-wider mb-1">Sans ACRE</div>
                   <div className="text-lg font-bold text-[#f87171]">{Math.round(r.urssafNormal * 100)}%</div>
                 </div>
                 <TrendingUp className="size-5 text-[#4ade80] shrink-0" />
                 <div className="flex-1 text-center p-3 rounded-xl bg-[#4ade80]/5 border border-[#4ade80]/15">
-                  <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-1">Avec ACRE</div>
+                  <div className="text-[10px] text-muted-foreground/80 uppercase tracking-wider mb-1">Avec ACRE</div>
                   <div className="text-lg font-bold text-[#4ade80]">{Math.round(r.urssafAcre * 100)}%</div>
                 </div>
               </div>
@@ -276,7 +276,7 @@ export default function AcrePage() {
 
               {/* Savings */}
               <div className="p-3 rounded-xl bg-[#4ade80]/5 border border-[#4ade80]/15 text-center">
-                <div className="text-xs text-muted-foreground/60 mb-0.5">&Eacute;conomie ACRE / an</div>
+                <div className="text-xs text-muted-foreground/80 mb-0.5">&Eacute;conomie ACRE / an</div>
                 <div className="text-xl font-bold text-[#4ade80]">+{fmt(r.economieAnnuelle)} &euro;</div>
                 <div className="text-xs text-muted-foreground">soit +{fmt(r.economieMensuelle)} &euro;/mois</div>
               </div>
@@ -297,25 +297,25 @@ export default function AcrePage() {
               key={q}
               className="text-center p-4 rounded-xl bg-[#4ade80]/5 border border-[#4ade80]/15"
             >
-              <div className="text-xs text-muted-foreground/60 mb-1">Trimestre {q}</div>
+              <div className="text-xs text-muted-foreground/80 mb-1">Trimestre {q}</div>
               <div className="text-sm font-bold text-[#4ade80]">-50%</div>
               <div className="text-[10px] text-muted-foreground mt-1">charges r&eacute;duites</div>
             </div>
           ))}
           <div className="text-center p-4 rounded-xl bg-muted/40 border border-border">
-            <div className="text-xs text-muted-foreground/60 mb-1">Trimestre 5+</div>
+            <div className="text-xs text-muted-foreground/80 mb-1">Trimestre 5+</div>
             <div className="text-sm font-bold text-muted-foreground">Taux normal</div>
-            <div className="text-[10px] text-muted-foreground/60 mt-1">fin ACRE</div>
+            <div className="text-[10px] text-muted-foreground/80 mt-1">fin ACRE</div>
           </div>
         </div>
-        <p className="text-xs text-muted-foreground/60 mt-4">
+        <p className="text-xs text-muted-foreground/80 mt-4">
           L&apos;ACRE s&apos;applique pendant les 4 premiers trimestres civils suivant la cr&eacute;ation de l&apos;entreprise.
           La r&eacute;duction est automatique pour les cr&eacute;ateurs &eacute;ligibles (demandeurs d&apos;emploi, b&eacute;n&eacute;ficiaires RSA, &lt;25 ans, etc.).
         </p>
       </div>
 
       {/* Disclaimer */}
-      <div className="text-center text-xs text-muted-foreground/60 pb-8">
+      <div className="text-center text-xs text-muted-foreground/80 pb-8">
         Simulation indicative. L&apos;ACRE r&eacute;duit de 50% les cotisations sociales (URSSAF) pendant 4 trimestres.
         Pour la SASU, seule la part patronale est r&eacute;duite. Consulte un expert-comptable pour un conseil personnalis&eacute;.
       </div>

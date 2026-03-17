@@ -263,7 +263,7 @@ export default function ComparateurPage() {
         <div className="bg-card rounded-2xl border border-border p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Chiffre d&apos;affaires annuel</div>
+              <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Chiffre d&apos;affaires annuel</div>
               <div className="text-3xl font-bold text-foreground">{fmt(annualCA)} &euro;</div>
             </div>
             {caOverride !== null && (
@@ -284,7 +284,7 @@ export default function ComparateurPage() {
             onChange={(e) => setCaOverride(Number(e.target.value))}
             className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
           />
-          <div className="flex justify-between text-xs text-muted-foreground/60 mt-2">
+          <div className="flex justify-between text-xs text-muted-foreground/80 mt-2">
             <span>10 000 &euro;</span>
             <span>{fmt(Math.round(sliderMax / 2))} &euro;</span>
             <span>{fmt(sliderMax)} &euro;</span>
@@ -293,7 +293,7 @@ export default function ComparateurPage() {
 
         {/* Remuneration type selector (for IS statuts) */}
         <div className="bg-card rounded-2xl border border-border p-6">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-3">
             Mode de rémunération (SASU IR / EURL IS / SASU IS)
           </div>
           <div className="flex gap-2 mb-4">
@@ -331,7 +331,7 @@ export default function ComparateurPage() {
                 onChange={(e) => setLocalMixte(Number(e.target.value))}
                 className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
               />
-              <div className="flex justify-between text-xs text-muted-foreground/60 mt-1">
+              <div className="flex justify-between text-xs text-muted-foreground/80 mt-1">
                 <span>100% Dividendes</span>
                 <span>100% Salaire</span>
               </div>
@@ -348,7 +348,7 @@ export default function ComparateurPage() {
             <TrendingUp className="size-6" style={{ color: best.color }} />
           </div>
           <div>
-            <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">Meilleur statut pour toi</div>
+            <div className="text-xs text-muted-foreground/80 uppercase tracking-wider">Meilleur statut pour toi</div>
             <div className="text-lg font-bold text-foreground">{best.label}</div>
             <div className="text-sm text-muted-foreground">
               {fmt(best.netMonthly)} &euro;/mois net &middot; Taux effectif {Math.round(best.tauxEffectif * 100)}%
@@ -410,7 +410,7 @@ export default function ComparateurPage() {
                 {/* Status name */}
                 <div className="mb-4">
                   <h3 className="text-base font-bold text-foreground">{r.label}</h3>
-                  <p className="text-xs text-muted-foreground/60 mt-0.5">
+                  <p className="text-xs text-muted-foreground/80 mt-0.5">
                     {BUSINESS_STATUS_CONFIG[r.status].regime}
                   </p>
                 </div>
@@ -419,7 +419,7 @@ export default function ComparateurPage() {
                 <div className="mb-4">
                   <div className="text-2xl font-bold" style={{ color: r.color }}>
                     {fmt(r.netMonthly)} &euro;
-                    <span className="text-sm font-normal text-muted-foreground/60">/mois</span>
+                    <span className="text-sm font-normal text-muted-foreground/80">/mois</span>
                   </div>
                   {!isBest && delta < 0 && (
                     <div className="text-xs text-[#f87171] mt-0.5">
@@ -461,7 +461,7 @@ export default function ComparateurPage() {
                     <div className="text-right">
                       <span className="font-bold text-foreground">{Math.round(r.tauxEffectif * 100)}%</span>
                       {annualCA > 0 && (
-                        <div className="text-[10px] text-muted-foreground/60 mt-0.5">
+                        <div className="text-[10px] text-muted-foreground/80 mt-0.5">
                           {Math.round((r.chargesSociales / annualCA) * 100)}% social + {Math.round((r.impots / annualCA) * 100)}% fiscal
                         </div>
                       )}
@@ -529,7 +529,7 @@ export default function ComparateurPage() {
         )}
 
         {/* Disclaimer */}
-        <div className="text-center text-xs text-muted-foreground/60 pb-8">
+        <div className="text-center text-xs text-muted-foreground/80 pb-8">
           Simulation indicative basée sur des taux moyens. Consulte un expert-comptable pour un conseil personnalisé.
         </div>
       </div>

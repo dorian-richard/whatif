@@ -477,7 +477,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
         {/* Émetteur */}
         <div className="bg-muted/30 rounded-xl border border-border p-3 space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">Émetteur</span>
+            <span className="text-[10px] font-medium text-muted-foreground/80 uppercase tracking-wider">Émetteur</span>
             {onIssuerChange && !isLocked && (
               <button
                 onClick={() => setShowIssuerEdit(!showIssuerEdit)}
@@ -489,7 +489,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
           </div>
           {!showIssuerEdit ? (
             <>
-              <p className="text-sm font-medium text-foreground">{issuerSnapshot.companyName || <span className="text-muted-foreground/40 italic">Nom entreprise non renseigné</span>}</p>
+              <p className="text-sm font-medium text-foreground">{issuerSnapshot.companyName || <span className="text-muted-foreground/80 italic">Nom entreprise non renseigné</span>}</p>
               {issuerSnapshot.siret && <p className="text-xs text-muted-foreground">SIRET : {issuerSnapshot.siret}</p>}
               {issuerSnapshot.tvaNumber && <p className="text-xs text-muted-foreground">TVA : {issuerSnapshot.tvaNumber}</p>}
               {(issuerSnapshot.address || issuerSnapshot.zip || issuerSnapshot.city) && (
@@ -520,7 +520,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
 
         {/* Destinataire */}
         <div className="bg-muted/30 rounded-xl border border-border p-3 space-y-1.5">
-          <span className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">Destinataire</span>
+          <span className="text-[10px] font-medium text-muted-foreground/80 uppercase tracking-wider">Destinataire</span>
 
           {/* Client selector */}
           <div className="flex gap-2">
@@ -555,7 +555,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
           {showNewClient && onAddClient && (
             <div className="space-y-2 pt-1">
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/80" />
                 <input
                   value={siretQuery}
                   onChange={(e) => handleSiretSearch(e.target.value)}
@@ -576,7 +576,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
                       className="w-full text-left px-2.5 py-2 rounded-lg hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <Building2 className="size-3.5 text-muted-foreground/40 shrink-0" />
+                        <Building2 className="size-3.5 text-muted-foreground/80 shrink-0" />
                         <div className="min-w-0">
                           <p className="text-xs font-medium text-foreground truncate">{r.companyName}</p>
                           <p className="text-[10px] text-muted-foreground">SIRET {r.siret} · {r.zip} {r.city}</p>
@@ -587,7 +587,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
                 </div>
               )}
               {siretQuery.length >= 3 && !siretLoading && siretResults.length === 0 && (
-                <p className="text-[11px] text-muted-foreground/60 px-1">Aucun résultat trouvé.</p>
+                <p className="text-[11px] text-muted-foreground/80 px-1">Aucun résultat trouvé.</p>
               )}
             </div>
           )}
@@ -649,7 +649,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
         <label className="text-xs text-muted-foreground/70 mb-2 block">Prestations & produits</label>
         <div className="space-y-2">
           {/* Header - desktop */}
-          <div className="hidden sm:grid grid-cols-[100px_1fr_70px_90px_90px_32px] gap-2 text-[10px] text-muted-foreground/60 uppercase tracking-wider px-1">
+          <div className="hidden sm:grid grid-cols-[100px_1fr_70px_90px_90px_32px] gap-2 text-[10px] text-muted-foreground/80 uppercase tracking-wider px-1">
             <span>Type</span>
             <span>Description</span>
             <span className="text-right">Qté</span>
@@ -696,7 +696,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
                 {fmt(item.quantity * item.unitPrice)}&nbsp;&euro;
               </div>
               {items.length > 1 && (
-                <button onClick={() => removeItem(item.id)} className="text-muted-foreground/40 hover:text-red-400 transition-colors justify-self-center">
+                <button onClick={() => removeItem(item.id)} className="text-muted-foreground/80 hover:text-red-400 transition-colors justify-self-center">
                   <X className="size-4" />
                 </button>
               )}
@@ -805,7 +805,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
         {defaultNotes && !notes && (
           <button
             onClick={() => setNotes(defaultNotes)}
-            className="text-[10px] text-muted-foreground/60 hover:text-foreground transition-colors"
+            className="text-[10px] text-muted-foreground/80 hover:text-foreground transition-colors"
           >
             Utiliser les conditions par d&eacute;faut sauvegard&eacute;es
           </button>
@@ -944,7 +944,7 @@ function PDFCustomization({ options, onChange }: { options: Partial<PDFOptions>;
         <div className="bg-muted/30 rounded-xl border border-border p-4 space-y-4">
           {/* Accent color */}
           <div>
-            <label className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-2 block">Couleur d&apos;accent</label>
+            <label className="text-[10px] text-muted-foreground/80 uppercase tracking-wider mb-2 block">Couleur d&apos;accent</label>
             <div className="flex items-center gap-2">
               {ACCENT_PRESETS.map((preset) => (
                 <button
@@ -968,7 +968,7 @@ function PDFCustomization({ options, onChange }: { options: Partial<PDFOptions>;
                   className="absolute inset-0 opacity-0 cursor-pointer size-7"
                 />
                 <div
-                  className="size-7 rounded-full border-2 border-dashed border-border flex items-center justify-center text-muted-foreground/40 text-[10px] cursor-pointer hover:border-foreground/40 transition-colors"
+                  className="size-7 rounded-full border-2 border-dashed border-border flex items-center justify-center text-muted-foreground/80 text-[10px] cursor-pointer hover:border-foreground/40 transition-colors"
                 >
                   +
                 </div>
@@ -978,7 +978,7 @@ function PDFCustomization({ options, onChange }: { options: Partial<PDFOptions>;
 
           {/* Font size */}
           <div>
-            <label className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-2 block">Taille du texte</label>
+            <label className="text-[10px] text-muted-foreground/80 uppercase tracking-wider mb-2 block">Taille du texte</label>
             <div className="flex gap-2">
               {FONT_SIZE_OPTIONS.map((opt) => (
                 <button
@@ -999,7 +999,7 @@ function PDFCustomization({ options, onChange }: { options: Partial<PDFOptions>;
 
           {/* Show/hide toggles */}
           <div>
-            <label className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-2 block">Afficher sur le PDF</label>
+            <label className="text-[10px] text-muted-foreground/80 uppercase tracking-wider mb-2 block">Afficher sur le PDF</label>
             <div className="flex flex-wrap gap-3">
               <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
                 <input
@@ -1024,12 +1024,12 @@ function PDFCustomization({ options, onChange }: { options: Partial<PDFOptions>;
 
           {/* Custom footer */}
           <div>
-            <label className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-1.5 block">Pied de page personnalis&eacute;</label>
+            <label className="text-[10px] text-muted-foreground/80 uppercase tracking-wider mb-1.5 block">Pied de page personnalis&eacute;</label>
             <input
               value={options.customFooter ?? ""}
               onChange={(e) => onChange({ customFooter: e.target.value })}
               placeholder="Ex: Membre d'une association de gestion agréée..."
-              className="w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40 placeholder:text-muted-foreground/40"
+              className="w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40 placeholder:text-muted-foreground/80"
             />
           </div>
         </div>

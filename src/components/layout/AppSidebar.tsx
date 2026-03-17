@@ -168,7 +168,7 @@ export function AppSidebar() {
             <div key={si} className={si > 0 ? "mt-1" : ""}>
               {section.label && (
                 <div className="pt-3 pb-1 px-3">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">{section.label}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">{section.label}</span>
                 </div>
               )}
               <div className="space-y-0.5">
@@ -214,7 +214,7 @@ export function AppSidebar() {
         {/* Bottom */}
         <div className="px-3 py-4 border-t border-border space-y-2">
           <div className={cn("px-3 py-2 rounded-xl border", isPro ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-border")}>
-            <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">Plan</div>
+            <div className="text-[11px] text-muted-foreground/80 uppercase tracking-wider mb-0.5">Plan</div>
             <div className={cn("text-sm font-semibold", isPro ? "text-primary" : "text-foreground")}>
               {trialDays > 0 && subscriptionStatus === "FREE"
                 ? `Essai Pro — ${trialDays}j`
@@ -277,7 +277,7 @@ export function AppSidebar() {
             <div key={si} className={si > 0 ? "mt-2" : ""}>
               {section.label && (
                 <div className="px-1 pb-1.5 pt-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">{section.label}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">{section.label}</span>
                 </div>
               )}
               <div className="grid grid-cols-4 gap-2">
@@ -349,7 +349,7 @@ export function AppSidebar() {
               prefetch={true}
               className={cn(
                 "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors",
-                isActive ? "text-primary" : "text-muted-foreground/60"
+                isActive ? "text-primary" : "text-muted-foreground/80"
               )}
             >
               <item.icon className="size-5" />
@@ -362,7 +362,7 @@ export function AppSidebar() {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className={cn(
             "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors",
-            mobileMenuOpen ? "text-primary" : "text-muted-foreground/60"
+            mobileMenuOpen ? "text-primary" : "text-muted-foreground/80"
           )}
         >
           <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

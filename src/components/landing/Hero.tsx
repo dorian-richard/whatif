@@ -43,7 +43,7 @@ export function Hero() {
               Voir la simulation
             </a>
           </div>
-          <p className="text-sm text-muted-foreground/60 mb-12">
+          <p className="text-sm text-muted-foreground/80 mb-12">
             7 jours d&apos;essai Pro gratuit &middot; Sans carte bancaire &middot; Annulation libre
           </p>
         </AnimateOnScroll>
@@ -83,7 +83,7 @@ function DashboardMockup() {
           { label: "Récurrent", value: "78%", color: "#a78bfa" },
         ].map((kpi) => (
           <div key={kpi.label} className="bg-muted/30 rounded-xl p-3 border border-border">
-            <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-1">{kpi.label}</div>
+            <div className="text-[10px] text-muted-foreground/80 uppercase tracking-wider mb-1">{kpi.label}</div>
             <div className="text-lg font-bold text-foreground">{kpi.value}</div>
             <div className="w-full h-1 bg-muted/30 rounded-full mt-2">
               <div className="h-full rounded-full" style={{ width: "65%", backgroundColor: kpi.color }} />

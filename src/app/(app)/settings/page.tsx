@@ -61,7 +61,7 @@ export default function SettingsPage() {
       <div className="bg-card rounded-2xl border border-border p-6">
         <div className="mb-5">
           <h2 className="text-sm font-bold text-foreground">Statut juridique</h2>
-          <p className="text-[11px] text-muted-foreground/60 mt-1">Détermine les taux de cotisations sociales, d&apos;IR et d&apos;IS appliqués à tes revenus.</p>
+          <p className="text-[11px] text-muted-foreground/80 mt-1">Détermine les taux de cotisations sociales, d&apos;IR et d&apos;IS appliqués à tes revenus.</p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -83,7 +83,7 @@ export default function SettingsPage() {
                 )}>
                   {config.label}
                 </div>
-                <div className="text-[10px] text-muted-foreground/60 mt-0.5 leading-relaxed">{config.desc}</div>
+                <div className="text-[10px] text-muted-foreground/80 mt-0.5 leading-relaxed">{config.desc}</div>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   <span className="text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-medium">
                     {config.regime}
@@ -113,24 +113,24 @@ export default function SettingsPage() {
           <div className="grid grid-cols-3 gap-3 mb-3">
             <div className="text-center p-2 bg-muted/20 rounded-lg">
               <div className="text-lg font-bold text-primary">{(currentConfig.urssaf * 100).toFixed(1).replace(/\.0$/, "")}%</div>
-              <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium">
+              <div className="text-[9px] text-muted-foreground/80 uppercase tracking-wider font-medium">
                 {profile.businessStatus === "sasu_ir" ? "Prélèvements sociaux" : "Cotisations"}
               </div>
-              <div className="text-[9px] text-muted-foreground/60">
+              <div className="text-[9px] text-muted-foreground/80">
                 {currentConfig.is > 0 ? "sur rémunération" : profile.businessStatus === "micro" ? "sur le CA" : profile.businessStatus === "sasu_ir" ? "CSG/CRDS sur résultat" : "sur bénéfice"}
               </div>
             </div>
             <div className="text-center p-2 bg-muted/20 rounded-lg">
               <div className="text-lg font-bold text-[#F4BE7E]">{(currentConfig.ir * 100).toFixed(1)}%</div>
-              <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium">IR estimé</div>
-              <div className="text-[9px] text-muted-foreground/60">
+              <div className="text-[9px] text-muted-foreground/80 uppercase tracking-wider font-medium">IR estimé</div>
+              <div className="text-[9px] text-muted-foreground/80">
                 {profile.businessStatus === "micro" ? "après abattement 34%" : "barème progressif"}
               </div>
             </div>
             <div className="text-center p-2 bg-muted/20 rounded-lg">
               <div className="text-lg font-bold text-[#a78bfa]">{currentConfig.is > 0 ? `${(currentConfig.is * 100).toFixed(0)}%` : "\u2014"}</div>
-              <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium">IS</div>
-              <div className="text-[9px] text-muted-foreground/60">
+              <div className="text-[9px] text-muted-foreground/80 uppercase tracking-wider font-medium">IS</div>
+              <div className="text-[9px] text-muted-foreground/80">
                 {currentConfig.is > 0 ? "15% \u2264 42 500\u20AC, 25% après" : "Non applicable"}
               </div>
             </div>
@@ -184,7 +184,7 @@ export default function SettingsPage() {
               {profile.customIrRate != null && (
                 <button
                   onClick={() => profile.setProfile({ customIrRate: undefined })}
-                  className="text-[10px] text-muted-foreground/60 hover:text-red-400 transition-colors"
+                  className="text-[10px] text-muted-foreground/80 hover:text-red-400 transition-colors"
                 >
                   Réinitialiser
                 </button>
@@ -202,8 +202,8 @@ export default function SettingsPage() {
             step={0.5}
           />
           <div className="flex items-start gap-1.5 mt-2">
-            <Info className="size-3 text-muted-foreground/60 shrink-0 mt-0.5" />
-            <p className="text-[10px] text-muted-foreground/60">
+            <Info className="size-3 text-muted-foreground/80 shrink-0 mt-0.5" />
+            <p className="text-[10px] text-muted-foreground/80">
               Défaut : {(currentConfig.ir * 100).toFixed(1)}% pour {currentConfig.label}. Ajustez selon votre tranche marginale réelle (11%, 30%, 41% ou 45%).
             </p>
           </div>
@@ -440,7 +440,7 @@ export default function SettingsPage() {
                 const val = vacDays[i] ?? 0;
                 return (
                   <div key={i} className="flex flex-col items-center gap-1">
-                    <span className="text-[10px] text-muted-foreground/60 font-medium">{m}</span>
+                    <span className="text-[10px] text-muted-foreground/80 font-medium">{m}</span>
                     <input
                       type="number"
                       min={0}
@@ -454,7 +454,7 @@ export default function SettingsPage() {
                       }}
                       className={cn(
                         "w-full text-center text-sm font-semibold py-1.5 rounded-lg border bg-muted/15 focus:outline-none focus:ring-1 focus:ring-[#fbbf24]/40 transition-colors",
-                        val > 0 ? "border-[#fbbf24]/30 text-[#fbbf24]" : "border-border text-muted-foreground/60"
+                        val > 0 ? "border-[#fbbf24]/30 text-[#fbbf24]" : "border-border text-muted-foreground/80"
                       )}
                     />
                   </div>
@@ -526,7 +526,7 @@ export default function SettingsPage() {
       {/* Invoice settings */}
       <div className="bg-card rounded-2xl border border-border p-6">
         <h2 className="text-sm font-bold text-foreground mb-1">Informations de facturation</h2>
-        <p className="text-[11px] text-muted-foreground/60 mb-5">Apparaissent sur tes devis et factures g&eacute;n&eacute;r&eacute;s en PDF.</p>
+        <p className="text-[11px] text-muted-foreground/80 mb-5">Apparaissent sur tes devis et factures g&eacute;n&eacute;r&eacute;s en PDF.</p>
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <InvoiceField label="Nom de l'entreprise" value={profile.companyName ?? ""} onChange={(v) => profile.setProfile({ companyName: v || undefined })} />
@@ -743,7 +743,7 @@ function InvoiceField({ label, value, onChange, placeholder, className }: {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-3 py-2 bg-muted/25 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
+        className="w-full px-3 py-2 bg-muted/25 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/80 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40"
       />
     </div>
   );

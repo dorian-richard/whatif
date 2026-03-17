@@ -126,7 +126,7 @@ export function Demo() {
                       }}
                     />
                   </div>
-                  <span className="text-[10px] text-muted-foreground/60">{month}</span>
+                  <span className="text-[10px] text-muted-foreground/80">{month}</span>
                 </div>
               );
             })}
@@ -135,15 +135,15 @@ export function Demo() {
           {/* Summary */}
           <div className="mt-6 pt-4 border-t border-border grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">CA actuel</div>
+              <div className="text-[11px] text-muted-foreground/80 uppercase tracking-wider">CA actuel</div>
               <div className="text-lg font-bold text-foreground mt-1">{fmt(beforeTotal)}&euro;</div>
             </div>
             <div>
-              <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">CA simulé</div>
+              <div className="text-[11px] text-muted-foreground/80 uppercase tracking-wider">CA simulé</div>
               <div className="text-lg font-bold text-foreground mt-1">{fmt(afterTotal)}&euro;</div>
             </div>
             <div>
-              <div className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">Impact</div>
+              <div className="text-[11px] text-muted-foreground/80 uppercase tracking-wider">Impact</div>
               <div className={`text-lg font-bold mt-1 ${diff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}`}>
                 {diff >= 0 ? "+" : ""}{fmt(diff)}&euro;
               </div>

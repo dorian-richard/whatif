@@ -400,7 +400,7 @@ export default function AssistantPage() {
                     onKeyDown={handleKeyDown}
                     placeholder="Demande a Facto..."
                     rows={1}
-                    className="flex-1 resize-none px-4 py-3 bg-muted/40 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40 max-h-32"
+                    className="flex-1 resize-none px-4 py-3 bg-muted/40 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40 max-h-32"
                   />
                   <button
                     onClick={() => handleSend()}
@@ -409,7 +409,7 @@ export default function AssistantPage() {
                       "size-11 rounded-xl flex items-center justify-center transition-all shrink-0",
                       input.trim() && !streaming
                         ? "bg-gradient-to-br from-[#5682F2] to-[#7C5BF2] text-white hover:opacity-90"
-                        : "bg-muted/50 text-muted-foreground/40"
+                        : "bg-muted/50 text-muted-foreground/80"
                     )}
                   >
                     <Send className="size-4" />

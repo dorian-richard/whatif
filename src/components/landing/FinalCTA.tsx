@@ -29,7 +29,7 @@ export function FinalCTA() {
             Essai gratuit 7 jours &rarr;
           </Link>
         </div>
-        <p className="text-sm text-muted-foreground/60">
+        <p className="text-sm text-muted-foreground/80">
           Sans carte bancaire &middot; Toutes les fonctionnalités Pro
         </p>
       </div>
@@ -42,11 +42,11 @@ export function FinalCTA() {
             <img src="/logo.webp" alt="Freelens" className="h-6 w-auto opacity-70 hidden dark:block" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-light.webp" alt="Freelens" className="h-6 w-auto opacity-70 block dark:hidden" />
-            <span className="text-sm text-muted-foreground/60">
+            <span className="text-sm text-muted-foreground/80">
               Freelens &mdash; Le copilote financier des freelances
             </span>
           </div>
-          <div className="flex gap-6 text-sm text-muted-foreground/60">
+          <div className="flex gap-6 text-sm text-muted-foreground/80">
             <Link href="/cgu" className="hover:text-foreground transition-colors">CGU</Link>
             <Link href="/cgv" className="hover:text-foreground transition-colors">CGV</Link>
             <Link href="/mentions-legales" className="hover:text-foreground transition-colors">Mentions l&eacute;gales</Link>

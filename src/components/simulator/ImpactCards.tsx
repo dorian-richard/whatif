@@ -62,11 +62,11 @@ function ImpactCard({ label, before, after, unit, icon, reverse, highlight }: Im
       <div className="space-y-1">
         <div className="text-2xl font-bold text-foreground tracking-tight">
           {fmt(after)}
-          <span className="text-sm font-normal text-muted-foreground/60 ml-0.5">{unit}</span>
+          <span className="text-sm font-normal text-muted-foreground/80 ml-0.5">{unit}</span>
         </div>
         {!isNeutral && (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground/60 line-through">
+            <span className="text-xs text-muted-foreground/80 line-through">
               {fmt(before)}{unit}
             </span>
             <span className={cn(

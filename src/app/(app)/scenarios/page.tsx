@@ -252,7 +252,7 @@ export default function ScenariosPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-bold text-foreground">Mes scénarios</h1>
-          <p className="text-xs text-muted-foreground/60">
+          <p className="text-xs text-muted-foreground/80">
             {scenarios.length} scénario{scenarios.length !== 1 ? "s" : ""} sauvegardé{scenarios.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -285,7 +285,7 @@ export default function ScenariosPage() {
 
         {(["croissance", "equilibre", "risque"] as ScenarioCategory[]).map((cat) => (
           <div key={cat} className="mb-3 last:mb-0">
-            <div className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1.5">
+            <div className="text-[10px] font-semibold text-muted-foreground/80 uppercase tracking-wider mb-1.5">
               {SCENARIO_CATEGORIES[cat]}
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -315,7 +315,7 @@ export default function ScenariosPage() {
                         "px-1.5 py-1.5 rounded-r-full text-xs transition-all duration-150 border border-l-0",
                         isActive
                           ? "bg-gradient-to-r from-[#7C5BF2] to-[#7C5BF2] border-transparent text-white/70 hover:text-white"
-                          : "border-border bg-muted/40 text-muted-foreground/60 hover:text-muted-foreground hover:bg-muted"
+                          : "border-border bg-muted/40 text-muted-foreground/80 hover:text-muted-foreground hover:bg-muted"
                       )}
                     >
                       <Plus className="size-3" />
@@ -331,13 +331,13 @@ export default function ScenariosPage() {
       {/* Search bar (if many scenarios) */}
       {scenarios.length > 3 && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/60" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/80" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher un scénario..."
-            className="w-full pl-10 pr-4 py-2.5 bg-card border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full pl-10 pr-4 py-2.5 bg-card border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/80 focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
         </div>
       )}
@@ -351,7 +351,7 @@ export default function ScenariosPage() {
             </div>
           </div>
           <h2 className="text-lg font-bold text-foreground mb-2">Aucun scénario sauvegardé</h2>
-          <p className="text-sm text-muted-foreground/60 mb-6 max-w-xs mx-auto">
+          <p className="text-sm text-muted-foreground/80 mb-6 max-w-xs mx-auto">
             Crée un scénario personnalisé ou sauvegarde la config actuelle du simulateur.
           </p>
           <div className="flex gap-3 justify-center">
@@ -389,7 +389,7 @@ export default function ScenariosPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-foreground truncate">{s.name}</h3>
-                      <span className="text-[10px] text-muted-foreground/60 shrink-0">
+                      <span className="text-[10px] text-muted-foreground/80 shrink-0">
                         {new Date(s.savedAt).toLocaleDateString("fr-FR")}
                       </span>
                     </div>
@@ -414,15 +414,15 @@ export default function ScenariosPage() {
                     {/* Impact metrics */}
                     <div className="flex items-center gap-4">
                       <div>
-                        <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">CA annuel</div>
+                        <div className="text-[9px] text-muted-foreground/80 uppercase tracking-wider">CA annuel</div>
                         <div className="text-sm font-bold text-foreground">{fmt(impact.annualCA)}&euro;</div>
                       </div>
                       <div>
-                        <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Net annuel</div>
+                        <div className="text-[9px] text-muted-foreground/80 uppercase tracking-wider">Net annuel</div>
                         <div className="text-sm font-bold text-foreground">{fmt(impact.annualNet)}&euro;</div>
                       </div>
                       <div>
-                        <div className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Impact CA</div>
+                        <div className="text-[9px] text-muted-foreground/80 uppercase tracking-wider">Impact CA</div>
                         <div
                           className={cn(
                             "text-sm font-bold",
@@ -452,7 +452,7 @@ export default function ScenariosPage() {
                     </button>
                     <button
                       onClick={() => deleteScenario(s.id)}
-                      className="px-3 py-1.5 text-muted-foreground/60 rounded-lg text-[11px] font-medium hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                      className="px-3 py-1.5 text-muted-foreground/80 rounded-lg text-[11px] font-medium hover:bg-red-500/10 hover:text-red-400 transition-colors"
                     >
                       Supprimer
                     </button>
@@ -469,7 +469,7 @@ export default function ScenariosPage() {
         <ModalWrapper title="Sauvegarder la simulation" onClose={closeModal}>
           {/* Current params preview */}
           <div className="bg-muted/40 rounded-xl border border-border p-4 mb-4">
-            <div className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-2">Paramètres actuels</div>
+            <div className="text-[10px] font-semibold text-muted-foreground/80 uppercase tracking-wider mb-2">Paramètres actuels</div>
             <div className="flex flex-wrap gap-1.5">
               {getParamTags(currentParams, profile.workDaysPerWeek).map((tag) => (
                 <span key={tag} className="text-[11px] px-2.5 py-1 rounded-full bg-primary/15 text-primary font-medium">
@@ -482,13 +482,13 @@ export default function ScenariosPage() {
               return (
                 <div className="flex gap-4 mt-3 pt-3 border-t border-border">
                   <div>
-                    <div className="text-[9px] text-muted-foreground/60 uppercase">Impact CA</div>
+                    <div className="text-[9px] text-muted-foreground/80 uppercase">Impact CA</div>
                     <div className={cn("text-sm font-bold", impact.annualDiff >= 0 ? "text-emerald-400" : "text-red-400")}>
                       {impact.annualDiff >= 0 ? "+" : ""}{fmt(impact.annualDiff)}&euro;/an
                     </div>
                   </div>
                   <div>
-                    <div className="text-[9px] text-muted-foreground/60 uppercase">Net annuel</div>
+                    <div className="text-[9px] text-muted-foreground/80 uppercase">Net annuel</div>
                     <div className="text-sm font-bold text-foreground">{fmt(impact.annualNet)}&euro;</div>
                   </div>
                 </div>
@@ -532,7 +532,7 @@ export default function ScenariosPage() {
 
           {/* Inline sliders */}
           <div className="mt-4 space-y-4 bg-muted/40 rounded-xl border border-border p-4">
-            <div className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1">Paramètres du scénario</div>
+            <div className="text-[10px] font-semibold text-muted-foreground/80 uppercase tracking-wider mb-1">Paramètres du scénario</div>
 
             <SliderRow
               label="Semaines de vacances"
@@ -583,7 +583,7 @@ export default function ScenariosPage() {
                     "text-xs font-medium px-3 py-1 rounded-full border transition-all",
                     createParams.lostClientIndex >= 0
                       ? "bg-red-500/15 text-red-400 border-red-500/30"
-                      : "bg-muted/40 text-muted-foreground/60 border-border hover:border-border"
+                      : "bg-muted/40 text-muted-foreground/80 border-border hover:border-border"
                   )}
                 >
                   {createParams.lostClientIndex >= 0 ? "Oui" : "Non"}
@@ -601,21 +601,21 @@ export default function ScenariosPage() {
 
           {/* Impact preview */}
           <div className="mt-4 p-4 bg-muted/40 rounded-xl border border-border">
-            <div className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-2">Impact estimé</div>
+            <div className="text-[10px] font-semibold text-muted-foreground/80 uppercase tracking-wider mb-2">Impact estimé</div>
             <div className="grid grid-cols-3 gap-3">
               <div className="text-center">
                 <div className="text-lg font-bold text-foreground">{fmt(createPreview.annualCA)}&euro;</div>
-                <div className="text-[9px] text-muted-foreground/60">CA annuel</div>
+                <div className="text-[9px] text-muted-foreground/80">CA annuel</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-bold text-foreground">{fmt(createPreview.annualNet)}&euro;</div>
-                <div className="text-[9px] text-muted-foreground/60">Net annuel</div>
+                <div className="text-[9px] text-muted-foreground/80">Net annuel</div>
               </div>
               <div className="text-center">
                 <div className={cn("text-lg font-bold", createPreview.annualDiff >= 0 ? "text-emerald-400" : "text-red-400")}>
                   {createPreview.annualDiff >= 0 ? "+" : ""}{fmt(createPreview.annualDiff)}&euro;
                 </div>
-                <div className="text-[9px] text-muted-foreground/60">Diff. CA</div>
+                <div className="text-[9px] text-muted-foreground/80">Diff. CA</div>
               </div>
             </div>
           </div>
@@ -686,7 +686,7 @@ function ModalWrapper({
       <div className="bg-card rounded-2xl border border-border p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-bold text-foreground">{title}</h2>
-          <button onClick={onClose} className="text-muted-foreground/60 hover:text-foreground transition-colors">
+          <button onClick={onClose} className="text-muted-foreground/80 hover:text-foreground transition-colors">
             <X className="size-5" />
           </button>
         </div>
@@ -725,7 +725,7 @@ function ScenarioForm({
                 "size-9 rounded-xl flex items-center justify-center transition-all",
                 icon === ic
                   ? "bg-primary/15 ring-2 ring-primary text-primary"
-                  : "bg-muted/40 hover:bg-muted text-muted-foreground/60"
+                  : "bg-muted/40 hover:bg-muted text-muted-foreground/80"
               )}
             >
               <Icon name={ic} className="size-4" />
@@ -740,7 +740,7 @@ function ScenarioForm({
           value={name}
           onChange={(e) => onNameChange(e.target.value)}
           placeholder="Ex: Vacances été + hausse tarifs"
-          className="w-full px-3 py-2 bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="w-full px-3 py-2 bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
       <div>
@@ -750,7 +750,7 @@ function ScenarioForm({
           value={desc}
           onChange={(e) => onDescChange(e.target.value)}
           placeholder="Ex: Impact de 3 semaines off + augmentation TJM"
-          className="w-full px-3 py-2 bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="w-full px-3 py-2 bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
     </div>

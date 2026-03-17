@@ -81,7 +81,7 @@ export default function SignupPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="ton@email.com"
-                    className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50"
+                    className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/80 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50"
                   />
                 </div>
                 {error && <p className="text-sm text-[#f87171]">{error}</p>}
@@ -92,7 +92,7 @@ export default function SignupPage() {
                 >
                   {loading ? "Envoi..." : "S'inscrire avec un magic link"}
                 </button>
-                <p className="text-xs text-muted-foreground/60 text-center">
+                <p className="text-xs text-muted-foreground/80 text-center">
                   En t&apos;inscrivant, tu acceptes nos <Link href="/cgu" className="text-primary hover:underline">CGU</Link>.
                 </p>
               </form>
@@ -100,7 +100,7 @@ export default function SignupPage() {
           )}
         </div>
 
-        <p className="text-center text-xs text-muted-foreground/60 mt-4">
+        <p className="text-center text-xs text-muted-foreground/80 mt-4">
           Déjà un compte ?{" "}
           <Link href="/login" className="text-primary hover:underline">Connexion</Link>
         </p>

@@ -257,9 +257,9 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
     <div className="bg-card rounded-2xl p-6 border border-border">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-bold text-foreground">Impact du scénario</h3>
-        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">{metrics.length} indicateurs</span>
+        <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">{metrics.length} indicateurs</span>
       </div>
-      <p className="text-[11px] text-muted-foreground/60 mb-5">
+      <p className="text-[11px] text-muted-foreground/80 mb-5">
         Comparaison avant / après votre scénario. Les badges indiquent la santé de chaque indicateur.
       </p>
 
@@ -312,7 +312,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
                         <div className="flex items-baseline gap-1.5">
                           <span className="text-lg font-bold text-foreground tracking-tight">
                             {Math.abs(m.after) > 999 ? fmt(m.after) : m.after}
-                            <span className="text-xs font-normal text-muted-foreground/60 ml-0.5">{m.unit}</span>
+                            <span className="text-xs font-normal text-muted-foreground/80 ml-0.5">{m.unit}</span>
                           </span>
                           {!isNeutral && (
                             <span className={cn(
@@ -326,13 +326,13 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
                           )}
                         </div>
                         {!isNeutral && (
-                          <p className="text-[10px] text-muted-foreground/60 mt-0.5">
+                          <p className="text-[10px] text-muted-foreground/80 mt-0.5">
                             Avant : {Math.abs(m.before) > 999 ? fmt(m.before) : m.before}{m.unit}
                           </p>
                         )}
                       </div>
                     </div>
-                    <p className="text-[10px] text-muted-foreground/60 mt-2 leading-relaxed">{m.explanation}</p>
+                    <p className="text-[10px] text-muted-foreground/80 mt-2 leading-relaxed">{m.explanation}</p>
                   </div>
                 );
               })}
@@ -341,7 +341,7 @@ export function EmotionalMetrics({ projection, profile, sim, clients }: Emotiona
         ))}
       </div>
 
-      <p className="text-[10px] text-muted-foreground/40 mt-5 leading-relaxed text-center">
+      <p className="text-[10px] text-muted-foreground/80 mt-5 leading-relaxed text-center">
         Estimations bas&eacute;es sur le bar&egrave;me IR 2026 et les taux URSSAF en vigueur. Consultez un expert-comptable pour une analyse personnalis&eacute;e.
       </p>
     </div>

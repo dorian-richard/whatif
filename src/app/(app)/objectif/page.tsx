@@ -248,7 +248,7 @@ export default function ObjectifPage() {
           >
             Net mensuel
           </button>
-          <ArrowLeftRight className="size-3.5 text-muted-foreground/40" />
+          <ArrowLeftRight className="size-3.5 text-muted-foreground/80" />
           <button
             onClick={() => setInputMode("ca")}
             className={cn(
@@ -266,7 +266,7 @@ export default function ObjectifPage() {
           <>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Mon objectif net mensuel</div>
+                <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Mon objectif net mensuel</div>
                 <div className="flex items-baseline gap-3">
                   <input
                     type="number"
@@ -277,11 +277,11 @@ export default function ObjectifPage() {
                     onChange={(e) => setTargetNet(Math.max(500, Number(e.target.value)))}
                     className="text-3xl font-bold fn-gradient-text bg-transparent border-none outline-none w-32 tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
-                  <span className="text-lg text-muted-foreground/60">&euro;/mois</span>
+                  <span className="text-lg text-muted-foreground/80">&euro;/mois</span>
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-xs text-muted-foreground/60">Soit par an</div>
+                <div className="text-xs text-muted-foreground/80">Soit par an</div>
                 <div className="text-lg font-bold text-foreground">{fmt(targetAnnualNet)} &euro;</div>
               </div>
             </div>
@@ -294,7 +294,7 @@ export default function ObjectifPage() {
               onChange={(e) => setTargetNet(Number(e.target.value))}
               className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
             />
-            <div className="flex justify-between text-xs text-muted-foreground/60 mt-2">
+            <div className="flex justify-between text-xs text-muted-foreground/80 mt-2">
               <span>1 500 &euro;</span>
               <span>12 500 &euro;</span>
               <span>25 000 &euro;</span>
@@ -304,7 +304,7 @@ export default function ObjectifPage() {
           <>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-1">Mon CA brut mensuel</div>
+                <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-1">Mon CA brut mensuel</div>
                 <div className="flex items-baseline gap-3">
                   <input
                     type="number"
@@ -315,11 +315,11 @@ export default function ObjectifPage() {
                     onChange={(e) => setTargetMonthlyCA(Math.max(1000, Number(e.target.value)))}
                     className="text-3xl font-bold fn-gradient-text bg-transparent border-none outline-none w-32 tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
-                  <span className="text-lg text-muted-foreground/60">&euro;/mois</span>
+                  <span className="text-lg text-muted-foreground/80">&euro;/mois</span>
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-xs text-muted-foreground/60">Soit par an</div>
+                <div className="text-xs text-muted-foreground/80">Soit par an</div>
                 <div className="text-lg font-bold text-foreground">{fmt(targetAnnualCA)} &euro;</div>
               </div>
             </div>
@@ -332,7 +332,7 @@ export default function ObjectifPage() {
               onChange={(e) => setTargetMonthlyCA(Number(e.target.value))}
               className="w-full accent-[#5682F2] h-2 bg-muted rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#5682F2] [&::-webkit-slider-thumb]:shadow-lg"
             />
-            <div className="flex justify-between text-xs text-muted-foreground/60 mt-2">
+            <div className="flex justify-between text-xs text-muted-foreground/80 mt-2">
               <span>2 000 &euro;</span>
               <span>20 000 &euro;</span>
               <span>40 000 &euro;</span>
@@ -345,7 +345,7 @@ export default function ObjectifPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Vacation weeks */}
         <div className="bg-card rounded-2xl border border-border p-6">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">Semaines de vacances</div>
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-3">Semaines de vacances</div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-2xl font-bold text-foreground">{effectiveVacationWeeks} sem.</span>
             <span className="text-sm text-muted-foreground">{workedDaysPerYear} jours travaillés/an</span>
@@ -363,7 +363,7 @@ export default function ObjectifPage() {
 
         {/* Remuneration type */}
         <div className="bg-card rounded-2xl border border-border p-6">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider mb-3">
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider mb-3">
             Rémunération (IS)
           </div>
           <div className="flex gap-2 mb-3">
@@ -415,7 +415,7 @@ export default function ObjectifPage() {
           <Target className="size-6" style={{ color: best.color }} />
         </div>
         <div className="flex-1">
-          <div className="text-xs text-muted-foreground/60 uppercase tracking-wider">Statut le plus avantageux</div>
+          <div className="text-xs text-muted-foreground/80 uppercase tracking-wider">Statut le plus avantageux</div>
           <div className="text-lg font-bold text-foreground">{best.label}</div>
           <div className="text-sm text-muted-foreground">
             {inputMode === "net" ? (
@@ -481,19 +481,19 @@ export default function ObjectifPage() {
 
               {/* Status name */}
               <h3 className="text-base font-bold text-foreground mb-1">{r.label}</h3>
-              <p className="text-xs text-muted-foreground/60 mb-4">{BUSINESS_STATUS_CONFIG[r.status].regime}</p>
+              <p className="text-xs text-muted-foreground/80 mb-4">{BUSINESS_STATUS_CONFIG[r.status].regime}</p>
 
               {/* Big number: TJM (net mode) or Net mensuel (CA mode) */}
               <div className="mb-4">
                 {inputMode === "net" ? (
                   <div className="text-2xl font-bold" style={{ color: r.color }}>
                     {fmt(r.requiredTJM)} &euro;
-                    <span className="text-sm font-normal text-muted-foreground/60">/jour</span>
+                    <span className="text-sm font-normal text-muted-foreground/80">/jour</span>
                   </div>
                 ) : (
                   <div className="text-2xl font-bold" style={{ color: r.color }}>
                     {fmt(r.netResult / 12)} &euro;
-                    <span className="text-sm font-normal text-muted-foreground/60">/mois net</span>
+                    <span className="text-sm font-normal text-muted-foreground/80">/mois net</span>
                   </div>
                 )}
               </div>
@@ -575,7 +575,7 @@ export default function ObjectifPage() {
       {/* Info: taux effectif explanation */}
       <div className="bg-card rounded-2xl border border-border p-5">
         <div className="flex items-center gap-3">
-          <Info className="size-5 text-muted-foreground/60 shrink-0" />
+          <Info className="size-5 text-muted-foreground/80 shrink-0" />
           <div className="text-sm text-muted-foreground">
             Le <strong className="text-foreground">taux effectif</strong> inclut les cotisations sociales (URSSAF)
             <strong> et </strong> l&apos;impôt sur le revenu/sociétés.
@@ -586,7 +586,7 @@ export default function ObjectifPage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="text-center text-xs text-muted-foreground/60 pb-8">
+      <div className="text-center text-xs text-muted-foreground/80 pb-8">
         Simulation indicative &middot; Hors TVA &middot; {workedDaysPerYear} jours travaillés/an &middot; Taux moyens.
         Consulte un expert-comptable pour un conseil personnalisé.
       </div>

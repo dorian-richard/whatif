@@ -61,7 +61,7 @@ export function Comparison() {
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
               Pens&eacute; pour les freelances, pas d&eacute;riv&eacute; d&apos;un outil g&eacute;n&eacute;raliste.
               <br />
-              <span className="text-sm text-muted-foreground/60">Bar&egrave;mes et taux &agrave; jour du Projet de Loi de Finances 2026.</span>
+              <span className="text-sm text-muted-foreground/80">Bar&egrave;mes et taux &agrave; jour du Projet de Loi de Finances 2026.</span>
             </p>
           </div>
         </AnimateOnScroll>

@@ -45,7 +45,7 @@ export function RevenueTimeline({ projection }: RevenueTimelineProps) {
         </div>
       </div>
       {Math.abs(totalDiff) > 0.5 && (
-        <p className="text-xs text-muted-foreground/60 mb-4">
+        <p className="text-xs text-muted-foreground/80 mb-4">
           Différence annuelle :{" "}
           <span className={totalDiff >= 0 ? "text-[#4ade80] font-semibold" : "text-[#f87171] font-semibold"}>
             {totalDiff >= 0 ? "+" : ""}{fmt(totalDiff)}&euro;

@@ -336,7 +336,7 @@ export function AssistantChat() {
                 onKeyDown={handleKeyDown}
                 placeholder="Pose ta question..."
                 rows={1}
-                className="flex-1 resize-none px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40 max-h-24"
+                className="flex-1 resize-none px-3 py-2 bg-muted/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40 max-h-24"
               />
               <button
                 onClick={() => handleSend()}
@@ -345,7 +345,7 @@ export function AssistantChat() {
                   "size-9 rounded-xl flex items-center justify-center transition-all shrink-0",
                   input.trim() && !streaming
                     ? "bg-primary text-white hover:bg-primary/90"
-                    : "bg-muted/50 text-muted-foreground/40"
+                    : "bg-muted/50 text-muted-foreground/80"
                 )}
               >
                 <Send className="size-4" />

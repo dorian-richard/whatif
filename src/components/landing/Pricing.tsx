@@ -110,10 +110,10 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
           {/* Free */}
           <div className="relative rounded-2xl p-6 border bg-muted/40 border-border hover:bg-muted/50 transition-all duration-300">
             <h3 className="text-lg font-bold text-foreground">Free</h3>
-            <p className="text-sm text-muted-foreground/60 mb-4">Pour découvrir Freelens</p>
+            <p className="text-sm text-muted-foreground/80 mb-4">Pour découvrir Freelens</p>
             <div className="mb-6">
               <span className="text-4xl font-bold text-foreground">0&euro;</span>
-              <span className="text-muted-foreground/60 ml-1">pour toujours</span>
+              <span className="text-muted-foreground/80 ml-1">pour toujours</span>
             </div>
             <ul className="space-y-2.5 mb-6">
               {FREE_FEATURES.map((f) => (
@@ -125,7 +125,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
                 </li>
               ))}
               {FREE_LIMITATIONS.map((f) => (
-                <li key={f} className="flex items-center gap-2.5 text-sm text-muted-foreground/50 dark:text-muted-foreground/40">
+                <li key={f} className="flex items-center gap-2.5 text-sm text-muted-foreground/70 dark:text-muted-foreground/80">
                   <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
                   </svg>
@@ -147,10 +147,10 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
               7 jours gratuits
             </span>
             <h3 className="text-lg font-bold text-foreground">Pro</h3>
-            <p className="text-sm text-muted-foreground/60 mb-4">Pour les freelances sérieux</p>
+            <p className="text-sm text-muted-foreground/80 mb-4">Pour les freelances sérieux</p>
             <div className="mb-6 flex items-baseline gap-1">
               <span className="text-4xl font-bold text-foreground">{proPrice}&euro;</span>
-              <span className="text-muted-foreground/60">{proPeriod}</span>
+              <span className="text-muted-foreground/80">{proPeriod}</span>
               {savings && (
                 <span className="ml-2 text-xs font-medium text-[#F4BE7E] bg-[#F4BE7E]/10 px-2 py-0.5 rounded-full">
                   {savings}
@@ -173,7 +173,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
             >
               Essai gratuit 7 jours
             </Link>
-            <p className="text-[11px] text-muted-foreground/50 text-center mt-2">
+            <p className="text-[11px] text-muted-foreground/70 text-center mt-2">
               Sans carte bancaire
             </p>
           </div>

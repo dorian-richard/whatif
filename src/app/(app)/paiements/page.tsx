@@ -166,28 +166,28 @@ export default function PaiementsPage() {
         <div className="bg-card rounded-xl p-4 border border-border">
           <div className="flex items-center gap-2 mb-1">
             <Banknote className="size-4 text-[#5682F2]" />
-            <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Attendu</span>
+            <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Attendu</span>
           </div>
           <div className="text-xl font-bold text-foreground">{fmt(totalExpected)}&euro;</div>
         </div>
         <div className="bg-card rounded-xl p-4 border border-border">
           <div className="flex items-center gap-2 mb-1">
             <Check className="size-4 text-[#4ade80]" />
-            <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Reçu</span>
+            <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Reçu</span>
           </div>
           <div className="text-xl font-bold text-[#4ade80]">{fmt(totalReceived)}&euro;</div>
         </div>
         <div className="bg-card rounded-xl p-4 border border-border">
           <div className="flex items-center gap-2 mb-1">
             <Users className="size-4 text-[#a78bfa]" />
-            <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Payés</span>
+            <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Payés</span>
           </div>
           <div className="text-xl font-bold text-foreground">{paidCount}/{monthPayments.length}</div>
         </div>
         <div className="bg-card rounded-xl p-4 border border-border">
           <div className="flex items-center gap-2 mb-1">
             <AlertTriangle className="size-4 text-[#f87171]" />
-            <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">En retard</span>
+            <span className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">En retard</span>
           </div>
           <div className={cn("text-xl font-bold", lateCount > 0 ? "text-[#f87171]" : "text-foreground")}>{lateCount}</div>
         </div>
@@ -196,7 +196,7 @@ export default function PaiementsPage() {
       {/* Client payment table / cards */}
       {clients.length === 0 ? (
         <div className="bg-card rounded-2xl border border-border p-8 text-center">
-          <CreditCard className="size-8 text-muted-foreground/40 mx-auto mb-3" />
+          <CreditCard className="size-8 text-muted-foreground/80 mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">Ajoute des clients dans ton profil pour suivre leurs paiements.</p>
         </div>
       ) : (
@@ -207,11 +207,11 @@ export default function PaiementsPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Client</th>
-                    <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Attendu</th>
-                    <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Reçu</th>
-                    <th className="text-center px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Statut</th>
-                    <th className="text-center px-4 py-3 text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Action</th>
+                    <th className="text-left px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Client</th>
+                    <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Attendu</th>
+                    <th className="text-right px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Reçu</th>
+                    <th className="text-center px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Statut</th>
+                    <th className="text-center px-4 py-3 text-[10px] text-muted-foreground/80 uppercase tracking-wider font-medium">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -223,7 +223,7 @@ export default function PaiementsPage() {
                           <div className="flex items-center gap-2">
                             <div className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: client.color ?? "#5682F2" }} />
                             <span className="font-medium text-foreground">{client.name}</span>
-                            <span className="text-[10px] text-muted-foreground/60 uppercase">{client.billing}</span>
+                            <span className="text-[10px] text-muted-foreground/80 uppercase">{client.billing}</span>
                           </div>
                         </td>
                         <td className="px-4 py-3 text-right font-medium text-foreground">{fmt(expected)}&euro;</td>
@@ -282,7 +282,7 @@ export default function PaiementsPage() {
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="size-3 rounded-full shrink-0" style={{ backgroundColor: client.color ?? "#5682F2" }} />
                       <span className="font-medium text-foreground truncate">{client.name}</span>
-                      <span className="text-[10px] text-muted-foreground/60 uppercase shrink-0">{client.billing}</span>
+                      <span className="text-[10px] text-muted-foreground/80 uppercase shrink-0">{client.billing}</span>
                     </div>
                     <span
                       className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ml-2", cfg.bg)}
@@ -293,11 +293,11 @@ export default function PaiementsPage() {
                   </div>
                   <div className="flex items-center gap-4 mb-3">
                     <div>
-                      <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Attendu</div>
+                      <div className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Attendu</div>
                       <div className="text-sm font-bold text-foreground">{fmt(expected)}&euro;</div>
                     </div>
                     <div>
-                      <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Reçu</div>
+                      <div className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">Reçu</div>
                       <div className="text-sm font-bold" style={{ color: cfg.color }}>{fmt(received)}&euro;</div>
                     </div>
                   </div>
@@ -357,14 +357,14 @@ export default function PaiementsPage() {
                     isCurrent && "border border-primary/20"
                   )}
                 >
-                  <div className="text-[10px] text-muted-foreground/60 font-medium mb-1">{m}</div>
+                  <div className="text-[10px] text-muted-foreground/80 font-medium mb-1">{m}</div>
                   <div className="h-8 bg-muted/30 rounded-md relative overflow-hidden">
                     <div
                       className="absolute bottom-0 left-0 right-0 bg-[#4ade80]/40 rounded-md transition-all"
                       style={{ height: `${pct}%` }}
                     />
                   </div>
-                  <div className="text-[9px] text-muted-foreground/60 mt-1">{fmt(monthTotal)}&euro;</div>
+                  <div className="text-[9px] text-muted-foreground/80 mt-1">{fmt(monthTotal)}&euro;</div>
                 </button>
               );
             })}
@@ -372,7 +372,7 @@ export default function PaiementsPage() {
         </div>
       </div>
 
-      <div className="text-center text-xs text-muted-foreground/60 pb-8">
+      <div className="text-center text-xs text-muted-foreground/80 pb-8">
         Les montants attendus sont calcul&eacute;s automatiquement &agrave; partir de tes clients et leur mode de facturation.
       </div>
       </ProBlur>

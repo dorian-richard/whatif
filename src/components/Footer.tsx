@@ -11,11 +11,11 @@ export function Footer() {
           <img src="/logo.webp" alt="Freelens" className="h-5 w-auto opacity-70 hidden dark:block" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-light.webp" alt="Freelens" className="h-5 w-auto opacity-70 block dark:hidden" />
-          <Link href="/" className="text-sm text-muted-foreground/60 hover:text-foreground transition-colors">
+          <Link href="/" className="text-sm text-muted-foreground/80 hover:text-foreground transition-colors">
             Freelens
           </Link>
         </div>
-        <div className="flex flex-wrap gap-4 sm:gap-6 justify-center text-sm text-muted-foreground/60">
+        <div className="flex flex-wrap gap-4 sm:gap-6 justify-center text-sm text-muted-foreground/80">
           <Link href="/cgu" className="hover:text-foreground transition-colors">CGU</Link>
           <Link href="/cgv" className="hover:text-foreground transition-colors">CGV</Link>
           <Link href="/mentions-legales" className="hover:text-foreground transition-colors">Mentions l&eacute;gales</Link>

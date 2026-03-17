@@ -45,7 +45,7 @@ export function DocumentList({ documents, filter, onSelect, onDelete, onDuplicat
 
   if (sorted.length === 0) {
     return (
-      <div className="text-center py-12 text-muted-foreground/60">
+      <div className="text-center py-12 text-muted-foreground/80">
         <FileText className="size-10 mx-auto mb-3 opacity-40" />
         <p className="text-sm">Aucun document pour le moment</p>
       </div>
@@ -74,7 +74,7 @@ export function DocumentList({ documents, filter, onSelect, onDelete, onDuplicat
                   {cfg.label}
                 </span>
               </div>
-              <div className="text-xs text-muted-foreground/60">
+              <div className="text-xs text-muted-foreground/80">
                 {doc.clientSnapshot?.name ?? "Client"} &middot; {formatDate(doc.issueDate)}
                 {doc.items?.length ? ` \u00B7 ${doc.items.length} ligne${doc.items.length > 1 ? "s" : ""}` : ""}
               </div>
@@ -82,7 +82,7 @@ export function DocumentList({ documents, filter, onSelect, onDelete, onDuplicat
 
             <div className="text-right shrink-0">
               <div className="text-sm font-bold text-foreground">{fmt(doc.totalTTC)}&nbsp;&euro;</div>
-              <div className="text-[10px] text-muted-foreground/60">{doc.type === "devis" ? "Devis" : "Facture"}</div>
+              <div className="text-[10px] text-muted-foreground/80">{doc.type === "devis" ? "Devis" : "Facture"}</div>
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
@@ -96,7 +96,7 @@ export function DocumentList({ documents, filter, onSelect, onDelete, onDuplicat
                     pdf.save(`${doc.number || "document"}.pdf`);
                   }
                 }}
-                className="text-muted-foreground/40 hover:text-[#5682F2] transition-colors p-1"
+                className="text-muted-foreground/80 hover:text-[#5682F2] transition-colors p-1"
                 title="Télécharger PDF"
               >
                 <Download className="size-3.5" />
@@ -104,7 +104,7 @@ export function DocumentList({ documents, filter, onSelect, onDelete, onDuplicat
               {onDuplicate && (
                 <button
                   onClick={(e) => { e.stopPropagation(); onDuplicate(doc); }}
-                  className="text-muted-foreground/40 hover:text-primary transition-colors p-1"
+                  className="text-muted-foreground/80 hover:text-primary transition-colors p-1"
                   title="Dupliquer"
                 >
                   <Copy className="size-3.5" />
@@ -112,7 +112,7 @@ export function DocumentList({ documents, filter, onSelect, onDelete, onDuplicat
               )}
               <button
                 onClick={(e) => { e.stopPropagation(); if (window.confirm(`Supprimer ${doc.number} ?`)) onDelete(doc.id); }}
-                className="text-muted-foreground/40 hover:text-red-400 transition-colors p-1"
+                className="text-muted-foreground/80 hover:text-red-400 transition-colors p-1"
                 title="Supprimer"
               >
                 <X className="size-3.5" />

@@ -52,7 +52,7 @@ export function HoldingSummaryCards({ result }: Props) {
             >
               <card.icon className="size-4" style={{ color: card.color }} />
             </div>
-            <span className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">
+            <span className="text-[11px] text-muted-foreground/80 uppercase tracking-wider">
               {card.label}
             </span>
           </div>

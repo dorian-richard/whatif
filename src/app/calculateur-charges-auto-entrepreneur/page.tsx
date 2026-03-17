@@ -167,10 +167,10 @@ export default function CalculateurChargesAutoEntrepreneurPage() {
           >
             Calculer mes charges gratuitement &rarr;
           </Link>
-          <p className="text-sm text-muted-foreground/60">Sans carte bancaire &middot; Essai gratuit 7 jours</p>
+          <p className="text-sm text-muted-foreground/80">Sans carte bancaire &middot; Essai gratuit 7 jours</p>
         </div>
 
-        <div className="text-xs text-muted-foreground/40 border-t border-border pt-6 space-y-2">
+        <div className="text-xs text-muted-foreground/80 border-t border-border pt-6 space-y-2">
           <p>
             Voir aussi : <Link href="/simulateur-revenus-freelance" className="text-primary hover:underline">Simulateur de revenus freelance</Link>
             {" "}&middot;{" "}<Link href="/comparateur-sasu-eurl" className="text-primary hover:underline">Comparateur SASU vs EURL</Link>

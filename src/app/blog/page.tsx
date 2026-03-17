@@ -71,12 +71,12 @@ export default function BlogIndexPage() {
           >
             Essayer Freelens gratuitement &rarr;
           </Link>
-          <p className="text-sm text-muted-foreground/60 mt-3">
+          <p className="text-sm text-muted-foreground/80 mt-3">
             Sans carte bancaire &middot; Tous les outils inclus
           </p>
         </div>
 
-        <div className="text-xs text-muted-foreground/40 border-t border-border pt-6">
+        <div className="text-xs text-muted-foreground/80 border-t border-border pt-6">
           <p>
             Voir aussi :{" "}
             <Link href="/simulateur-revenus-freelance" className="text-primary hover:underline">

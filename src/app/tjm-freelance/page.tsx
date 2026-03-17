@@ -61,7 +61,7 @@ export default function TJMFreelancePage() {
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-muted-foreground/60">
+          <p className="text-xs text-muted-foreground/80">
             Sources : Silkhom 2026, Malt 2024. Les TJM varient selon l&apos;exp&eacute;rience, la localisation et la sp&eacute;cialisation.
             Freelens propose un benchmark d&eacute;taill&eacute; sur 27 m&eacute;tiers.
           </p>
@@ -122,10 +122,10 @@ export default function TJMFreelancePage() {
           >
             Calculer mon TJM id&eacute;al gratuitement &rarr;
           </Link>
-          <p className="text-sm text-muted-foreground/60">Sans carte bancaire &middot; Benchmark 27 m&eacute;tiers inclus</p>
+          <p className="text-sm text-muted-foreground/80">Sans carte bancaire &middot; Benchmark 27 m&eacute;tiers inclus</p>
         </div>
 
-        <div className="text-xs text-muted-foreground/40 border-t border-border pt-6 space-y-2">
+        <div className="text-xs text-muted-foreground/80 border-t border-border pt-6 space-y-2">
           <p>
             Voir aussi : <Link href="/simulateur-revenus-freelance" className="text-primary hover:underline">Simulateur de revenus freelance</Link>
             {" "}&middot;{" "}<Link href="/comparateur-statuts-freelance" className="text-primary hover:underline">Comparateur de statuts</Link>

@@ -125,11 +125,11 @@ export function Verdict({ projection, sim, clients }: VerdictProps) {
             <div className="space-y-1.5">
               {messages.map((m, i) => (
                 <p key={i} className="text-sm text-muted-foreground leading-relaxed">
-                  <span className="text-muted-foreground/60 mr-1">&rarr;</span> {m}
+                  <span className="text-muted-foreground/80 mr-1">&rarr;</span> {m}
                 </p>
               ))}
             </div>
-            <div className="mt-3 pt-3 border-t border-border flex items-center gap-4 text-xs text-muted-foreground/60">
+            <div className="mt-3 pt-3 border-t border-border flex items-center gap-4 text-xs text-muted-foreground/80">
               <span>
                 Variation :{" "}
                 <strong className={pctDiff >= 0 ? "text-[#4ade80]" : "text-[#f87171]"}>

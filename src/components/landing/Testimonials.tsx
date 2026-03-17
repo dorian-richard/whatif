@@ -55,7 +55,7 @@ export function Testimonials() {
             {STATS.map((s) => (
               <div key={s.label} className="text-center py-4 bg-muted/40 border border-border rounded-2xl">
                 <div className="text-2xl font-bold text-foreground mb-1">{s.value}</div>
-                <div className="text-xs text-muted-foreground/60">{s.label}</div>
+                <div className="text-xs text-muted-foreground/80">{s.label}</div>
               </div>
             ))}
           </div>
@@ -108,7 +108,7 @@ export function Testimonials() {
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-foreground">{t.name}</div>
-                  <div className="text-xs text-muted-foreground/60">{t.role}</div>
+                  <div className="text-xs text-muted-foreground/80">{t.role}</div>
                 </div>
               </div>
             </div>

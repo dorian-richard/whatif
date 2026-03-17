@@ -24,7 +24,7 @@ export function PresetScenarios() {
         {activePreset && (
           <button
             onClick={reset}
-            className="text-[11px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+            className="text-[11px] text-muted-foreground/80 hover:text-muted-foreground transition-colors"
           >
             Réinitialiser
           </button>
