@@ -49,10 +49,10 @@ function getMeteo(score: number): Meteo {
 }
 
 const METEO_CONFIG: Record<Meteo, { label: string; icon: typeof Sun; color: string; accent: string; glow: string }> = {
-  soleil: { label: "Grand soleil", icon: Sun, color: "text-[#fbbf24]", accent: "#fbbf24", glow: "shadow-[0_0_24px_rgba(251,191,36,0.15)]" },
-  beau: { label: "Beau temps", icon: CloudSun, color: "text-[#4ade80]", accent: "#4ade80", glow: "shadow-[0_0_24px_rgba(74,222,128,0.15)]" },
-  variable: { label: "Variable", icon: CloudRain, color: "text-[#F4BE7E]", accent: "#F4BE7E", glow: "shadow-[0_0_24px_rgba(244,190,126,0.15)]" },
-  orageux: { label: "Orageux", icon: CloudLightning, color: "text-[#f87171]", accent: "#f87171", glow: "shadow-[0_0_24px_rgba(248,113,113,0.15)]" },
+  soleil: { label: "Grand soleil", icon: Sun, color: "text-foreground", accent: "#5682F2", glow: "" },
+  beau: { label: "Beau temps", icon: CloudSun, color: "text-foreground", accent: "#5682F2", glow: "" },
+  variable: { label: "Variable", icon: CloudRain, color: "text-muted-foreground", accent: "#94a3b8", glow: "" },
+  orageux: { label: "Orageux", icon: CloudLightning, color: "text-[#f87171]", accent: "#f87171", glow: "" },
 };
 
 function Shimmer({ className, style }: { className?: string; style?: React.CSSProperties }) {
@@ -469,86 +469,71 @@ function DashboardFinanceCards({
     <div className="space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {/* Revenu / Résultat net mensuel */}
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <div className="flex h-full">
-            <div className="w-1 shrink-0 bg-[#4ade80]" />
-            <div className="flex-1 p-5">
-              <div className="flex items-center gap-2 mb-1">
-                <Banknote className="size-5 text-[#4ade80]" />
-                <span className="text-xs font-semibold text-[#4ade80] uppercase tracking-wider">{monthlyLabel}</span>
-              </div>
-              <Tooltip content={`CA ${fmt(totalCA)}\u20AC \u2192 net ${fmt(Math.round(netMonthly))}\u20AC \u2212 charges ${fmt(expenses)}\u20AC | ${statusConfig.label} \u00B7 URSSAF ${(urssafRate * 100).toFixed(0)}% + IR ${(irRate * 100).toFixed(0)}%${isIS ? ` + IS ${(statusConfig.is * 100).toFixed(0)}%` : ""}${monthlySubtext ? ` | ${monthlySubtext}` : ""}`}>
-                <div className="cursor-help">
-                  <div className={cn("text-2xl font-bold", netMonthly - expenses > 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
-                    {fmt(Math.round(netMonthly - expenses))}&euro;
-                  </div>
-                  <div className="text-[11px] text-muted-foreground/60 mt-1">
-                    {statusConfig.label}{isIS && remunerationType ? ` \u00B7 ${isDividendes ? "Dividendes" : isMixte ? "Mixte" : "Salaire"}` : ""}
-                  </div>
-                </div>
-              </Tooltip>
-            </div>
+        <div className="bg-card rounded-xl border border-border p-5">
+          <div className="flex items-center gap-2 mb-1">
+            <Banknote className="size-4 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{monthlyLabel}</span>
           </div>
+          <Tooltip content={`CA ${fmt(totalCA)}\u20AC \u2192 net ${fmt(Math.round(netMonthly))}\u20AC \u2212 charges ${fmt(expenses)}\u20AC | ${statusConfig.label} \u00B7 URSSAF ${(urssafRate * 100).toFixed(0)}% + IR ${(irRate * 100).toFixed(0)}%${isIS ? ` + IS ${(statusConfig.is * 100).toFixed(0)}%` : ""}${monthlySubtext ? ` | ${monthlySubtext}` : ""}`}>
+            <div className="cursor-help">
+              <div className={cn("text-2xl font-bold", netMonthly - expenses > 0 ? "text-foreground" : "text-[#f87171]")}>
+                {fmt(Math.round(netMonthly - expenses))}&euro;
+              </div>
+              <div className="text-[11px] text-muted-foreground/60 mt-1">
+                {statusConfig.label}{isIS && remunerationType ? ` \u00B7 ${isDividendes ? "Dividendes" : isMixte ? "Mixte" : "Salaire"}` : ""}
+              </div>
+            </div>
+          </Tooltip>
         </div>
 
         {/* Net / Résultat net annuel */}
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <div className="flex h-full">
-            <div className="w-1 shrink-0 bg-[#5682F2]" />
-            <div className="flex-1 p-5">
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingUp className="size-5 text-[#5682F2]" />
-                <span className="text-xs font-semibold text-[#5682F2] uppercase tracking-wider">{annualLabel}</span>
-              </div>
-              <Tooltip content={`${fmt(Math.round(netAfterAll))}\u20AC net fiscal \u2212 ${fmt(expenses * 12)}\u20AC charges${annualSubtext ? ` | ${annualSubtext}` : ""}`}>
-                <div className="cursor-help">
-                  <div className={cn("text-2xl font-bold", netAfterExpenses > 0 ? "text-[#5682F2]" : "text-[#f87171]")}>
-                    {fmt(Math.round(netAfterExpenses))}&euro;
-                  </div>
-                  <div className="text-[11px] text-muted-foreground/60 mt-1">
-                    Net fiscal {fmt(Math.round(netAfterAll))}&euro; &minus; charges {fmt(expenses * 12)}&euro;
-                  </div>
-                </div>
-              </Tooltip>
-            </div>
+        <div className="bg-card rounded-xl border border-border p-5">
+          <div className="flex items-center gap-2 mb-1">
+            <TrendingUp className="size-4 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{annualLabel}</span>
           </div>
+          <Tooltip content={`${fmt(Math.round(netAfterAll))}\u20AC net fiscal \u2212 ${fmt(expenses * 12)}\u20AC charges${annualSubtext ? ` | ${annualSubtext}` : ""}`}>
+            <div className="cursor-help">
+              <div className={cn("text-2xl font-bold", netAfterExpenses > 0 ? "text-foreground" : "text-[#f87171]")}>
+                {fmt(Math.round(netAfterExpenses))}&euro;
+              </div>
+              <div className="text-[11px] text-muted-foreground/60 mt-1">
+                Net fiscal {fmt(Math.round(netAfterAll))}&euro; &minus; charges {fmt(expenses * 12)}&euro;
+              </div>
+            </div>
+          </Tooltip>
         </div>
 
         {/* Tresorerie fin d'annee */}
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <div className="flex h-full">
-            <div className="w-1 shrink-0 bg-[#F4BE7E]" />
-            <div className="flex-1 p-5">
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <PiggyBank className="size-5 text-[#F4BE7E]" />
-                  <span className="text-xs font-semibold text-[#F4BE7E] uppercase tracking-wider">Trésorerie fin d&apos;année</span>
-                </div>
-                <button
-                  onClick={() => setIncludeRem(!includeRem)}
-                  className={cn(
-                    "text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors",
-                    includeRem
-                      ? "bg-[#a78bfa]/12 text-[#a78bfa] border-[#a78bfa]/20"
-                      : "bg-muted text-muted-foreground/60 border-border"
-                  )}
-                >
-                  {includeRem
-                    ? monthlySalary > 0 ? `\u2212 ${fmt(annualSalary)}\u20AC rem.` : "Rem. non définie"
-                    : "Sans rem."}
-                </button>
-              </div>
-              <div className={cn("text-2xl font-bold", treasuryValue >= 0 ? "text-[#F4BE7E]" : "text-[#f87171]")}>
-                {fmt(Math.round(treasuryValue))}&euro;
-              </div>
-              <div className="text-[11px] text-muted-foreground/60 mt-1">
-                {fmt(savings)}&euro; {netAfterExpenses >= 0 ? "+" : "\u2212"} {fmt(Math.abs(Math.round(netAfterExpenses)))}&euro; net{includeRem && monthlySalary > 0 ? ` \u2212 ${fmt(annualSalary)}\u20AC rem.` : ""}
-              </div>
-              {includeRem && monthlySalary === 0 && (
-                <a href="/settings" className="text-[10px] text-[#a78bfa] underline mt-1 inline-block">Définir la rémunération &rarr;</a>
-              )}
+        <div className="bg-card rounded-xl border border-border p-5">
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <PiggyBank className="size-4 text-muted-foreground" />
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Tresorerie fin d&apos;annee</span>
             </div>
+            <button
+              onClick={() => setIncludeRem(!includeRem)}
+              className={cn(
+                "text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors",
+                includeRem
+                  ? "bg-muted text-foreground border-border"
+                  : "bg-muted text-muted-foreground/60 border-border"
+              )}
+            >
+              {includeRem
+                ? monthlySalary > 0 ? `\u2212 ${fmt(annualSalary)}\u20AC rem.` : "Rem. non definie"
+                : "Sans rem."}
+            </button>
           </div>
+          <div className={cn("text-2xl font-bold", treasuryValue >= 0 ? "text-foreground" : "text-[#f87171]")}>
+            {fmt(Math.round(treasuryValue))}&euro;
+          </div>
+          <div className="text-[11px] text-muted-foreground/60 mt-1">
+            {fmt(savings)}&euro; {netAfterExpenses >= 0 ? "+" : "\u2212"} {fmt(Math.abs(Math.round(netAfterExpenses)))}&euro; net{includeRem && monthlySalary > 0 ? ` \u2212 ${fmt(annualSalary)}\u20AC rem.` : ""}
+          </div>
+          {includeRem && monthlySalary === 0 && (
+            <a href="/settings" className="text-[10px] text-muted-foreground underline mt-1 inline-block">Definir la remuneration &rarr;</a>
+          )}
         </div>
       </div>
 
@@ -556,35 +541,32 @@ function DashboardFinanceCards({
       {available > 0 && (
         <div className="bg-card rounded-xl p-4 border border-border">
           <div className="flex items-center gap-3">
-            <div className="size-8 rounded-lg bg-[#a78bfa]/12 flex items-center justify-center shrink-0">
-              <Lightbulb className="size-4 text-[#a78bfa]" />
+            <div className="size-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <Lightbulb className="size-4 text-muted-foreground" />
             </div>
             <Tooltip content={`Base : ${fmt(Math.round(netMonthly))}\u20AC net/mois \u2212 ${fmt(expenses)}\u20AC charges. Prudent = 50% en tréso, confort = 30%, max = 100%`}>
-              <span className="text-xs font-bold text-[#a78bfa] cursor-help">Remuneration conseillee</span>
+              <span className="text-xs font-bold text-foreground cursor-help">Remuneration conseillee</span>
             </Tooltip>
             {monthlySalary > 0 && (
               <span className={cn(
                 "text-[10px] font-medium px-2 py-0.5 rounded-full",
-                monthlySalary <= remConfort ? "bg-[#4ade80]/12 text-[#4ade80]" : monthlySalary <= remMax ? "bg-[#fbbf24]/12 text-[#fbbf24]" : "bg-[#f87171]/12 text-[#f87171]"
+                monthlySalary <= remMax ? "bg-muted text-foreground" : "bg-[#f87171]/12 text-[#f87171]"
               )}>
                 Actuel : {fmt(monthlySalary)}&euro;
               </span>
             )}
             <div className="flex flex-wrap gap-2 ml-auto">
               <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />
                 <span className="text-[11px] text-muted-foreground/60">Prudent</span>
-                <span className="text-sm font-bold text-[#4ade80]">{fmt(remPrudent)}&euro;</span>
+                <span className="text-sm font-bold text-foreground">{fmt(remPrudent)}&euro;</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#5682F2]" />
                 <span className="text-[11px] text-muted-foreground/60">Confort</span>
-                <span className="text-sm font-bold text-[#5682F2]">{fmt(remConfort)}&euro;</span>
+                <span className="text-sm font-bold text-foreground">{fmt(remConfort)}&euro;</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#fbbf24]" />
                 <span className="text-[11px] text-muted-foreground/60">Max</span>
-                <span className="text-sm font-bold text-[#fbbf24]">{fmt(remMax)}&euro;</span>
+                <span className="text-sm font-bold text-foreground">{fmt(remMax)}&euro;</span>
               </div>
             </div>
           </div>
@@ -609,9 +591,9 @@ function DashboardChart({ projection, expenses, netRate, clients, profile }: { p
         <div className="flex items-center gap-3">
           <h3 className="text-sm font-bold text-foreground">Projection mensuelle</h3>
           <div className="flex items-center gap-2.5 text-[10px] text-muted-foreground/60">
-            <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#5682F2]" /> CA</span>
-            <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#F4BE7E]" /> Résultat</span>
-            <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#4ade80]" /> Net</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-foreground/70" /> CA</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-foreground/30" /> Resultat</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm bg-[#5682F2]" /> Net</span>
           </div>
         </div>
         {hoveredMonth !== null && (() => {
@@ -621,16 +603,16 @@ function DashboardChart({ projection, expenses, netRate, clients, profile }: { p
           return (
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <span className="font-bold text-foreground">{MONTHS_SHORT[hoveredMonth]}</span>
-              <span className="text-xs text-[#5682F2] font-semibold">CA {fmt(ca)}&euro;</span>
+              <span className="text-xs text-foreground font-semibold">CA {fmt(ca)}&euro;</span>
               <span className={cn(
                 "text-xs font-semibold px-1.5 py-0.5 rounded-full",
-                resultat >= 0 ? "bg-[#F4BE7E]/15 text-[#F4BE7E]" : "bg-[#f87171]/12 text-[#f87171]"
+                resultat >= 0 ? "bg-muted text-muted-foreground" : "bg-[#f87171]/12 text-[#f87171]"
               )}>
                 Res. {fmt(Math.round(resultat))}&euro;
               </span>
               <span className={cn(
                 "text-xs font-semibold px-1.5 py-0.5 rounded-full",
-                netRevenue >= 0 ? "bg-[#4ade80]/12 text-[#4ade80]" : "bg-[#f87171]/12 text-[#f87171]"
+                netRevenue >= 0 ? "bg-[#5682F2]/12 text-[#5682F2]" : "bg-[#f87171]/12 text-[#f87171]"
               )}>
                 Net {fmt(Math.round(netRevenue))}&euro;
               </span>
@@ -672,7 +654,7 @@ function DashboardChart({ projection, expenses, netRate, clients, profile }: { p
                 <div
                   className={cn(
                     "w-1/3 max-w-[10px] rounded-t transition-all duration-150",
-                    isHovered ? "bg-[#5682F2]" : "bg-[#5682F2]/40"
+                    isHovered ? "bg-foreground/70" : "bg-foreground/20"
                   )}
                   style={{ height: `${Math.max(2, caPct)}%` }}
                 />
@@ -680,7 +662,7 @@ function DashboardChart({ projection, expenses, netRate, clients, profile }: { p
                   className={cn(
                     "w-1/3 max-w-[10px] rounded-t transition-all duration-150",
                     resultat >= 0
-                      ? isHovered ? "bg-[#F4BE7E]" : "bg-[#F4BE7E]/40"
+                      ? isHovered ? "bg-foreground/30" : "bg-foreground/10"
                       : isHovered ? "bg-[#f87171]" : "bg-[#f87171]/40"
                   )}
                   style={{ height: `${Math.max(2, resultatPct)}%` }}
@@ -689,7 +671,7 @@ function DashboardChart({ projection, expenses, netRate, clients, profile }: { p
                   className={cn(
                     "w-1/3 max-w-[10px] rounded-t transition-all duration-150",
                     netRevenue >= 0
-                      ? isHovered ? "bg-[#4ade80]" : "bg-[#4ade80]/40"
+                      ? isHovered ? "bg-[#5682F2]" : "bg-[#5682F2]/30"
                       : isHovered ? "bg-[#f87171]" : "bg-[#f87171]/40"
                   )}
                   style={{ height: `${Math.max(2, netPct)}%` }}
