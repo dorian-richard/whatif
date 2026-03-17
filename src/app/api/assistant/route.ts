@@ -125,10 +125,7 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ALLOWED_EMAILS = ["dorich@icloud.com"];
-  if (!ALLOWED_EMAILS.includes(user.email ?? "")) {
-    return Response.json({ error: "Feature not available" }, { status: 403 });
-  }
+  // Assistant IA is now available to all authenticated users
 
   let body: { messages?: Array<{ role: string; content: string }>; context?: Record<string, unknown> };
   try { body = await request.json(); } catch { return Response.json({ error: "Invalid JSON" }, { status: 400 }); }

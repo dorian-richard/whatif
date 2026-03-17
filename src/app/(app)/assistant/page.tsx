@@ -12,7 +12,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { InvoiceDocument, DocumentItem } from "@/types";
 
-const ALLOWED_EMAILS = ["dorich@icloud.com"];
 
 interface Message {
   role: "user" | "assistant";
@@ -54,7 +53,7 @@ export default function AssistantPage() {
     async function check() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (user?.email && ALLOWED_EMAILS.includes(user.email)) {
+      if (user) {
         setAllowed(true);
         loadConversations();
       }
