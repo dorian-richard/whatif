@@ -8,9 +8,9 @@ import Link from "next/link";
 
 const DEMO_CONVERSATION = [
   { role: "user" as const, text: "Combien je gagne vraiment avec 95k de CA ?" },
-  { role: "assistant" as const, text: "Avec **95 000 EUR de CA** en micro-entreprise :\n\n- Cotisations URSSAF (23,1%) : **-21 945 EUR**\n- Impot sur le revenu : **-8 120 EUR**\n\n**Net apres tout : 64 935 EUR**, soit **5 411 EUR/mois**.\n\nTu veux que je compare avec une EURL a l'IS ?" },
+  { role: "assistant" as const, text: "Avec **95 000 EUR de CA** en micro-entreprise :\n\n- Cotisations URSSAF (23,1%) : **-21 945 EUR**\n- Impot sur le revenu (1 part) : **-11 976 EUR**\n\n**Net apres tout : 61 079 EUR**, soit **5 090 EUR/mois**.\n\nTu veux que je compare avec une EURL a l'IS ?" },
   { role: "user" as const, text: "Oui, compare avec EURL IS" },
-  { role: "assistant" as const, text: "**EURL IS** avec 2 800 EUR de salaire + dividendes :\n\n| | Micro | EURL IS |\n|---|---|---|\n| CA | 95 000 EUR | 95 000 EUR |\n| Net | 64 935 EUR | 68 210 EUR |\n| Net/mois | 5 411 EUR | 5 684 EUR |\n\n**Gain : +3 275 EUR/an** en passant en EURL IS.\nLe seuil de rentabilite est a ~72 000 EUR de CA." },
+  { role: "assistant" as const, text: "**EURL IS** avec 2 500 EUR de salaire + dividendes :\n\n| | Micro | EURL IS |\n|---|---|---|\n| CA | 95 000 EUR | 95 000 EUR |\n| Net | 61 079 EUR | 64 820 EUR |\n| Net/mois | 5 090 EUR | 5 402 EUR |\n\n**Gain : +3 741 EUR/an** en passant en EURL IS.\nLe seuil de rentabilite est a ~72 000 EUR de CA." },
 ];
 
 const CAPABILITIES = [
