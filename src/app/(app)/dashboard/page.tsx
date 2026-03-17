@@ -194,7 +194,7 @@ export default function DashboardPage() {
   if (!isDbSynced) return <DashboardSkeleton />;
 
   return (
-    <div id="dashboard-content" className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">
+    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">
       {/* Fiscal deadline alert */}
       {upcomingDeadlines.length > 0 && (
         <div className="bg-[#f87171]/10 border border-[#f87171]/20 rounded-2xl p-4">

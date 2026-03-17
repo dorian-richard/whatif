@@ -209,6 +209,13 @@ export function Facto() {
             </AnimateOnScroll>
           </div>
         </div>
+
+        {/* Disclaimer */}
+        <AnimateOnScroll delay={0.4}>
+          <p className="text-center text-xs text-muted-foreground/60 mt-10">
+            Facto est un outil d&apos;aide a la decision. Il ne remplace pas un expert-comptable. Pour toute decision fiscale ou juridique importante, consultez un professionnel.
+          </p>
+        </AnimateOnScroll>
       </div>
     </section>
   );
