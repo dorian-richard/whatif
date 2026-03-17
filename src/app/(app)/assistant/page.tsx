@@ -25,13 +25,13 @@ interface ConversationSummary {
 }
 
 const SUGGESTIONS = [
-  { label: "Combien je gagne vraiment ?", prompt: "Avec mon CA actuel, combien il me reste net après charges et impôts ? Détaille le calcul étape par étape." },
-  { label: "Quel statut choisir ?", prompt: "Avec mon niveau de CA, est-ce que je devrais rester en micro ou passer en EURL/SASU ? Compare les 3 en chiffres concrets." },
-  { label: "Mon TJM est-il bon ?", prompt: "Est-ce que mon TJM actuel est cohérent avec le marché et mes objectifs de revenu ? Que devrais-je viser ?" },
-  { label: "Facture ce mois-ci", prompt: "Crée la facture pour mon client principal, pour le mois en cours." },
-  { label: "Combien mettre de cote ?", prompt: "Combien je dois provisionner chaque mois pour les charges, impôts et cotisations ? Donne-moi les montants exacts." },
-  { label: "Augmenter mon tarif", prompt: "Comment justifier une augmentation de TJM auprès de mon client ? Donne-moi des arguments et un exemple de message." },
-  { label: "Combien me verser ce mois ?", prompt: "Combien je peux me verser ce mois-ci en restant confortable ? Prends en compte mes charges, impôts et provisions à venir." },
+  { label: "Micro vs EURL vs SASU — combien je perds ?", prompt: "Compare mon net exact en micro-entreprise, EURL IS et SASU IS avec mon CA actuel. Montre les montants URSSAF, IR/IS et net final pour chaque statut. Dis-moi lequel est le plus rentable et a partir de quel CA ca bascule." },
+  { label: "Mon bulletin de paie freelance du mois", prompt: "Fais-moi un recapitulatif complet de ce mois : CA brut, cotisations URSSAF, impot, charges pro, et ce qu'il me reste vraiment sur mon compte. Comme un bulletin de paie." },
+  { label: "Combien provisionner pour l'URSSAF ?", prompt: "Calcule exactement combien je dois mettre de cote chaque mois pour l'URSSAF et les impots. Donne-moi le montant a virer sur un compte separe chaque mois pour ne jamais etre surpris." },
+  { label: "Je veux gagner 5 000 EUR net — quel TJM ?", prompt: "Quel TJM je dois facturer pour avoir 5 000 EUR net par mois apres toutes les charges et impots, avec mon statut actuel et mes jours travailles ? Si c'est pas realiste, dis-le." },
+  { label: "Est-ce que je dois passer en societe ?", prompt: "Avec mon CA actuel, est-ce que j'ai interet a quitter la micro pour une EURL ou SASU ? Calcule le gain net exact et dis-moi a quel moment ca vaut le coup de faire la transition." },
+  { label: "Facture mon client principal ce mois", prompt: "Cree la facture pour mon client principal pour le mois en cours, avec le bon TJM et le bon nombre de jours." },
+  { label: "Diagnostic financier complet", prompt: "Fais un diagnostic complet de ma situation : est-ce que mon TJM est bon, est-ce que je facture assez de jours, est-ce que mon statut est optimal, combien je peux me verser, et quels sont les risques. Sois direct." },
 ];
 
 export default function AssistantPage() {

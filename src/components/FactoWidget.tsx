@@ -17,9 +17,9 @@ interface Message {
 }
 
 const QUICK_PROMPTS = [
-  "Combien je gagne vraiment ?",
-  "Quel statut choisir ?",
-  "Combien mettre de cote ?",
+  "Mon bulletin de paie du mois",
+  "Micro vs EURL vs SASU ?",
+  "Diagnostic financier",
 ];
 
 export function FactoWidget() {
