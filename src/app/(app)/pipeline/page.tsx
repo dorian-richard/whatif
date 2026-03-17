@@ -12,13 +12,14 @@ import { MONTHS_SHORT } from "@/lib/constants";
 import { JOURS_OUVRES } from "@/lib/simulation-engine";
 import type { BillingType, IssuerSnapshot } from "@/types";
 
-const STAGES: ProspectStage[] = ["lead", "devis_envoye", "signe", "actif"];
+const STAGES: ProspectStage[] = ["lead", "devis_envoye", "signe", "actif", "perdu"];
 
 const STAGE_CONFIG: Record<ProspectStage, { label: string; color: string; bg: string; defaultProba: number }> = {
   lead: { label: "Lead", color: "#F4BE7E", bg: "bg-[#F4BE7E]/12", defaultProba: 20 },
   devis_envoye: { label: "Devis envoyé", color: "#5682F2", bg: "bg-[#5682F2]/12", defaultProba: 50 },
   signe: { label: "Signé", color: "#a78bfa", bg: "bg-[#a78bfa]/12", defaultProba: 80 },
   actif: { label: "Actif", color: "#4ade80", bg: "bg-[#4ade80]/12", defaultProba: 100 },
+  perdu: { label: "Perdu", color: "#f87171", bg: "bg-[#f87171]/12", defaultProba: 0 },
 };
 
 const BILLING_OPTIONS = [
@@ -54,14 +55,14 @@ function computeCAFromForm(form: FormState): number {
 }
 
 interface FormState {
-  name: string; company: string; contactEmail: string; contactPhone: string;
+  name: string; company: string; contactName: string; contactEmail: string; contactPhone: string;
   estimatedCA: string; billing: string; dailyRate: string; daysPerWeek: string;
   monthlyAmount: string; totalAmount: string; startMonth: string; endMonth: string;
   stage: ProspectStage; expectedClose: string; source: string; notes: string;
 }
 
 const EMPTY_FORM: FormState = {
-  name: "", company: "", contactEmail: "", contactPhone: "",
+  name: "", company: "", contactName: "", contactEmail: "", contactPhone: "",
   estimatedCA: "", billing: "", dailyRate: "", daysPerWeek: "",
   monthlyAmount: "", totalAmount: "", startMonth: "", endMonth: "",
   stage: "lead", expectedClose: "", source: "", notes: "",
@@ -92,6 +93,7 @@ export default function PipelinePage() {
               stage: (p.stage as string).toLowerCase() as ProspectStage,
               notes: p.notes as string | undefined,
               expectedClose: p.expectedClose ? String(p.expectedClose).slice(0, 10) : undefined,
+              contactName: p.contactName as string | undefined,
               contactEmail: p.contactEmail as string | undefined,
               company: p.company as string | undefined,
               contactPhone: p.contactPhone as string | undefined,
@@ -145,6 +147,7 @@ export default function PipelinePage() {
       probability: proba,
       expectedClose: form.expectedClose || undefined,
       notes: form.notes || undefined,
+      contactName: form.contactName || undefined,
       contactEmail: form.contactEmail || undefined,
       company: form.company || undefined,
       contactPhone: form.contactPhone || undefined,
@@ -176,6 +179,7 @@ export default function PipelinePage() {
     setForm({
       name: p.name,
       company: p.company ?? "",
+      contactName: p.contactName ?? "",
       contactEmail: p.contactEmail ?? "",
       contactPhone: p.contactPhone ?? "",
       estimatedCA: String(p.estimatedCA),
@@ -344,15 +348,17 @@ export default function PipelinePage() {
   }, [handleConvertToClient, businessStatus, companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic, updateProspect, syncProspect, router]);
 
   // Summary
-  const totalPipeline = prospects.reduce((s, p) => s + p.estimatedCA, 0);
-  const weightedPipeline = prospects.filter((p) => p.stage !== "actif").reduce((s, p) => s + p.estimatedCA * (p.probability / 100), 0);
-  const activeCount = prospects.filter((p) => p.stage !== "actif").length;
+  const activeProspects = prospects.filter((p) => p.stage !== "perdu");
+  const totalPipeline = activeProspects.reduce((s, p) => s + p.estimatedCA, 0);
+  const weightedPipeline = activeProspects.filter((p) => p.stage !== "actif").reduce((s, p) => s + p.estimatedCA * (p.probability / 100), 0);
+  const activeCount = activeProspects.filter((p) => p.stage !== "actif").length;
   const totalCount = prospects.length;
+  const lostCount = prospects.filter((p) => p.stage === "perdu").length;
   const conversionRate = totalCount > 0 ? (prospects.filter((p) => p.stage === "actif").length / totalCount) * 100 : 0;
 
   // Group by stage
   const byStage = useMemo(() => {
-    const grouped: Record<ProspectStage, Prospect[]> = { lead: [], devis_envoye: [], signe: [], actif: [] };
+    const grouped: Record<ProspectStage, Prospect[]> = { lead: [], devis_envoye: [], signe: [], actif: [], perdu: [] };
     for (const p of prospects) grouped[p.stage].push(p);
     return grouped;
   }, [prospects]);
@@ -420,7 +426,7 @@ export default function PipelinePage() {
           <>
             {/* Desktop Kanban */}
             <div className="hidden md:grid grid-cols-4 gap-3">
-              {STAGES.map((stage) => {
+              {STAGES.filter(s => s !== "perdu").map((stage) => {
                 const cfg = STAGE_CONFIG[stage];
                 const stageProspects = byStage[stage];
                 const stageTotal = stageProspects.reduce((s, p) => s + p.estimatedCA, 0);
@@ -459,6 +465,9 @@ export default function PipelinePage() {
                               <span className="text-sm font-medium text-foreground truncate block">{p.name}</span>
                               {p.company && (
                                 <span className="text-[10px] text-muted-foreground/60 truncate block">{p.company}</span>
+                              )}
+                              {p.contactName && (
+                                <span className="text-[10px] text-muted-foreground/60 truncate block">{p.contactName}</span>
                               )}
                             </div>
                             <span className={cn("px-1.5 py-0.5 rounded-full text-[9px] font-bold shrink-0", cfg.bg)} style={{ color: cfg.color }}>
@@ -531,7 +540,7 @@ export default function PipelinePage() {
 
             {/* Mobile list */}
             <div className="md:hidden space-y-3">
-              {STAGES.map((stage) => {
+              {STAGES.filter(s => s !== "perdu").map((stage) => {
                 const cfg = STAGE_CONFIG[stage];
                 const stageProspects = byStage[stage];
                 if (stageProspects.length === 0) return null;
@@ -559,6 +568,9 @@ export default function PipelinePage() {
                                 <span className="text-sm font-medium text-foreground block">{p.name}</span>
                                 {p.company && (
                                   <span className="text-[11px] text-muted-foreground/60 block">{p.company}</span>
+                                )}
+                                {p.contactName && (
+                                  <span className="text-[11px] text-muted-foreground/60 block">{p.contactName}</span>
                                 )}
                               </div>
                               <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold", cfg.bg)} style={{ color: cfg.color }}>
@@ -625,6 +637,38 @@ export default function PipelinePage() {
                 );
               })}
             </div>
+
+            {/* Lost deals section */}
+            {byStage.perdu.length > 0 && (
+              <details className="group">
+                <summary className="flex items-center gap-2 cursor-pointer py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <div className="size-2.5 rounded-full bg-[#f87171]" />
+                  <span className="font-medium">Perdu</span>
+                  <span className="text-xs text-muted-foreground/60">{byStage.perdu.length}</span>
+                </summary>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
+                  {byStage.perdu.map((p) => (
+                    <div key={p.id} className="bg-card rounded-xl border border-border p-3 opacity-60 hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="min-w-0">
+                          <span className="text-sm font-medium text-foreground truncate block">{p.name}</span>
+                          {p.company && <span className="text-[10px] text-muted-foreground/60 block">{p.company}</span>}
+                          {p.contactName && <span className="text-[10px] text-muted-foreground/60 block">{p.contactName}</span>}
+                        </div>
+                        <span className="text-xs text-muted-foreground/60">{fmt(Math.round(p.estimatedCA))}&euro;/mois</span>
+                      </div>
+                      <div className="flex items-center gap-1 mt-1">
+                        <button onClick={() => handleStageChange(p.id, "lead")} className="text-[10px] font-medium text-muted-foreground hover:text-foreground transition-colors">Relancer</button>
+                        <span className="text-muted-foreground/30">&middot;</span>
+                        <button onClick={() => handleEdit(p)} className="text-[10px] font-medium text-muted-foreground hover:text-foreground transition-colors">Modifier</button>
+                        <span className="text-muted-foreground/30">&middot;</span>
+                        <button onClick={() => handleDelete(p.id)} className="text-[10px] font-medium text-muted-foreground hover:text-[#f87171] transition-colors">Supprimer</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
           </>
         )}
       </ProBlur>
@@ -654,8 +698,9 @@ export default function PipelinePage() {
             <div className="mb-5">
               <h3 className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium mb-2">Contact</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input type="text" placeholder="Nom du contact" value={form.contactName} onChange={(e) => setForm({ ...form, contactName: e.target.value })} className={inputCls} />
                 <input type="email" placeholder="Email" value={form.contactEmail} onChange={(e) => setForm({ ...form, contactEmail: e.target.value })} className={inputCls} />
-                <input type="tel" placeholder="Téléphone" value={form.contactPhone} onChange={(e) => setForm({ ...form, contactPhone: e.target.value })} className={inputCls} />
+                <input type="tel" placeholder="Telephone" value={form.contactPhone} onChange={(e) => setForm({ ...form, contactPhone: e.target.value })} className={inputCls} />
               </div>
             </div>
 

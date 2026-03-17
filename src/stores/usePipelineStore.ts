@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type ProspectStage = "lead" | "devis_envoye" | "signe" | "actif";
+export type ProspectStage = "lead" | "devis_envoye" | "signe" | "actif" | "perdu";
 
 export interface Prospect {
   id: string;
@@ -11,6 +11,7 @@ export interface Prospect {
   stage: ProspectStage;
   notes?: string;
   expectedClose?: string;
+  contactName?: string;
   contactEmail?: string;
   company?: string;
   contactPhone?: string;

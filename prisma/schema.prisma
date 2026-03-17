@@ -204,6 +204,7 @@ enum ProspectStage {
   DEVIS_ENVOYE
   SIGNE
   ACTIF
+  PERDU
 }
 
 model Prospect {
@@ -217,6 +218,7 @@ model Prospect {
   stage         ProspectStage @default(LEAD)
   notes         String?
   expectedClose DateTime?
+  contactName   String?
   contactEmail  String?
   company       String?
   contactPhone  String?

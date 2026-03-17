@@ -11,8 +11,8 @@ import { ProBlur } from "@/components/ProBlur";
 import { DEADLINES, CATEGORY_CONFIG, type DeadlineCategory, type FiscalDeadline, type FiscalEstimateContext } from "@/lib/fiscal-deadlines";
 
 const MONTHS_FULL = [
-  "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
-  "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre",
+  "Janvier", "F\u00e9vrier", "Mars", "Avril", "Mai", "Juin",
+  "Juillet", "Ao\u00fbt", "Septembre", "Octobre", "Novembre", "D\u00e9cembre",
 ];
 
 /* ════════════════════════════════════════════════
@@ -190,33 +190,35 @@ export default function CalendrierPage() {
         ))}
       </div>
 
-      {/* Category legend */}
+      {/* Key figures — compact */}
+      <div className="flex flex-wrap items-center gap-4 text-sm">
+        <div className="flex items-center gap-1.5">
+          <Banknote className="size-4 text-[#10b981]" />
+          <span className="text-muted-foreground">CA :</span>
+          <span className="font-bold text-foreground">{fmt(annualCA)}&euro;</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <Landmark className="size-4 text-[#06b6d4]" />
+          <span className="text-muted-foreground">A provisionner :</span>
+          <span className="font-bold text-foreground">{fmt(Math.round(totalProvision))}&euro;</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <CalendarDays className="size-4 text-[#F4BE7E]" />
+          <span className="text-muted-foreground">{filteredByMonth.reduce((s, m) => s + m.length, 0)} echeances/an</span>
+        </div>
+      </div>
+
+      {/* Category legend — inline */}
       <div className="flex flex-wrap gap-3">
         {(Object.entries(CATEGORY_CONFIG) as [DeadlineCategory, { label: string; color: string }][]).map(
           ([key, cfg]) => (
             <div key={key} className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <div className="size-2.5 rounded-full" style={{ backgroundColor: cfg.color }} />
               {cfg.label}
+              {totals[key] > 0 && <span className="font-semibold text-foreground">{fmt(Math.round(totals[key]))}&euro;</span>}
             </div>
           )
         )}
-      </div>
-
-      {/* Summary cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <SummaryCard icon={Banknote} label="CA annuel HT" value={annualCA} color="#10b981" />
-        <SummaryCard icon={Banknote} label="URSSAF / an" value={totals.urssaf} color="#5682F2" />
-        {totals.tva > 0 && <SummaryCard icon={CircleAlert} label="TVA / an" value={totals.tva} color="#f97316" />}
-        {totals.is > 0 && <SummaryCard icon={Shield} label="IS / an" value={totals.is} color="#a78bfa" />}
-        <SummaryCard icon={Landmark} label="IR estime / an" value={totals.ir} color="#4ade80" />
-        <SummaryCard icon={Landmark} label="Total a provisionner" value={totalProvision} color="#06b6d4" />
-        <SummaryCard
-          icon={CalendarDays}
-          label="Echeances / an"
-          value={filteredByMonth.reduce((s, m) => s + m.length, 0)}
-          color="#F4BE7E"
-          isCount
-        />
       </div>
 
       {/* 12-month timeline */}
