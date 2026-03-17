@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, ClientData, ClientSnapshot, IssuerSnapshot, ItemType } from "@/types";
+import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, ClientData, ClientSnapshot, IssuerSnapshot, ItemType, PDFOptions } from "@/types";
 import { fmt, cn } from "@/lib/utils";
-import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown, Upload, Lock, Search, Building2, UserPlus } from "@/components/ui/icons";
+import { Plus, X, Download, Check, FileText, Wand2, Copy, ChevronDown, Upload, Lock, Search, Building2, UserPlus, Settings } from "@/components/ui/icons";
 import type jsPDF from "jspdf";
 import { generateInvoicePDF } from "./DocumentPDF";
 
@@ -118,9 +118,11 @@ interface DocumentFormProps {
   onLogoChange?: (logo: string | undefined) => void;
   onIssuerChange?: (updates: Partial<IssuerSnapshot & { invoiceAddress?: string; invoiceCity?: string; invoiceZip?: string }>) => void;
   onAddClient?: (client: Omit<ClientData, "id" | "color">) => void;
+  pdfOptions?: Partial<PDFOptions>;
+  onPdfOptionsChange?: (updates: Partial<PDFOptions>) => void;
 }
 
-export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onSave, onClose, onConvert, onStatusChange, onDuplicate, existingDocuments = [], defaultNotes, onSaveDefaultNotes, onLogoChange, onIssuerChange, onAddClient }: DocumentFormProps) {
+export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onSave, onClose, onConvert, onStatusChange, onDuplicate, existingDocuments = [], defaultNotes, onSaveDefaultNotes, onLogoChange, onIssuerChange, onAddClient, pdfOptions, onPdfOptionsChange }: DocumentFormProps) {
   const isNew = !doc?.id || doc.id === "new";
   const isLocked = !isNew && doc?.status !== "draft";
 
@@ -278,7 +280,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
   }
 
   function handleDownloadPDF() {
-    const pdf = generateInvoicePDF(buildPdfDoc());
+    const pdf = generateInvoicePDF(buildPdfDoc(), pdfOptions);
     pdf.save(`${doc?.number || previewNumber || "document"}.pdf`);
   }
 
@@ -810,6 +812,11 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
         )}
       </div>
 
+      {/* PDF Customization */}
+      {onPdfOptionsChange && (
+        <PDFCustomization options={pdfOptions ?? {}} onChange={onPdfOptionsChange} />
+      )}
+
       {/* Actions */}
       <div className="flex flex-wrap gap-2 pt-2">
         {!isLocked && (
@@ -840,7 +847,7 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
               if (!window.confirm("Une fois validé, ce document ne pourra plus être modifié. Continuer ?")) return;
               // Generate and upload PDF to blob storage
               const pdfDoc = buildPdfDoc();
-              const pdf = generateInvoicePDF(pdfDoc);
+              const pdf = generateInvoicePDF(pdfDoc, pdfOptions);
               await uploadPDFToBlob(pdf, doc.id);
               onStatusChange(doc.id, "sent");
             }}
@@ -897,6 +904,136 @@ export function DocumentForm({ doc, clients, issuerSnapshot, businessStatus, onS
           </button>
         )}
       </div>
+    </div>
+  );
+}
+
+/* ── PDF Customization Panel ── */
+
+const ACCENT_PRESETS = [
+  { color: "#5682F2", label: "Bleu" },
+  { color: "#10b981", label: "Vert" },
+  { color: "#f97316", label: "Orange" },
+  { color: "#8b5cf6", label: "Violet" },
+  { color: "#ef4444", label: "Rouge" },
+  { color: "#0ea5e9", label: "Cyan" },
+  { color: "#1a1a2e", label: "Noir" },
+];
+
+const FONT_SIZE_OPTIONS: { value: "small" | "normal" | "large"; label: string }[] = [
+  { value: "small", label: "Petit" },
+  { value: "normal", label: "Normal" },
+  { value: "large", label: "Grand" },
+];
+
+function PDFCustomization({ options, onChange }: { options: Partial<PDFOptions>; onChange: (updates: Partial<PDFOptions>) => void }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="space-y-2">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <Settings className="size-3.5" />
+        <span>Personnaliser le PDF</span>
+        <ChevronDown className={cn("size-3 transition-transform", open && "rotate-180")} />
+      </button>
+
+      {open && (
+        <div className="bg-muted/30 rounded-xl border border-border p-4 space-y-4">
+          {/* Accent color */}
+          <div>
+            <label className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-2 block">Couleur d&apos;accent</label>
+            <div className="flex items-center gap-2">
+              {ACCENT_PRESETS.map((preset) => (
+                <button
+                  key={preset.color}
+                  onClick={() => onChange({ accentColor: preset.color })}
+                  title={preset.label}
+                  className={cn(
+                    "size-7 rounded-full border-2 transition-all hover:scale-110",
+                    (options.accentColor ?? "#5682F2") === preset.color
+                      ? "border-foreground scale-110"
+                      : "border-transparent"
+                  )}
+                  style={{ backgroundColor: preset.color }}
+                />
+              ))}
+              <label className="relative" title="Couleur personnalisée">
+                <input
+                  type="color"
+                  value={options.accentColor ?? "#5682F2"}
+                  onChange={(e) => onChange({ accentColor: e.target.value })}
+                  className="absolute inset-0 opacity-0 cursor-pointer size-7"
+                />
+                <div
+                  className="size-7 rounded-full border-2 border-dashed border-border flex items-center justify-center text-muted-foreground/40 text-[10px] cursor-pointer hover:border-foreground/40 transition-colors"
+                >
+                  +
+                </div>
+              </label>
+            </div>
+          </div>
+
+          {/* Font size */}
+          <div>
+            <label className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-2 block">Taille du texte</label>
+            <div className="flex gap-2">
+              {FONT_SIZE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => onChange({ fontSize: opt.value })}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                    (options.fontSize ?? "normal") === opt.value
+                      ? "bg-primary/15 text-primary ring-1 ring-primary/30"
+                      : "bg-muted/50 text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Show/hide toggles */}
+          <div>
+            <label className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-2 block">Afficher sur le PDF</label>
+            <div className="flex flex-wrap gap-3">
+              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={options.showIban ?? true}
+                  onChange={(e) => onChange({ showIban: e.target.checked })}
+                  className="accent-primary size-3.5"
+                />
+                IBAN
+              </label>
+              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={options.showBic ?? true}
+                  onChange={(e) => onChange({ showBic: e.target.checked })}
+                  className="accent-primary size-3.5"
+                />
+                BIC
+              </label>
+            </div>
+          </div>
+
+          {/* Custom footer */}
+          <div>
+            <label className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-1.5 block">Pied de page personnalis&eacute;</label>
+            <input
+              value={options.customFooter ?? ""}
+              onChange={(e) => onChange({ customFooter: e.target.value })}
+              placeholder="Ex: Membre d'une association de gestion agréée..."
+              className="w-full px-3 py-2 bg-muted/50 border border-border rounded-xl text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-[#5682F2]/40 placeholder:text-muted-foreground/40"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

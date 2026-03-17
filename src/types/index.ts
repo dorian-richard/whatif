@@ -217,4 +217,18 @@ export interface InvoiceSettings {
   bic?: string;
   invoiceNotes?: string;
   invoiceLogo?: string;
+  invoiceAccentColor?: string;
+  invoiceFontSize?: "small" | "normal" | "large";
+  invoiceShowIban?: boolean;
+  invoiceShowBic?: boolean;
+  invoiceFooter?: string;
+}
+
+export interface PDFOptions {
+  accentColor: string;
+  fontSize: "small" | "normal" | "large";
+  showIban: boolean;
+  showBic: boolean;
+  customFooter?: string;
+  logo?: string;
 }

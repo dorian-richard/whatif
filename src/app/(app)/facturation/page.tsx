@@ -8,12 +8,12 @@ import { Receipt, FileText, AlertTriangle, Banknote, Check, Clock } from "@/comp
 import { ProBlur } from "@/components/ProBlur";
 import { DocumentList } from "@/components/invoicing/DocumentList";
 import { DocumentForm } from "@/components/invoicing/DocumentForm";
-import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, IssuerSnapshot } from "@/types";
+import type { InvoiceDocument, DocumentItem, DocumentType, DocumentStatus, IssuerSnapshot, PDFOptions } from "@/types";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
 export default function FacturationPage() {
-  const { clients, businessStatus, companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic, invoiceNotes, invoiceLogo, setProfile, addClient } = useProfileStore();
+  const { clients, businessStatus, companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic, invoiceNotes, invoiceLogo, invoiceAccentColor, invoiceFontSize, invoiceShowIban, invoiceShowBic, invoiceFooter, setProfile, addClient } = useProfileStore();
   const { documents, setDocuments, addDocument, updateDocument, removeDocument, loaded, setLoaded } = useInvoiceStore();
 
   const [year, setYear] = useState(CURRENT_YEAR);
@@ -107,6 +107,25 @@ export default function FacturationPage() {
     iban, bic,
     logo: invoiceLogo,
   }), [companyName, siret, tvaNumber, invoiceAddress, invoiceCity, invoiceZip, iban, bic, invoiceLogo]);
+
+  const pdfOptions: Partial<PDFOptions> = useMemo(() => ({
+    accentColor: invoiceAccentColor ?? "#5682F2",
+    fontSize: invoiceFontSize ?? "normal",
+    showIban: invoiceShowIban ?? true,
+    showBic: invoiceShowBic ?? true,
+    customFooter: invoiceFooter,
+    logo: invoiceLogo,
+  }), [invoiceAccentColor, invoiceFontSize, invoiceShowIban, invoiceShowBic, invoiceFooter, invoiceLogo]);
+
+  const handlePdfOptionsChange = useCallback((updates: Partial<PDFOptions>) => {
+    const profileUpdates: Record<string, unknown> = {};
+    if (updates.accentColor !== undefined) profileUpdates.invoiceAccentColor = updates.accentColor;
+    if (updates.fontSize !== undefined) profileUpdates.invoiceFontSize = updates.fontSize;
+    if (updates.showIban !== undefined) profileUpdates.invoiceShowIban = updates.showIban;
+    if (updates.showBic !== undefined) profileUpdates.invoiceShowBic = updates.showBic;
+    if (updates.customFooter !== undefined) profileUpdates.invoiceFooter = updates.customFooter;
+    setProfile(profileUpdates);
+  }, [setProfile]);
 
   // KPIs
   const kpis = useMemo(() => {
@@ -328,6 +347,8 @@ export default function FacturationPage() {
                 onLogoChange={(logo) => setProfile({ invoiceLogo: logo })}
                 onIssuerChange={(updates) => setProfile(updates)}
                 onAddClient={addClient}
+                pdfOptions={pdfOptions}
+                onPdfOptionsChange={handlePdfOptionsChange}
               />
             </div>
           </div>
