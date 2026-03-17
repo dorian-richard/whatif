@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Bot, Send, X, Maximize2, Minus } from "@/components/ui/icons";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { getEffectiveStatus } from "@/lib/subscription";
+import { buildFactoContext } from "@/lib/facto-context";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -31,11 +31,9 @@ export function FactoWidget() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const profile = useProfileStore();
   const subscriptionStatus = useProfileStore((s) => s.subscriptionStatus);
   const trialEndsAt = useProfileStore((s) => s.trialEndsAt);
   const isPro = getEffectiveStatus(subscriptionStatus, trialEndsAt) === "ACTIVE";
-  const { documents } = useInvoiceStore();
 
   // Auto-scroll on new messages
   useEffect(() => {
@@ -49,40 +47,6 @@ export function FactoWidget() {
 
   // Hide on assistant page (full page already)
   if (pathname === "/assistant") return null;
-
-  function buildContext() {
-    const activeClients = profile.clients.filter((c) => c.isActive !== false);
-    const totalCA = activeClients.reduce((sum, c) => {
-      if (c.billing === "tjm") return sum + (c.dailyRate ?? 0) * (c.daysPerMonth ?? (c.daysPerWeek ?? 0) * 4.33) * 12;
-      if (c.billing === "forfait") return sum + (c.monthlyAmount ?? 0) * 12;
-      if (c.billing === "mission") return sum + (c.totalAmount ?? 0);
-      return sum;
-    }, 0);
-    return {
-      businessStatus: profile.businessStatus,
-      role: profile.role,
-      companyName: profile.companyName,
-      monthlyExpenses: profile.monthlyExpenses,
-      savings: profile.savings,
-      workDaysPerWeek: profile.workDaysPerWeek,
-      age: profile.age,
-      monthlySalary: profile.monthlySalary,
-      nbParts: profile.nbParts,
-      chargesPro: profile.chargesPro,
-      clients: activeClients.map((c) => ({
-        id: c.id, name: c.name, companyName: c.companyName, billing: c.billing,
-        dailyRate: c.dailyRate, daysPerWeek: c.daysPerWeek, daysPerMonth: c.daysPerMonth,
-        monthlyAmount: c.monthlyAmount, totalAmount: c.totalAmount, isActive: c.isActive,
-      })),
-      caAnnuel: Math.round(totalCA),
-      invoices: {
-        total: documents.length,
-        unpaid: documents.filter((d) => d.type === "facture" && (d.status === "sent" || d.status === "late")).length,
-        unpaidAmount: documents.filter((d) => d.type === "facture" && (d.status === "sent" || d.status === "late")).reduce((s, d) => s + d.totalTTC, 0),
-        drafts: documents.filter((d) => d.status === "draft").length,
-      },
-    };
-  }
 
   async function handleSend(text?: string) {
     const msg = (text ?? input).trim();
@@ -100,7 +64,7 @@ export function FactoWidget() {
       const res = await fetch("/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages, context: buildContext() }),
+        body: JSON.stringify({ messages: newMessages, context: buildFactoContext() }),
       });
 
       if (!res.ok) {

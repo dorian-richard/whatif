@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { createClient } from "@/lib/supabase/client";
+import { buildFactoContext } from "@/lib/facto-context";
 import { cn } from "@/lib/utils";
 import { Send, Bot, Plus, MessageCircle, Trash2, PanelLeftOpen, PanelLeftClose } from "@/components/ui/icons";
 import { ProBlur } from "@/components/ProBlur";
@@ -132,32 +133,7 @@ export default function AssistantPage() {
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
   useEffect(() => { inputRef.current?.focus(); }, []);
 
-  function buildContext() {
-    const activeClients = profile.clients.filter(c => c.isActive !== false);
-    const totalCA = activeClients.reduce((sum, c) => {
-      if (c.billing === "tjm") return sum + (c.dailyRate ?? 0) * (c.daysPerMonth ?? (c.daysPerWeek ?? 0) * 4.33) * 12;
-      if (c.billing === "forfait") return sum + (c.monthlyAmount ?? 0) * 12;
-      if (c.billing === "mission") return sum + (c.totalAmount ?? 0);
-      return sum;
-    }, 0);
-    return {
-      businessStatus: profile.businessStatus, role: profile.role, companyName: profile.companyName,
-      monthlyExpenses: profile.monthlyExpenses, savings: profile.savings, workDaysPerWeek: profile.workDaysPerWeek,
-      age: profile.age, monthlySalary: profile.monthlySalary, nbParts: profile.nbParts, chargesPro: profile.chargesPro,
-      clients: activeClients.map(c => ({
-        id: c.id, name: c.name, companyName: c.companyName, billing: c.billing,
-        dailyRate: c.dailyRate, daysPerWeek: c.daysPerWeek, daysPerMonth: c.daysPerMonth,
-        monthlyAmount: c.monthlyAmount, totalAmount: c.totalAmount, isActive: c.isActive,
-      })),
-      caAnnuel: Math.round(totalCA),
-      invoices: {
-        total: documents.length,
-        unpaid: documents.filter(d => d.type === "facture" && (d.status === "sent" || d.status === "late")).length,
-        unpaidAmount: documents.filter(d => d.type === "facture" && (d.status === "sent" || d.status === "late")).reduce((s, d) => s + d.totalTTC, 0),
-        drafts: documents.filter(d => d.status === "draft").length,
-      },
-    };
-  }
+  // Context is built centrally via buildFactoContext()
 
   function handleAction(action: { type: string; data: Record<string, unknown> }) {
     const clients = profile.clients.filter(c => c.isActive !== false);
@@ -210,7 +186,7 @@ export default function AssistantPage() {
       const res = await fetch("/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages, context: buildContext() }),
+        body: JSON.stringify({ messages: newMessages, context: buildFactoContext() }),
       });
 
       if (!res.ok) {
