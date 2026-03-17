@@ -71,6 +71,8 @@ import {
   Trash2,
   PanelLeftOpen,
   PanelLeftClose,
+  Maximize2,
+  Minus,
   type LucideProps,
 } from "lucide-react";
 import { type ComponentType } from "react";
@@ -202,4 +204,6 @@ export {
   Trash2,
   PanelLeftOpen,
   PanelLeftClose,
+  Maximize2,
+  Minus,
 };

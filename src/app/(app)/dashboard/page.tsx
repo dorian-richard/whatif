@@ -29,12 +29,15 @@ import {
   Download,
   FileText,
   Target,
+  ChevronDown,
+  ChevronUp,
 } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/tooltip";
 import { getUpcomingDeadlines, CATEGORY_CONFIG as DEADLINE_CATS } from "@/lib/fiscal-deadlines";
 import { usePipelineStore } from "@/stores/usePipelineStore";
 import { exportCSV, exportPDF } from "@/lib/export";
 import { MonthlyBreakdown } from "@/components/simulator/MonthlyBreakdown";
+import { WelcomeModal } from "@/components/WelcomeModal";
 
 type Meteo = "soleil" | "beau" | "variable" | "orageux";
 
@@ -191,10 +194,15 @@ export default function DashboardPage() {
   const prospects = usePipelineStore((s) => s.prospects);
   const weightedPipeline = prospects.reduce((s, p) => s + p.estimatedCA * (p.probability / 100), 0);
 
+  const [showAllKpis, setShowAllKpis] = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(false);
+  const [showClients, setShowClients] = useState(false);
+
   if (!isDbSynced) return <DashboardSkeleton />;
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">
+      <WelcomeModal />
       {/* Fiscal deadline alert */}
       {upcomingDeadlines.length > 0 && (
         <div className="bg-[#f87171]/10 border border-[#f87171]/20 rounded-2xl p-4">
@@ -315,65 +323,102 @@ export default function DashboardPage() {
         remunerationType={remunerationType}
       />
 
-      {/* KPI grid — horizontal scroll on mobile */}
-      <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-1 md:grid md:grid-cols-4 md:overflow-visible md:pb-0">
-        {[
+      {/* KPI grid */}
+      {(() => {
+        const allKpis = [
           { icon: <Wallet className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "CA mensuel", value: `${fmt(currentMonthCA)}\u20AC`, sub: `${fmt(annualCA)}\u20AC/an`, tip: "CA du mois en cours basé sur les jours ouvrés réels" },
-          { icon: <Users className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Clients actifs", value: String(activeClientsCount), sub: `${totalDaysPerWeek}j/sem facturés`, tip: "Clients actifs ce mois-ci (selon période de contrat)" },
-          { icon: <LifeBuoy className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Runway", value: `${runway.toFixed(1)} mois`, sub: `${fmt(profile.savings)}\u20AC de trésorerie`, tip: "Mois de trésorerie restante si ton CA tombe à zéro" },
+          { icon: <Users className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Clients actifs", value: String(activeClientsCount), sub: `${totalDaysPerWeek}j/sem facturés`, tip: "Clients actifs ce mois-ci" },
+          { icon: <LifeBuoy className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Runway", value: `${runway.toFixed(1)} mois`, sub: `${fmt(profile.savings)}\u20AC épargne`, tip: "Mois de trésorerie restante si ton CA tombe à zéro" },
+          { icon: <BadgePercent className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Charges", value: `${effectiveChargesRate.toFixed(0)}%`, sub: `${fmt(Math.round(totalCharges))}\u20AC/an`, tip: "Cotisations sociales + IR en % du CA brut" },
           { icon: <RefreshCw className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Récurrent", value: `${recurringPct.toFixed(0)}%`, sub: recurringPct >= 60 ? "Stable" : "À renforcer", tip: "Part du CA en TJM ou forfait (revenu prévisible)" },
-          { icon: <Shield className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Top client", value: `${dependencyPct.toFixed(0)}%`, sub: dependencyPct > 50 ? "Risque concentration" : "Diversifié", tip: "Part du CA venant de ton plus gros client. Au-dessus de 50% = risque de dépendance" },
-          { icon: <CalendarDays className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Utilisation", value: `${utilizationPct.toFixed(0)}%`, sub: `${totalDaysPerWeek}/${profile.workDaysPerWeek}j par sem`, tip: "Jours facturés / jours disponibles par semaine" },
-          { icon: <BadgePercent className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Charges totales", value: `${effectiveChargesRate.toFixed(0)}%`, sub: `${fmt(Math.round(totalCharges))}\u20AC/an`, tip: "Cotisations sociales + IR en % du CA brut" },
-          { icon: <Banknote className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Taux net effectif", value: `${annualCA > 0 ? ((netAfterAll / annualCA) * 100).toFixed(0) : 0}%`, sub: `${fmt(Math.round(netAfterAll))}\u20AC net fiscal/an`, tip: "Ce qui te reste réellement après toutes les charges et impôts" },
-          ...(prospects.length > 0 ? [{ icon: <Target className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Leads", value: `${fmt(Math.round(weightedPipeline))}\u20AC`, sub: `${prospects.length} prospect${prospects.length > 1 ? "s" : ""} en cours`, tip: "CA pondéré par probabilité de conversion de tes prospects" }] : []),
-        ].map((kpi) => (
-          <div key={kpi.label} className="min-w-[150px] snap-center shrink-0 md:min-w-0 md:shrink bg-card rounded-xl p-4 border border-border hover:bg-muted/50 transition-colors">
-            <div className="flex items-center gap-2 mb-2">
-              <div className={cn("size-7 rounded-lg flex items-center justify-center", kpi.iconBg)}>{kpi.icon}</div>
-              <Tooltip content={kpi.tip}>
-                <span className="text-[11px] text-muted-foreground/60 font-medium uppercase tracking-wider cursor-help">{kpi.label}</span>
-              </Tooltip>
+          { icon: <Shield className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Top client", value: `${dependencyPct.toFixed(0)}%`, sub: dependencyPct > 50 ? "Concentration" : "Diversifié", tip: "Part du CA venant de ton plus gros client" },
+          { icon: <CalendarDays className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Utilisation", value: `${utilizationPct.toFixed(0)}%`, sub: `${totalDaysPerWeek}/${profile.workDaysPerWeek}j/sem`, tip: "Jours facturés / jours disponibles par semaine" },
+          { icon: <Banknote className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Taux net", value: `${annualCA > 0 ? ((netAfterAll / annualCA) * 100).toFixed(0) : 0}%`, sub: `${fmt(Math.round(netAfterAll))}\u20AC/an`, tip: "Ce qui te reste après toutes les charges et impôts" },
+          ...(prospects.length > 0 ? [{ icon: <Target className="size-4 text-muted-foreground" />, iconBg: "bg-muted", label: "Leads", value: `${fmt(Math.round(weightedPipeline))}\u20AC`, sub: `${prospects.length} prospect${prospects.length > 1 ? "s" : ""}`, tip: "CA pondéré par probabilité de conversion" }] : []),
+        ];
+        const visibleKpis = showAllKpis ? allKpis : allKpis.slice(0, 4);
+        return (
+          <div>
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-1 md:grid md:grid-cols-4 md:overflow-visible md:pb-0">
+              {visibleKpis.map((kpi) => (
+                <div key={kpi.label} className="min-w-[150px] snap-center shrink-0 md:min-w-0 md:shrink bg-card rounded-xl p-4 border border-border hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={cn("size-7 rounded-lg flex items-center justify-center", kpi.iconBg)}>{kpi.icon}</div>
+                    <Tooltip content={kpi.tip}>
+                      <span className="text-[11px] text-muted-foreground/60 font-medium uppercase tracking-wider cursor-help">{kpi.label}</span>
+                    </Tooltip>
+                  </div>
+                  <div className="text-xl font-bold text-foreground">{kpi.value}</div>
+                  <div className="text-[11px] text-muted-foreground/60 mt-0.5">{kpi.sub}</div>
+                </div>
+              ))}
             </div>
-            <div className="text-xl font-bold text-foreground">{kpi.value}</div>
-            <div className="text-[11px] text-muted-foreground/60 mt-0.5">{kpi.sub}</div>
+            {allKpis.length > 4 && (
+              <button
+                onClick={() => setShowAllKpis(!showAllKpis)}
+                className="mt-2 w-full flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
+              >
+                {showAllKpis ? <><ChevronUp className="size-3" /> Moins</> : <><ChevronDown className="size-3" /> {allKpis.length - 4} indicateurs de plus</>}
+              </button>
+            )}
           </div>
-        ))}
-      </div>
+        );
+      })()}
 
       {/* Monthly CA chart */}
       <DashboardChart projection={projection} expenses={expenses} netRate={netRate} clients={profile.clients} profile={profile} />
 
-      {/* Monthly breakdown table */}
-      <MonthlyBreakdown projection={projection} clients={profile.clients} profile={profile} sim={DEFAULT_SIM} />
+      {/* Monthly breakdown table — collapsible */}
+      <div className="bg-card rounded-2xl border border-border overflow-hidden">
+        <button
+          onClick={() => setShowBreakdown(!showBreakdown)}
+          className="w-full flex items-center justify-between px-6 py-4 hover:bg-muted/30 transition-colors"
+        >
+          <h3 className="text-sm font-bold text-foreground">Detail mensuel</h3>
+          {showBreakdown ? <ChevronUp className="size-4 text-muted-foreground" /> : <ChevronDown className="size-4 text-muted-foreground" />}
+        </button>
+        {showBreakdown && (
+          <div className="px-0 pb-4">
+            <MonthlyBreakdown projection={projection} clients={profile.clients} profile={profile} sim={DEFAULT_SIM} />
+          </div>
+        )}
+      </div>
 
-      {/* Client breakdown */}
+      {/* Client breakdown — collapsible */}
       {profile.clients.length > 0 && (
-        <div className="bg-card rounded-2xl p-6 border border-border">
-          <h3 className="text-sm font-bold text-foreground mb-4">Répartition clients</h3>
-          <div className="space-y-3">
-            {profile.clients.map((c) => {
-              const ca = getClientBaseCA(c);
-              const pct = totalCA > 0 ? (ca / totalCA) * 100 : 0;
-              return (
-                <div key={c.id} className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color ?? "#5682F2" }} />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-foreground truncate">{c.name}</span>
-                      <span className="text-xs text-muted-foreground shrink-0"><span className="hidden sm:inline">{fmt(ca)}&euro;/mois &middot; </span>{pct.toFixed(0)}%</span>
-                    </div>
-                    <div className="w-full h-1.5 bg-muted rounded-full">
-                      <div
-                        className="h-full rounded-full transition-all duration-300"
-                        style={{ width: `${pct}%`, backgroundColor: c.color ?? "#5682F2" }}
-                      />
+        <div className="bg-card rounded-2xl border border-border overflow-hidden">
+          <button
+            onClick={() => setShowClients(!showClients)}
+            className="w-full flex items-center justify-between px-6 py-4 hover:bg-muted/30 transition-colors"
+          >
+            <h3 className="text-sm font-bold text-foreground">Repartition clients</h3>
+            {showClients ? <ChevronUp className="size-4 text-muted-foreground" /> : <ChevronDown className="size-4 text-muted-foreground" />}
+          </button>
+          {showClients && (
+            <div className="px-6 pb-6 space-y-3">
+              {profile.clients.map((c) => {
+                const ca = getClientBaseCA(c);
+                const pct = totalCA > 0 ? (ca / totalCA) * 100 : 0;
+                return (
+                  <div key={c.id} className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color ?? "#5682F2" }} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-sm font-medium text-foreground truncate">{c.name}</span>
+                        <span className="text-xs text-muted-foreground shrink-0"><span className="hidden sm:inline">{fmt(ca)}&euro;/mois &middot; </span>{pct.toFixed(0)}%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-muted rounded-full">
+                        <div
+                          className="h-full rounded-full transition-all duration-300"
+                          style={{ width: `${pct}%`, backgroundColor: c.color ?? "#5682F2" }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -432,16 +477,16 @@ function DashboardFinanceCards({
                 <Banknote className="size-5 text-[#4ade80]" />
                 <span className="text-xs font-semibold text-[#4ade80] uppercase tracking-wider">{monthlyLabel}</span>
               </div>
-              <div className={cn("text-2xl font-bold", netMonthly - expenses > 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
-                {fmt(Math.round(netMonthly - expenses))}&euro;
-              </div>
-              <div className="text-[11px] text-muted-foreground/60 mt-1">
-                CA {fmt(totalCA)}&euro; &rarr; net {fmt(Math.round(netMonthly))}&euro; &minus; charges {fmt(expenses)}&euro;
-              </div>
-              <div className="text-[10px] text-muted-foreground/60 mt-0.5">{statusConfig.label} &middot; URSSAF {(urssafRate * 100).toFixed(0)}% + IR {(irRate * 100).toFixed(0)}%{isIS ? ` + IS ${(statusConfig.is * 100).toFixed(0)}%` : ""}{isIS && remunerationType ? ` \u00B7 ${isDividendes ? "Dividendes" : isMixte ? "Mixte" : "Salaire"}` : ""}</div>
-              {monthlySubtext && (
-                <div className="text-[10px] text-[#fbbf24]/70 mt-1 italic">{monthlySubtext}</div>
-              )}
+              <Tooltip content={`CA ${fmt(totalCA)}\u20AC \u2192 net ${fmt(Math.round(netMonthly))}\u20AC \u2212 charges ${fmt(expenses)}\u20AC | ${statusConfig.label} \u00B7 URSSAF ${(urssafRate * 100).toFixed(0)}% + IR ${(irRate * 100).toFixed(0)}%${isIS ? ` + IS ${(statusConfig.is * 100).toFixed(0)}%` : ""}${monthlySubtext ? ` | ${monthlySubtext}` : ""}`}>
+                <div className="cursor-help">
+                  <div className={cn("text-2xl font-bold", netMonthly - expenses > 0 ? "text-[#4ade80]" : "text-[#f87171]")}>
+                    {fmt(Math.round(netMonthly - expenses))}&euro;
+                  </div>
+                  <div className="text-[11px] text-muted-foreground/60 mt-1">
+                    {statusConfig.label}{isIS && remunerationType ? ` \u00B7 ${isDividendes ? "Dividendes" : isMixte ? "Mixte" : "Salaire"}` : ""}
+                  </div>
+                </div>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -455,15 +500,16 @@ function DashboardFinanceCards({
                 <TrendingUp className="size-5 text-[#5682F2]" />
                 <span className="text-xs font-semibold text-[#5682F2] uppercase tracking-wider">{annualLabel}</span>
               </div>
-              <div className={cn("text-2xl font-bold", netAfterExpenses > 0 ? "text-[#5682F2]" : "text-[#f87171]")}>
-                {fmt(Math.round(netAfterExpenses))}&euro;
-              </div>
-              <div className="text-[11px] text-muted-foreground/60 mt-1">
-                {fmt(Math.round(netAfterAll))}&euro; net fiscal &minus; {fmt(expenses * 12)}&euro; charges
-              </div>
-              {annualSubtext && (
-                <div className="text-[10px] text-[#fbbf24]/70 mt-1 italic">{annualSubtext}</div>
-              )}
+              <Tooltip content={`${fmt(Math.round(netAfterAll))}\u20AC net fiscal \u2212 ${fmt(expenses * 12)}\u20AC charges${annualSubtext ? ` | ${annualSubtext}` : ""}`}>
+                <div className="cursor-help">
+                  <div className={cn("text-2xl font-bold", netAfterExpenses > 0 ? "text-[#5682F2]" : "text-[#f87171]")}>
+                    {fmt(Math.round(netAfterExpenses))}&euro;
+                  </div>
+                  <div className="text-[11px] text-muted-foreground/60 mt-1">
+                    Net fiscal {fmt(Math.round(netAfterAll))}&euro; &minus; charges {fmt(expenses * 12)}&euro;
+                  </div>
+                </div>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -509,49 +555,37 @@ function DashboardFinanceCards({
       {/* Salary recommendation */}
       {available > 0 && (
         <div className="bg-card rounded-xl p-4 border border-border">
-          <div className="flex items-start gap-3">
-            <div className="size-8 rounded-lg bg-[#a78bfa]/12 flex items-center justify-center shrink-0 mt-0.5">
+          <div className="flex items-center gap-3">
+            <div className="size-8 rounded-lg bg-[#a78bfa]/12 flex items-center justify-center shrink-0">
               <Lightbulb className="size-4 text-[#a78bfa]" />
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-bold text-[#a78bfa]">Rémunération conseillée</span>
-                {monthlySalary > 0 && (
-                  <span className={cn(
-                    "text-[10px] font-medium px-2 py-0.5 rounded-full",
-                    monthlySalary <= remPrudent
-                      ? "bg-[#4ade80]/12 text-[#4ade80]"
-                      : monthlySalary <= remConfort
-                        ? "bg-[#4ade80]/12 text-[#4ade80]"
-                        : monthlySalary <= remMax
-                          ? "bg-[#fbbf24]/12 text-[#fbbf24]"
-                          : "bg-[#f87171]/12 text-[#f87171]"
-                  )}>
-                    <HandCoins className="size-3 inline -mt-0.5 mr-0.5" />
-                    Actuel : {fmt(monthlySalary)}&euro;
-                  </span>
-                )}
+            <Tooltip content={`Base : ${fmt(Math.round(netMonthly))}\u20AC net/mois \u2212 ${fmt(expenses)}\u20AC charges. Prudent = 50% en tréso, confort = 30%, max = 100%`}>
+              <span className="text-xs font-bold text-[#a78bfa] cursor-help">Remuneration conseillee</span>
+            </Tooltip>
+            {monthlySalary > 0 && (
+              <span className={cn(
+                "text-[10px] font-medium px-2 py-0.5 rounded-full",
+                monthlySalary <= remConfort ? "bg-[#4ade80]/12 text-[#4ade80]" : monthlySalary <= remMax ? "bg-[#fbbf24]/12 text-[#fbbf24]" : "bg-[#f87171]/12 text-[#f87171]"
+              )}>
+                Actuel : {fmt(monthlySalary)}&euro;
+              </span>
+            )}
+            <div className="flex flex-wrap gap-2 ml-auto">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />
+                <span className="text-[11px] text-muted-foreground/60">Prudent</span>
+                <span className="text-sm font-bold text-[#4ade80]">{fmt(remPrudent)}&euro;</span>
               </div>
-              <div className="flex flex-wrap gap-2">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />
-                  <span className="text-[11px] text-muted-foreground/60">Prudent</span>
-                  <span className="text-sm font-bold text-[#4ade80]">{fmt(remPrudent)}&euro;</span>
-                </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#5682F2]" />
-                  <span className="text-[11px] text-muted-foreground/60">Confort</span>
-                  <span className="text-sm font-bold text-[#5682F2]">{fmt(remConfort)}&euro;</span>
-                </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#fbbf24]" />
-                  <span className="text-[11px] text-muted-foreground/60">Max</span>
-                  <span className="text-sm font-bold text-[#fbbf24]">{fmt(remMax)}&euro;</span>
-                </div>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#5682F2]" />
+                <span className="text-[11px] text-muted-foreground/60">Confort</span>
+                <span className="text-sm font-bold text-[#5682F2]">{fmt(remConfort)}&euro;</span>
               </div>
-              <p className="text-[10px] text-muted-foreground/60 mt-2">
-                Base : {fmt(Math.round(netMonthly))}&euro; net/mois &minus; {fmt(expenses)}&euro; charges. Prudent garde 50% en trésorerie, confort 30%, max = 100% du disponible.
-              </p>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-lg border border-border">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#fbbf24]" />
+                <span className="text-[11px] text-muted-foreground/60">Max</span>
+                <span className="text-sm font-bold text-[#fbbf24]">{fmt(remMax)}&euro;</span>
+              </div>
             </div>
           </div>
         </div>
