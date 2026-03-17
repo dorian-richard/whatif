@@ -11,6 +11,7 @@ import { FinalCTA } from "@/components/landing/FinalCTA";
 import { FAQ } from "@/components/landing/FAQ";
 import { Comparison } from "@/components/landing/Comparison";
 import { TJMCalculator } from "@/components/landing/TJMCalculator";
+import { Facto } from "@/components/landing/Facto";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -256,6 +257,7 @@ export default function Home() {
 
       <Hero />
       <Features />
+      <Facto />
       <Demo />
       <TJMCalculator />
       <Testimonials />
