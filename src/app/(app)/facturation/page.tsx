@@ -329,7 +329,8 @@ export default function FacturationPage() {
 
         {/* Edit form — modal */}
         {editing && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center pt-8 pb-8 px-4 overflow-y-auto bg-black/50 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setEditing(null); }}>
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setEditing(null); }}>
+            <div className="min-h-full flex items-start justify-center pt-8 pb-8 px-4" onClick={(e) => { if (e.target === e.currentTarget) setEditing(null); }}>
             <div ref={formRef} className="w-full max-w-3xl">
               <DocumentForm
                 doc={editing}
@@ -350,6 +351,7 @@ export default function FacturationPage() {
                 pdfOptions={pdfOptions}
                 onPdfOptionsChange={handlePdfOptionsChange}
               />
+            </div>
             </div>
           </div>
         )}
