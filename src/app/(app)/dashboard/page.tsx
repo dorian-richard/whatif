@@ -196,7 +196,7 @@ export default function DashboardPage() {
 
   const [showAllKpis, setShowAllKpis] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
-  const [showClients, setShowClients] = useState(false);
+  const [showClients, setShowClients] = useState(true);
 
   if (!isDbSynced) return <DashboardSkeleton />;
 
@@ -391,21 +391,23 @@ export default function DashboardPage() {
             onClick={() => setShowClients(!showClients)}
             className="w-full flex items-center justify-between px-6 py-4 hover:bg-muted/30 transition-colors"
           >
-            <h3 className="text-sm font-bold text-foreground">Repartition clients</h3>
+            <h3 className="text-sm font-bold text-foreground">CA par client sur l&apos;ann&eacute;e</h3>
             {showClients ? <ChevronUp className="size-4 text-muted-foreground" /> : <ChevronDown className="size-4 text-muted-foreground" />}
           </button>
           {showClients && (
             <div className="px-6 pb-6 space-y-3">
               {profile.clients.map((c) => {
-                const ca = getClientBaseCA(c);
-                const pct = totalCA > 0 ? (ca / totalCA) * 100 : 0;
+                const caMensuel = getClientBaseCA(c);
+                const caAnnuel = caMensuel * 12;
+                const totalAnnuel = totalCA * 12;
+                const pct = totalCA > 0 ? (caMensuel / totalCA) * 100 : 0;
                 return (
                   <div key={c.id} className="flex items-center gap-3">
                     <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color ?? "#5682F2" }} />
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-sm font-medium text-foreground truncate">{c.name}</span>
-                        <span className="text-xs text-muted-foreground shrink-0"><span className="hidden sm:inline">{fmt(ca)}&euro;/mois &middot; </span>{pct.toFixed(0)}%</span>
+                        <span className="text-xs text-muted-foreground shrink-0">{fmt(caAnnuel)}&euro;/an<span className="hidden sm:inline"> &middot; {fmt(caMensuel)}&euro;/mois</span> &middot; {pct.toFixed(0)}%</span>
                       </div>
                       <div className="w-full h-1.5 bg-muted rounded-full">
                         <div
@@ -417,6 +419,10 @@ export default function DashboardPage() {
                   </div>
                 );
               })}
+              <div className="flex items-center justify-between pt-3 mt-1 border-t border-border">
+                <span className="text-sm font-bold text-foreground">Total</span>
+                <span className="text-sm font-bold text-foreground">{fmt(totalCA * 12)}&euro;/an</span>
+              </div>
             </div>
           )}
         </div>
