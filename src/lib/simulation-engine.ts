@@ -97,6 +97,20 @@ export function getClientBaseCA(client: ClientData): number {
 }
 
 /**
+ * Calcule le CA annuel d'un seul client en sommant ses 12 mois.
+ * Tient compte de startMonth/endMonth (ex: mission ponctuelle sur 1 mois).
+ */
+export function getClientAnnualCA(client: ClientData, vacationDaysPerMonth?: number[]): number {
+  let total = 0;
+  for (let month = 0; month < 12; month++) {
+    const season = SEASONALITY[month];
+    const vacDays = vacationDaysPerMonth?.[month] ?? 0;
+    total += getClientMonthlyCA(client, month, season, vacDays);
+  }
+  return total;
+}
+
+/**
  * Calcule le CA annuel reel a partir des clients en tenant compte de la
  * saisonnalite, des periodes de contrat et des clients inactifs.
  * Resultat coherent avec simulate().

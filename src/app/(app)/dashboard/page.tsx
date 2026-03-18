@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { simulate, getClientBaseCA, getClientMonthlyCA, computeNetFromCA, JOURS_OUVRES, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
+import { simulate, getClientBaseCA, getClientMonthlyCA, getClientAnnualCA, computeNetFromCA, JOURS_OUVRES, AVG_JOURS_OUVRES } from "@/lib/simulation-engine";
 import { DEFAULT_SIM, MONTHS_SHORT, BUSINESS_STATUS_CONFIG, SEASONALITY } from "@/lib/constants";
 import { fmt, cn } from "@/lib/utils";
 import { EarningsCounter } from "@/components/dashboard/EarningsCounter";
@@ -397,17 +397,17 @@ export default function DashboardPage() {
           {showClients && (
             <div className="px-6 pb-6 space-y-3">
               {profile.clients.map((c) => {
+                const caAnnuel = getClientAnnualCA(c, profile.vacationDaysPerMonth);
                 const caMensuel = getClientBaseCA(c);
-                const caAnnuel = caMensuel * 12;
-                const totalAnnuel = totalCA * 12;
-                const pct = totalCA > 0 ? (caMensuel / totalCA) * 100 : 0;
+                const totalAnnuel = profile.clients.reduce((s, cl) => s + getClientAnnualCA(cl, profile.vacationDaysPerMonth), 0);
+                const pct = totalAnnuel > 0 ? (caAnnuel / totalAnnuel) * 100 : 0;
                 return (
                   <div key={c.id} className="flex items-center gap-3">
                     <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color ?? "#5682F2" }} />
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-sm font-medium text-foreground truncate">{c.name}</span>
-                        <span className="text-xs text-muted-foreground shrink-0">{fmt(caAnnuel)}&euro;/an<span className="hidden sm:inline"> &middot; {fmt(caMensuel)}&euro;/mois</span> &middot; {pct.toFixed(0)}%</span>
+                        <span className="text-xs text-muted-foreground shrink-0">{fmt(caAnnuel)}&euro;/an{c.billing !== "mission" && <span className="hidden sm:inline"> &middot; {fmt(caMensuel)}&euro;/mois</span>} &middot; {pct.toFixed(0)}%</span>
                       </div>
                       <div className="w-full h-1.5 bg-muted rounded-full">
                         <div
@@ -421,7 +421,7 @@ export default function DashboardPage() {
               })}
               <div className="flex items-center justify-between pt-3 mt-1 border-t border-border">
                 <span className="text-sm font-bold text-foreground">Total</span>
-                <span className="text-sm font-bold text-foreground">{fmt(totalCA * 12)}&euro;/an</span>
+                <span className="text-sm font-bold text-foreground">{fmt(profile.clients.reduce((s, cl) => s + getClientAnnualCA(cl, profile.vacationDaysPerMonth), 0))}&euro;/an</span>
               </div>
             </div>
           )}

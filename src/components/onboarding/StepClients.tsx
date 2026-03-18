@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { ClientForm } from "@/components/clients/ClientForm";
 import { fmt } from "@/lib/utils";
-import { getClientBaseCA } from "@/lib/simulation-engine";
+import { getClientBaseCA, getClientAnnualCA } from "@/lib/simulation-engine";
 import { CLIENT_COLORS, PLAN_LIMITS } from "@/lib/constants";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { getEffectiveStatus } from "@/lib/subscription";
@@ -65,7 +65,7 @@ export function StepClients() {
       {clients.length > 0 && (
         <div className="mt-4 p-3 bg-[#5682F2]/10 border border-[#5682F2]/20 rounded-xl text-center space-y-1">
           <span className="text-sm text-[#5682F2] font-medium block">
-            CA total : <strong>{fmt(totalCA * 12)}&euro;/an</strong> <span className="text-xs font-normal">({fmt(totalCA)}&euro;/mois)</span>
+            CA total : <strong>{fmt(clients.reduce((s, c) => s + getClientAnnualCA(c), 0))}&euro;/an</strong> <span className="text-xs font-normal">({fmt(totalCA)}&euro;/mois moy.)</span>
           </span>
           <div className="flex justify-center gap-4 text-xs text-muted-foreground">
             <span>{clients.filter((c) => c.billing === "tjm").length} TJM</span>
