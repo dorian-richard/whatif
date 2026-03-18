@@ -25,6 +25,7 @@ const FREE_LIMITATIONS = [
   "Estime ta retraite et tes aides à la création",
   "Optimise ta fiscalité avec une holding",
   "Score de santé financière sur 6 axes",
+  "Facto — ton copilote IA financier, 24h/24",
   "Export PDF & CSV",
 ];
 
@@ -43,6 +44,7 @@ const PRO_FEATURES = [
   "Estime ta retraite et tes aides à la création",
   "Optimise ta fiscalité avec une holding",
   "Score de santé financière sur 6 axes",
+  "Facto — ton copilote IA financier, 24h/24",
   "Export PDF & CSV",
   "Support prioritaire",
 ];
