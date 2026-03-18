@@ -5,20 +5,20 @@ import { AnimateOnScroll } from "./AnimateOnScroll";
 const HERO_FEATURES = [
   {
     icon: SlidersHorizontal,
-    title: "Et si je perdais un client ?",
-    desc: "Vacances, hausse de TJM, passage à 4 jours, perte d'un client — simule le scénario, vois le résultat avant de décider.",
+    title: "\"Si je perds ce client, je survis ?\"",
+    desc: "Vacances, hausse de TJM, passage à 4 jours, perte d'un client — simule avant de flipper.",
     color: "#5682F2",
   },
   {
     icon: BarChart3,
-    title: "12 mois de visibilité",
-    desc: "CA, revenu net, trésorerie mois par mois avec les vrais jours ouvrés, la saisonnalité et tous tes clients.",
+    title: "\"Combien mettre de côté pour l'URSSAF ?\"",
+    desc: "Net réel mois par mois, provisions URSSAF et IR calculées — plus de mauvaise surprise à la déclaration.",
     color: "#fbbf24",
   },
   {
     icon: Scale,
-    title: "Scénarios comparés",
-    desc: "Sauvegarde plusieurs configurations, compare-les côte à côte. Visualise l'impact de chaque décision avant de la prendre.",
+    title: "\"Micro ou EURL, je perds combien ?\"",
+    desc: "Compare ton net exact par statut avec ton CA réel. Vois à quel moment ça vaut le coup de basculer.",
     color: "#ec4899",
   },
 ];
@@ -92,11 +92,11 @@ export function Features() {
           <div className="text-center mb-16">
             <span className="text-sm font-medium text-primary uppercase tracking-widest mb-3 block">Fonctionnalités</span>
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-              Tout ce qu&apos;il faut pour{" "}
-              <span className="fn-gradient-text">décider sereinement</span>
+              Arr&ecirc;te de piloter{" "}
+              <span className="fn-gradient-text">&agrave; l&apos;aveugle</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Simulateur, comparateur, benchmark et outils de décision — tout en un.
+              Les r&eacute;ponses que tu cherches sur Reddit et dans les groupes Facebook &mdash; sauf qu&apos;ici c&apos;est avec tes vrais chiffres.
             </p>
           </div>
         </AnimateOnScroll>

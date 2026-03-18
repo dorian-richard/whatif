@@ -7,32 +7,28 @@ import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const QUESTIONS = [
   {
-    q: "Freelens, c\u2019est quoi exactement ?",
-    a: "Freelens est le copilote financier des freelances en France. Simulateur de revenus, comparateur de statuts (micro, EURL IR/IS, SASU IR/IS, portage), facturation avec devis et factures PDF, pipeline commercial, calendrier fiscal, tr\u00e9sorerie pr\u00e9visionnelle et benchmark TJM \u2014 tout en un.",
+    q: "J\u2019ai un tableur Excel, pourquoi Freelens ?",
+    a: "Ton tableur ne calcule pas l\u2019URSSAF, l\u2019IR progressif, le PFU ou la taxe PUMa. Et il ne se met pas \u00e0 jour quand les taux changent. Freelens fait tout \u00e7a automatiquement avec les vrais bar\u00e8mes 2026, en 2 minutes.",
+  },
+  {
+    q: "Les calculs sont-ils fiables ? Mon comptable dit que...",
+    a: "Le moteur utilise les taux URSSAF 2026, le bar\u00e8me IR progressif, l\u2019IS progressif (15%/25%), le PFU \u00e0 31,4%, l\u2019abattement 10% frais pro et la taxe PUMa. Ce sont les m\u00eames chiffres que ton comptable, sauf que tu les as en temps r\u00e9el, pas 3 mois apr\u00e8s. Freelens ne remplace pas un expert-comptable, il te permet de comprendre tes chiffres avant de lui parler.",
+  },
+  {
+    q: "Je suis en micro, \u00e7a me concerne ?",
+    a: "Surtout toi. Le simulateur te montre exactement combien tu gagnes vraiment apr\u00e8s URSSAF et IR. Et quand ton CA approche les seuils, tu vois en un clic si l\u2019EURL ou la SASU te ferait gagner plus.",
   },
   {
     q: "Quelle diff\u00e9rence entre Free et Pro ?",
-    a: "Le plan Free te donne acc\u00e8s au dashboard avec projections 12 mois et \u00e0 l\u2019objectif revenu (1 client, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients et sc\u00e9narios illimit\u00e9s, comparateur de statuts avec mix salaire/dividendes, devis et factures PDF, suivi des paiements, pipeline commercial, calendrier fiscal, tr\u00e9sorerie, tendances YoY, simulation retraite/ACRE, benchmark TJM (27 m\u00e9tiers), diagnostic financier et export PDF/CSV.",
-  },
-  {
-    q: "Les calculs sont-ils fiables ?",
-    a: "Le moteur utilise les taux URSSAF 2026, le bar\u00e8me IR progressif, l\u2019IS progressif (15%/25%), le PFU \u00e0 31,4%, l\u2019abattement 10% frais pro sur les salaires, et la taxe PUMa sur les dividendes. Tous les statuts sont support\u00e9s : micro, EI, EURL IR/IS, SASU IR/IS, portage.",
-  },
-  {
-    q: "Puis-je cr\u00e9er des devis et factures ?",
-    a: "Oui. L\u2019outil de facturation int\u00e9gr\u00e9 g\u00e8re devis et factures avec num\u00e9rotation automatique, TVA configurable, conditions de paiement, export PDF professionnel, conversion devis \u2192 facture en 1 clic, et d\u00e9tection automatique des retards.",
+    a: "Le plan Free te donne le dashboard avec projections 12 mois (1 client, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients illimit\u00e9s, comparateur de statuts, facturation PDF, pipeline commercial, calendrier fiscal, tr\u00e9sorerie, benchmark TJM, simulation retraite/ACRE et l\u2019assistant IA Facto.",
   },
   {
     q: "Mes donn\u00e9es sont-elles en s\u00e9curit\u00e9 ?",
-    a: "Oui. Tes donn\u00e9es sont stock\u00e9es sur des serveurs europ\u00e9ens avec chiffrement de bout en bout. Nous ne revendons aucune donn\u00e9e et tu peux supprimer ton compte \u00e0 tout moment.",
+    a: "Oui. Tes donn\u00e9es sont stock\u00e9es sur des serveurs europ\u00e9ens (Paris) avec chiffrement. L\u2019IA Facto tourne sur AWS Bedrock en Europe \u2014 tes donn\u00e9es ne quittent pas l\u2019UE. On ne revend rien, et tu peux supprimer ton compte \u00e0 tout moment.",
   },
   {
-    q: "Quels moyens de paiement acceptez-vous ?",
-    a: "Cartes bancaires (Visa, Mastercard, Amex) via Stripe. Paiement s\u00e9curis\u00e9 et conforme PCI-DSS. Abonnement mensuel (9\u20ac/mois) ou annuel (79\u20ac/an).",
-  },
-  {
-    q: "Puis-je \u00eatre rembours\u00e9 ?",
-    a: "Tu b\u00e9n\u00e9ficies d\u2019un essai gratuit de 7 jours sans carte bancaire. Ensuite, tu peux annuler ton abonnement \u00e0 tout moment depuis tes param\u00e8tres. L\u2019annulation prend effet \u00e0 la fin de la p\u00e9riode en cours.",
+    q: "Je peux tester sans payer ?",
+    a: "Oui. Essai Pro gratuit de 7 jours, sans carte bancaire. Tu testes tout, et si \u00e7a te pla\u00eet pas, tu ne paies rien. Annulation en 1 clic depuis les param\u00e8tres.",
   },
 ];
 

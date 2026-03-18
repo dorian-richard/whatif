@@ -14,17 +14,17 @@ export function Hero() {
         <div className="mb-12" />
         <AnimateOnScroll>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
-            <span className="text-foreground">Décide avec les chiffres,</span>
+            <span className="text-foreground">Tu sais pas combien</span>
             <br />
-            <span className="text-foreground">pas au </span>
-            <span className="fn-gradient-text">feeling.</span>
+            <span className="text-foreground">tu </span>
+            <span className="fn-gradient-text">gagnes vraiment.</span>
           </h1>
         </AnimateOnScroll>
 
         <AnimateOnScroll delay={0.1}>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Simulateur, comparateur de statuts (micro, EURL, SASU, portage), benchmark TJM, suivi des paiements, facturation, prospects, objectif revenu et simulation holding.
-            Tous les outils pour piloter ton activité.
+            Entre l&apos;URSSAF, l&apos;IR, la TVA et les charges pro, impossible de savoir ce qu&apos;il te reste.
+            Freelens calcule ton vrai net, compare les statuts et te dit quoi provisionner &mdash; en 2 minutes.
           </p>
         </AnimateOnScroll>
 

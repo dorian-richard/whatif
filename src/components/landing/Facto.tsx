@@ -70,7 +70,7 @@ export function Facto() {
               <span className="fn-gradient-text">Facto</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Ton expert-comptable IA, disponible 24h/24. Il connait ton CA, tes clients, ton statut — et repond avec tes vrais chiffres.
+              L&apos;expert-comptable que tu peux appeler &agrave; 23h. Il conna&icirc;t ton CA, tes clients, ton statut &mdash; et r&eacute;pond avec tes vrais chiffres, pas des g&eacute;n&eacute;ralit&eacute;s.
             </p>
           </div>
         </AnimateOnScroll>

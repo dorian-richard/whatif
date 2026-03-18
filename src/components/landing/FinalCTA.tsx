@@ -13,13 +13,13 @@ export function FinalCTA() {
 
       <div className="relative text-center px-4 sm:px-6 max-w-3xl mx-auto">
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-tight mb-6">
-          Prêt à{" "}
-          <span className="fn-gradient-text">piloter</span>
-          {" "}ton activité ?
+          Arr&ecirc;te de stresser,{" "}
+          <br className="hidden sm:block" />
+          commence &agrave;{" "}
+          <span className="fn-gradient-text">piloter.</span>
         </h2>
         <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
-          Rejoins les freelances qui prennent des décisions éclairées.
-          Dashboard, scénarios et fiscalité en 2 minutes.
+          En 2 minutes tu sais exactement combien tu gagnes, combien provisionner et quel statut te co&ucirc;te le moins.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
           <Link

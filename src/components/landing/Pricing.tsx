@@ -110,7 +110,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
           {/* Free */}
           <div className="relative rounded-2xl p-6 border bg-muted/40 border-border hover:bg-muted/50 transition-all duration-300">
             <h3 className="text-lg font-bold text-foreground">Free</h3>
-            <p className="text-sm text-muted-foreground/80 mb-4">Pour découvrir Freelens</p>
+            <p className="text-sm text-muted-foreground/80 mb-4">Pour voir si &ccedil;a te parle</p>
             <div className="mb-6">
               <span className="text-4xl font-bold text-foreground">0&euro;</span>
               <span className="text-muted-foreground/80 ml-1">pour toujours</span>
@@ -147,7 +147,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
               7 jours gratuits
             </span>
             <h3 className="text-lg font-bold text-foreground">Pro</h3>
-            <p className="text-sm text-muted-foreground/80 mb-4">Pour les freelances sérieux</p>
+            <p className="text-sm text-muted-foreground/80 mb-4">Pour ceux qui veulent dormir tranquille</p>
             <div className="mb-6 flex items-baseline gap-1">
               <span className="text-4xl font-bold text-foreground">{proPrice}&euro;</span>
               <span className="text-muted-foreground/80">{proPeriod}</span>
