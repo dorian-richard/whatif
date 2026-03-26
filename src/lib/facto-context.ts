@@ -9,6 +9,7 @@ import { useHoldingStore } from "@/stores/useHoldingStore";
 import { usePipelineStore } from "@/stores/usePipelineStore";
 import { usePaymentStore } from "@/stores/usePaymentStore";
 import { useWorkLogStore } from "@/stores/useWorkLogStore";
+import { getClientAnnualCA } from "@/lib/simulation-engine";
 
 export function buildFactoContext() {
   const profile = useProfileStore.getState();
@@ -20,12 +21,7 @@ export function buildFactoContext() {
 
   // ─── Profile & clients ───
   const activeClients = profile.clients.filter((c) => c.isActive !== false);
-  const totalCA = activeClients.reduce((sum, c) => {
-    if (c.billing === "tjm") return sum + (c.dailyRate ?? 0) * (c.daysPerMonth ?? (c.daysPerWeek ?? 0) * 4.33) * 12;
-    if (c.billing === "forfait") return sum + (c.monthlyAmount ?? 0) * 12;
-    if (c.billing === "mission") return sum + (c.totalAmount ?? 0);
-    return sum;
-  }, 0);
+  const totalCA = activeClients.reduce((sum, c) => sum + getClientAnnualCA(c, profile.vacationDaysPerMonth), 0);
 
   // ─── Invoices summary ───
   const factures = documents.filter((d) => d.type === "facture");

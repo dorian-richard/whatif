@@ -75,20 +75,32 @@ export function getClientMonthlyCA(
  */
 export function getClientBaseCA(client: ClientData): number {
   if (client.isActive === false) return 0;
+
+  // Nombre de mois actifs (startMonth/endMonth)
+  const start = client.startMonth ?? 0;
+  const end = client.endMonth ?? 11;
+  const activeMonths = end - start + 1;
+
   switch (client.billing) {
     case "tjm": {
+      let monthly: number;
       if (client.daysPerYear) {
-        return (client.dailyRate ?? 0) * client.daysPerYear / 12;
+        monthly = (client.dailyRate ?? 0) * client.daysPerYear / 12;
+      } else if (client.daysPerWeek != null) {
+        monthly = (client.dailyRate ?? 0) * (client.daysPerWeek / 5) * AVG_JOURS_OUVRES;
+      } else {
+        monthly = (client.dailyRate ?? 0) * (client.daysPerMonth ?? 0);
       }
-      if (client.daysPerWeek != null) {
-        return (client.dailyRate ?? 0) * (client.daysPerWeek / 5) * AVG_JOURS_OUVRES;
-      }
-      return (client.dailyRate ?? 0) * (client.daysPerMonth ?? 0);
+      // Ramener au prorata si le contrat ne couvre pas l'annee entiere
+      return activeMonths < 12 ? monthly * (activeMonths / 12) : monthly;
     }
     case "forfait":
-      return client.monthlyAmount ?? 0;
+      // Forfait mensuel proratise sur la duree du contrat
+      return activeMonths < 12
+        ? (client.monthlyAmount ?? 0) * (activeMonths / 12)
+        : (client.monthlyAmount ?? 0);
     case "mission": {
-      const duration = Math.max(1, (client.endMonth ?? 11) - (client.startMonth ?? 0) + 1);
+      const duration = Math.max(1, activeMonths);
       return (client.totalAmount ?? 0) / duration;
     }
     default:

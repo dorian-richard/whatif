@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/stores/useProfileStore";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import { createClient } from "@/lib/supabase/client";
+import { getClientAnnualCA } from "@/lib/simulation-engine";
 import { cn } from "@/lib/utils";
 import { Sparkles, Send, X, Bot } from "@/components/ui/icons";
 import ReactMarkdown from "react-markdown";
@@ -68,12 +69,7 @@ export function AssistantChat() {
 
   function buildContext() {
     const activeClients = profile.clients.filter(c => c.isActive !== false);
-    const totalCA = activeClients.reduce((sum, c) => {
-      if (c.billing === "tjm") return sum + (c.dailyRate ?? 0) * (c.daysPerMonth ?? (c.daysPerWeek ?? 0) * 4.33) * 12;
-      if (c.billing === "forfait") return sum + (c.monthlyAmount ?? 0) * 12;
-      if (c.billing === "mission") return sum + (c.totalAmount ?? 0);
-      return sum;
-    }, 0);
+    const totalCA = activeClients.reduce((sum, c) => sum + getClientAnnualCA(c, profile.vacationDaysPerMonth), 0);
 
     const invoiceStats = {
       total: documents.length,
@@ -103,6 +99,8 @@ export function AssistantChat() {
         daysPerMonth: c.daysPerMonth,
         monthlyAmount: c.monthlyAmount,
         totalAmount: c.totalAmount,
+        startMonth: c.startMonth,
+        endMonth: c.endMonth,
         isActive: c.isActive,
       })),
       caAnnuel: Math.round(totalCA),
