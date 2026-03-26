@@ -171,7 +171,7 @@ const jsonLd = [
         name: "Quels moyens de paiement acceptez-vous ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Nous acceptons les cartes bancaires (Visa, Mastercard, Amex) via Stripe. Le paiement est sécurisé et conforme PCI-DSS. Tu peux choisir un abonnement mensuel (9€/mois) ou annuel (79€/an, soit 2 mois offerts).",
+          text: "Nous acceptons les cartes bancaires (Visa, Mastercard, Amex) via Stripe. Le paiement est sécurisé et conforme PCI-DSS. Tu peux choisir un abonnement mensuel (19€/mois) ou annuel (190€/an, soit 2 mois offerts).",
         },
       },
       {

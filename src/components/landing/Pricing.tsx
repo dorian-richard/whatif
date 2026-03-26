@@ -52,7 +52,7 @@ const PRO_FEATURES = [
 export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   const [annual, setAnnual] = useState(false);
 
-  const proPrice = annual ? 79 : 9;
+  const proPrice = annual ? 190 : 19;
   const proPeriod = annual ? "/an" : "/mois";
   const savings = annual ? "2 mois offerts" : null;
   const plan = annual ? "annual" : "monthly";
@@ -100,7 +100,7 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
             >
               Annuel
               <span className="text-[10px] font-bold bg-[#F4BE7E] dark:bg-[#F4BE7E] text-[#1a1a2e] px-2 py-0.5 rounded-full">
-                &Eacute;conomise 29&euro;
+                &Eacute;conomise 38&euro;
               </span>
             </button>
           </div>
