@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | Freelens",
   },
   description:
-    "Simulateur de revenus, comparateur de statuts juridiques, benchmark TJM et outils de d\u00e9cision pour freelances. Gratuit et 100% confidentiel.",
+    "Calcule ton net r\u00e9el apr\u00e8s URSSAF et IR, compare les statuts, pilote ta tr\u00e9sorerie. Le copilote financier des freelances. Essai Pro 7 jours gratuit.",
   keywords: [
     "freelance",
     "simulateur freelance",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     siteName: "Freelens",
     title: "Freelens \u2014 Le copilote financier des freelances",
     description:
-      "Simulateur de revenus, comparateur de statuts, benchmark TJM march\u00e9. Prends les bonnes d\u00e9cisions pour ton activit\u00e9 freelance.",
+      "Calcule ton net r\u00e9el, compare les statuts, pilote ta tr\u00e9sorerie. D\u00e9cide avec les chiffres, pas au feeling.",
     images: [
       {
         url: "/og-image.png",
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Freelens \u2014 Le copilote financier des freelances",
     description:
-      "Simulateur de revenus, comparateur de statuts, benchmark TJM. Gratuit et confidentiel.",
+      "Calcule ton net r\u00e9el, compare les statuts, pilote ta tr\u00e9sorerie. D\u00e9cide avec les chiffres.",
     images: ["/og-image.png"],
   },
   robots: {

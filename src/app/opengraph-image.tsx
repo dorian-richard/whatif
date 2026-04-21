@@ -117,7 +117,7 @@ export default function OGImage() {
             marginBottom: 40,
           }}
         >
-          Simulateur de revenus · Comparateur de statuts · Benchmark TJM
+          Net réel · Comparateur de statuts · Pilotage financier
         </div>
 
         {/* CTA pill */}

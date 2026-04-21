@@ -16,11 +16,11 @@ const QUESTIONS = [
   },
   {
     q: "Je suis en micro, \u00e7a me concerne ?",
-    a: "Surtout toi. Le simulateur te montre exactement combien tu gagnes vraiment apr\u00e8s URSSAF et IR. Et quand ton CA approche les seuils, tu vois en un clic si l\u2019EURL ou la SASU te ferait gagner plus.",
+    a: "Surtout toi. Freelens te montre exactement combien tu gagnes vraiment apr\u00e8s URSSAF et IR. Et quand ton CA approche les seuils, tu vois en un clic si l\u2019EURL ou la SASU te ferait gagner plus.",
   },
   {
     q: "Quelle diff\u00e9rence entre Free et Pro ?",
-    a: "Le plan Free te donne le dashboard avec projections 12 mois (1 client, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients illimit\u00e9s, comparateur de statuts, facturation PDF, pipeline commercial, calendrier fiscal, tr\u00e9sorerie, benchmark TJM, simulation retraite/ACRE et l\u2019assistant IA Facto.",
+    a: "Le plan Free te donne le dashboard avec projections 12 mois (1 client, 1 sc\u00e9nario). Le plan Pro d\u00e9bloque tout : clients illimit\u00e9s, comparateur de statuts, facturation PDF, pipeline commercial, calendrier fiscal, tr\u00e9sorerie, benchmark TJM, projection retraite/ACRE et l\u2019assistant IA Facto.",
   },
   {
     q: "Mes donn\u00e9es sont-elles en s\u00e9curit\u00e9 ?",

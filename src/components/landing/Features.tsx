@@ -6,7 +6,7 @@ const HERO_FEATURES = [
   {
     icon: SlidersHorizontal,
     title: "\"Si je perds ce client, je survis ?\"",
-    desc: "Vacances, hausse de TJM, passage à 4 jours, perte d'un client — simule avant de flipper.",
+    desc: "Vacances, hausse de TJM, passage à 4 jours, perte d'un client — vois l'impact avant de flipper.",
     color: "#5682F2",
   },
   {
@@ -62,9 +62,9 @@ const PRO_GROUPS = [
     title: "Projections long terme",
     color: "#a78bfa",
     items: [
-      "Simulation retraite : pension estimée vs CDI",
-      "Simulation ACRE : économies URSSAF sur 1 an",
-      "Simulateur patrimoine : épargne sur 5 à 30 ans",
+      "Projection retraite : pension estimée vs CDI",
+      "Calcul ACRE : économies URSSAF sur 1 an",
+      "Projection patrimoine : épargne sur 5 à 30 ans",
       "Optimisation holding : IS, mère-fille, graphe interactif",
     ],
   },

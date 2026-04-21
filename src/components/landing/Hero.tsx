@@ -37,10 +37,10 @@ export function Hero() {
               Essai gratuit 7 jours &rarr;
             </Link>
             <a
-              href="#simulation"
+              href="#demo"
               className="px-6 py-3 bg-muted/30 text-foreground rounded-full text-base font-semibold hover:bg-muted transition-colors border border-border backdrop-blur-sm"
             >
-              Voir la simulation
+              Voir la d&eacute;mo
             </a>
           </div>
           <p className="text-sm text-muted-foreground/80 mb-12">
@@ -98,7 +98,7 @@ function DashboardMockup() {
           <span className="text-xs text-muted-foreground font-medium">Projection 12 mois</span>
           <div className="flex gap-3 text-[10px]">
             <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-[#5682F2]" /> Actuel</span>
-            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-[#F4BE7E]" /> Simulé</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-[#F4BE7E]" /> Projet&eacute;</span>
           </div>
         </div>
         <svg viewBox="0 0 480 120" className="w-full h-auto">

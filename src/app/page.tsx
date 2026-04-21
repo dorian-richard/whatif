@@ -24,18 +24,18 @@ const jsonLd = [
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     description:
-      "Le copilote financier des freelances en France : simulateur de revenus, comparateur de statuts, pipeline commercial, suivi des paiements, calendrier fiscal, trésorerie prévisionnelle et benchmark TJM.",
+      "Le copilote financier des freelances en France : calcule ton net réel après URSSAF et IR, compare les statuts, pilote ta trésorerie, gère tes factures et ton pipeline commercial.",
     url: "https://freelens.io",
     offers: [
       {
         "@type": "Offer",
         price: "0",
         priceCurrency: "EUR",
-        description: "Plan Free — Simulateur, comparateur, benchmark",
+        description: "Plan Free — Projection 12 mois, comparateur, benchmark",
       },
       {
         "@type": "Offer",
-        price: "9",
+        price: "19",
         priceCurrency: "EUR",
         description: "Plan Pro — Tous les outils, clients illimités",
       },
@@ -52,7 +52,7 @@ const jsonLd = [
     name: "Freelens",
     url: "https://freelens.io",
     logo: "https://freelens.io/logo.webp",
-    description: "Le copilote financier des freelances. Simulateur de revenus, comparateur de statuts, pipeline commercial, suivi des paiements, calendrier fiscal et trésorerie prévisionnelle.",
+    description: "Le copilote financier des freelances. Calcul du net réel, comparateur de statuts, pipeline commercial, suivi des paiements, calendrier fiscal et trésorerie prévisionnelle.",
     sameAs: [
       "https://www.linkedin.com/in/dorianri/",
       "https://x.com/dorian__richard",
@@ -67,7 +67,7 @@ const jsonLd = [
         name: "Freelens, c\u2019est quoi exactement ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Freelens est le copilote financier des freelances en France. Simulateur de revenus, comparateur de statuts (micro, EURL IR/IS, SASU IR/IS, portage), facturation avec devis et factures PDF, pipeline commercial, calendrier fiscal, trésorerie prévisionnelle et benchmark TJM — tout en un.",
+          text: "Freelens est le copilote financier des freelances en France. Calcul du net réel après URSSAF et IR, comparateur de statuts (micro, EURL IR/IS, SASU IR/IS, portage), facturation avec devis et factures PDF, pipeline commercial, calendrier fiscal, trésorerie prévisionnelle et benchmark TJM — tout en un.",
         },
       },
       {
@@ -75,7 +75,7 @@ const jsonLd = [
         name: "Qu\u2019est-ce que je peux faire avec Freelens ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Simuler tes revenus nets mois par mois, comparer les statuts juridiques avec mix salaire/dividendes optimisé, créer devis et factures PDF, gérer ton pipeline de prospects, suivre tes paiements, anticiper ta trésorerie sur 12 mois, consulter ton calendrier fiscal, analyser tes tendances YoY, et calculer le TJM pour atteindre ton objectif de revenu.",
+          text: "Connaître ton net réel mois par mois, comparer les statuts juridiques avec mix salaire/dividendes optimisé, créer devis et factures PDF, gérer ton pipeline de prospects, suivre tes paiements, anticiper ta trésorerie sur 12 mois, consulter ton calendrier fiscal, analyser tes tendances YoY, et calculer le TJM pour atteindre ton objectif de revenu.",
         },
       },
       {
@@ -91,7 +91,7 @@ const jsonLd = [
         name: "Quelle différence entre Free et Pro ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Le plan Free te donne accès au dashboard avec projections 12 mois et à l\u2019objectif revenu (1 client, 1 scénario). Le plan Pro débloque tout : clients et scénarios illimités, comparateur de statuts avec mix salaire/dividendes, devis et factures PDF, suivi des paiements, pipeline commercial, calendrier fiscal, trésorerie, tendances YoY, simulation retraite/ACRE, benchmark TJM (27 métiers), diagnostic financier et export PDF/CSV.",
+          text: "Le plan Free te donne accès au dashboard avec projections 12 mois et à l\u2019objectif revenu (1 client, 1 scénario). Le plan Pro débloque tout : clients et scénarios illimités, comparateur de statuts avec mix salaire/dividendes, devis et factures PDF, suivi des paiements, pipeline commercial, calendrier fiscal, trésorerie, tendances YoY, projection retraite, calcul ACRE, benchmark TJM (27 métiers), diagnostic financier et export PDF/CSV.",
         },
       },
       {
@@ -104,10 +104,10 @@ const jsonLd = [
       },
       {
         "@type": "Question",
-        name: "Comment fonctionne le simulateur de revenus ?",
+        name: "Comment calcule-t-il mon net réel ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Tu renseignes tes clients (TJM, forfait ou mission), ton statut juridique, tes jours travaillés et tes vacances. Le simulateur calcule ton CA et ton revenu net mois par mois sur 12 mois, en intégrant la saisonnalité, les cotisations URSSAF et l\u2019impôt sur le revenu. Tu peux créer plusieurs scénarios pour comparer différentes stratégies.",
+          text: "Tu renseignes tes clients (TJM, forfait ou mission), ton statut juridique, tes jours travaillés et tes vacances. Freelens calcule ton CA et ton revenu net mois par mois sur 12 mois, en intégrant la saisonnalité, les cotisations URSSAF et l\u2019impôt sur le revenu. Tu peux créer plusieurs scénarios pour comparer différentes stratégies.",
         },
       },
       {
@@ -136,10 +136,10 @@ const jsonLd = [
       },
       {
         "@type": "Question",
-        name: "Comment fonctionne le simulateur de trésorerie ?",
+        name: "Comment fonctionne la trésorerie prévisionnelle ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Il projette ton solde bancaire sur 12 mois en intégrant tes entrées (CA clients) et tes sorties (URSSAF, IR, IS, charges fixes). Tu définis un seuil d\u2019alerte et le simulateur t\u2019avertit si ta trésorerie risque de passer en dessous. Idéal pour anticiper les mois creux.",
+          text: "Elle projette ton solde bancaire sur 12 mois en intégrant tes entrées (CA clients) et tes sorties (URSSAF, IR, IS, charges fixes). Tu définis un seuil d\u2019alerte et Freelens te prévient si ta trésorerie risque de passer en dessous. Idéal pour anticiper les mois creux.",
         },
       },
       {
@@ -218,8 +218,8 @@ export default function Home() {
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
               Fonctionnalités
             </a>
-            <a href="#simulation" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
-              Simulation
+            <a href="#demo" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
+              D&eacute;mo
             </a>
             <a href="#calculateur" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
               Objectif TJM

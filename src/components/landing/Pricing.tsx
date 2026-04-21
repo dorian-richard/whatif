@@ -12,7 +12,7 @@ const FREE_FEATURES = [
 ];
 
 const FREE_LIMITATIONS = [
-  "Simulateur de revenus avancé",
+  "Projection 12 mois de ton net réel",
   "Clients et scénarios illimités",
   "Compare ton statut : Micro, EURL, SASU, portage",
   "Compare ton TJM au marché (27 métiers)",
@@ -31,7 +31,7 @@ const FREE_LIMITATIONS = [
 
 const PRO_FEATURES = [
   "Tout du plan Gratuit, plus :",
-  "Simulateur de revenus avancé",
+  "Projection 12 mois de ton net réel",
   "Clients et scénarios illimités",
   "Compare ton statut : Micro, EURL, SASU, portage",
   "Compare ton TJM au marché (27 métiers)",

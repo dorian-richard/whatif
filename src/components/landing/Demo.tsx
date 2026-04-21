@@ -45,7 +45,7 @@ export function Demo() {
   const maxVal = Math.max(...projection.before, ...projection.after, 1);
 
   return (
-    <section id="simulation" className="snap-section relative flex items-center overflow-hidden">
+    <section id="demo" className="snap-section relative flex items-center overflow-hidden">
       <div className="absolute inset-0">
         <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] bg-[#F4BE7E]/5 rounded-full blur-[120px]" />
       </div>
@@ -53,12 +53,12 @@ export function Demo() {
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full">
         <AnimateOnScroll>
           <div className="text-center mb-12">
-            <span className="text-sm font-medium text-[#F4BE7E] uppercase tracking-widest mb-3 block">Simulation</span>
+            <span className="text-sm font-medium text-[#F4BE7E] uppercase tracking-widest mb-3 block">D&eacute;cision</span>
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-              Teste un scénario en 1 clic
+              La question qui te stresse, r&eacute;solue en 1 clic
             </h2>
             <p className="text-lg text-muted-foreground">
-              Vacances, hausse de tarifs, perte de client — vois l&apos;impact sur ton CA instantanément.
+              Vacances, hausse de tarifs, perte de client &mdash; sache l&apos;impact avant de d&eacute;cider.
             </p>
           </div>
         </AnimateOnScroll>
@@ -89,7 +89,7 @@ export function Demo() {
                 <span className="w-3 h-1.5 bg-[#5682F2] inline-block rounded" /> Actuel
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-1.5 bg-[#F4BE7E] inline-block rounded" /> Simulé
+                <span className="w-3 h-1.5 bg-[#F4BE7E] inline-block rounded" /> Projet&eacute;
               </span>
             </div>
             {activeIdx !== null && (
@@ -139,7 +139,7 @@ export function Demo() {
               <div className="text-lg font-bold text-foreground mt-1">{fmt(beforeTotal)}&euro;</div>
             </div>
             <div>
-              <div className="text-[11px] text-muted-foreground/80 uppercase tracking-wider">CA simulé</div>
+              <div className="text-[11px] text-muted-foreground/80 uppercase tracking-wider">CA projet&eacute;</div>
               <div className="text-lg font-bold text-foreground mt-1">{fmt(afterTotal)}&euro;</div>
             </div>
             <div>
