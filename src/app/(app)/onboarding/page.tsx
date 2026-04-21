@@ -3,18 +3,17 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useProfileStore } from "@/stores/useProfileStore";
-import { StepBusiness } from "@/components/onboarding/StepBusiness";
-import { StepClients } from "@/components/onboarding/StepClients";
-import { StepSchedule } from "@/components/onboarding/StepSchedule";
-import { StepFinances } from "@/components/onboarding/StepFinances";
-import { CLIENT_COLORS } from "@/lib/constants";
+import { StepStatut } from "@/components/onboarding/StepStatut";
+import { StepRevenu } from "@/components/onboarding/StepRevenu";
+import { StepCharges } from "@/components/onboarding/StepCharges";
+import { StepResult } from "@/components/onboarding/StepResult";
 import { Sparkles } from "@/components/ui/icons";
 
 const STEPS = [
-  { component: StepBusiness },
-  { component: StepClients },
-  { component: StepSchedule },
-  { component: StepFinances },
+  { component: StepStatut, label: "Statut" },
+  { component: StepRevenu, label: "Revenu" },
+  { component: StepCharges, label: "Charges" },
+  { component: StepResult, label: "Résultat" },
 ];
 
 export default function OnboardingPage() {
@@ -23,21 +22,10 @@ export default function OnboardingPage() {
   const from = searchParams.get("from");
   const [step, setStep] = useState(initialStep);
   const router = useRouter();
-  const { clients, addClient, setOnboardingCompleted } = useProfileStore();
-
-  // Seed demo clients if empty
-  const seedDefaults = () => {
-    if (clients.length === 0) {
-      const defaults = [
-        { name: "Client A", billing: "tjm" as const, dailyRate: 450, daysPerWeek: 3 },
-        { name: "Client B", billing: "forfait" as const, monthlyAmount: 2000 },
-        { name: "Client C", billing: "tjm" as const, dailyRate: 500, daysPerWeek: 2 },
-      ];
-      defaults.forEach((c) => addClient(c));
-    }
-  };
+  const { setOnboardingCompleted } = useProfileStore();
 
   const StepComponent = STEPS[step].component;
+  const isLast = step === STEPS.length - 1;
 
   const finish = () => {
     setOnboardingCompleted(true);
@@ -48,37 +36,29 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-xl">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-3">
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-3 mb-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.webp" alt="Freelens" className="h-14 w-auto opacity-80 hidden dark:block" />
+            <img src="/logo.webp" alt="Freelens" className="h-10 w-auto opacity-80 hidden dark:block" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-light.webp" alt="Freelens" className="h-14 w-auto opacity-80 block dark:hidden" />
-            <h1 className="text-3xl font-bold fn-gradient-text">Freelens</h1>
+            <img src="/logo-light.webp" alt="Freelens" className="h-10 w-auto opacity-80 block dark:hidden" />
+            <h1 className="text-2xl font-bold fn-gradient-text">Freelens</h1>
           </div>
-          <p className="text-muted-foreground">Simule chaque décision avant de la prendre.</p>
+          <p className="text-xs text-muted-foreground">
+            3 questions, 30 secondes. Tu sais combien tu gagnes vraiment.
+          </p>
         </div>
 
-        <div className="bg-card rounded-2xl border border-border p-8">
-          {/* Step indicator */}
-          <div className="flex items-center gap-2 mb-6">
-            {STEPS.map((_, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                    i < step
-                      ? "bg-[#5682F2] text-white"
-                      : i === step
-                        ? "bg-[#5682F2]/15 text-[#5682F2] ring-2 ring-[#5682F2]"
-                        : "bg-muted text-muted-foreground/70"
-                  }`}
-                >
-                  {i + 1}
-                </div>
-                {i < STEPS.length - 1 && (
-                  <div className={`w-8 h-0.5 ${i < step ? "bg-[#5682F2]" : "bg-border"}`} />
-                )}
-              </div>
+        <div className="bg-card rounded-2xl border border-border p-6 sm:p-8">
+          {/* Progress bar (simpler than circles) */}
+          <div className="flex items-center gap-1.5 mb-6">
+            {STEPS.map((s, i) => (
+              <div
+                key={s.label}
+                className={`flex-1 h-1 rounded-full transition-all duration-300 ${
+                  i <= step ? "bg-[#5682F2]" : "bg-muted"
+                }`}
+              />
             ))}
           </div>
 
@@ -95,7 +75,7 @@ export default function OnboardingPage() {
             ) : (
               <div />
             )}
-            {step < STEPS.length - 1 ? (
+            {!isLast ? (
               <button
                 onClick={() => setStep(step + 1)}
                 className="px-6 py-2.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
@@ -105,23 +85,23 @@ export default function OnboardingPage() {
             ) : (
               <button
                 onClick={finish}
-                className="px-6 py-2.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
+                className="px-6 py-2.5 bg-gradient-to-r from-[#5682F2] to-[#7C5BF2] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2"
               >
-                <Sparkles className="size-4 inline" /> Lancer le simulateur
+                <Sparkles className="size-4" /> Aller au dashboard
               </button>
             )}
           </div>
         </div>
 
-        <button
-          onClick={() => {
-            seedDefaults();
-            finish();
-          }}
-          className="w-full text-center mt-4 text-xs text-muted-foreground/70 hover:text-[#5682F2] transition-colors"
-        >
-          Passer avec les données de démo &rarr;
-        </button>
+        {/* Skip option */}
+        {step < STEPS.length - 1 && (
+          <button
+            onClick={finish}
+            className="w-full text-center mt-4 text-xs text-muted-foreground/70 hover:text-[#5682F2] transition-colors"
+          >
+            Passer, je configurerai plus tard &rarr;
+          </button>
+        )}
       </div>
     </div>
   );
