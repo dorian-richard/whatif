@@ -1,5 +1,5 @@
 import type { ClientData, SimulationParams, ProjectionResult, FreelanceProfile, BusinessStatus, RemunerationType } from "@/types";
-import { SEASONALITY, BUSINESS_STATUS_CONFIG, PFU_RATE, ABATTEMENT_FRAIS_PRO, PUMA_RATE, PUMA_SEUIL_ACTIVITE } from "./constants";
+import { SEASONALITY, BUSINESS_STATUS_CONFIG, PFU_RATE, ABATTEMENT_FRAIS_PRO, PUMA_RATE, PUMA_SEUIL_ACTIVITE, PUMA_DEDUCTIBLE_CAPITAL } from "./constants";
 
 /**
  * Calcule les jours ouvres (lun-ven) pour chaque mois de l'annee donnee.
@@ -251,8 +251,9 @@ export function computeNetFromCA(
     return annualCA - urssaf - ir;
   }
 
-  // Charges pro deductibles (EI, EURL IR/IS, SASU IR — pas micro, pas SASU IS, pas portage)
-  const deductChargesPro = ["ei", "eurl_ir", "eurl_is", "sasu_ir"].includes(profile.businessStatus ?? "");
+  // Charges pro deductibles pour tous les regimes reels (EI, EURL IR/IS, SASU IR/IS)
+  // Pas pour la micro (abattement forfaitaire 34% a la place) ni pour le portage (gere par le porteur)
+  const deductChargesPro = ["ei", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"].includes(profile.businessStatus ?? "");
   const caAfterChargesPro = deductChargesPro
     ? annualCA * (1 - chargesProRate / 100)
     : annualCA;
@@ -271,9 +272,14 @@ export function computeNetFromCA(
   // --- Structures IS (eurl_is, sasu_is) ---
 
   // Taxe PUMa : cotisation subsidiaire maladie si revenus d'activité < 20% PASS
+  // Formule : 6,5% × max(0, revenus du capital - 50% PASS) × (1 - activité / (20% PASS))
+  // Source : art. L. 380-2 CSS
   const computePUMa = (revenuActivite: number, revenuCapital: number) => {
-    if (revenuActivite >= PUMA_SEUIL_ACTIVITE || revenuCapital <= 0) return 0;
-    return PUMA_RATE * revenuCapital * (1 - revenuActivite / PUMA_SEUIL_ACTIVITE);
+    if (revenuActivite >= PUMA_SEUIL_ACTIVITE) return 0;
+    const assiette = Math.max(0, revenuCapital - PUMA_DEDUCTIBLE_CAPITAL);
+    if (assiette <= 0) return 0;
+    const minoration = 1 - revenuActivite / PUMA_SEUIL_ACTIVITE;
+    return PUMA_RATE * assiette * minoration;
   };
 
   const remunerationType = profile.remunerationType ?? "salaire";
@@ -336,7 +342,8 @@ export function computeNetFromCA(
 
   const salaryNet = salaryCost * (1 - urssafRate);
   // Abattement 10% frais pro sur la part salaire
-  const irSalary = irOn(salaryNet * (1 - ABATTEMENT_FRAIS_PRO));
+  const salaryTaxable = salaryNet * (1 - ABATTEMENT_FRAIS_PRO);
+  const irSalary = irOn(salaryTaxable);
   const netSalary = salaryNet - irSalary;
 
   // Benefice restant → IS progressif → dividendes
@@ -344,7 +351,8 @@ export function computeNetFromCA(
   const isAmount = computeIS(remainingCA);
   const afterIS = remainingCA - isAmount;
 
-  const netDividends = netFromDividends(afterIS, salaryNet);
+  // IR marginal calcule sur la base taxable du salaire (apres abattement 10%)
+  const netDividends = netFromDividends(afterIS, salaryTaxable);
 
   // Taxe PUMa si le salaire est insuffisant (< 20% PASS)
   const puma = computePUMa(salaryNet, afterIS);

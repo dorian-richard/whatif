@@ -149,16 +149,59 @@ describe("computeNetFromCA — IR progressif", () => {
     expect(net).toBeCloseTo(afterUrssaf - ir, 0);
   });
 
-  test("SASU IS dividendes : PFU 30% inchange", () => {
+  test("SASU IS dividendes : PFU 30% + PUMa sur l'assiette au-dessus du seuil", () => {
     const profile: FreelanceProfile = {
       monthlyExpenses: 0, savings: 0, adminHoursPerWeek: 0,
       workDaysPerWeek: 5, businessStatus: "sasu_is", remunerationType: "dividendes",
     };
     const net = computeNetFromCA(100000, profile);
-    // IS: 42500*0.15 + 57500*0.25 = 6375 + 14375 = 20750
-    // After IS: 79250
-    // PFU 30%: 79250 * 0.70 = 55475
-    expect(net).toBeCloseTo(55475, 0);
+    // IS progressif : 42500 × 15% + 57500 × 25% = 20 750€
+    // Après IS : 100 000 - 20 750 = 79 250€
+    // PFU 30% flat : 79 250 × 0,70 = 55 475€
+    // PUMa : pas d'activité → 6,5% × (79 250 - 24 030) × 1 = 3 589€
+    //   (abattement 50% PASS = 24 030€ ; PASS 2026 = 48 060€)
+    // Net final : 55 475 - 3 589 = 51 886€
+    expect(net).toBeCloseTo(51886, 0);
+  });
+
+  test("PUMa ne s'applique pas si les dividendes sont sous le seuil 50% PASS", () => {
+    const profile: FreelanceProfile = {
+      monthlyExpenses: 0, savings: 0, adminHoursPerWeek: 0,
+      workDaysPerWeek: 5, businessStatus: "sasu_is", remunerationType: "dividendes",
+    };
+    // Avec CA = 25 000€ :
+    // IS : 25000 × 15% = 3 750€ ; après IS = 21 250€
+    // 21 250 < 24 030 (50% PASS) → pas de PUMa
+    // PFU 30% : 21 250 × 0,70 = 14 875€
+    const net = computeNetFromCA(25000, profile);
+    expect(net).toBeCloseTo(14875, 0);
+  });
+
+  test("SASU IS salaire : charges pro deduites du benefice IS", () => {
+    const profile: FreelanceProfile = {
+      monthlyExpenses: 0, savings: 0, adminHoursPerWeek: 0,
+      workDaysPerWeek: 5, businessStatus: "sasu_is", remunerationType: "salaire",
+      chargesPro: 20, // 20% de charges pro deductibles
+    };
+    // CA = 100 000€ ; après charges pro = 80 000€
+    // Salaire 100% : urssaf 45% → net social = 80 000 × 0,55 = 44 000€
+    // Abattement 10% : taxable = 44 000 × 0,90 = 39 600€
+    // IR : 0 + 17979 × 0,11 + (39600 - 29579) × 0,30 = 1977,69 + 3006,30 = 4984€
+    // Net = 44 000 - 4 984 = 39 016€
+    const net = computeNetFromCA(100000, profile);
+    expect(net).toBeCloseTo(39016, 0);
+  });
+
+  test("Mixte SASU IS : IR progressif correct sur la base taxable", () => {
+    const profile: FreelanceProfile = {
+      monthlyExpenses: 0, savings: 0, adminHoursPerWeek: 0,
+      workDaysPerWeek: 5, businessStatus: "sasu_is", remunerationType: "mixte",
+      mixtePartSalaire: 50,
+    };
+    // Pas de regression : le calcul mixte doit rester stable et positif
+    const net = computeNetFromCA(100000, profile);
+    expect(net).toBeGreaterThan(40000);
+    expect(net).toBeLessThan(70000);
   });
 });
 

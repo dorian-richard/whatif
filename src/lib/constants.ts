@@ -1,12 +1,13 @@
 import type { SimulationParams } from "@/types";
 
 /* ── Constantes réglementaires ── */
-export const PFU_RATE = 0.314; // 12.8% IR + 18.6% prélèvements sociaux (2025+)
+export const PFU_RATE = 0.30; // PFU "flat tax" : 12,8% IR + 17,2% prélèvements sociaux
 export const ABATTEMENT_FRAIS_PRO = 0.10; // 10% abattement forfaitaire frais professionnels sur salaires
 export const MICRO_PLAFOND = 83600; // Plafond micro-entreprise BNC 2026
 export const PLAFOND_SS = 48060; // Plafond annuel Sécurité Sociale 2026
-export const PUMA_RATE = 0.065; // Cotisation subsidiaire maladie (taxe PUMa) : 6.5%
+export const PUMA_RATE = 0.065; // Cotisation subsidiaire maladie (taxe PUMa) : 6,5%
 export const PUMA_SEUIL_ACTIVITE = PLAFOND_SS * 0.20; // 20% du PASS — seuil de déclenchement PUMa
+export const PUMA_DEDUCTIBLE_CAPITAL = PLAFOND_SS * 0.50; // 50% du PASS — abattement sur l'assiette capital PUMa
 export const CHARGES_SALARIALES = 0.23; // Taux moyen charges salariales CDI
 
 export const MONTHS_SHORT = [
