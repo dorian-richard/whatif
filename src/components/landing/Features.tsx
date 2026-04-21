@@ -92,11 +92,11 @@ export function Features() {
           <div className="text-center mb-16">
             <span className="text-sm font-medium text-primary uppercase tracking-widest mb-3 block">Fonctionnalités</span>
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-              Arr&ecirc;te de piloter{" "}
-              <span className="fn-gradient-text">&agrave; l&apos;aveugle</span>
+              Tout pour piloter et{" "}
+              <span className="fn-gradient-text">suivre ton activit&eacute;</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Les r&eacute;ponses que tu cherches sur Reddit et dans les groupes Facebook &mdash; sauf qu&apos;ici c&apos;est avec tes vrais chiffres.
+              Les r&eacute;ponses que tu cherches sur Reddit et dans les groupes Facebook &mdash; sauf qu&apos;ici c&apos;est avec tes vrais chiffres, en temps r&eacute;el.
             </p>
           </div>
         </AnimateOnScroll>

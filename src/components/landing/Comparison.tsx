@@ -55,13 +55,11 @@ export function Comparison() {
           <div className="text-center mb-12">
             <span className="text-sm font-medium text-primary uppercase tracking-widest mb-3 block">Comparatif</span>
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-              Pourquoi{" "}
-              <span className="fn-gradient-text">Freelens</span> ?
+              Le seul outil qui{" "}
+              <span className="fn-gradient-text">pilote ET suit</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Excel ne calcule pas ton net apr&egrave;s URSSAF. Indy ne r&eacute;pond pas &agrave; &laquo;&nbsp;si je perds ce client&nbsp;?&nbsp;&raquo;. Freelens, si.
-              <br />
-              <span className="text-sm text-muted-foreground/80">Bar&egrave;mes et taux &agrave; jour du Projet de Loi de Finances 2026.</span>
+              Excel ne pilote rien. Indy ne fait que suivre. Freelens fait les deux &mdash; en temps r&eacute;el, avec les vrais chiffres 2026.
             </p>
           </div>
         </AnimateOnScroll>

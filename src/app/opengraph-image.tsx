@@ -95,7 +95,7 @@ export default function OGImage() {
             marginBottom: 20,
           }}
         >
-          <span>Le copilote financier</span>
+          <span>Pilote et suis</span>
           <span
             style={{
               background: "linear-gradient(90deg, #5682F2, #7C5BF2, #a78bfa)",
@@ -103,7 +103,7 @@ export default function OGImage() {
               color: "transparent",
             }}
           >
-            des freelances
+            ton activité freelance
           </span>
         </div>
 
@@ -117,7 +117,7 @@ export default function OGImage() {
             marginBottom: 40,
           }}
         >
-          Net réel · Comparateur de statuts · Pilotage financier
+          Net réel · Factures · Trésorerie · Pipeline · En temps réel
         </div>
 
         {/* CTA pill */}

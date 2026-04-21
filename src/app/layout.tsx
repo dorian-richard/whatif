@@ -22,11 +22,11 @@ const SITE_URL = "https://freelens.io";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Freelens \u2014 Le copilote financier des freelances",
+    default: "Freelens \u2014 L'outil de pilotage et de suivi des freelances",
     template: "%s | Freelens",
   },
   description:
-    "Calcule ton net r\u00e9el apr\u00e8s URSSAF et IR, compare les statuts, pilote ta tr\u00e9sorerie. Le copilote financier des freelances. Essai Pro 7 jours gratuit.",
+    "Pilote et suis ton activit\u00e9 freelance : net r\u00e9el apr\u00e8s URSSAF et IR, factures, tr\u00e9sorerie, pipeline commercial, calendrier fiscal. Tout en un, en temps r\u00e9el. Essai Pro 7 jours gratuit.",
   keywords: [
     "freelance",
     "simulateur freelance",
@@ -60,9 +60,9 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     url: SITE_URL,
     siteName: "Freelens",
-    title: "Freelens \u2014 Le copilote financier des freelances",
+    title: "Freelens \u2014 L'outil de pilotage et de suivi des freelances",
     description:
-      "Calcule ton net r\u00e9el, compare les statuts, pilote ta tr\u00e9sorerie. D\u00e9cide avec les chiffres, pas au feeling.",
+      "Pilote et suis ton activit\u00e9 freelance : net r\u00e9el, factures, tr\u00e9sorerie, pipeline. Tout en un, en temps r\u00e9el.",
     images: [
       {
         url: "/og-image.png",
@@ -74,9 +74,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Freelens \u2014 Le copilote financier des freelances",
+    title: "Freelens \u2014 L'outil de pilotage et de suivi des freelances",
     description:
-      "Calcule ton net r\u00e9el, compare les statuts, pilote ta tr\u00e9sorerie. D\u00e9cide avec les chiffres.",
+      "Pilote et suis ton activit\u00e9 freelance : net r\u00e9el, factures, tr\u00e9sorerie, pipeline. En temps r\u00e9el.",
     images: ["/og-image.png"],
   },
   robots: {

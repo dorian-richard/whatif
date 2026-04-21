@@ -71,11 +71,11 @@ export function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
         <div className="text-center mb-10">
           <span className="text-sm font-medium text-[#a78bfa] uppercase tracking-widest mb-3 block">Tarifs</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Simple et{" "}
-            <span className="fn-gradient-text">transparent</span>
+            Pilote ton activit&eacute;{" "}
+            <span className="fn-gradient-text">sans te ruiner</span>
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Essai Pro gratuit pendant 7 jours. Sans carte bancaire.
+            Moins cher qu&apos;une heure de comptable. Essai Pro 7 jours, sans carte bancaire.
           </p>
 
           {/* Toggle mensuel/annuel */}

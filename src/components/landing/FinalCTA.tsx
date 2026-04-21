@@ -19,7 +19,7 @@ export function FinalCTA() {
           <span className="fn-gradient-text">piloter.</span>
         </h2>
         <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
-          En 2 minutes tu sais exactement combien tu gagnes, combien provisionner et quel statut te co&ucirc;te le moins.
+          Pilote ton CA, suis tes factures, anticipe ta tr&eacute;sorerie. Tout en un, en temps r&eacute;el.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
           <Link
@@ -43,7 +43,7 @@ export function FinalCTA() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-light.webp" alt="Freelens" className="h-6 w-auto opacity-70 block dark:hidden" />
             <span className="text-sm text-muted-foreground/80">
-              Freelens &mdash; Le copilote financier des freelances
+              Freelens &mdash; L&apos;outil de pilotage et de suivi des freelances
             </span>
           </div>
           <div className="flex gap-6 text-sm text-muted-foreground/80">

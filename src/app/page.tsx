@@ -24,7 +24,7 @@ const jsonLd = [
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     description:
-      "Le copilote financier des freelances en France : calcule ton net réel après URSSAF et IR, compare les statuts, pilote ta trésorerie, gère tes factures et ton pipeline commercial.",
+      "L'outil de pilotage et de suivi pour freelances en France. Net réel après URSSAF et IR, factures, trésorerie prévisionnelle, pipeline commercial, calendrier fiscal. Tout en un, en temps réel.",
     url: "https://freelens.io",
     offers: [
       {
@@ -52,7 +52,7 @@ const jsonLd = [
     name: "Freelens",
     url: "https://freelens.io",
     logo: "https://freelens.io/logo.webp",
-    description: "Le copilote financier des freelances. Calcul du net réel, comparateur de statuts, pipeline commercial, suivi des paiements, calendrier fiscal et trésorerie prévisionnelle.",
+    description: "L'outil de pilotage et de suivi des freelances. Net réel, comparateur de statuts, pipeline commercial, suivi des paiements, calendrier fiscal et trésorerie prévisionnelle.",
     sameAs: [
       "https://www.linkedin.com/in/dorianri/",
       "https://x.com/dorian__richard",
@@ -67,7 +67,7 @@ const jsonLd = [
         name: "Freelens, c\u2019est quoi exactement ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Freelens est le copilote financier des freelances en France. Calcul du net réel après URSSAF et IR, comparateur de statuts (micro, EURL IR/IS, SASU IR/IS, portage), facturation avec devis et factures PDF, pipeline commercial, calendrier fiscal, trésorerie prévisionnelle et benchmark TJM — tout en un.",
+          text: "Freelens est l'outil de pilotage et de suivi des freelances en France. Net réel après URSSAF et IR, comparateur de statuts (micro, EURL IR/IS, SASU IR/IS, portage), facturation avec devis et factures PDF, pipeline commercial, calendrier fiscal, trésorerie prévisionnelle et benchmark TJM — tout en un.",
         },
       },
       {
