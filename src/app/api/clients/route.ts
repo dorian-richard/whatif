@@ -1,6 +1,56 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
+
+// All writable client columns. Building the Prisma payload from this explicit
+// allow-list keeps the API in sync with the schema: any extra field present on
+// the client object (e.g. UI-only props) is dropped instead of crashing Prisma
+// with "Unknown argument", which previously made every update silently fail.
+function buildClientData(
+  body: Record<string, unknown>
+): Prisma.ClientUncheckedUpdateInput {
+  const data: Prisma.ClientUncheckedUpdateInput = {};
+  const set = <K extends keyof Prisma.ClientUncheckedUpdateInput>(key: K) => {
+    if (body[key as string] !== undefined) {
+      data[key] = body[key as string] as never;
+    }
+  };
+
+  set("name");
+  set("dailyRate");
+  set("daysPerMonth");
+  set("daysPerWeek");
+  set("daysPerYear");
+  set("monthlyAmount");
+  set("totalAmount");
+  set("startMonth");
+  set("endMonth");
+  set("startYear");
+  set("endYear");
+  set("color");
+  set("email");
+  set("phone");
+  set("contactName");
+  set("companyName");
+  set("siret");
+  set("siren");
+  set("tvaNumber");
+  set("nafCode");
+  set("legalForm");
+  set("clientAddress");
+  set("clientCity");
+  set("clientZip");
+  set("clientCountry");
+  set("website");
+  set("paymentTermDays");
+
+  if (typeof body.billing === "string") {
+    data.billing = body.billing.toUpperCase() as Prisma.ClientUncheckedUpdateInput["billing"];
+  }
+
+  return data;
+}
 
 export async function GET() {
   const supabase = await createClient();
@@ -32,22 +82,14 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
 
-  const billing = (body.billing as string).toUpperCase();
+  const data = buildClientData(body);
   const client = await prisma.client.create({
     data: {
-      ...(body.id && { id: body.id }),
+      ...data,
+      ...(body.id && { id: body.id as string }),
       userId: user.id,
-      name: body.name,
-      billing: billing as "TJM" | "FORFAIT" | "MISSION",
-      dailyRate: body.dailyRate,
-      daysPerMonth: body.daysPerMonth,
-      daysPerWeek: body.daysPerWeek,
-      daysPerYear: body.daysPerYear,
-      monthlyAmount: body.monthlyAmount,
-      totalAmount: body.totalAmount,
-      startMonth: body.startMonth,
-      endMonth: body.endMonth,
-      color: body.color,
+      name: body.name as string,
+      billing: (body.billing as string).toUpperCase() as Prisma.ClientUncheckedCreateInput["billing"],
     },
   });
 
@@ -65,12 +107,8 @@ export async function PUT(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { id, ...data } = body;
-
-  // Convert billing to uppercase for Prisma enum
-  if (data.billing) {
-    data.billing = (data.billing as string).toUpperCase();
-  }
+  const { id } = body;
+  const data = buildClientData(body);
 
   const client = await prisma.client.updateMany({
     where: { id, userId: user.id },

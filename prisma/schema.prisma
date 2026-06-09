@@ -96,14 +96,25 @@ model Client {
   totalAmount    Float?
   startMonth     Int?
   endMonth       Int?
+  startYear      Int?
+  endYear        Int?
 
   // Contact / facturation
   email          String?
+  phone          String?
+  contactName    String?
   companyName    String?
   siret          String?
+  siren          String?
+  tvaNumber      String?
+  nafCode        String?
+  legalForm      String?
   clientAddress  String?
   clientCity     String?
   clientZip      String?
+  clientCountry  String?
+  website        String?
+  paymentTermDays Int?
 
   // Meta
   isActive       Boolean     @default(true)
