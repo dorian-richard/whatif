@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Devenir freelance en 2026 : guide complet pour se lancer — Freelens",
+  title: "Devenir freelance en 2026 : le guide complet",
   description:
     "Tout ce qu'il faut savoir pour devenir freelance : choisir son statut, fixer son TJM, trouver des clients, gérer ses finances. Guide pratique gratuit.",
   alternates: { canonical: "https://freelens.io/devenir-freelance" },

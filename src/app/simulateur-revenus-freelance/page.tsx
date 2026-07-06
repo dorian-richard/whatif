@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Simulateur de revenus freelance gratuit 2026 — Freelens",
+  title: "Simulateur de revenus freelance gratuit 2026",
   description:
     "Calcule ton revenu net freelance mois par mois : TJM, charges URSSAF, impôts, vacances. Micro-entreprise, EURL, SASU, portage. Outil gratuit en ligne.",
   alternates: { canonical: "https://freelens.io/simulateur-revenus-freelance" },

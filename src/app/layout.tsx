@@ -29,7 +29,11 @@ export const metadata: Metadata = {
     "Pilote et suis ton activit\u00e9 freelance : net r\u00e9el apr\u00e8s URSSAF et IR, factures, tr\u00e9sorerie, pipeline commercial, calendrier fiscal. Tout en un, en temps r\u00e9el. Essai Pro 7 jours gratuit.",
   keywords: [
     "freelance",
-    "simulateur freelance",
+    "gestion freelance",
+    "pilotage activité freelance",
+    "logiciel de gestion freelance",
+    "tableau de bord freelance",
+    "suivi trésorerie freelance",
     "simulateur revenus freelance",
     "TJM",
     "TJM développeur",
@@ -63,21 +67,12 @@ export const metadata: Metadata = {
     title: "Freelens \u2014 L'outil de pilotage et de suivi des freelances",
     description:
       "Pilote et suis ton activit\u00e9 freelance : net r\u00e9el, factures, tr\u00e9sorerie, pipeline. Tout en un, en temps r\u00e9el.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Freelens — Décide avec les chiffres, pas au feeling",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Freelens \u2014 L'outil de pilotage et de suivi des freelances",
     description:
       "Pilote et suis ton activit\u00e9 freelance : net r\u00e9el, factures, tr\u00e9sorerie, pipeline. En temps r\u00e9el.",
-    images: ["/og-image.png"],
   },
   robots: {
     index: true,

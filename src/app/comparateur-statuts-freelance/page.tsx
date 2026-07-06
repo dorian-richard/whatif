@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Comparateur statuts freelance 2026 : micro, EURL, SASU, portage — Freelens",
+  title: "Comparateur de statuts freelance 2026 : micro, SASU, EURL",
   description:
     "Compare micro-entreprise, EI, EURL IR/IS, SASU IR/IS et portage salarial côte à côte. Calcul du net après charges et impôts selon ton CA réel. Gratuit.",
   alternates: { canonical: "https://freelens.io/comparateur-statuts-freelance" },

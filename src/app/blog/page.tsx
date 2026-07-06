@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { BLOG_POSTS } from "@/lib/blog";
 
 export const metadata: Metadata = {
-  title: "Blog Freelens — Guides et conseils pour freelances",
+  title: "Blog — guides et conseils pour freelances",
   description:
     "Articles pratiques pour freelances : statuts juridiques, charges URSSAF, TJM, fiscalité. Guides complets et à jour pour optimiser ton activité.",
   alternates: { canonical: "https://freelens.io/blog" },

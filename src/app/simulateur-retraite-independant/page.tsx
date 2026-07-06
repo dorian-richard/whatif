@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Simulateur retraite indépendant 2026 — Freelens",
+  title: "Simulateur retraite indépendant freelance 2026",
   description:
     "Estime ta retraite de freelance : trimestres validés, pension estimée selon ton statut (micro, SASU, EURL, portage). Simulateur gratuit en ligne.",
   alternates: { canonical: "https://freelens.io/simulateur-retraite-independant" },

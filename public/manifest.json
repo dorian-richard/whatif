@@ -1,7 +1,7 @@
 {
-  "name": "Freelens \u2014 Copilote financier freelance",
+  "name": "Freelens \u2014 Pilotage et suivi freelance",
   "short_name": "Freelens",
-  "description": "Simulateur de revenus, comparateur de statuts et outils de d\u00e9cision pour freelances.",
+  "description": "Pilote et suis ton activit\u00e9 freelance : net r\u00e9el apr\u00e8s URSSAF et IR, factures, tr\u00e9sorerie, pipeline et calendrier fiscal. Tout en un.",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#07070e",

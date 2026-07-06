@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "TJM freelance 2026 : combien facturer ? Benchmark + calculateur — Freelens",
+  title: "TJM freelance 2026 : combien facturer ? Calculateur gratuit",
   description:
     "Découvre les TJM du marché freelance français par métier (dev, data, design, product). Calcule ton TJM idéal selon ton objectif de revenu net. Gratuit.",
   alternates: { canonical: "https://freelens.io/tjm-freelance" },

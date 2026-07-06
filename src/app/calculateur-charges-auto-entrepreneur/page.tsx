@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Calculateur de charges auto-entrepreneur 2026 — Freelens",
+  title: "Calculateur de charges auto-entrepreneur 2026",
   description:
     "Calcule tes charges auto-entrepreneur 2026 en 30 secondes : cotisations URSSAF, CFP, impôt sur le revenu, TVA. Simulateur gratuit en ligne avec les taux officiels.",
   alternates: { canonical: "https://freelens.io/calculateur-charges-auto-entrepreneur" },

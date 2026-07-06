@@ -40,11 +40,6 @@ const jsonLd = [
         description: "Plan Pro — Tous les outils, clients illimités",
       },
     ],
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      ratingCount: "120",
-    },
   },
   {
     "@context": "https://schema.org",

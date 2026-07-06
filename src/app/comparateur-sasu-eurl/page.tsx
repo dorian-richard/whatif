@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Comparateur SASU vs EURL 2026 — Quel statut choisir ? — Freelens",
+  title: "SASU vs EURL 2026 : quel statut choisir ?",
   description:
     "SASU ou EURL ? Compare charges sociales, fiscalité, dividendes, protection sociale et coût de création. Simulateur gratuit avec les vrais chiffres 2026.",
   alternates: { canonical: "https://freelens.io/comparateur-sasu-eurl" },

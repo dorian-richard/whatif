@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Calcul TVA freelance 2026 — Seuils, franchise, déclaration — Freelens",
+  title: "TVA freelance 2026 : seuils, franchise, déclaration",
   description:
     "Tout sur la TVA freelance en 2026 : seuils de franchise, calcul TVA collectée vs déductible, déclaration mensuelle ou trimestrielle. Simulateur gratuit.",
   alternates: { canonical: "https://freelens.io/calcul-tva-freelance" },

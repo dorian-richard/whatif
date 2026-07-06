@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Simulateur salaire portage salarial 2026 — Freelens",
+  title: "Simulateur salaire portage salarial 2026",
   description:
     "Calcule ton salaire net en portage salarial : frais de gestion, charges sociales, impôts. Comparaison avec micro-entreprise, SASU et EURL. Simulateur gratuit.",
   alternates: { canonical: "https://freelens.io/simulateur-salaire-portage-salarial" },

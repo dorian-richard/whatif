@@ -1,205 +1,123 @@
 import type { MetadataRoute } from "next";
+import { BLOG_POSTS } from "@/lib/blog";
+
+const baseUrl = "https://freelens.io";
+
+// Stable "last content update" date for evergreen pages.
+// Bump this when landing-page content is meaningfully revised
+// (avoids every URL looking "modified" on each deploy).
+const CONTENT_UPDATED = new Date("2026-03-16");
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://freelens.io";
-
-  return [
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "weekly",
       priority: 1,
     },
-    // Free tools (indexable, high SEO value)
-    {
-      url: `${baseUrl}/comparateur`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/objectif`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/benchmark`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/transition`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    // SEO landing pages (long-tail keywords)
+    // SEO landing pages (public, indexable) — long-tail keywords
     {
       url: `${baseUrl}/simulateur-revenus-freelance`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/comparateur-statuts-freelance`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/tjm-freelance`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/devenir-freelance`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/calculateur-charges-auto-entrepreneur`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/comparateur-sasu-eurl`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/simulateur-salaire-portage-salarial`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/calcul-tva-freelance`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/simulateur-retraite-independant`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/simulateur-salaire-portage-salarial`,
+      lastModified: CONTENT_UPDATED,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/devenir-freelance`,
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/faq`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    // Blog
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "weekly",
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/micro-entreprise-vs-sasu-vs-eurl-2026`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/charges-freelance-2026-urssaf-impots`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/combien-facturer-freelance-2026-tjm`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/devenir-freelance-guide-2026`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/tresorerie-freelance-guide-gestion`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/diversifier-revenus-freelance`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/optimiser-remuneration-eurl-sasu-2026`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/trouver-premier-client-freelance`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/retraite-freelance-2026-combien-cotiser`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/tva-freelance-2026-guide-complet`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    // Auth pages
-    {
-      url: `${baseUrl}/login`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/signup`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
     },
     // Legal pages
     {
       url: `${baseUrl}/cgu`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/cgv`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/mentions-legales`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/confidentialite`,
-      lastModified: new Date(),
+      lastModified: CONTENT_UPDATED,
       changeFrequency: "yearly",
       priority: 0.3,
     },
   ];
+
+  // Blog articles — generated from source so the sitemap never drifts,
+  // with each URL's real publication date as lastModified.
+  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
+  return [...staticPages, ...blogPages];
 }
