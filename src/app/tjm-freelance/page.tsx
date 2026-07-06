@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
+import { ObjectifTJMCalculator } from "@/components/tools/ObjectifTJMCalculator";
 
 export const metadata: Metadata = {
   title: "TJM freelance 2026 : combien facturer ? Calculateur gratuit",
@@ -37,6 +38,8 @@ export default function TJMFreelancePage() {
             Freelens t&apos;aide &agrave; trouver le <strong className="text-foreground">TJM id&eacute;al</strong> pour ton profil.
           </p>
         </div>
+
+        <ObjectifTJMCalculator />
 
         <div className="space-y-4">
           <h2 className="text-xl font-bold text-foreground">TJM moyens par m&eacute;tier en France (2026)</h2>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
+import { FreelanceNetCalculator } from "@/components/tools/FreelanceNetCalculator";
 
 export const metadata: Metadata = {
   title: "Simulateur salaire portage salarial 2026",
@@ -37,6 +38,8 @@ export default function SimulateurPortageSalarialPage() {
             combien te reste-t-il vraiment ?
           </p>
         </div>
+
+        <FreelanceNetCalculator defaultStatus="portage" />
 
         {/* Comment ça marche */}
         <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 space-y-6">

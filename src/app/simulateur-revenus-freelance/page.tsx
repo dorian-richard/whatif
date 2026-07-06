@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
+import { FreelanceNetCalculator } from "@/components/tools/FreelanceNetCalculator";
 
 export const metadata: Metadata = {
   title: "Simulateur de revenus freelance gratuit 2026",
@@ -37,6 +38,8 @@ export default function SimulateurRevenusPage() {
             en int&eacute;grant automatiquement les cotisations URSSAF, l&apos;imp&ocirc;t sur le revenu et la saisonnalit&eacute;.
           </p>
         </div>
+
+        <FreelanceNetCalculator />
 
         <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 space-y-6">
           <h2 className="text-xl font-bold text-foreground">Comment &ccedil;a marche ?</h2>

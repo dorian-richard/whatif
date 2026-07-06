@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
+import { StatutComparateur } from "@/components/tools/StatutComparateur";
 
 export const metadata: Metadata = {
   title: "SASU vs EURL 2026 : quel statut choisir ?",
@@ -37,6 +38,8 @@ export default function ComparateurSasuEurlPage() {
             <strong className="text-foreground">Voici la comparaison compl&egrave;te avec les chiffres 2026.</strong>
           </p>
         </div>
+
+        <StatutComparateur statuses={["micro", "eurl_ir", "eurl_is", "sasu_ir", "sasu_is"]} />
 
         {/* Tableau comparatif */}
         <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 space-y-6">

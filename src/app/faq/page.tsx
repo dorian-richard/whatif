@@ -7,11 +7,11 @@ import { cn } from "@/lib/utils";
 const QUESTIONS = [
   {
     q: "Freelens, c\u2019est quoi exactement ?",
-    a: "Freelens est le copilote financier des freelances en France. Simulateur de revenus, comparateur de statuts (micro, EURL IR/IS, SASU IR/IS, portage), facturation avec devis et factures PDF, pipeline commercial, calendrier fiscal, tr\u00e9sorerie pr\u00e9visionnelle et benchmark TJM \u2014 tout en un.",
+    a: "Freelens est l\u2019outil de pilotage et de suivi des freelances en France : ton vrai net apr\u00e8s URSSAF et IR, comparateur de statuts (micro, EURL IR/IS, SASU IR/IS, portage), facturation avec devis et factures PDF, pipeline commercial, calendrier fiscal, tr\u00e9sorerie pr\u00e9visionnelle et benchmark TJM \u2014 tout en un.",
   },
   {
     q: "Qu\u2019est-ce que je peux faire avec Freelens ?",
-    a: "Simuler tes revenus nets mois par mois, comparer les statuts juridiques avec mix salaire/dividendes optimis\u00e9, cr\u00e9er devis et factures PDF, g\u00e9rer ton pipeline de prospects, suivre tes paiements, anticiper ta tr\u00e9sorerie sur 12 mois, consulter ton calendrier fiscal, analyser tes tendances YoY, et calculer le TJM pour atteindre ton objectif de revenu.",
+    a: "Suivre ton vrai net mois par mois, comparer les statuts juridiques avec mix salaire/dividendes optimis\u00e9, cr\u00e9er devis et factures PDF, g\u00e9rer ton pipeline de prospects, suivre tes paiements, anticiper ta tr\u00e9sorerie sur 12 mois, consulter ton calendrier fiscal, analyser tes tendances YoY, et calculer le TJM pour atteindre ton objectif de revenu.",
   },
   {
     q: "Mes donn\u00e9es sont-elles en s\u00e9curit\u00e9 ?",
@@ -30,8 +30,8 @@ const QUESTIONS = [
     a: "Oui. L\u2019outil de facturation int\u00e9gr\u00e9 g\u00e8re devis et factures avec num\u00e9rotation automatique, TVA configurable, conditions de paiement, export PDF professionnel, conversion devis \u2192 facture en 1 clic, et d\u00e9tection automatique des retards.",
   },
   {
-    q: "Comment fonctionne le simulateur de revenus ?",
-    a: "Tu renseignes tes clients (TJM, forfait ou mission), ton statut juridique, tes jours travaill\u00e9s et tes vacances. Le simulateur calcule ton CA et ton revenu net mois par mois sur 12 mois, en int\u00e9grant la saisonnalit\u00e9, les cotisations URSSAF et l\u2019imp\u00f4t sur le revenu. Tu peux cr\u00e9er plusieurs sc\u00e9narios pour comparer diff\u00e9rentes strat\u00e9gies.",
+    q: "Comment Freelens calcule ton net r\u00e9el ?",
+    a: "Tu renseignes tes clients (TJM, forfait ou mission), ton statut juridique, tes jours travaill\u00e9s et tes vacances. Freelens calcule ton CA et ton revenu net mois par mois sur 12 mois, en int\u00e9grant la saisonnalit\u00e9, les cotisations URSSAF et l\u2019imp\u00f4t sur le revenu. Tu peux cr\u00e9er plusieurs sc\u00e9narios pour comparer diff\u00e9rentes strat\u00e9gies.",
   },
   {
     q: "\u00c0 quoi sert le comparateur de statuts ?",
@@ -39,11 +39,11 @@ const QUESTIONS = [
   },
   {
     q: "Que fait le pipeline commercial ?",
-    a: "C\u2019est un mini-CRM int\u00e9gr\u00e9 pour suivre tes prospects. Tu organises tes opportunit\u00e9s en colonnes (Lead, Devis envoy\u00e9, Sign\u00e9, Actif) avec drag & drop, tu estimes le CA potentiel et la probabilit\u00e9 de closing. Le pipeline pondr\u00e9 te donne une vision r\u00e9aliste de ton CA \u00e0 venir.",
+    a: "C\u2019est un mini-CRM int\u00e9gr\u00e9 pour suivre tes prospects. Tu organises tes opportunit\u00e9s en colonnes (Lead, Devis envoy\u00e9, Sign\u00e9, Actif) avec drag & drop, tu estimes le CA potentiel et la probabilit\u00e9 de closing. Le pipeline pond\u00e9r\u00e9 te donne une vision r\u00e9aliste de ton CA \u00e0 venir.",
   },
   {
-    q: "Comment fonctionne le simulateur de tr\u00e9sorerie ?",
-    a: "Il projette ton solde bancaire sur 12 mois en int\u00e9grant tes entr\u00e9es (CA clients) et tes sorties (URSSAF, IR, IS, charges fixes). Tu d\u00e9finis un seuil d\u2019alerte et le simulateur t\u2019avertit si ta tr\u00e9sorerie risque de passer en dessous. Id\u00e9al pour anticiper les mois creux.",
+    q: "Comment fonctionne la tr\u00e9sorerie pr\u00e9visionnelle ?",
+    a: "Il projette ton solde bancaire sur 12 mois en int\u00e9grant tes entr\u00e9es (CA clients) et tes sorties (URSSAF, IR, IS, charges fixes). Tu d\u00e9finis un seuil d\u2019alerte et Freelens t\u2019avertit si ta tr\u00e9sorerie risque de passer en dessous. Id\u00e9al pour anticiper les mois creux.",
   },
   {
     q: "Combien facturer en freelance ?",
@@ -55,7 +55,7 @@ const QUESTIONS = [
   },
   {
     q: "Quels moyens de paiement acceptez-vous ?",
-    a: "Cartes bancaires (Visa, Mastercard, Amex) via Stripe. Paiement s\u00e9curis\u00e9 et conforme PCI-DSS. Abonnement mensuel (9\u20ac/mois) ou annuel (79\u20ac/an, soit 2 mois offerts).",
+    a: "Cartes bancaires (Visa, Mastercard, Amex) via Stripe. Paiement s\u00e9curis\u00e9 et conforme PCI-DSS. Abonnement mensuel (19\u20ac/mois) ou annuel (190\u20ac/an, soit 2 mois offerts).",
   },
   {
     q: "Puis-je \u00eatre rembours\u00e9 ?",

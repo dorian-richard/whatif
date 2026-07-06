@@ -261,6 +261,37 @@ export default function Home() {
       <Pricing isLoggedIn={isLoggedIn} />
       <FAQ />
       <FinalCTA />
+
+      {/* Maillage interne SEO — outils & guides gratuits */}
+      <section className="bg-background border-t border-border px-4 sm:px-6 py-12">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-5 text-center">
+            Outils &amp; guides gratuits
+          </h2>
+          <div className="flex flex-wrap justify-center gap-2.5">
+            {[
+              { href: "/simulateur-revenus-freelance", label: "Simulateur de revenus freelance" },
+              { href: "/comparateur-statuts-freelance", label: "Comparateur de statuts" },
+              { href: "/tjm-freelance", label: "Calculateur de TJM" },
+              { href: "/calculateur-charges-auto-entrepreneur", label: "Charges auto-entrepreneur" },
+              { href: "/comparateur-sasu-eurl", label: "SASU vs EURL" },
+              { href: "/calcul-tva-freelance", label: "Calcul TVA freelance" },
+              { href: "/simulateur-retraite-independant", label: "Simulateur retraite" },
+              { href: "/simulateur-salaire-portage-salarial", label: "Salaire portage salarial" },
+              { href: "/devenir-freelance", label: "Devenir freelance" },
+              { href: "/blog", label: "Blog" },
+            ].map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="text-sm text-muted-foreground hover:text-foreground border border-border rounded-full px-4 py-2 hover:border-primary/40 transition-colors"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

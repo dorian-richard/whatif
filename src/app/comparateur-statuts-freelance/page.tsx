@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
+import { StatutComparateur } from "@/components/tools/StatutComparateur";
 
 export const metadata: Metadata = {
   title: "Comparateur de statuts freelance 2026 : micro, SASU, EURL",
@@ -37,6 +38,8 @@ export default function ComparateurStatutsPage() {
             Freelens compare tous les statuts c&ocirc;te &agrave; c&ocirc;te, sur la base de ton CA r&eacute;el.
           </p>
         </div>
+
+        <StatutComparateur />
 
         <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 space-y-5">
           <h2 className="text-xl font-bold text-foreground">Ce que le comparateur calcule</h2>

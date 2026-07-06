@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
+import { ChargesMicroCalculator } from "@/components/tools/ChargesMicroCalculator";
 
 export const metadata: Metadata = {
   title: "Calculateur de charges auto-entrepreneur 2026",
@@ -37,6 +38,8 @@ export default function CalculateurChargesAutoEntrepreneurPage() {
             en temps r&eacute;el, avec les taux officiels 2026.
           </p>
         </div>
+
+        <ChargesMicroCalculator />
 
         {/* Taux 2026 */}
         <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 space-y-6">

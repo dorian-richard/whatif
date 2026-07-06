@@ -12,7 +12,7 @@ export function Hero() {
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center pt-20">
         <div className="mb-12" />
-        <AnimateOnScroll>
+        <AnimateOnScroll eager>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
             <span className="text-foreground">Pilote ton activit&eacute; freelance</span>
             <br />
@@ -21,14 +21,14 @@ export function Hero() {
           </h1>
         </AnimateOnScroll>
 
-        <AnimateOnScroll delay={0.1}>
+        <AnimateOnScroll delay={0.1} eager>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
             L&apos;outil de pilotage et de suivi des freelances.
             Ton net r&eacute;el apr&egrave;s URSSAF et IR, tes factures, ta tr&eacute;sorerie, ton pipeline &mdash; tout en un, mis &agrave; jour en temps r&eacute;el.
           </p>
         </AnimateOnScroll>
 
-        <AnimateOnScroll delay={0.2}>
+        <AnimateOnScroll delay={0.2} eager>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
             <Link
               href="/signup"
@@ -49,7 +49,7 @@ export function Hero() {
         </AnimateOnScroll>
 
         {/* Dashboard mockup */}
-        <AnimateOnScroll delay={0.3}>
+        <AnimateOnScroll delay={0.3} eager>
           <div className="relative mx-auto max-w-3xl">
             <div className="fn-glow rounded-2xl">
               <DashboardMockup />
