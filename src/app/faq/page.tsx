@@ -23,7 +23,7 @@ const QUESTIONS = [
   },
   {
     q: "Les calculs sont-ils fiables ?",
-    a: "Le moteur utilise les taux URSSAF 2026, le bar\u00e8me IR progressif, l\u2019IS progressif (15%/25%), le PFU \u00e0 31,4%, l\u2019abattement 10% frais pro sur les salaires, et la taxe PUMa sur les dividendes. Tous les statuts sont support\u00e9s : micro, EI, EURL IR/IS, SASU IR/IS, portage.",
+    a: "Le moteur utilise les taux URSSAF 2026, le bar\u00e8me IR progressif, l\u2019IS progressif (15%/25%), le PFU \u00e0 30%, l\u2019abattement 10% frais pro sur les salaires, et la taxe PUMa sur les dividendes. Tous les statuts sont support\u00e9s : micro, EI, EURL IR/IS, SASU IR/IS, portage.",
   },
   {
     q: "Puis-je cr\u00e9er des devis et factures ?",

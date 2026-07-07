@@ -94,7 +94,7 @@ const jsonLd = [
         name: "Les calculs sont-ils fiables ?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Le moteur utilise les taux URSSAF 2026, le barème IR progressif, l\u2019IS progressif (15%/25%), le PFU à 31,4%, l\u2019abattement 10% frais pro sur les salaires, et la taxe PUMa sur les dividendes. Tous les statuts sont supportés : micro, EI, EURL IR/IS, SASU IR/IS, portage.",
+          text: "Le moteur utilise les taux URSSAF 2026, le barème IR progressif, l\u2019IS progressif (15%/25%), le PFU à 30%, l\u2019abattement 10% frais pro sur les salaires, et la taxe PUMa sur les dividendes. Tous les statuts sont supportés : micro, EI, EURL IR/IS, SASU IR/IS, portage.",
         },
       },
       {

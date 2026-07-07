@@ -30,7 +30,7 @@ const PRO_GROUPS = [
     color: "#5682F2",
     items: [
       "Comparateur de statuts : Micro, EURL IR/IS, SASU IR/IS, portage",
-      "Taxe PUMa, abattement 10% frais pro, PFU 31,4% — les vrais taux 2026",
+      "Taxe PUMa, abattement 10% frais pro, PFU 30% — les vrais taux 2026",
       "Mix salaire/dividendes optimisé (EURL IS, SASU IS)",
       "Benchmark TJM marché (27 métiers, données Silkhom 2025)",
       "Objectif Revenu : du net cible au CA et TJM requis",

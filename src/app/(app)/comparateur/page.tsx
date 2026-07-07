@@ -118,7 +118,7 @@ function computeForStatus(
       if (isSASU) {
         // PFU 30% flat
         const pfuAmount = afterIS * PFU_RATE;
-        chargesSociales = afterIS * 0.186 + puma; // CSG/CRDS + PUMa
+        chargesSociales = afterIS * 0.172 + puma; // CSG/CRDS 17,2% + PUMa
         impots = isAmount + afterIS * 0.128 /* IR part of PFU */; // IS + IR part of PFU
         netAnnual = afterIS - pfuAmount - puma;
       } else {
@@ -145,7 +145,7 @@ function computeForStatus(
       let divNet = 0;
 
       if (isSASU) {
-        divCharges = afterIS * 0.186;
+        divCharges = afterIS * 0.172;
         divIR = afterIS * 0.128 /* IR part of PFU */;
         divNet = afterIS * (1 - PFU_RATE);
       } else {

@@ -303,7 +303,7 @@ export const BLOG_POSTS: BlogPost[] = [
 <li>Avec 210 jours facturés : TJM = 83 000 / 210 ≈ <strong>395€/jour</strong></li>
 </ul>
 
-<p>Plutôt que faire ce calcul à la main, utilise l'outil <a href="/objectif">Objectif Revenu de Freelens</a> qui gère toutes les subtilités (barème progressif IR, seuils URSSAF, saisonnalité).</p>`,
+<p>Plutôt que faire ce calcul à la main, utilise l'outil <a href="/simulateur-revenus-freelance">Objectif Revenu de Freelens</a> qui gère toutes les subtilités (barème progressif IR, seuils URSSAF, saisonnalité).</p>`,
       },
       {
         title: "Benchmark TJM 2026 par métier",
@@ -332,7 +332,7 @@ export const BLOG_POSTS: BlogPost[] = [
 
 <p><em>Ces fourchettes sont indicatives et varient selon la localisation (Paris +10-20%), le secteur client (finance, luxe = premium), et la durée de mission (missions courtes = TJM plus élevé).</em></p>
 
-<p>Compare ton TJM actuel avec le marché sur le <a href="/benchmark">benchmark Freelens</a> qui couvre 27 métiers tech.</p>`,
+<p>Compare ton TJM actuel avec le marché sur le <a href="/tjm-freelance">benchmark Freelens</a> qui couvre 27 métiers tech.</p>`,
       },
       {
         title: "Les facteurs qui influencent ton TJM",
@@ -468,7 +468,7 @@ export const BLOG_POSTS: BlogPost[] = [
 <p><strong>Tu veux zéro admin ?</strong></p>
 <p>→ <strong>Portage salarial</strong>. Tu es salarié, avec chômage et mutuelle. Il te reste ~48% du CA après frais de gestion et charges.</p>
 
-<p>Pour comparer précisément selon ton CA prévisionnel, utilise le <a href="/comparateur">comparateur de statuts Freelens</a>.</p>`,
+<p>Pour comparer précisément selon ton CA prévisionnel, utilise le <a href="/comparateur-statuts-freelance">comparateur de statuts Freelens</a>.</p>`,
       },
       {
         title: "Étape 3 : Les démarches administratives",
@@ -529,7 +529,7 @@ export const BLOG_POSTS: BlogPost[] = [
 
 <p>Exemple : tu vises 4 000€ net/mois en micro → 48 000€/an net → CA nécessaire = 48 000 / 0,65 = 73 850€ → TJM = 73 850 / 210 jours ≈ <strong>350€/jour</strong>.</p>
 
-<p>Utilise l'outil <a href="/objectif">Objectif Revenu Freelens</a> pour un calcul précis avec le barème fiscal en vigueur.</p>
+<p>Utilise l'outil <a href="/simulateur-revenus-freelance">Objectif Revenu Freelens</a> pour un calcul précis avec le barème fiscal en vigueur.</p>
 
 <p><strong>Facturation : les bases</strong></p>
 <ul>
@@ -895,12 +895,12 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         title: "Mode 2 : 100% dividendes — le piège du PFU",
-        content: `<p>La tentation du full dividendes est forte : pas de charges sociales lourdes, juste le PFU (prélèvement forfaitaire unique) à <strong>31,4%</strong> en 2026 (12,8% d'IR + 18,6% de prélèvements sociaux). Simple, rapide.</p>
+        content: `<p>La tentation du full dividendes est forte : pas de charges sociales lourdes, juste le PFU (prélèvement forfaitaire unique) à <strong>30%</strong> en 2026 (12,8% d'IR + 17,2% de prélèvements sociaux). Simple, rapide.</p>
 
 <p>Mais il y a <strong>trois pièges majeurs</strong> :</p>
 
 <p><strong>1. L'IS avant le PFU</strong></p>
-<p>Les dividendes sont versés <em>après</em> paiement de l'IS. Sur 100 000€ de bénéfice : 15% sur les premiers 42 500€ + 25% au-delà = 20 750€ d'IS. Il te reste 79 250€, puis le PFU de 31,4% s'applique sur ce montant.</p>
+<p>Les dividendes sont versés <em>après</em> paiement de l'IS. Sur 100 000€ de bénéfice : 15% sur les premiers 42 500€ + 25% au-delà = 20 750€ d'IS. Il te reste 79 250€, puis le PFU de 30% s'applique sur ce montant.</p>
 
 <p><strong>2. La taxe PUMa</strong></p>
 <p>Si tes revenus d'activité (salaire) sont inférieurs à 20% du plafond de la Sécurité sociale (~9 612€ en 2026), tu paies la <strong>cotisation subsidiaire maladie de 6,5%</strong> sur tes revenus du capital. En full dividendes avec zéro salaire, c'est le taux maximum.</p>
@@ -919,15 +919,15 @@ export const BLOG_POSTS: BlogPost[] = [
 <p><strong>Exemple chiffré en SASU IS à 120 000€ de CA :</strong></p>
 <ul>
 <li>Salaire brut : 20 000€ (charges ~65% → net ~12 000€, au-dessus du seuil PUMa)</li>
-<li>Bénéfice restant : ~88 000€ → IS = ~17 375€ → dividendes = ~70 625€</li>
-<li>PFU 31,4% sur dividendes : ~22 176€</li>
-<li>Net total : ~12 000€ (salaire) + 48 449€ (dividendes après PFU) = ~60 449€</li>
+<li>Bénéfice restant : ~88 000€ → IS = ~17 750€ → dividendes = ~70 250€</li>
+<li>PFU 30% sur dividendes : ~21 075€</li>
+<li>Net total : ~12 000€ (salaire) + 49 175€ (dividendes après PFU) = ~61 175€</li>
 <li>+ pas de PUMa, trimestres retraite validés, couverture sociale de base</li>
 </ul>
 
 <p><strong>En EURL IS</strong>, c'est encore plus intéressant : les dividendes au-delà de 10% du capital social sont soumis aux cotisations TNS (pas au PFU). Avec un capital social de 1 000€, c'est quasi tout qui passe en TNS — ce qui finance ta retraite mais coûte plus cher en charges.</p>
 
-<p>L'optimum dépend de ton CA, de ta situation familiale (nombre de parts fiscales) et de tes priorités (retraite vs net immédiat). C'est exactement ce que simule <a href="/comparateur">le comparateur Freelens</a>.</p>`,
+<p>L'optimum dépend de ton CA, de ta situation familiale (nombre de parts fiscales) et de tes priorités (retraite vs net immédiat). C'est exactement ce que simule <a href="/comparateur-statuts-freelance">le comparateur Freelens</a>.</p>`,
       },
       {
         title: "L'abattement 10% : le détail qui change tout",
@@ -964,7 +964,7 @@ export const BLOG_POSTS: BlogPost[] = [
 <li><strong>Zéro admin, CDI et chômage</strong> → portage salarial (mais cher)</li>
 </ul>
 
-<p>Dans tous les cas, <strong>ne fais pas de full dividendes</strong> sans avoir mesuré l'impact de la PUMa et l'absence de protection sociale. Simule les différents scénarios sur <a href="/comparateur">le comparateur de statuts</a>.</p>`,
+<p>Dans tous les cas, <strong>ne fais pas de full dividendes</strong> sans avoir mesuré l'impact de la PUMa et l'absence de protection sociale. Simule les différents scénarios sur <a href="/comparateur-statuts-freelance">le comparateur de statuts</a>.</p>`,
       },
     ],
     cta: { text: "Simuler mon mix optimal", href: "/signup", sub: "Gratuit — comparateur de statuts inclus" },

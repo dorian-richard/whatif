@@ -12,7 +12,7 @@ const QUESTIONS = [
   },
   {
     q: "Les calculs sont-ils fiables ? Mon comptable dit que...",
-    a: "Le moteur utilise les taux URSSAF 2026, le bar\u00e8me IR progressif, l\u2019IS progressif (15%/25%), le PFU \u00e0 31,4%, l\u2019abattement 10% frais pro et la taxe PUMa. Ce sont les m\u00eames chiffres que ton comptable, sauf que tu les as en temps r\u00e9el, pas 3 mois apr\u00e8s. Freelens ne remplace pas un expert-comptable, il te permet de comprendre tes chiffres avant de lui parler.",
+    a: "Le moteur utilise les taux URSSAF 2026, le bar\u00e8me IR progressif, l\u2019IS progressif (15%/25%), le PFU \u00e0 30%, l\u2019abattement 10% frais pro et la taxe PUMa. Ce sont les m\u00eames chiffres que ton comptable, sauf que tu les as en temps r\u00e9el, pas 3 mois apr\u00e8s. Freelens ne remplace pas un expert-comptable, il te permet de comprendre tes chiffres avant de lui parler.",
   },
   {
     q: "Je suis en micro, \u00e7a me concerne ?",
